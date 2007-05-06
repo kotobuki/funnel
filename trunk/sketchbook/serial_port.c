@@ -8,7 +8,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-//#include <errno.h>
 #include <termios.h>
 
 #include <ruby.h>
@@ -57,13 +56,11 @@ sp_initialize(VALUE self, VALUE port, VALUE baudrate)
 		rb_sys_fail(RSTRING(port)->ptr);
 	}
 
-//	fcntl(fd, F_SETFL, 0);
-
 	if (tcgetattr(sp->fd, &options) == -1) {
 		rb_sys_fail("tcgetattr");
 	}
 
-	switch(FIX2INT(baudrate)) {
+	switch (FIX2INT(baudrate)) {
 		case 9600: _baudrate = B9600; break;
 		case 19200: _baudrate = B19200; break;
 		case 38400: _baudrate = B38400; break;
@@ -91,7 +88,7 @@ sp_initialize(VALUE self, VALUE port, VALUE baudrate)
 	options.c_cflag &= ~CSTOPB;
 
 	// set parity to none
-    options.c_cflag &= ~PARENB;
+	options.c_cflag &= ~PARENB;
 
 #ifdef CNEW_RTSCTS
 	// disable hardware flow control
