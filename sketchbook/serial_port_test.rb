@@ -6,7 +6,7 @@ class GainerIO < Funnel::SerialPort
   @receiver
   @dispatcher
   @quitRequested = false
-  @commands
+  @commands = []
 
   def talk(command, reply_length)
     write(command + '*')
@@ -60,18 +60,46 @@ class GainerIO < Funnel::SerialPort
   end
 
   def startPolling
-    @commands
     received = ''
+    commands = []
+
     @receiver = Thread.new do
       while !@quitRequested
         sleep(0.01) if (bytes_available < 1)
-        received = read(bytes_available)
-        puts = received.split(/\s*\*\s*/)
-#        loop do
-#          puts index = received.index('*')
-#          break if (index == nil)
-#          puts received.slice!(0, index)
-#        end
+        received << read(bytes_available)
+
+        count = received.scan(/\*/).length
+        commands = received.split(/\*/)
+
+        @commands = []
+        count.times do |i|
+          @commands << commands.at(i) unless (commands.at(i) == nil)
+        end
+
+        dispatchEvents
+        received = commands.at(count) unless (commands.at(count) == nil)  # incomplete command
+      end
+    end
+  end
+
+  def dispatchEvents
+    return if (@commands == nil)
+
+    @commands.each do |command|
+      case command[0]
+      when ?i
+        values = command.unpack('xa2a2a2a2')
+#        puts "ain: #{values.at(0).hex}, #{values.at(1).hex}, #{values.at(2).hex}, #{values.at(3).hex}"  # ain 0..3
+      when ?h
+        puts "led: on"
+      when ?l
+        puts "led: off"
+      when ?N
+        puts "sw: on"
+      when ?F
+        puts "sw: off"
+      else
+        puts "unknown!"
       end
     end
   end
@@ -95,10 +123,17 @@ puts gio.setConfiguration(1)
   sleep(0.2)
 end
 
-puts gio.beginAnalogInput
+gio.beginAnalogInput
 gio.startPolling
 
 sleep(5)
 
-puts gio.endAnalogInput
+#3.times do
+#  gio.turnOnLED
+#  sleep(0.5)
+#  gio.turnOffLED
+#  sleep(0.5)
+#end
+
+gio.endAnalogInput
 gio.finishPolling
