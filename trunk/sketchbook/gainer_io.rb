@@ -7,6 +7,12 @@ class GainerIO < Funnel::SerialPort
   @dispatcher
   @quitRequested = false
   @commands = []
+  @eventHandler
+
+  AIN_EVENT = 0
+  DIN_EVENT = 1
+  LED_EVENT = 2
+  SW_EVENT = 3
 
   def talk(command, reply_length)
     write(command + '*')
@@ -21,6 +27,10 @@ class GainerIO < Funnel::SerialPort
     if (bytes_available >= reply_length) then read(reply_length)
     else return nil
     end
+  end
+
+  def onEvent=(handler)
+    @eventHandler = handler
   end
 
   def reboot
@@ -88,20 +98,21 @@ class GainerIO < Funnel::SerialPort
 
   def dispatchEvents
     return if (@commands == nil)
+    return if (@eventHandler == nil)
 
     @commands.each do |command|
       case command[0]
       when ?i
         values = command.unpack('xa2a2a2a2')
-#        puts "ain: #{values.at(0).hex}, #{values.at(1).hex}, #{values.at(2).hex}, #{values.at(3).hex}"  # ain 0..3
+        @eventHandler.call(AIN_EVENT, [values.at(0).hex, values.at(1).hex, values.at(2).hex, values.at(3).hex])
       when ?h
-        puts "led: on"
+        @eventHandler.call(LED_EVENT, true)
       when ?l
-        puts "led: off"
+        @eventHandler.call(LED_EVENT, false)
       when ?N
-        puts "sw: on"
+        @eventHandler.call(SW_EVENT, true)
       when ?F
-        puts "sw: off"
+        @eventHandler.call(SW_EVENT, false)
       else
         puts "unknown! #{command[0].chr}"
       end
