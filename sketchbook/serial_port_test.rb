@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require "gainer_io"
+require "funnel_server"
 
 devices = []
 

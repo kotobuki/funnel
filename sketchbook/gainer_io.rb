@@ -43,6 +43,22 @@ class GainerIO < Funnel::SerialPort
     talk("?", 10)
   end
 
+  def setOutputs(values)
+    port = values.at(0)
+    return if (port < 0) || (port > 17)
+    values.shift
+    values.each do |value|
+      if (port < 16) then
+        #set ports
+      elsif (port == 17) then
+        if (value == 0) then turnOffLED
+        else turnOnLED
+        end
+      end
+      port += 1
+    end
+  end
+
   def turnOnLED
 #    talk("h", 2)
     talk("h", 0)
@@ -106,13 +122,13 @@ class GainerIO < Funnel::SerialPort
         values = command.unpack('xa2a2a2a2')
         @eventHandler.call(AIN_EVENT, [values.at(0).hex, values.at(1).hex, values.at(2).hex, values.at(3).hex])
       when ?h
-        @eventHandler.call(LED_EVENT, true)
+        @eventHandler.call(LED_EVENT, 1)
       when ?l
-        @eventHandler.call(LED_EVENT, false)
+        @eventHandler.call(LED_EVENT, 0)
       when ?N
-        @eventHandler.call(SW_EVENT, true)
+        @eventHandler.call(SW_EVENT, 1)
       when ?F
-        @eventHandler.call(SW_EVENT, false)
+        @eventHandler.call(SW_EVENT, 0)
       else
         puts "unknown! #{command[0].chr}"
       end
