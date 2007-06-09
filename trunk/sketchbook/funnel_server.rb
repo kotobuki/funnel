@@ -5,15 +5,15 @@ require 'osc'
 require 'timeout'
 require "gainer_io"
 
-port = 7123
-
 class FunnelServer
 
   def initialize(port)
-    @server = TCPServer.new('localhost', port)
-    #    @callbacks = []
-    @addedClients = Queue.new
-    @removedClients = Queue.new
+    @server = TCPServer.open('localhost', port)
+    puts "server: #{@server.addr.at(2)}, #{@server.addr.at(1)}"
+    @notifier = TCPServer.open('localhost', port + 1)
+    puts "notifier: #{@notifier.addr.at(2)}, #{@notifier.addr.at(1)}"
+
+    @queue = Queue.new
     @clients = []
     @ain = [0, 0, 0, 0]
 
@@ -34,9 +34,8 @@ class FunnelServer
 
   def onEvent(type, value)
     if (type == GainerIO::AIN_EVENT) then
-#      info = OSC::Message.new('/in', 'i', 0, value.at(0), value.at(1), value.at(2), value.at(3))
-#      send_notify(info)
       @ain = value
+      @queue.push(value)
     elsif (type == GainerIO::SW_EVENT) then
 #      info = OSC::Message.new('/in', 'i', 16, value)
 #      send_notify(info)
@@ -105,15 +104,14 @@ ERROR       = 1
 
 def client_watcher
   loop do
-    puts "waiting for connection..."
-
     Thread.start(@server.accept) do |client|
-      puts "connected: #{client}"
+      puts "server: connected: #{client}"
 
       callbacks = []
 
       add_method(callbacks, QUIT_SERVER) do |message|
         puts "quit requested"
+        @gio.endAnalogInput
         reply = OSC::Message.new(QUIT_SERVER, 'i', NO_ERROR)
         client.send(reply.encode, 0)
         exit
@@ -127,7 +125,6 @@ def client_watcher
       end
 
       add_method(callbacks, POLLING) do |message|
-        puts "polling"
         if message.to_a.at(0) == 1 then
           puts "begin polling requested"
           @gio.beginAnalogInput
@@ -172,13 +169,54 @@ def client_watcher
         end
       end
 
-      puts "disconnected: #{client}"
+      puts "server: disconnected: #{client}"
       client.close
     end
   end
 end
 
+def notify_service
+  socks = [@notifier]
+
+  Thread.new do
+    loop do
+      ain = @queue.pop
+      for s in socks
+        if s != @notifier then
+          message = OSC::Message.new('/in', 'i', 0, ain.at(0), ain.at(1), ain.at(2), ain.at(3))
+          s.send(message.encode, 0)
+          #          puts "sent to #{s}"
+        end
+      end
+    end
+  end
+
+  Thread.new do
+    loop do
+      nsock = select(socks)
+      next if nsock == nil
+      for s in nsock[0]
+        if s == @notifier
+          client = s.accept
+          socks.push(client)
+          puts "notifier: connected: #{client}"
+        elsif s.eof?
+          puts "notifier: disconnected: #{client}"
+          s.close
+          socks.delete(s)
+        end
+      end
+    end
+  end
+end
+
 def run
+  begin
+    notify_service
+  rescue
+    Thread.main.raise $!
+  end
+
   begin
     client_watcher
   rescue
@@ -188,10 +226,6 @@ end
 
 end
 
-
-th = Thread.new do
-  server = FunnelServer.new(port)
-  server.run
-end
-
-th.join
+# instantiate the FunnelServer and set to run
+server = FunnelServer.new(5000)
+server.run
