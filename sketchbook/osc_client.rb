@@ -3,9 +3,10 @@
 require "socket"
 require 'osc'
 
-port = 7123
+port = 5000
 
 @client = TCPSocket.open('localhost', port)
+@receiver = TCPSocket.open('localhost', port + 1)
 p @client
 
 @xs = []
@@ -26,26 +27,32 @@ def send_commands
   @xs = []
 end
 
+
+th = Thread.new do
+  counter = 0
+  loop do
+    packet = @receiver.recv(256)
+    begin
+      OSC::Packet.decode(packet).each do |time, message|
+#        puts "received: #{message.address}, #{message.to_a}"
+        counter += 1
+      end
+    rescue EOFError
+      puts "EOFError: packet = #{packet}"
+      puts "counter: #{counter}"
+      exit
+    end    
+  end
+end
+
 @xs << OSC::Message.new('/reset', nil)
-@xs << OSC::Message.new('/out', 'i', 17, 1)
 @xs << OSC::Message.new('/polling', 'i', 1)
 send_commands
 
-2000.times do
-  command = OSC::Message.new('/in', 'i', 0)
-  @client.send(command.encode, 0)
-  packet = @client.recv(256)
-  begin
-    OSC::Packet.decode(packet).each do |time, message|
-      puts "received: #{message.address}, #{message.to_a}"
-    end
-  rescue EOFError
-    puts "EOFError: packet = #{packet}"
-  end
-  sleep(0.01)
-end
+sleep(10)
 
 @xs << OSC::Message.new('/polling', 'i', 0)
-@xs << OSC::Message.new('/out', 'i', 17, 0)
 @xs << OSC::Message.new('/quit', nil)
 send_commands
+
+th.join
