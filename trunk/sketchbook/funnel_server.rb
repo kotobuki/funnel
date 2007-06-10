@@ -1,11 +1,18 @@
 #!/usr/bin/env ruby
 
 require 'socket'
-require 'osc'
 require 'timeout'
+require "yaml"
+
+require 'osc'
 require "gainer_io"
 
 class FunnelServer
+
+  PORT_DIRECTION_I = 0
+  PORT_DIRECTION_O = 1
+  PORT_TYPE_A = 0
+  PORT_TYPE_D = 1
 
   def initialize(port)
     @server = TCPServer.open('localhost', port)
@@ -16,6 +23,7 @@ class FunnelServer
     @queue = Queue.new
     @clients = []
     @ain = [0, 0, 0, 0]
+    @button = 0
 
     devices = []
 
@@ -27,18 +35,44 @@ class FunnelServer
       raise "Can't find any I/O modules..."
     end
 
+    @configuration = [
+        [PORT_DIRECTION_I, PORT_TYPE_A],
+        [PORT_DIRECTION_I, PORT_TYPE_A],
+        [PORT_DIRECTION_I, PORT_TYPE_A],
+        [PORT_DIRECTION_I, PORT_TYPE_A],
+        [PORT_DIRECTION_I, PORT_TYPE_D],
+        [PORT_DIRECTION_I, PORT_TYPE_D],
+        [PORT_DIRECTION_I, PORT_TYPE_D],
+        [PORT_DIRECTION_I, PORT_TYPE_D],
+        [PORT_DIRECTION_O, PORT_TYPE_A],
+        [PORT_DIRECTION_O, PORT_TYPE_A],
+        [PORT_DIRECTION_O, PORT_TYPE_A],
+        [PORT_DIRECTION_O, PORT_TYPE_A],
+        [PORT_DIRECTION_O, PORT_TYPE_D],
+        [PORT_DIRECTION_O, PORT_TYPE_D],
+        [PORT_DIRECTION_O, PORT_TYPE_D],
+        [PORT_DIRECTION_O, PORT_TYPE_D],
+        [PORT_DIRECTION_O, PORT_TYPE_D],  # LED
+        [PORT_DIRECTION_I, PORT_TYPE_D],  # Button
+      ]
+
     @gio = GainerIO.new('/dev/' + devices.at(0), 38400)
     @gio.onEvent = method(:onEvent)
     reboot_io_module
   end
 
-  def onEvent(type, value)
+  def onEvent(type, values)
     if (type == GainerIO::AIN_EVENT) then
-      @ain = value
-      @queue.push(value)
-    elsif (type == GainerIO::SW_EVENT) then
-#      info = OSC::Message.new('/in', 'i', 16, value)
-#      send_notify(info)
+      i = 0
+      values.each do |value|
+        @ain[i] = value / 255.0
+        i += 1
+      end
+      @queue.push([0, @ain])
+    elsif (type == GainerIO::BUTTON_EVENT) then
+      puts "button: #{values}"
+      @button = values.at(0)
+      @queue.push([17, [@button]])      
     else
       puts "#{type}: #{value}"
     end
@@ -144,6 +178,13 @@ def client_watcher
       end
 
       add_method(callbacks, QUERY) do |message|
+        oscMessages = []
+        @configuration.size.times do |i|
+          oscMessages[i] = OSC::Message.new('/query/' + i.to_s, 'ii', *@configuration.at(i))
+        end
+
+        reply = OSC::Bundle.new(nil, *oscMessages)
+        client.send(reply.encode, 0)
       end
 
       add_method(callbacks, SET_OUTPUTS) do |message|
@@ -153,8 +194,17 @@ def client_watcher
       end
 
       add_method(callbacks, GET_INPUTS) do |message|
-        reply = OSC::Message.new(GET_INPUTS, 'i', 0, @ain.at(0), @ain.at(1), @ain.at(2), @ain.at(3))
-        client.send(reply.encode, 0)
+        from = message.to_a.at(0)
+        ports = message.to_a.at(1)
+        if (0 <= from and from < 4) then
+          values = @ain[from, ports]
+          return if values == nil
+          reply = OSC::Message.new(GET_INPUTS, 'i' + 'f' * values.size, 0, *values)
+          client.send(reply.encode, 0)
+        elsif (from == 17 and ports == 1) then
+          reply = OSC::Message.new(GET_INPUTS, 'if', 17, @button)
+          client.send(reply.encode, 0)
+        end
       end
 
       while true
@@ -180,12 +230,11 @@ def notify_service
 
   Thread.new do
     loop do
-      ain = @queue.pop
+      from, inputs = @queue.pop
       for s in socks
         if s != @notifier then
-          message = OSC::Message.new('/in', 'i', 0, ain.at(0), ain.at(1), ain.at(2), ain.at(3))
+          message = OSC::Message.new('/in', 'i' + 'f' * inputs.size, from, *inputs)
           s.send(message.encode, 0)
-          #          puts "sent to #{s}"
         end
       end
     end
@@ -226,6 +275,13 @@ end
 
 end
 
+
+# load setting from the setting file
+settings = YAML.load_file('settings.yaml')
+p settings
+port = settings["port"]
+port = 5000 if port == nil
+
 # instantiate the FunnelServer and set to run
-server = FunnelServer.new(5000)
+server = FunnelServer.new(port)
 server.run

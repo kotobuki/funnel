@@ -12,7 +12,7 @@ class GainerIO < Funnel::SerialPort
   AIN_EVENT = 0
   DIN_EVENT = 1
   LED_EVENT = 2
-  SW_EVENT = 3
+  BUTTON_EVENT = 3
 
   def talk(command, reply_length)
     write(command + '*')
@@ -122,13 +122,13 @@ class GainerIO < Funnel::SerialPort
         values = command.unpack('xa2a2a2a2')
         @eventHandler.call(AIN_EVENT, [values.at(0).hex, values.at(1).hex, values.at(2).hex, values.at(3).hex])
       when ?h
-        @eventHandler.call(LED_EVENT, 1)
+        @eventHandler.call(LED_EVENT, [1])
       when ?l
-        @eventHandler.call(LED_EVENT, 0)
+        @eventHandler.call(LED_EVENT, [0])
       when ?N
-        @eventHandler.call(SW_EVENT, 1)
+        @eventHandler.call(BUTTON_EVENT, [1])
       when ?F
-        @eventHandler.call(SW_EVENT, 0)
+        @eventHandler.call(BUTTON_EVENT, [0])
       else
         puts "unknown! #{command[0].chr}"
       end
