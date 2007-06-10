@@ -14,6 +14,16 @@ class FunnelServer
   PORT_TYPE_A = 0
   PORT_TYPE_D = 1
 
+  QUIT_SERVER = '/quit'
+  RESET       = '/reset'
+  POLLING     = '/polling'
+  QUERY       = '/query'
+  SET_OUTPUTS = '/out'
+  GET_INPUTS  = '/in'
+
+  NO_ERROR    = 0
+  ERROR       = 1
+
   def initialize(port)
     @server = TCPServer.open('localhost', port)
     puts "server: #{@server.addr.at(2)}, #{@server.addr.at(1)}"
@@ -125,16 +135,6 @@ def handle_message(callbacks, message)
     end
   end
 end
-
-QUIT_SERVER = '/quit'
-RESET       = '/reset'
-POLLING     = '/polling'
-QUERY       = '/query'
-SET_OUTPUTS = '/out'
-GET_INPUTS  = '/in'
-
-NO_ERROR    = 0
-ERROR       = 1
 
 def client_watcher
   loop do

@@ -3,16 +3,16 @@
 require "serial_port"
 
 class GainerIO < Funnel::SerialPort
+  AIN_EVENT = 0
+  DIN_EVENT = 1
+  LED_EVENT = 2
+  BUTTON_EVENT = 3
+
   @receiver
   @dispatcher
   @quitRequested = false
   @commands = []
   @eventHandler
-
-  AIN_EVENT = 0
-  DIN_EVENT = 1
-  LED_EVENT = 2
-  BUTTON_EVENT = 3
 
   def talk(command, reply_length)
     write(command + '*')
@@ -43,16 +43,19 @@ class GainerIO < Funnel::SerialPort
     talk("?", 10)
   end
 
+  # values: [port, val1, val2...]
   def setOutputs(values)
     port = values.at(0)
     return if (port < 0) || (port > 17)
     values.shift
     values.each do |value|
-      if (port < 16) then
-        #set ports
-      elsif (port == 17) then
-        if (value == 0) then turnOffLED
-        else turnOnLED
+      if (0 <= port and port < 4) then
+        analogOutput(port, value)
+      elsif (port == 16) then
+        if (value == 0) then
+          turnOffLED
+        else
+          turnOnLED
         end
       end
       port += 1
@@ -67,6 +70,14 @@ class GainerIO < Funnel::SerialPort
   def turnOffLED
 #    talk("l", 2)
     talk("l", 0)
+  end
+
+  def analogOutput(port, value)
+    value = value * 255
+    if value < 0 then value = 0
+    elsif value > 255 then value = 255
+    end
+    talk("a" + format("%X", port) + format("%02X", value), 0)
   end
 
   def setConfiguration(configuration)
