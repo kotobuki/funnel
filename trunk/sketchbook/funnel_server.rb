@@ -69,6 +69,7 @@ class FunnelServer
     @gio = GainerIO.new('/dev/' + devices.at(0), 38400)
     @gio.onEvent = method(:onEvent)
     reboot_io_module
+    STDOUT.flush
   end
 
   def onEvent(type, values)
@@ -81,10 +82,12 @@ class FunnelServer
       @queue.push([0, @ain])
     elsif (type == GainerIO::BUTTON_EVENT) then
       puts "button: #{values}"
+      STDOUT.flush
       @button = values.at(0)
       @queue.push([17, [@button]])      
     else
       puts "#{type}: #{value}"
+      STDOUT.flush
     end
   end
   
@@ -140,11 +143,13 @@ def client_watcher
   loop do
     Thread.start(@server.accept) do |client|
       puts "server: connected: #{client}"
+      STDOUT.flush
 
       callbacks = []
 
       add_method(callbacks, QUIT_SERVER) do |message|
         puts "quit requested"
+        STDOUT.flush
         @gio.endAnalogInput
         reply = OSC::Message.new(QUIT_SERVER, 'i', NO_ERROR)
         client.send(reply.encode, 0)
@@ -153,6 +158,7 @@ def client_watcher
 
       add_method(callbacks, RESET) do |message|
         puts "reset requested"
+        STDOUT.flush
         reboot_io_module
         reply = OSC::Message.new(RESET, 'i', NO_ERROR)
         client.send(reply.encode, 0)
@@ -161,14 +167,17 @@ def client_watcher
       add_method(callbacks, POLLING) do |message|
         if message.to_a.at(0) == 1 then
           puts "begin polling requested"
+          STDOUT.flush
           @gio.beginAnalogInput
           @gio.startPolling
         elsif message.to_a.at(0) == 0 then
           puts "end polling requested"
+          STDOUT.flush
           @gio.finishPolling
           @gio.endAnalogInput
         else
           puts "invalid value: #{message.to_a.at(0)}"
+          STDOUT.flush
           reply = OSC::Message.new(POLLING, 'i', ERROR)
           client.send(reply.encode, 0)
           return
@@ -220,6 +229,7 @@ def client_watcher
       end
 
       puts "server: disconnected: #{client}"
+      STDOUT.flush
       client.close
     end
   end
@@ -249,8 +259,10 @@ def notify_service
           client = s.accept
           socks.push(client)
           puts "notifier: connected: #{client}"
+          STDOUT.flush
         elsif s.eof?
           puts "notifier: disconnected: #{client}"
+          STDOUT.flush
           s.close
           socks.delete(s)
         end
