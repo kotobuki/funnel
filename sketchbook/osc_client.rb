@@ -15,7 +15,7 @@ def send_commands
   @xs.each do |x|
     p x
     @client.send(x.encode, 0)
-    packet = @client.recv(256)
+    packet = @client.recv(4096)
     begin
       OSC::Packet.decode(packet).each do |time, message|
         puts "received: #{message.address}, #{message.to_a}"
@@ -34,7 +34,7 @@ th = Thread.new do
     packet = @receiver.recv(256)
     begin
       OSC::Packet.decode(packet).each do |time, message|
-#        puts "received: #{message.address}, #{message.to_a}"
+#        puts "received: #{message.address}, #{message.to_a}" if message.to_a.at(0) == 17
         counter += 1
       end
     rescue EOFError
@@ -45,6 +45,7 @@ th = Thread.new do
   end
 end
 
+@xs << OSC::Message.new('/query', nil)
 @xs << OSC::Message.new('/reset', nil)
 @xs << OSC::Message.new('/polling', 'i', 1)
 send_commands
