@@ -65,7 +65,7 @@ sp_initialize(VALUE self, VALUE port, VALUE baudrate)
 		case 19200: _baudrate = B19200; break;
 		case 38400: _baudrate = B38400; break;
 		case 57600: _baudrate = B57600; break;
-		case 76800: _baudrate = B76800; break;
+//		case 76800: _baudrate = B76800; break;
 		case 115200: _baudrate = B115200; break;
 		case 230400: _baudrate = B230400; break;
 		default:
@@ -131,7 +131,11 @@ sp_bytes_available(VALUE self)
 	struct serial_port *sp;
 
 	Data_Get_Struct(self, struct serial_port, sp);
+#if 0
 	ioctl(sp->fd, FIONREAD, &bytes);
+#else
+	ioctl(sp->fd, TIOCINQ, &bytes);
+#endif
 	return INT2FIX(bytes);
 }
 
