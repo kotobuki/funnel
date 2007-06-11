@@ -24,7 +24,7 @@ class FunnelServer
   NO_ERROR    = 0
   ERROR       = 1
 
-  def initialize(port)
+  def initialize(port, com)
     @server = TCPServer.open('localhost', port)
     puts "server: #{@server.addr.at(2)}, #{@server.addr.at(1)}"
     @notifier = TCPServer.open('localhost', port + 1)
@@ -37,12 +37,16 @@ class FunnelServer
 
     devices = []
 
+    if com == nil then
     Dir.foreach("/dev") do | deviceName |
       devices.push(deviceName) if (deviceName.index("cu.usbserial") == 0)
     end
 
     if (devices.size < 1) then
       raise "Can't find any I/O modules..."
+    end
+    else
+        devices = [com]
     end
 
     @configuration = [
@@ -292,8 +296,9 @@ end
 settings = YAML.load_file('settings.yaml')
 p settings
 port = settings["port"]
+com = settings["com"]
 port = 5000 if port == nil
 
 # instantiate the FunnelServer and set to run
-server = FunnelServer.new(port)
+server = FunnelServer.new(port, com)
 server.run
