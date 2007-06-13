@@ -249,11 +249,7 @@ sp_bytes_available(VALUE self)
 	struct serial_port *sp;
 
 	Data_Get_Struct(self, struct serial_port, sp);
-#if 0
 	ioctl(sp->fd, FIONREAD, &bytes);
-#else
-	ioctl(sp->fd, TIOCINQ, &bytes);
-#endif
 	return INT2FIX(bytes);
 #endif
 }
