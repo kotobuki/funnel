@@ -3,12 +3,35 @@
  * http://www.easysw.com/~mike/serial/serial.html
  */
 
+#if defined(__MINGW32__)
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <windows.h>
+static char sGetCommState[] = "GetCommState";
+static char sSetCommState[] = "SetCommState";
+static char sGetCommTimeouts[] = "GetCommTimeouts";
+static char sSetCommTimeouts[] = "SetCommTimeouts";
+#define FMODE_READABLE  1
+#define FMODE_WRITABLE  2
+#define FMODE_READWRITE 3
+#define FMODE_APPEND   64
+#define FMODE_CREATE  128
+#define FMODE_BINMODE   4
+#define FMODE_SYNC      8
+#define FMODE_WBUF     16
+#define FMODE_RBUF     32
+#define FMODE_WSPLIT  0x200
+#define FMODE_WSPLIT_INITIALIZED  0x400
+#else
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <termios.h>
+#endif
 
 #include <ruby.h>
 
@@ -17,6 +40,11 @@ static VALUE cSerialPort;
 
 struct serial_port
 {
+#if defined(__MINGW32__)
+	FILE *f;
+	HANDLE fh;
+	int mode;
+#endif
 	int fd;
 	char buffer[128];
 };
@@ -45,6 +73,87 @@ sp_allocate(VALUE klass)
 static VALUE
 sp_initialize(VALUE self, VALUE port, VALUE baudrate)
 {
+#if defined(__MINGW32__)
+//  OpenFile *fp;
+//  int fd;
+//  HANDLE fh;
+//  int num_port;
+  char *_port;
+  // char *ports[] = {
+  // "COM1", "COM2", "COM3", "COM4",
+  // "COM5", "COM6", "COM7", "COM8"
+  // };
+  DCB dcb;
+
+	struct serial_port *sp;
+
+	  COMMTIMEOUTS ctout;
+
+	Data_Get_Struct(self, struct serial_port, sp);
+
+//  NEWOBJ(sp, struct RFile);
+//  rb_secure(4);
+//  OBJSETUP(sp, self, T_FILE);
+//  MakeOpenFile(sp, fp);
+
+  Check_SafeStr(port);
+  _port = RSTRING(port)->ptr;
+
+  sp->fd = open(_port, O_BINARY | O_RDWR);
+  if (sp->fd == -1)
+    rb_sys_fail(_port);
+  sp->fh = (HANDLE) _get_osfhandle(sp->fd);
+  if (SetupComm(sp->fh, 1024, 1024) == 0) {
+    close(sp->fd);
+    rb_raise(rb_eArgError, "not a serial port");
+  }
+
+  dcb.DCBlength = sizeof(dcb);
+  if (GetCommState(sp->fh, &dcb) == 0) {
+    close(sp->fd);
+    rb_sys_fail(sGetCommState);
+  }
+  dcb.fBinary = TRUE;
+  dcb.fParity = FALSE;
+  dcb.fOutxDsrFlow = FALSE;
+//  dcb.fDtrControl = DTR_CONTROL_ENABLE;
+  dcb.fDtrControl = DTR_CONTROL_DISABLE;
+  dcb.fDsrSensitivity = FALSE;
+//  dcb.fDsrSensitivity = TRUE;
+  dcb.fTXContinueOnXoff = FALSE;
+  dcb.fErrorChar = FALSE;
+  dcb.fNull = FALSE;
+  dcb.fAbortOnError = FALSE;
+  dcb.XonChar = 17;
+  dcb.XoffChar = 19;
+
+	//modem parameters
+  dcb.BaudRate = FIX2INT(baudrate);
+  dcb.ByteSize = 8;
+  dcb.StopBits = ONESTOPBIT;
+  dcb.Parity = NOPARITY;
+
+  if (SetCommState(sp->fh, &dcb) == 0) {
+    close(sp->fd);
+    rb_sys_fail(sSetCommState);
+  }
+
+  sp->f = (FILE *)rb_fdopen(sp->fd, "rb+");
+  sp->mode = FMODE_READWRITE | FMODE_BINMODE | FMODE_SYNC;
+//  return (VALUE) sp;
+
+  if (GetCommTimeouts(sp->fh, &ctout) == 0)
+    rb_sys_fail(sGetCommTimeouts);
+
+    ctout.ReadIntervalTimeout = MAXDWORD;
+    ctout.ReadTotalTimeoutMultiplier = MAXDWORD;
+    ctout.ReadTotalTimeoutConstant = MAXDWORD - 1;
+
+  if (SetCommTimeouts(sp->fh, &ctout) == 0)
+    rb_sys_fail(sSetCommTimeouts);
+
+	return self;
+#else
 	struct termios options;
 	int _baudrate;
 	struct serial_port *sp;
@@ -100,6 +209,7 @@ sp_initialize(VALUE self, VALUE port, VALUE baudrate)
 	}
 
 	return self;
+#endif
 }
 
 static VALUE
@@ -127,6 +237,14 @@ sp_read(VALUE self, VALUE bytes)
 static VALUE
 sp_bytes_available(VALUE self)
 {
+#if defined(__MINGW32__)
+	// DUMMY IMPLEMENTATION!!!
+	int bytes = 1;
+	struct serial_port *sp;
+	Data_Get_Struct(self, struct serial_port, sp);
+
+	return INT2FIX(bytes);
+#else
 	int bytes;
 	struct serial_port *sp;
 
@@ -137,6 +255,7 @@ sp_bytes_available(VALUE self)
 	ioctl(sp->fd, TIOCINQ, &bytes);
 #endif
 	return INT2FIX(bytes);
+#endif
 }
 
 void Init_serial_port()
