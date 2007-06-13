@@ -241,9 +241,17 @@ sp_bytes_available(VALUE self)
 	// DUMMY IMPLEMENTATION!!!
 	int bytes = 1;
 	struct serial_port *sp;
+	DWORD errors;
+	COMSTAT stat;
+	
 	Data_Get_Struct(self, struct serial_port, sp);
 
-	return INT2FIX(bytes);
+	if (!ClearCommError(sp->fh, &errors, &stat)) {
+		rb_sys_fail("ClearCommError");
+		return 0;
+	}
+
+	return INT2FIX(stat.cbInQue);
 #else
 	int bytes;
 	struct serial_port *sp;
