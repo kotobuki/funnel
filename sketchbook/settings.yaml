@@ -1,2 +1,2 @@
 port: 5000
-com: ttyS11
+#com: COM4

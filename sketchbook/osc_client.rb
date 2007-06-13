@@ -1,9 +1,13 @@
 #!/usr/bin/env ruby
 
 require "socket"
+require "yaml"
 require 'osc'
 
-port = 5000
+# load setting from the setting file
+settings = YAML.load_file('settings.yaml')
+port = settings["port"]
+port = 5432 if port == nil
 
 @client = TCPSocket.open('localhost', port)
 @receiver = TCPSocket.open('localhost', port + 1)
