@@ -25,9 +25,9 @@ class FunnelServer
   ERROR       = 1
 
   def initialize(port, com)
-    @server = TCPServer.open('localhost', port)
+    @server = TCPServer.open(port)
     puts "server: #{@server.addr.at(2)}, #{@server.addr.at(1)}"
-    @notifier = TCPServer.open('localhost', port + 1)
+    @notifier = TCPServer.open(port + 1)
     puts "notifier: #{@notifier.addr.at(2)}, #{@notifier.addr.at(1)}"
 
     @queue = Queue.new
@@ -38,8 +38,8 @@ class FunnelServer
     devices = []
 
     if com == nil then
-    Dir.foreach("/dev") do | deviceName |
-      devices.push(deviceName) if (deviceName.index("cu.usbserial") == 0)
+    Dir.foreach('/dev') do | deviceName |
+      devices.push('/dev' + deviceName) if (deviceName.index("cu.usbserial") == 0)
     end
 
     if (devices.size < 1) then
@@ -70,7 +70,7 @@ class FunnelServer
         [PORT_DIRECTION_I, PORT_TYPE_D],  # Button
       ]
 
-    @gio = GainerIO.new('/dev/' + devices.at(0), 38400)
+    @gio = GainerIO.new(devices.at(0), 38400)
     @gio.onEvent = method(:onEvent)
     reboot_io_module
     STDOUT.flush
@@ -298,6 +298,14 @@ p settings
 port = settings["port"]
 com = settings["com"]
 port = 5000 if port == nil
+
+if com == nil then
+puts "please enter COM port number (e.g. '4' for 'COM4')"
+STDOUT.flush
+port_number = gets
+port_number.chomp!
+com = "COM#{port_number.to_i}"
+end
 
 # instantiate the FunnelServer and set to run
 server = FunnelServer.new(port, com)
