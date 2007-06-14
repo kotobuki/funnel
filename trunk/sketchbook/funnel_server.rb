@@ -2,10 +2,11 @@
 
 require 'socket'
 require 'timeout'
-require "yaml"
+require 'yaml'
+require 'rbconfig'
 
 require 'osc'
-require "gainer_io"
+require 'gainer_io'
 
 class FunnelServer
 
@@ -38,15 +39,24 @@ class FunnelServer
     devices = []
 
     if com == nil then
-    Dir.foreach('/dev') do | deviceName |
-      devices.push('/dev' + deviceName) if (deviceName.index("cu.usbserial") == 0)
-    end
+      case Config::CONFIG["target_os"].downcase
+      when 'darwin8.0'
+        # i.e. Mac OS X
+        Dir.foreach('/dev') do | deviceName |
+          devices.push('/dev/' + deviceName) if (deviceName.index("cu.usbserial") == 0)
+        end
 
-    if (devices.size < 1) then
-      raise "Can't find any I/O modules..."
-    end
-    else
-        devices = [com]
+        if (devices.size < 1) then
+          raise "Can't find any I/O modules..."
+        end
+      else
+        # i.e. Windows: Should be replaced this section with more better implementation...
+        puts "please enter COM port number (e.g. '4' for 'COM4')"
+        STDOUT.flush
+        port_number = gets
+        port_number.chomp!
+        devices = ["COM#{port_number.to_i}"]
+      end
     end
 
     @configuration = [
@@ -297,15 +307,7 @@ settings = YAML.load_file('settings.yaml')
 p settings
 port = settings["port"]
 com = settings["com"]
-port = 5000 if port == nil
-
-if com == nil then
-puts "please enter COM port number (e.g. '4' for 'COM4')"
-STDOUT.flush
-port_number = gets
-port_number.chomp!
-com = "COM#{port_number.to_i}"
-end
+port = 9000 if port == nil
 
 # instantiate the FunnelServer and set to run
 server = FunnelServer.new(port, com)
