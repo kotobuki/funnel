@@ -9,9 +9,36 @@ settings = YAML.load_file('settings.yaml')
 port = settings["port"]
 port = 5432 if port == nil
 
+PORT_AIN = 0
+PORT_DIN = 1
+PORT_AOUT = 2
+PORT_DOUT = 3
+
+@configuration = [
+    PORT_AIN,
+    PORT_AIN,
+    PORT_AIN,
+    PORT_AIN,
+    PORT_DIN,
+    PORT_DIN,
+    PORT_DIN,
+    PORT_DIN,
+    PORT_AOUT,
+    PORT_AOUT,
+    PORT_AOUT,
+    PORT_AOUT,
+    PORT_DOUT,
+    PORT_DOUT,
+    PORT_DOUT,
+    PORT_DOUT,
+    PORT_DOUT,  # LED
+    PORT_DIN,  # Button
+  ]
+
 @client = TCPSocket.open('localhost', port)
-@receiver = TCPSocket.open('localhost', port + 1)
 p @client
+@receiver = TCPSocket.open('localhost', port + 1)
+p @receiver
 
 @xs = []
 
@@ -49,9 +76,11 @@ th = Thread.new do
   end
 end
 
-@xs << OSC::Message.new('/query', nil)
+@xs << OSC::Message.new('/configure', 'i', *@configuration)
+@xs << OSC::Message.new('/samplingInterval', 'i', 20)
 @xs << OSC::Message.new('/reset', nil)
 @xs << OSC::Message.new('/polling', 'i', 1)
+
 send_commands
 
 sleep(10)

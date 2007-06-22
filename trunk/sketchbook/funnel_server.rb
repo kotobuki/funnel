@@ -15,15 +15,24 @@ class FunnelServer
   PORT_TYPE_A = 0
   PORT_TYPE_D = 1
 
-  QUIT_SERVER = '/quit'
-  RESET       = '/reset'
-  POLLING     = '/polling'
-  QUERY       = '/query'
-  SET_OUTPUTS = '/out'
-  GET_INPUTS  = '/in'
+  PORT_AIN = 0
+  PORT_DIN = 1
+  PORT_AOUT = 2
+  PORT_DOUT = 3
 
-  NO_ERROR    = 0
-  ERROR       = 1
+  QUIT_SERVER       = '/quit'
+  RESET             = '/reset'
+  POLLING           = '/polling'
+#  QUERY            = '/query'
+  CONFIGURE         = '/configure'
+  SAMPLING_INTERVAL = '/samplingInterval'
+  SET_OUTPUTS       = '/out'
+  GET_INPUTS        = '/in'
+
+  NO_ERROR            = 0
+  ERROR               = 1
+  REBOOT_ERROR        = 2
+  CONFIGURATION_ERROR = 3
 
   def initialize(port, com)
     @server = TCPServer.open(port)
@@ -81,12 +90,12 @@ class FunnelServer
       ]
 
     @gio = GainerIO.new(devices.at(0), 38400)
-    @gio.onEvent = method(:onEvent)
+    @gio.onEvent = method(:event_handler)
     reboot_io_module
     STDOUT.flush
   end
 
-  def onEvent(type, values)
+  def event_handler(type, values)
     if (type == GainerIO::AIN_EVENT) then
       i = 0
       values.each do |value|
@@ -200,13 +209,32 @@ def client_watcher
         client.send(reply.encode, 0)
       end
 
-      add_method(callbacks, QUERY) do |message|
-        oscMessages = []
-        @configuration.size.times do |i|
-          oscMessages[i] = OSC::Message.new('/query/' + i.to_s, 'ii', *@configuration.at(i))
-        end
+#      add_method(callbacks, QUERY) do |message|
+#        oscMessages = []
+#        @configuration.size.times do |i|
+#          oscMessages[i] = OSC::Message.new('/query/' + i.to_s, 'ii', *@configuration.at(i))
+#        end
+#
+#        reply = OSC::Bundle.new(nil, *oscMessages)
+#        client.send(reply.encode, 0)
+#      end
 
-        reply = OSC::Bundle.new(nil, *oscMessages)
+      add_method(callbacks, CONFIGURE) do |message|
+        puts "configuration requestd"
+        i = 0
+        message.to_a.each do |porttype|
+          puts "port #{i}: #{porttype}"
+          i += 1
+        end
+        STDOUT.flush
+        reply = OSC::Message.new(CONFIGURE, 'i', NO_ERROR)
+        client.send(reply.encode, 0)
+      end
+
+      add_method(callbacks, SAMPLING_INTERVAL) do |message|
+        puts "sampling interval: #{message.to_a} ms"
+        STDOUT.flush
+        reply = OSC::Message.new(SAMPLING_INTERVAL, 'i', NO_ERROR)
         client.send(reply.encode, 0)
       end
 
