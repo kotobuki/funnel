@@ -5,12 +5,10 @@ require "funneldefs"
 
 module Funnel
   class GainerIO < Funnel::SerialPort
-    @receiver = nil
-    @quitRequested = false
+    @service_thread = nil
+    @quit_requested = false
     @commands = []
-    @eventHandler
-    
-    attr_reader :receiver
+    @event_handler
 
     def initialize(port, baudrate)
       super(port, baudrate)
@@ -18,6 +16,9 @@ module Funnel
       @led_events = Queue.new
       @aout_events = Queue.new
       @dout_events = Queue.new
+      @version_events = Queue.new
+      @reboot_events = Queue.new
+      @config_events = Queue.new
     end
 
     def talk(command, reply_length)
@@ -36,17 +37,28 @@ module Funnel
     end
 
     def onEvent=(handler)
-      @eventHandler = handler
+      @event_handler = handler
+    end
+
+    def clear_receive_buffer
+      if (bytes_available > 0) then
+        rest = read(bytes_available)
+      end
     end
 
     def reboot
-      reply = talk("Q", 2)
+      reply = ''
+      @command_queue.push("Q")
+      timeout(5) {reply = @reboot_events.pop}
       sleep(0.1)
       return reply
     end
 
     def getVersion
-      talk("?", 10)
+      reply = ''
+      @command_queue.push("?")
+      timeout(5) {reply = @version_events.pop}
+      return reply
     end
 
     # values: [port, val1, val2...]
@@ -69,19 +81,13 @@ module Funnel
     end
 
     def turnOnLED
-      #    talk("h", 2)
-#      talk("h", 0)
-#      sleep(0.05)
       @command_queue.push('h')
-      @led_events.pop # do handle timeout here!!!
+      timeout(0.1) {@led_events.pop} # do handle timeout here!!!
     end
 
     def turnOffLED
-      #    talk("l", 2)
-#      talk("l", 0)
-#      sleep(0.05)
       @command_queue.push('l')
-      @led_events.pop # do handle timeout here!!!
+      timeout(0.1) {@led_events.pop} # do handle timeout here!!!
     end
 
     def analogOutput(port, value)
@@ -89,44 +95,44 @@ module Funnel
       if value < 0 then value = 0
       elsif value > 255 then value = 255
       end
-#      talk("a" + format("%X", port) + format("%02X", value), 0)
       @command_queue.push("a" + format("%X", port) + format("%02X", value))
       @aout_events.pop # do handle timeout here!!!
     end
 
     def setConfiguration(configuration)
-      reply = talk("KONFIGURATION_#{configuration}", 16)
+      reply = ''
+      @command_queue.push("KONFIGURATION_#{configuration}")
+      timeout(5) {reply = @config_events.pop}
       sleep(0.1)
       return reply
     end
 
-    def onEvent(i)
-      puts "event: #{i}"
-    end
-
     def beginAnalogInput
       @command_queue.push('i')
-#      talk("i", 0)
     end
 
     def endAnalogInput
       @command_queue.push('E')
-#      talk("E", 0)
     end
 
     def startPolling
       received = ''
       commands = []
+      @quit_requested = false
 
-      @receiver = Thread.new do
-        while !@quitRequested
+      @service_thread = Thread.new do
+        while !@quit_requested
           if !@command_queue.empty? then
             command_to_output = @command_queue.pop
             write(command_to_output + '*')
           end
 
 #          sleep(0.01) while (bytes_available < 1)
-          next if (bytes_available < 1)
+#          next if (bytes_available < 1)
+          if (bytes_available < 1) then
+            sleep(0.01)
+            next
+          end
 
           received << read(bytes_available)
           count = received.scan(/\*/).length
@@ -147,32 +153,40 @@ module Funnel
 
     def dispatchEvents
       return if (@commands == nil)
-      return if (@eventHandler == nil)
+      return if (@event_handler == nil)
 
       @commands.each do |command|
         case command[0]
         when ?i
           values = command.unpack('xa2a2a2a2')
-          @eventHandler.call(AIN_EVENT, [values.at(0).hex, values.at(1).hex, values.at(2).hex, values.at(3).hex])
+          @event_handler.call(AIN_EVENT, [values.at(0).hex, values.at(1).hex, values.at(2).hex, values.at(3).hex])
         when ?h
           @led_events.push(NO_ERROR)
         when ?l
           @led_events.push(NO_ERROR)
         when ?a
           @aout_events.push(NO_ERROR)
+        when ??
+          @version_events.push(command)
+        when ?Q
+          @reboot_events.push(command)
+        when ?K
+          @config_events.push(command)
         when ?N
-          @eventHandler.call(BUTTON_EVENT, [1])
+          @event_handler.call(BUTTON_EVENT, [1])
         when ?F
-          @eventHandler.call(BUTTON_EVENT, [0])
+          @event_handler.call(BUTTON_EVENT, [0])
+        when ?E
+          # puts "endAnalogInput"
         else
-          puts "unknown! #{command[0].chr}"
+          puts "unknown data: #{command[0].chr}"
         end
       end
     end
 
     def finishPolling
-      @quitRequested = true
-      @receiver.join(1)
+      @quit_requested = true
+      @service_thread.join(1)
     end
   end
 end
