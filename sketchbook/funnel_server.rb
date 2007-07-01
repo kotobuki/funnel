@@ -5,21 +5,12 @@ require 'timeout'
 require 'yaml'
 require 'rbconfig'
 
+require 'funneldefs'
 require 'osc'
 require 'gainer_io'
 
+module Funnel
 class FunnelServer
-
-  PORT_DIRECTION_I = 0
-  PORT_DIRECTION_O = 1
-  PORT_TYPE_A = 0
-  PORT_TYPE_D = 1
-
-  PORT_AIN = 0
-  PORT_DIN = 1
-  PORT_AOUT = 2
-  PORT_DOUT = 3
-
   QUIT_SERVER       = '/quit'
   RESET             = '/reset'
   POLLING           = '/polling'
@@ -29,11 +20,6 @@ class FunnelServer
   SET_OUTPUTS       = '/out'
   GET_INPUTS        = '/in'
 
-  NO_ERROR            = 0
-  ERROR               = 1
-  REBOOT_ERROR        = 2
-  CONFIGURATION_ERROR = 3
-
   def initialize(port, com)
     @server = TCPServer.open(port)
     puts "server: #{@server.addr.at(2)}, #{@server.addr.at(1)}"
@@ -42,6 +28,7 @@ class FunnelServer
 
     @queue = Queue.new
     @clients = []
+    @clients0 = []
     @ain = [0, 0, 0, 0]
     @button = 0
 
@@ -69,24 +56,24 @@ class FunnelServer
     end
 
     @configuration = [
-        [PORT_DIRECTION_I, PORT_TYPE_A],
-        [PORT_DIRECTION_I, PORT_TYPE_A],
-        [PORT_DIRECTION_I, PORT_TYPE_A],
-        [PORT_DIRECTION_I, PORT_TYPE_A],
-        [PORT_DIRECTION_I, PORT_TYPE_D],
-        [PORT_DIRECTION_I, PORT_TYPE_D],
-        [PORT_DIRECTION_I, PORT_TYPE_D],
-        [PORT_DIRECTION_I, PORT_TYPE_D],
-        [PORT_DIRECTION_O, PORT_TYPE_A],
-        [PORT_DIRECTION_O, PORT_TYPE_A],
-        [PORT_DIRECTION_O, PORT_TYPE_A],
-        [PORT_DIRECTION_O, PORT_TYPE_A],
-        [PORT_DIRECTION_O, PORT_TYPE_D],
-        [PORT_DIRECTION_O, PORT_TYPE_D],
-        [PORT_DIRECTION_O, PORT_TYPE_D],
-        [PORT_DIRECTION_O, PORT_TYPE_D],
-        [PORT_DIRECTION_O, PORT_TYPE_D],  # LED
-        [PORT_DIRECTION_I, PORT_TYPE_D],  # Button
+        [PORT_AIN],   # 0
+        [PORT_AIN],   # 1
+        [PORT_AIN],   # 2
+        [PORT_AIN],   # 3
+        [PORT_DIN],   # 4
+        [PORT_DIN],   # 5
+        [PORT_DIN],   # 6
+        [PORT_DIN],   # 7
+        [PORT_AOUT],  # 8
+        [PORT_AOUT],  # 9
+        [PORT_AOUT],  # 10
+        [PORT_AOUT],  # 11
+        [PORT_DOUT],  # 12
+        [PORT_DOUT],  # 13
+        [PORT_DOUT],  # 14
+        [PORT_DOUT],  # 15
+        [PORT_DOUT],  # 16: LED
+        [PORT_DIN],   # 17: Button
       ]
 
     @gio = GainerIO.new(devices.at(0), 38400)
@@ -96,14 +83,14 @@ class FunnelServer
   end
 
   def event_handler(type, values)
-    if (type == GainerIO::AIN_EVENT) then
+    if (type == Funnel::AIN_EVENT) then
       i = 0
       values.each do |value|
         @ain[i] = value / 255.0
         i += 1
       end
       @queue.push([0, @ain])
-    elsif (type == GainerIO::BUTTON_EVENT) then
+    elsif (type == Funnel::BUTTON_EVENT) then
       puts "button: #{values}"
       STDOUT.flush
       @button = values.at(0)
@@ -115,6 +102,16 @@ class FunnelServer
   end
   
   def reboot_io_module
+    if false then
+      if @gio.receiver != nil then
+        puts "still running..."
+        @gio.finishPolling
+        10.times do
+          @gio.endAnalogInput
+          sleep(0.1)
+        end
+      end
+    end
     puts @gio.reboot
     puts @gio.getVersion
     puts @gio.setConfiguration(1)
@@ -166,6 +163,7 @@ def client_watcher
   loop do
     Thread.start(@server.accept) do |client|
       puts "server: connected: #{client}"
+      @clients0.push(client)
       STDOUT.flush
 
       callbacks = []
@@ -173,6 +171,7 @@ def client_watcher
       add_method(callbacks, QUIT_SERVER) do |message|
         puts "quit requested"
         STDOUT.flush
+        @gio.finishPolling
         @gio.endAnalogInput
         reply = OSC::Message.new(QUIT_SERVER, 'i', NO_ERROR)
         client.send(reply.encode, 0)
@@ -273,6 +272,12 @@ def client_watcher
       puts "server: disconnected: #{client}"
       STDOUT.flush
       client.close
+      @clients0.delete(client)
+      if @clients0.size == 0 then
+        puts "there are no clients..."
+        @gio.finishPolling
+        @gio.endAnalogInput
+      end
     end
   end
 end
@@ -328,7 +333,7 @@ def run
 end
 
 end
-
+end
 
 # load setting from the setting file
 settings = YAML.load_file('settings.yaml')
@@ -338,5 +343,5 @@ com = settings["com"]
 port = 9000 if port == nil
 
 # instantiate the FunnelServer and set to run
-server = FunnelServer.new(port, com)
+server = Funnel::FunnelServer.new(port, com)
 server.run
