@@ -28,7 +28,7 @@ class FunnelServer
 
     @queue = Queue.new
     @clients = []
-    @clients0 = []
+    @command_clients = []
     @ain = [0, 0, 0, 0]
     @button = 0
 
@@ -78,6 +78,7 @@ class FunnelServer
 
     @gio = GainerIO.new(devices.at(0), 38400)
     @gio.onEvent = method(:event_handler)
+    @gio.startPolling
     reboot_io_module
     STDOUT.flush
   end
@@ -102,16 +103,6 @@ class FunnelServer
   end
   
   def reboot_io_module
-    if false then
-      if @gio.receiver != nil then
-        puts "still running..."
-        @gio.finishPolling
-        10.times do
-          @gio.endAnalogInput
-          sleep(0.1)
-        end
-      end
-    end
     puts @gio.reboot
     puts @gio.getVersion
     puts @gio.setConfiguration(1)
@@ -162,8 +153,8 @@ end
 def client_watcher
   loop do
     Thread.start(@server.accept) do |client|
-      puts "server: connected: #{client}"
-      @clients0.push(client)
+      puts "connected to the server: #{client}"
+      @command_clients.push(client)
       STDOUT.flush
 
       callbacks = []
@@ -171,8 +162,8 @@ def client_watcher
       add_method(callbacks, QUIT_SERVER) do |message|
         puts "quit requested"
         STDOUT.flush
-        @gio.finishPolling
         @gio.endAnalogInput
+        @gio.finishPolling
         reply = OSC::Message.new(QUIT_SERVER, 'i', NO_ERROR)
         client.send(reply.encode, 0)
         exit
@@ -191,11 +182,9 @@ def client_watcher
           puts "begin polling requested"
           STDOUT.flush
           @gio.beginAnalogInput
-          @gio.startPolling
         elsif message.to_a.at(0) == 0 then
           puts "end polling requested"
           STDOUT.flush
-          @gio.finishPolling
           @gio.endAnalogInput
         else
           puts "invalid value: #{message.to_a.at(0)}"
@@ -269,14 +258,15 @@ def client_watcher
         end
       end
 
-      puts "server: disconnected: #{client}"
+      puts "disconnected from the server: #{client}"
       STDOUT.flush
       client.close
-      @clients0.delete(client)
-      if @clients0.size == 0 then
-        puts "there are no clients..."
-        @gio.finishPolling
+      @command_clients.delete(client)
+      if @command_clients.size == 0 then
+        puts "there are no clients running..."
         @gio.endAnalogInput
+        sleep(0.5)
+        @gio.clear_receive_buffer
       end
     end
   end
@@ -305,10 +295,10 @@ def notify_service
         if s == @notifier
           client = s.accept
           socks.push(client)
-          puts "notifier: connected: #{client}"
+          puts "connected to the notifier: #{client}"
           STDOUT.flush
         elsif s.eof?
-          puts "notifier: disconnected: #{client}"
+          puts "disconnected from the notifier: #{client}"
           STDOUT.flush
           s.close
           socks.delete(s)

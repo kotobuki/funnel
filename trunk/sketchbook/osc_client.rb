@@ -81,7 +81,7 @@ end
 @xs << OSC::Message.new('/reset', nil)
 @xs << OSC::Message.new('/polling', 'i', 1)
 
-20.times do
+10.times do
   @xs << OSC::Message.new('/out', 'if', 16, 1)
   @xs << OSC::Message.new('/out', 'if', 16, 0)
 end
@@ -91,7 +91,7 @@ send_commands
 sleep(5)
 
 @xs << OSC::Message.new('/polling', 'i', 0)
-@xs << OSC::Message.new('/quit', nil)
+#@xs << OSC::Message.new('/quit', nil)
 send_commands
 
 th.join
