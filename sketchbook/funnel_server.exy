@@ -8,6 +8,7 @@ general:
 
 file:
   funnel_server.rb:
+  funneldefs.rb:
   socket.so:
     file: C:/Program Files/ruby-1.8/lib/ruby/1.8/i386-mswin32/socket.so
     type: extension-library
