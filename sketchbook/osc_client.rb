@@ -86,6 +86,8 @@ end
   @xs << OSC::Message.new('/out', 'if', 16, 0)
 end
 
+@xs << OSC::Message.new('/in', 'ii', 3, 100)
+
 send_commands
 
 sleep(5)

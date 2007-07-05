@@ -29,7 +29,7 @@ class FunnelServer
     @queue = Queue.new
     @clients = []
     @command_clients = []
-    @ain = [0, 0, 0, 0]
+    @input = [0, 0, 0, 0, 0, 0, 0, 0]
     @button = 0
 
     devices = []
@@ -87,10 +87,10 @@ class FunnelServer
     if (type == Funnel::AIN_EVENT) then
       i = 0
       values.each do |value|
-        @ain[i] = value / 255.0
+        @input[i] = value / 255.0
         i += 1
       end
-      @queue.push([0, @ain])
+      @queue.push([0, @input])
     elsif (type == Funnel::BUTTON_EVENT) then
       puts "button: #{values}"
       STDOUT.flush
@@ -235,10 +235,10 @@ def client_watcher
       add_method(callbacks, GET_INPUTS) do |message|
         from = message.to_a.at(0)
         ports = message.to_a.at(1)
-        if (0 <= from and from < 4) then
-          values = @ain[from, ports]
+        if (0 <= from and from < 8) then
+          values = @input[from, ports]
           return if values == nil
-          reply = OSC::Message.new(GET_INPUTS, 'i' + 'f' * values.size, 0, *values)
+          reply = OSC::Message.new(GET_INPUTS, 'i' + 'f' * values.size, from, *values)
           client.send(reply.encode, 0)
         elsif (from == 17 and ports == 1) then
           reply = OSC::Message.new(GET_INPUTS, 'if', 17, @button)
