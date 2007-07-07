@@ -29,8 +29,6 @@ class FunnelServer
     @queue = Queue.new
     @clients = []
     @command_clients = []
-    @input = [0, 0, 0, 0, 0, 0, 0, 0]
-    @button = 0
 
     devices = []
 
@@ -62,30 +60,8 @@ class FunnelServer
     STDOUT.flush
   end
 
-  def event_handler(type, values)
-    if (type == Funnel::AIN_EVENT) then
-      i = 0
-      values.each do |value|
-        @input[i] = value / 255.0
-        i += 1
-      end
-      @queue.push([0, @input])
-    elsif (type == Funnel::DIN_EVENT) then
-      i = 4
-      values.each do |value|
-        @input[i] = value
-        i += 1
-      end
-      @queue.push([0, @input])
-    elsif (type == Funnel::BUTTON_EVENT) then
-      puts "button: #{values}"
-      STDOUT.flush
-      @button = values.at(0)
-      @queue.push([17, [@button]])      
-    else
-      puts "#{type}: #{value}"
-      STDOUT.flush
-    end
+  def event_handler(port, values)
+    @queue.push([port, values])
   end
   
   def reboot_io_module
@@ -158,9 +134,14 @@ def client_watcher
       add_method(callbacks, RESET) do |message|
         puts "reset requested"
         STDOUT.flush
-        reboot_io_module
-        reply = OSC::Message.new(RESET, 'i', NO_ERROR)
-        client.send(reply.encode, 0)
+        begin
+          reboot_io_module
+          reply = OSC::Message.new(RESET, 'i', NO_ERROR)
+          client.send(reply.encode, 0)
+        rescue TimeoutError
+          reply = OSC::Message.new(RESET, 'i', REBOOT_ERROR)
+          client.send(reply.encode, 0)
+        end
       end
 
       add_method(callbacks, POLLING) do |message|
@@ -195,11 +176,11 @@ def client_watcher
 
       add_method(callbacks, CONFIGURE) do |message|
         puts "configuration requestd"
-        i = 0
-        message.to_a.each do |porttype|
-          puts "port #{i}: #{porttype}"
-          i += 1
-        end
+#        i = 0
+#        message.to_a.each do |porttype|
+#          puts "port #{i}: #{porttype}"
+#          i += 1
+#        end
         puts @gio.reboot
         begin
           puts @gio.setConfiguration(message.to_a)
@@ -228,15 +209,10 @@ def client_watcher
       add_method(callbacks, GET_INPUTS) do |message|
         from = message.to_a.at(0)
         ports = message.to_a.at(1)
-        if (0 <= from and from < 8) then
-          values = @input[from, ports]
-          return if values == nil
-          reply = OSC::Message.new(GET_INPUTS, 'i' + 'f' * values.size, from, *values)
-          client.send(reply.encode, 0)
-        elsif (from == 17 and ports == 1) then
-          reply = OSC::Message.new(GET_INPUTS, 'if', 17, @button)
-          client.send(reply.encode, 0)
-        end
+        values = @gio.input[from, ports]
+        return if values == nil
+        reply = OSC::Message.new(GET_INPUTS, 'i' + 'f' * values.size, from, *values)
+        client.send(reply.encode, 0)
       end
 
       while true

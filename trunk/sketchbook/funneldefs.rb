@@ -12,7 +12,7 @@ module Funnel
   CONFIGURATION_ERROR = 3
 
   # event definitions
-  AIN_EVENT = 0
-  DIN_EVENT = 1
-  BUTTON_EVENT = 2
+#  AIN_EVENT = 0
+#  DIN_EVENT = 1
+#  BUTTON_EVENT = 2
 end

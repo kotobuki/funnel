@@ -4,32 +4,82 @@ require "serial_port"
 require "funneldefs"
 
 module Funnel
-  class GainerIO < Funnel::SerialPort
+  class GainerIO < SerialPort
+    LED_PORT = 16
+    BUTTON_PORT = 17
+
     CONFIGURATION_1 = [
-      PORT_AIN,   # 0
-      PORT_AIN,   # 1
-      PORT_AIN,   # 2
-      PORT_AIN,   # 3
-      PORT_DIN,   # 4
-      PORT_DIN,   # 5
-      PORT_DIN,   # 6
-      PORT_DIN,   # 7
-      PORT_AOUT,  # 8
-      PORT_AOUT,  # 9
-      PORT_AOUT,  # 10
-      PORT_AOUT,  # 11
-      PORT_DOUT,  # 12
-      PORT_DOUT,  # 13
-      PORT_DOUT,  # 14
-      PORT_DOUT,  # 15
-      PORT_DOUT,  # 16: LED
-      PORT_DIN,   # 17: Button
+      PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
+      PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
+      PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
+      PORT_DOUT, PORT_DIN  # LED, BUTTON
     ]
+
+    CONFIGURATION_2 = [
+      PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
+      PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
+      PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
+      PORT_DOUT, PORT_DIN  # LED, BUTTON
+    ]
+
+    CONFIGURATION_3 = [
+      PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
+      PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
+      PORT_DOUT, PORT_DIN  # LED, BUTTON
+    ]
+
+    CONFIGURATION_4 = [
+      PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
+      PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
+      PORT_DOUT, PORT_DIN  # LED, BUTTON
+    ]
+
+    CONFIGURATION_5 = [
+      PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+      PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+      PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+      PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+    ]
+
+    CONFIGURATION_6 = [
+      PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
+      PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
+      PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
+      PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
+    ]
+
+    CONFIGURATION_7 = [
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, # [0..7, 0]
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, # [0..7, 1]
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, # [0..7, 2]
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, # [0..7, 3]
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, # [0..7, 4]
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, # [0..7, 5]
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, # [0..7, 6]
+      PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, # [0..7, 7]
+    ]
+
+    CONFIGURATION_8 = [
+      PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+      PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+      PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
+      PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
+    ]
+
+    attr_reader :input
 
     @service_thread = nil
     @quit_requested = false
     @commands = []
     @event_handler
+    @input = []
+    @configuration = 0
 
     def initialize(port, baudrate)
       super(port, baudrate)
@@ -40,10 +90,6 @@ module Funnel
       @version_events = Queue.new
       @reboot_events = Queue.new
       @config_events = Queue.new
-      @ain_port_range = Range.new(0,3)
-      @din_port_range = Range.new(4,7)
-      @aout_port_range = Range.new(8,11)
-      @dout_port_range = Range.new(12,15)
     end
 
     def onEvent=(handler)
@@ -74,14 +120,13 @@ module Funnel
     # values: [port, val1, val2...]
     def setOutputs(values)
       port = values.at(0)
-      return if (port < 0) or (port > 17)
       values.shift
       values.each do |value|
         if @aout_port_range.include?(port) then
           analogOutput(port, value)
         elsif @dout_port_range.include?(port) then
           digitalOutput(port, value)
-        elsif (port == 16) then
+        elsif @configuration <= 4 and port == LED_PORT then
           if (value == 0) then
             turnOffLED
           else
@@ -103,13 +148,26 @@ module Funnel
     end
 
     def analogOutput(port, value)
-#      puts "aout: #{port}, #{value}"
-      value = value * 255
-      if value < 0 then value = 0
-      elsif value > 255 then value = 255
+      if @configuration == 7 then
+        value = value * 16
+        if value < 0 then value = 0
+        elsif value > 15 then value = 15
+        end
+        8.times do |y|
+          command = "a" + format("%X", y)
+          line = value[y * 8, 8]
+          line.size.times {|x| command << format("%01X", line.at(x))}
+          @command_queue.push(command)
+          timeout(0.1) {@aout_events.pop}
+        end
+      else
+        value = value * 255
+        if value < 0 then value = 0
+        elsif value > 255 then value = 255
+        end
+        @command_queue.push("a" + format("%X", port - @aout_port_range.first) + format("%02X", value))
+        timeout(0.1) {@aout_events.pop} # do handle timeout here!!!
       end
-      @command_queue.push("a" + format("%X", port - @aout_port_range.first) + format("%02X", value))
-      timeout(0.1) {@aout_events.pop} # do handle timeout here!!!
     end
 
     def digitalOutput(port, value)
@@ -123,17 +181,85 @@ module Funnel
     end
 
     def setConfiguration(config_data)
-      p config_data
-      config_num = 0
       if (CONFIGURATION_1 <=> config_data) == 0 then
-        puts "CONFIGURATION_1"
-        config_num = 1
+        @configuration = 1
+        @ain_port_range = Range.new(0, 3)
+        @din_port_range = Range.new(4, 7)
+        @aout_port_range = Range.new(8, 11)
+        @dout_port_range = Range.new(12, 15)
+        @input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 18 ports
+        @ain_ports = 4
+        @din_ports = 4
+      elsif (CONFIGURATION_2 <=> config_data) == 0 then
+        @configuration = 2
+        @ain_port_range = Range.new(0, 7)
+        @din_port_range = nil
+        @aout_port_range = Range.new(8, 11)
+        @dout_port_range = Range.new(12, 15)
+        @input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 18 ports
+        @ain_ports = 8
+        @din_ports = 0
+      elsif (CONFIGURATION_3 <=> config_data) == 0 then
+        @configuration = 3
+        @ain_port_range = Range.new(0, 3)
+        @din_port_range = Range.new(4, 7)
+        @aout_port_range = Range.new(8, 15)
+        @dout_port_range = nil
+        @input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 18 ports
+        @ain_ports = 4
+        @din_ports = 4
+      elsif (CONFIGURATION_4 <=> config_data) == 0 then
+        @configuration = 4
+        @ain_port_range = Range.new(0, 7)
+        @din_port_range = nil
+        @aout_port_range = Range.new(8, 15)
+        @dout_port_range = nil
+        @input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 18 ports
+        @ain_ports = 8
+        @din_ports = 0
+      elsif (CONFIGURATION_5 <=> config_data) == 0 then
+        @configuration = 5
+        @ain_port_range = nil
+        @din_port_range = Range.new(0, 15)
+        @aout_port_range = nil
+        @dout_port_range = nil
+        @input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 16 ports
+        @ain_ports = 0
+        @din_ports = 16
+      elsif (CONFIGURATION_6 <=> config_data) == 0 then
+        @configuration = 6
+        @ain_port_range = nil
+        @din_port_range = nil
+        @aout_port_range = nil
+        @dout_port_range = Range.new(0, 15)
+        @input.clear
+        @ain_ports = 0
+        @din_ports = 0
+      elsif (CONFIGURATION_7 <=> config_data) == 0 then
+        @configuration = 7
+        @ain_port_range = nil
+        @din_port_range = nil
+        @aout_port_range = Range.new(0, 63)
+        @dout_port_range = nil
+        @input.clear
+        @ain_ports = 0
+        @din_ports = 0
+      elsif (CONFIGURATION_8 <=> config_data) == 0 then
+        @configuration = 8
+        @ain_port_range = nil
+        @din_port_range = Range.new(0, 7)
+        @aout_port_range = nil
+        @dout_port_range = Range.new(8, 15)
+        @input = [0, 0, 0, 0, 0, 0, 0, 0]
+        @ain_ports = 0
+        @din_ports = 8
       else
-        puts "invalid configuration"
-        raise ArgumentError, "invalid configuration"
+        puts "Invalid configuration!"
+        raise ArgumentError, "Invalid configuration"
       end
+      puts "Requested configuration: #{@configuration}"
       reply = ''
-      @command_queue.push("KONFIGURATION_#{config_num}")
+      @command_queue.push("KONFIGURATION_#{@configuration}")
       timeout(5) {reply = @config_events.pop}
       sleep(0.1)
       return reply
@@ -188,12 +314,15 @@ module Funnel
       @commands.each do |command|
         case command[0]
         when ?i
-          values = command.unpack('xa2a2a2a2')
-          @event_handler.call(AIN_EVENT, [values.at(0).hex, values.at(1).hex, values.at(2).hex, values.at(3).hex])
+          values = command.unpack('x' + 'a2' * @ain_ports)
+          offset = @ain_port_range.first
+          @ain_ports.times {|i| @input[offset + i] = values.at(i).hex / 255.0}   # convert from integer to float
+          @event_handler.call(offset, @input[offset, @ain_ports])
         when ?R
-          value = command.unpack('xa4')
-          puts "#{value}"
-          @event_handler.call(DIN_EVENT, [value.hex & 0x1, value.hex & 0x2, value.hex & 0x4, value.hex & 0x8])
+          val = command.unpack('xa4').at(0).hex
+          offset = @din_port_range.first
+          @din_ports.times {|i| @input[offset + i] = val[i]}   # convert from bit to integer
+          @event_handler.call(offset, @input[offset, @din_ports])
         when ?h
           @led_events.push(NO_ERROR)
         when ?l
@@ -211,9 +340,11 @@ module Funnel
         when ?K
           @config_events.push(command)
         when ?N
-          @event_handler.call(BUTTON_EVENT, [1])
+          @input[BUTTON_PORT] = 1
+          @event_handler.call(BUTTON_PORT, @input[BUTTON_PORT, 1])
         when ?F
-          @event_handler.call(BUTTON_EVENT, [0])
+          @input[BUTTON_PORT] = 0          
+          @event_handler.call(BUTTON_PORT, @input[BUTTON_PORT, 1])
         when ?E
           # puts "endAnalogInput"
         else

@@ -4,36 +4,12 @@ require "socket"
 require "yaml"
 require 'osc'
 
+require "gainer_io"
+
 # load setting from the setting file
 settings = YAML.load_file('settings.yaml')
 port = settings["port"]
 port = 5432 if port == nil
-
-PORT_AIN = 0
-PORT_DIN = 1
-PORT_AOUT = 2
-PORT_DOUT = 3
-
-@configuration = [
-    PORT_AIN,
-    PORT_AIN,
-    PORT_AIN,
-    PORT_AIN,
-    PORT_DIN,
-    PORT_DIN,
-    PORT_DIN,
-    PORT_DIN,
-    PORT_AOUT,
-    PORT_AOUT,
-    PORT_AOUT,
-    PORT_AOUT,
-    PORT_DOUT,
-    PORT_DOUT,
-    PORT_DOUT,
-    PORT_DOUT,
-    PORT_DOUT,  # LED
-    PORT_DIN,  # Button
-  ]
 
 @client = TCPSocket.open('localhost', port)
 p @client
@@ -77,7 +53,7 @@ th = Thread.new do
 end
 
 @xs << OSC::Message.new('/reset', nil)
-@xs << OSC::Message.new('/configure', 'i', *@configuration)
+@xs << OSC::Message.new('/configure', 'i', *Funnel::GainerIO::CONFIGURATION_2)
 @xs << OSC::Message.new('/samplingInterval', 'i', 20)
 @xs << OSC::Message.new('/polling', 'i', 1)
 
