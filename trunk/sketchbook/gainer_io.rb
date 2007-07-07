@@ -5,6 +5,27 @@ require "funneldefs"
 
 module Funnel
   class GainerIO < Funnel::SerialPort
+    CONFIGURATION_1 = [
+      PORT_AIN,   # 0
+      PORT_AIN,   # 1
+      PORT_AIN,   # 2
+      PORT_AIN,   # 3
+      PORT_DIN,   # 4
+      PORT_DIN,   # 5
+      PORT_DIN,   # 6
+      PORT_DIN,   # 7
+      PORT_AOUT,  # 8
+      PORT_AOUT,  # 9
+      PORT_AOUT,  # 10
+      PORT_AOUT,  # 11
+      PORT_DOUT,  # 12
+      PORT_DOUT,  # 13
+      PORT_DOUT,  # 14
+      PORT_DOUT,  # 15
+      PORT_DOUT,  # 16: LED
+      PORT_DIN,   # 17: Button
+    ]
+
     @service_thread = nil
     @quit_requested = false
     @commands = []
@@ -19,21 +40,10 @@ module Funnel
       @version_events = Queue.new
       @reboot_events = Queue.new
       @config_events = Queue.new
-    end
-
-    def talk(command, reply_length)
-      write(command + '*')
-
-      return nil if (reply_length < 1)
-
-      10.times do
-        break if (bytes_available == reply_length)
-        sleep(0.01)
-      end
-
-      if (bytes_available >= reply_length) then read(reply_length)
-      else return nil
-      end
+      @ain_port_range = Range.new(0,3)
+      @din_port_range = Range.new(4,7)
+      @aout_port_range = Range.new(8,11)
+      @dout_port_range = Range.new(12,15)
     end
 
     def onEvent=(handler)
@@ -64,11 +74,13 @@ module Funnel
     # values: [port, val1, val2...]
     def setOutputs(values)
       port = values.at(0)
-      return if (port < 0) || (port > 17)
+      return if (port < 0) or (port > 17)
       values.shift
       values.each do |value|
-        if (0 <= port and port < 4) then
+        if @aout_port_range.include?(port) then
           analogOutput(port, value)
+        elsif @dout_port_range.include?(port) then
+          digitalOutput(port, value)
         elsif (port == 16) then
           if (value == 0) then
             turnOffLED
@@ -91,17 +103,37 @@ module Funnel
     end
 
     def analogOutput(port, value)
+#      puts "aout: #{port}, #{value}"
       value = value * 255
       if value < 0 then value = 0
       elsif value > 255 then value = 255
       end
-      @command_queue.push("a" + format("%X", port) + format("%02X", value))
-      @aout_events.pop # do handle timeout here!!!
+      @command_queue.push("a" + format("%X", port - @aout_port_range.first) + format("%02X", value))
+      timeout(0.1) {@aout_events.pop} # do handle timeout here!!!
     end
 
-    def setConfiguration(configuration)
+    def digitalOutput(port, value)
+      puts "dout: #{port}, #{value}"
+      if value == 0 then
+        @command_queue.push("L" + format("%01X", port - @dout_port_range.first))
+      else
+        @command_queue.push("H" + format("%01X", port - @dout_port_range.first))
+      end
+      timeout(0.1) {@dout_events.pop} # do handle timeout here!!!
+    end
+
+    def setConfiguration(config_data)
+      p config_data
+      config_num = 0
+      if (CONFIGURATION_1 <=> config_data) == 0 then
+        puts "CONFIGURATION_1"
+        config_num = 1
+      else
+        puts "invalid configuration"
+        raise ArgumentError, "invalid configuration"
+      end
       reply = ''
-      @command_queue.push("KONFIGURATION_#{configuration}")
+      @command_queue.push("KONFIGURATION_#{config_num}")
       timeout(5) {reply = @config_events.pop}
       sleep(0.1)
       return reply
@@ -127,8 +159,6 @@ module Funnel
             write(command_to_output + '*')
           end
 
-#          sleep(0.01) while (bytes_available < 1)
-#          next if (bytes_available < 1)
           if (bytes_available < 1) then
             sleep(0.01)
             next
@@ -160,12 +190,20 @@ module Funnel
         when ?i
           values = command.unpack('xa2a2a2a2')
           @event_handler.call(AIN_EVENT, [values.at(0).hex, values.at(1).hex, values.at(2).hex, values.at(3).hex])
+        when ?R
+          value = command.unpack('xa4')
+          puts "#{value}"
+          @event_handler.call(DIN_EVENT, [value.hex & 0x1, value.hex & 0x2, value.hex & 0x4, value.hex & 0x8])
         when ?h
           @led_events.push(NO_ERROR)
         when ?l
           @led_events.push(NO_ERROR)
         when ?a
           @aout_events.push(NO_ERROR)
+        when ?H
+          @dout_events.push(NO_ERROR)
+        when ?L
+          @dout_events.push(NO_ERROR)
         when ??
           @version_events.push(command)
         when ?Q
