@@ -55,27 +55,6 @@ class FunnelServer
       end
     end
 
-    @configuration = [
-        [PORT_AIN],   # 0
-        [PORT_AIN],   # 1
-        [PORT_AIN],   # 2
-        [PORT_AIN],   # 3
-        [PORT_DIN],   # 4
-        [PORT_DIN],   # 5
-        [PORT_DIN],   # 6
-        [PORT_DIN],   # 7
-        [PORT_AOUT],  # 8
-        [PORT_AOUT],  # 9
-        [PORT_AOUT],  # 10
-        [PORT_AOUT],  # 11
-        [PORT_DOUT],  # 12
-        [PORT_DOUT],  # 13
-        [PORT_DOUT],  # 14
-        [PORT_DOUT],  # 15
-        [PORT_DOUT],  # 16: LED
-        [PORT_DIN],   # 17: Button
-      ]
-
     @gio = GainerIO.new(devices.at(0), 38400)
     @gio.onEvent = method(:event_handler)
     @gio.startPolling
@@ -88,6 +67,13 @@ class FunnelServer
       i = 0
       values.each do |value|
         @input[i] = value / 255.0
+        i += 1
+      end
+      @queue.push([0, @input])
+    elsif (type == Funnel::DIN_EVENT) then
+      i = 4
+      values.each do |value|
+        @input[i] = value
         i += 1
       end
       @queue.push([0, @input])
@@ -105,7 +91,7 @@ class FunnelServer
   def reboot_io_module
     puts @gio.reboot
     puts @gio.getVersion
-    puts @gio.setConfiguration(1)
+#    puts @gio.setConfiguration(GainerIO::CONFIGURATION_1)
   end
 
 def send_notify(message)
@@ -214,9 +200,16 @@ def client_watcher
           puts "port #{i}: #{porttype}"
           i += 1
         end
+        puts @gio.reboot
+        begin
+          puts @gio.setConfiguration(message.to_a)
+          reply = OSC::Message.new(CONFIGURE, 'i', NO_ERROR)
+          client.send(reply.encode, 0)
+        rescue ArgumentError
+          reply = OSC::Message.new(CONFIGURE, 'i', CONFIGURATION_ERROR)
+          client.send(reply.encode, 0)
+        end
         STDOUT.flush
-        reply = OSC::Message.new(CONFIGURE, 'i', NO_ERROR)
-        client.send(reply.encode, 0)
       end
 
       add_method(callbacks, SAMPLING_INTERVAL) do |message|

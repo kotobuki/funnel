@@ -76,14 +76,18 @@ th = Thread.new do
   end
 end
 
+@xs << OSC::Message.new('/reset', nil)
 @xs << OSC::Message.new('/configure', 'i', *@configuration)
 @xs << OSC::Message.new('/samplingInterval', 'i', 20)
-@xs << OSC::Message.new('/reset', nil)
 @xs << OSC::Message.new('/polling', 'i', 1)
 
 10.times do
   @xs << OSC::Message.new('/out', 'if', 16, 1)
   @xs << OSC::Message.new('/out', 'if', 16, 0)
+end
+
+(12..15).each do |i|
+  @xs << OSC::Message.new('/out', 'if', i, 1)
 end
 
 @xs << OSC::Message.new('/in', 'ii', 3, 100)
