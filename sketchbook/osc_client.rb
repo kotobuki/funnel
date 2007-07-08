@@ -8,7 +8,7 @@ require "gainer_io"
 
 # load setting from the setting file
 settings = YAML.load_file('settings.yaml')
-port = settings["port"]
+port = settings["server"]["port"]
 port = 5432 if port == nil
 
 @client = TCPSocket.open('localhost', port)
