@@ -1,2 +1,14 @@
-port: 9000
-#com: COM4
+server:
+  port: 9000
+
+io:
+  -
+    type: Gainer
+    com: 
+
+...
+# the following lines will be ignored
+# please remove "..." to activate multiple I/O module settings
+  -
+    type: Arduino
+    com: COM4

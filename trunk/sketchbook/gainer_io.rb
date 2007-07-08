@@ -114,7 +114,8 @@ module Funnel
       reply = ''
       @command_queue.push("?")
       timeout(5) {reply = @version_events.pop}
-      return reply
+      major, minor, suffix, build = reply.unpack("xaxaxaxa2")
+      return "Gainer I/O module firmware version #{major}.#{minor}.#{suffix} build #{build}"
     end
 
     # values: [port, val1, val2...]

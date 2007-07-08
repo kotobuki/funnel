@@ -20,7 +20,7 @@ class FunnelServer
   SET_OUTPUTS       = '/out'
   GET_INPUTS        = '/in'
 
-  def initialize(port, com)
+  def initialize(port, io)
     @server = TCPServer.open(port)
     puts "server: #{@server.addr.at(2)}, #{@server.addr.at(1)}"
     @notifier = TCPServer.open(port + 1)
@@ -30,9 +30,13 @@ class FunnelServer
     @clients = []
     @command_clients = []
 
+    io.size.times do |i|
+      puts "io[#{i}]: #{io[i]["type"]}"
+    end
+
     devices = []
 
-    if com == nil then
+    if io[0]["com"] == nil then
       case Config::CONFIG["target_os"].downcase
       when 'darwin8.0'
         # i.e. Mac OS X
@@ -51,11 +55,19 @@ class FunnelServer
         port_number.chomp!
         devices = ["COM#{port_number.to_i}"]
       end
+    else
+      # a COM port is specified in the settings file
+      devices = [io[0]["com"]]
     end
 
-    @gio = GainerIO.new(devices.at(0), 38400)
-    @gio.onEvent = method(:event_handler)
-    @gio.startPolling
+    if io[0]["type"] == 'Gainer' then
+      @io = GainerIO.new(devices.at(0), 38400)
+    else
+      raise "Unsupported I/O module: #{io[0]["type"]}"
+    end
+
+    @io.onEvent = method(:event_handler)
+    @io.startPolling
     reboot_io_module
     STDOUT.flush
   end
@@ -65,9 +77,8 @@ class FunnelServer
   end
   
   def reboot_io_module
-    puts @gio.reboot
-    puts @gio.getVersion
-#    puts @gio.setConfiguration(GainerIO::CONFIGURATION_1)
+    puts @io.reboot
+    puts @io.getVersion
   end
 
 def send_notify(message)
@@ -124,8 +135,8 @@ def client_watcher
       add_method(callbacks, QUIT_SERVER) do |message|
         puts "quit requested"
         STDOUT.flush
-        @gio.endAnalogInput
-        @gio.finishPolling
+        @io.endAnalogInput
+        @io.finishPolling
         reply = OSC::Message.new(QUIT_SERVER, 'i', NO_ERROR)
         client.send(reply.encode, 0)
         exit
@@ -148,11 +159,11 @@ def client_watcher
         if message.to_a.at(0) == 1 then
           puts "begin polling requested"
           STDOUT.flush
-          @gio.beginAnalogInput
+          @io.beginAnalogInput
         elsif message.to_a.at(0) == 0 then
           puts "end polling requested"
           STDOUT.flush
-          @gio.endAnalogInput
+          @io.endAnalogInput
         else
           puts "invalid value: #{message.to_a.at(0)}"
           STDOUT.flush
@@ -176,14 +187,9 @@ def client_watcher
 
       add_method(callbacks, CONFIGURE) do |message|
         puts "configuration requestd"
-#        i = 0
-#        message.to_a.each do |porttype|
-#          puts "port #{i}: #{porttype}"
-#          i += 1
-#        end
-        puts @gio.reboot
+        puts @io.reboot
         begin
-          puts @gio.setConfiguration(message.to_a)
+          puts @io.setConfiguration(message.to_a)
           reply = OSC::Message.new(CONFIGURE, 'i', NO_ERROR)
           client.send(reply.encode, 0)
         rescue ArgumentError
@@ -201,7 +207,7 @@ def client_watcher
       end
 
       add_method(callbacks, SET_OUTPUTS) do |message|
-        @gio.setOutputs(message.to_a)
+        @io.setOutputs(message.to_a)
         reply = OSC::Message.new(SET_OUTPUTS, 'i', NO_ERROR)
         client.send(reply.encode, 0)
       end
@@ -209,7 +215,7 @@ def client_watcher
       add_method(callbacks, GET_INPUTS) do |message|
         from = message.to_a.at(0)
         ports = message.to_a.at(1)
-        values = @gio.input[from, ports]
+        values = @io.input[from, ports]
         return if values == nil
         reply = OSC::Message.new(GET_INPUTS, 'i' + 'f' * values.size, from, *values)
         client.send(reply.encode, 0)
@@ -233,9 +239,9 @@ def client_watcher
       @command_clients.delete(client)
       if @command_clients.size == 0 then
         puts "there are no clients running..."
-        @gio.endAnalogInput
+        @io.endAnalogInput
         sleep(0.5)
-        @gio.clear_receive_buffer
+        @io.clear_receive_buffer
       end
     end
   end
@@ -297,10 +303,11 @@ end
 # load setting from the setting file
 settings = YAML.load_file('settings.yaml')
 p settings
-port = settings["port"]
-com = settings["com"]
+port = settings["server"]["port"]
 port = 9000 if port == nil
+io = settings["io"]
+raise ArgumentError, "Can't find settings for I/O modules" unless io
 
 # instantiate the FunnelServer and set to run
-server = Funnel::FunnelServer.new(port, com)
+server = Funnel::FunnelServer.new(port, io)
 server.run
