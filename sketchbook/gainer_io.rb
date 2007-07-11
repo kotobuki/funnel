@@ -108,6 +108,7 @@ module Funnel
       @command_queue.push("Q")
       timeout(1) {reply = @reboot_events.pop}
       sleep(0.1)
+      puts "rebooted successfully"
       return reply
     end
 
@@ -274,6 +275,7 @@ module Funnel
     def end_polling
       @command_queue.push('E')
       timeout(0.5) {@end_events.pop}
+      puts "polling finished"
     end
 
     def start_communication

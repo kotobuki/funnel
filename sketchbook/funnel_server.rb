@@ -80,11 +80,9 @@ class FunnelServer
   def reboot_io_module
     begin
       @io.reboot
-      puts "rebooted"
     rescue TimeoutError
       puts "try rebooting once more..."
       @io.reboot
-      puts "rebooted"
     end
     puts @io.get_version
   end
@@ -196,7 +194,7 @@ def client_watcher
 
       add_method(callbacks, CONFIGURE) do |message|
         puts "configuration requestd"
-        puts @io.reboot
+        @io.reboot
         begin
           puts @io.set_configuration(message.to_a)
           reply = OSC::Message.new(CONFIGURE, 'i', NO_ERROR)
