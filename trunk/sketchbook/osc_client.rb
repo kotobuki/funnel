@@ -42,6 +42,7 @@ th = Thread.new do
     begin
       OSC::Packet.decode(packet).each do |time, message|
 #        puts "received: #{message.address}, #{message.to_a}" if message.to_a.at(0) == 17
+#        puts "#{message.to_a}"
         counter += 1
       end
     rescue EOFError
@@ -53,7 +54,7 @@ th = Thread.new do
 end
 
 @xs << OSC::Message.new('/reset', nil)
-@xs << OSC::Message.new('/configure', 'i', *Funnel::GainerIO::CONFIGURATION_2)
+@xs << OSC::Message.new('/configure', 'i', *Funnel::GainerIO::CONFIGURATION_1)
 @xs << OSC::Message.new('/samplingInterval', 'i', 20)
 @xs << OSC::Message.new('/polling', 'i', 1)
 
@@ -73,7 +74,7 @@ send_commands
 sleep(5)
 
 @xs << OSC::Message.new('/polling', 'i', 0)
-#@xs << OSC::Message.new('/quit', nil)
+@xs << OSC::Message.new('/quit', nil)
 send_commands
 
 th.join

@@ -61,24 +61,32 @@ class FunnelServer
     end
 
     if io[0]["type"] == 'Gainer' then
-      @io = GainerIO.new(devices.at(0), 38400)
+      @io = GainerIO.new(devices.at(0))
     else
       raise "Unsupported I/O module: #{io[0]["type"]}"
     end
 
-    @io.onEvent = method(:event_handler)
-    @io.startPolling
+    @io.on_event = method(:event_handler)
+    @io.start_communication
     reboot_io_module
+    puts "Funnel Server started!"
     STDOUT.flush
   end
 
   def event_handler(port, values)
     @queue.push([port, values])
   end
-  
+
   def reboot_io_module
-    puts @io.reboot
-    puts @io.getVersion
+    begin
+      @io.reboot
+      puts "rebooted"
+    rescue TimeoutError
+      puts "try rebooting once more..."
+      @io.reboot
+      puts "rebooted"
+    end
+    puts @io.get_version
   end
 
 def send_notify(message)
@@ -135,8 +143,9 @@ def client_watcher
       add_method(callbacks, QUIT_SERVER) do |message|
         puts "quit requested"
         STDOUT.flush
-        @io.endAnalogInput
-        @io.finishPolling
+        @io.end_polling
+        @io.reboot
+        @io.finish_communication
         reply = OSC::Message.new(QUIT_SERVER, 'i', NO_ERROR)
         client.send(reply.encode, 0)
         exit
@@ -159,11 +168,11 @@ def client_watcher
         if message.to_a.at(0) == 1 then
           puts "begin polling requested"
           STDOUT.flush
-          @io.beginAnalogInput
+          @io.start_polling
         elsif message.to_a.at(0) == 0 then
           puts "end polling requested"
           STDOUT.flush
-          @io.endAnalogInput
+          @io.end_polling
         else
           puts "invalid value: #{message.to_a.at(0)}"
           STDOUT.flush
@@ -189,7 +198,7 @@ def client_watcher
         puts "configuration requestd"
         puts @io.reboot
         begin
-          puts @io.setConfiguration(message.to_a)
+          puts @io.set_configuration(message.to_a)
           reply = OSC::Message.new(CONFIGURE, 'i', NO_ERROR)
           client.send(reply.encode, 0)
         rescue ArgumentError
@@ -207,7 +216,7 @@ def client_watcher
       end
 
       add_method(callbacks, SET_OUTPUTS) do |message|
-        @io.setOutputs(message.to_a)
+        @io.set_outputs(message.to_a)
         reply = OSC::Message.new(SET_OUTPUTS, 'i', NO_ERROR)
         client.send(reply.encode, 0)
       end
@@ -239,7 +248,7 @@ def client_watcher
       @command_clients.delete(client)
       if @command_clients.size == 0 then
         puts "there are no clients running..."
-        @io.endAnalogInput
+        @io.end_polling
         sleep(0.5)
         @io.clear_receive_buffer
       end
