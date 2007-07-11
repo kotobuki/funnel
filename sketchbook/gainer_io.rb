@@ -81,8 +81,8 @@ module Funnel
     @input = []
     @configuration = 0
 
-    def initialize(port, baudrate)
-      super(port, baudrate)
+    def initialize(port)
+      super(port, 38400)
       @command_queue = Queue.new
       @led_events = Queue.new
       @aout_events = Queue.new
@@ -90,9 +90,10 @@ module Funnel
       @version_events = Queue.new
       @reboot_events = Queue.new
       @config_events = Queue.new
+      @end_events = Queue.new
     end
 
-    def onEvent=(handler)
+    def on_event=(handler)
       @event_handler = handler
     end
 
@@ -105,12 +106,12 @@ module Funnel
     def reboot
       reply = ''
       @command_queue.push("Q")
-      timeout(5) {reply = @reboot_events.pop}
+      timeout(1) {reply = @reboot_events.pop}
       sleep(0.1)
       return reply
     end
 
-    def getVersion
+    def get_version
       reply = ''
       @command_queue.push("?")
       timeout(5) {reply = @version_events.pop}
@@ -119,36 +120,36 @@ module Funnel
     end
 
     # values: [port, val1, val2...]
-    def setOutputs(values)
+    def set_outputs(values)
       port = values.at(0)
       values.shift
       values.each do |value|
         if @aout_port_range.include?(port) then
-          analogOutput(port, value)
+          set_aout(port, value)
         elsif @dout_port_range.include?(port) then
-          digitalOutput(port, value)
+          set_dout(port, value)
         elsif @configuration <= 4 and port == LED_PORT then
           if (value == 0) then
-            turnOffLED
+            turn_off_led
           else
-            turnOnLED
+            turn_on_led
           end
         end
         port += 1
       end
     end
 
-    def turnOnLED
+    def turn_on_led
       @command_queue.push('h')
-      timeout(0.1) {@led_events.pop} # do handle timeout here!!!
+      timeout(0.1) {@led_events.pop}
     end
 
-    def turnOffLED
+    def turn_off_led
       @command_queue.push('l')
-      timeout(0.1) {@led_events.pop} # do handle timeout here!!!
+      timeout(0.1) {@led_events.pop}
     end
 
-    def analogOutput(port, value)
+    def set_aout(port, value)
       if @configuration == 7 then
         value = value * 16
         if value < 0 then value = 0
@@ -167,21 +168,20 @@ module Funnel
         elsif value > 255 then value = 255
         end
         @command_queue.push("a" + format("%X", port - @aout_port_range.first) + format("%02X", value))
-        timeout(0.1) {@aout_events.pop} # do handle timeout here!!!
+        timeout(0.1) {@aout_events.pop}
       end
     end
 
-    def digitalOutput(port, value)
-      puts "dout: #{port}, #{value}"
+    def set_dout(port, value)
       if value == 0 then
         @command_queue.push("L" + format("%01X", port - @dout_port_range.first))
       else
         @command_queue.push("H" + format("%01X", port - @dout_port_range.first))
       end
-      timeout(0.1) {@dout_events.pop} # do handle timeout here!!!
+      timeout(0.1) {@dout_events.pop}
     end
 
-    def setConfiguration(config_data)
+    def set_configuration(config_data)
       if (CONFIGURATION_1 <=> config_data) == 0 then
         @configuration = 1
         @ain_port_range = Range.new(0, 3)
@@ -266,15 +266,17 @@ module Funnel
       return reply
     end
 
-    def beginAnalogInput
-      @command_queue.push('i')
+    def start_polling
+      @command_queue.push('i') if @ain_ports > 0  # analog inputs
+      @command_queue.push('r') if @din_ports > 0  # digital inputs
     end
 
-    def endAnalogInput
+    def end_polling
       @command_queue.push('E')
+      timeout(0.5) {@end_events.pop}
     end
 
-    def startPolling
+    def start_communication
       received = ''
       commands = []
       @quit_requested = false
@@ -300,7 +302,7 @@ module Funnel
             @commands << commands.at(i) unless (commands.at(i) == nil)
           end
 
-          dispatchEvents
+          dispatch_events
           if (commands.at(count) == nil) then received = ''
           else received = commands.at(count)
           end
@@ -308,7 +310,7 @@ module Funnel
       end
     end
 
-    def dispatchEvents
+    def dispatch_events
       return if (@commands == nil)
       return if (@event_handler == nil)
 
@@ -319,7 +321,7 @@ module Funnel
           offset = @ain_port_range.first
           @ain_ports.times {|i| @input[offset + i] = values.at(i).hex / 255.0}   # convert from integer to float
           @event_handler.call(offset, @input[offset, @ain_ports])
-        when ?R
+        when ?r
           val = command.unpack('xa4').at(0).hex
           offset = @din_port_range.first
           @din_ports.times {|i| @input[offset + i] = val[i]}   # convert from bit to integer
@@ -347,14 +349,14 @@ module Funnel
           @input[BUTTON_PORT] = 0          
           @event_handler.call(BUTTON_PORT, @input[BUTTON_PORT, 1])
         when ?E
-          # puts "endAnalogInput"
+          @end_events.push(NO_ERROR)
         else
           puts "unknown data: #{command[0].chr}"
         end
       end
     end
 
-    def finishPolling
+    def finish_communication
       @quit_requested = true
       @service_thread.join(1)
     end
