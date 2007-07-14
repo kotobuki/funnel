@@ -61,12 +61,12 @@ class FunnelServer
     end
 
     if io[0]["type"] == 'Gainer' then
-      @io = GainerIO.new(devices.at(0))
+      @io = GainerIO.new(devices.at(0), @queue)
     else
       raise "Unsupported I/O module: #{io[0]["type"]}"
     end
 
-    @io.on_event = method(:event_handler)
+#    @io.on_event = method(:event_handler)
     @io.start_communication
     reboot_io_module
     puts "Funnel Server started!"

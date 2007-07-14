@@ -81,7 +81,7 @@ module Funnel
     @input = []
     @configuration = 0
 
-    def initialize(port)
+    def initialize(port, notifier)
       super(port, 38400)
       @command_queue = Queue.new
       @led_events = Queue.new
@@ -91,6 +91,7 @@ module Funnel
       @reboot_events = Queue.new
       @config_events = Queue.new
       @end_events = Queue.new
+      @notifier_queue = notifier
     end
 
     def on_event=(handler)
@@ -314,7 +315,7 @@ module Funnel
 
     def dispatch_events
       return if (@commands == nil)
-      return if (@event_handler == nil)
+#      return if (@event_handler == nil)
 
       @commands.each do |command|
         case command[0]
@@ -322,12 +323,14 @@ module Funnel
           values = command.unpack('x' + 'a2' * @ain_ports)
           offset = @ain_port_range.first
           @ain_ports.times {|i| @input[offset + i] = values.at(i).hex / 255.0}   # convert from integer to float
-          @event_handler.call(offset, @input[offset, @ain_ports])
+          #@event_handler.call(offset, @input[offset, @ain_ports])
+          @notifier_queue.push([offset, @input[offset, @ain_ports]])
         when ?r
           val = command.unpack('xa4').at(0).hex
           offset = @din_port_range.first
           @din_ports.times {|i| @input[offset + i] = val[i]}   # convert from bit to integer
-          @event_handler.call(offset, @input[offset, @din_ports])
+          #@event_handler.call(offset, @input[offset, @din_ports])
+          @notifier_queue.push([offset, @input[offset, @din_ports]])
         when ?h
           @led_events.push(NO_ERROR)
         when ?l
@@ -346,10 +349,12 @@ module Funnel
           @config_events.push(command)
         when ?N
           @input[BUTTON_PORT] = 1
-          @event_handler.call(BUTTON_PORT, @input[BUTTON_PORT, 1])
+#          @event_handler.call(BUTTON_PORT, @input[BUTTON_PORT, 1])
+          @notifier_queue.push([BUTTON_PORT, @input[BUTTON_PORT, 1]])
         when ?F
           @input[BUTTON_PORT] = 0          
-          @event_handler.call(BUTTON_PORT, @input[BUTTON_PORT, 1])
+#          @event_handler.call(BUTTON_PORT, @input[BUTTON_PORT, 1])
+          @notifier_queue.push([BUTTON_PORT, @input[BUTTON_PORT, 1]])
         when ?E
           @end_events.push(NO_ERROR)
         else
