@@ -224,13 +224,37 @@ def client_watcher
         end
       end
 
-      add_method(callbacks, GET_INPUTS) do |message|
-        from = message.to_a.at(0)
-        ports = message.to_a.at(1)
-        values = @io.input[from, ports]
-        return if values == nil
-        reply = OSC::Message.new(GET_INPUTS, 'i' + 'f' * values.size, from, *values)
-        client.send(reply.encode, 0)
+      in_ranged_pattern = Regexp.new(/\/in\/\[\d\.\.\d\]/)
+      in_all_pattern = Regexp.new(/\/in\/\*/)
+
+      add_method(callbacks, /\/in*/) do |message|
+        if message.address == '/in' then
+          # e.g. /in ii 0 3
+          from = message.to_a.at(0)
+          count = message.to_a.at(1)
+          # puts "count type: #{from}, #{count}"
+          values = @io.input[from, count]
+          return if values == nil # Should handle range error!!!
+          reply = OSC::Message.new(GET_INPUTS, 'i' + 'f' * values.size, from, *values)
+          client.send(reply.encode, 0)
+        elsif in_ranged_pattern.match(message.address) then
+          # e.g. /in/[0..2]
+          s = message.address.split("..")
+          from = s[0].split(/\[/).at(1).to_i
+          to = s[1].split(/\]/).at(0).to_i
+          # puts "ranged type: #{from}..#{to}"
+          values = @io.input[from..to]
+          return if values == nil # Should handle range error!!!
+          reply = OSC::Message.new(GET_INPUTS, 'i' + 'f' * values.size, from, *values)
+          client.send(reply.encode, 0)
+        elsif in_all_pattern.match(message.address) then
+          # i.e. /in/*
+          # puts "all type:"
+          reply = OSC::Message.new(GET_INPUTS, 'i' + 'f' * @io.input.size, 0, *@io.input)
+          client.send(reply.encode, 0)
+        else
+          raise ArgumentError, "#{message.address}"
+        end
       end
 
       while true
@@ -338,8 +362,9 @@ end
 
 # set handler for SIGTERM
 Signal.trap(:TERM) do
+  puts "Terminate requested..."
   server.stop
-  puts "Terminate requested"
+  puts "Terminated successfully :)"
   STDOUT.flush
   exit
 end
