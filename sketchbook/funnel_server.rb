@@ -214,9 +214,14 @@ def client_watcher
       end
 
       add_method(callbacks, SET_OUTPUTS) do |message|
-        @io.set_outputs(message.to_a)
-        reply = OSC::Message.new(SET_OUTPUTS, 'i', NO_ERROR)
-        client.send(reply.encode, 0)
+        begin
+          timeout(0.1) {@io.set_outputs(message.to_a)}
+          reply = OSC::Message.new(SET_OUTPUTS, 'i', NO_ERROR)
+          client.send(reply.encode, 0)
+        rescue TimeoutError
+          reply = OSC::Message.new(SET_OUTPUTS, 'i', ERROR)
+          client.send(reply.encode, 0)
+        end
       end
 
       add_method(callbacks, GET_INPUTS) do |message|
@@ -249,6 +254,7 @@ def client_watcher
         @io.end_polling
         sleep(0.5)
         @io.clear_receive_buffer
+        @io.reboot
       end
     end
   end
@@ -304,6 +310,12 @@ def run
   end
 end
 
+def stop
+  puts "Stop requested"
+  STDOUT.flush
+  @io.reboot
+end
+
 end
 end
 
@@ -317,4 +329,19 @@ raise ArgumentError, "Can't find settings for I/O modules" unless io
 
 # instantiate the FunnelServer and set to run
 server = Funnel::FunnelServer.new(port, io)
+
+# set handler for SIGINT
+Signal.trap(:INT) do
+  puts "Interrupt requested"
+  STDOUT.flush
+end
+
+# set handler for SIGTERM
+Signal.trap(:TERM) do
+  server.stop
+  puts "Terminate requested"
+  STDOUT.flush
+  exit
+end
+
 server.run

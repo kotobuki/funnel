@@ -80,6 +80,7 @@ module Funnel
     @event_handler
     @input = []
     @configuration = 0
+    @ain_unpack_pattern = ''
 
     def initialize(port, notifier)
       super(port, 38400)
@@ -131,23 +132,18 @@ module Funnel
         elsif @dout_port_range.include?(port) then
           set_dout(port, value)
         elsif @configuration <= 4 and port == LED_PORT then
-          if (value == 0) then
-            turn_off_led
-          else
-            turn_on_led
-          end
+          set_led(value)
         end
         port += 1
       end
     end
 
-    def turn_on_led
-      @command_queue.push('h')
-      timeout(0.1) {@led_events.pop}
-    end
-
-    def turn_off_led
-      @command_queue.push('l')
+    def set_led(value)
+      if value == 0 then
+        @command_queue.push('l')
+      else
+        @command_queue.push('h')
+      end
       timeout(0.1) {@led_events.pop}
     end
 
@@ -193,65 +189,69 @@ module Funnel
         @input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 18 ports
         @ain_ports = 4
         @din_ports = 4
+        @ain_unpack_pattern = 'x' + 'a2' * @ain_ports
       elsif (CONFIGURATION_2 <=> config_data) == 0 then
         @configuration = 2
         @ain_port_range = Range.new(0, 7)
-        @din_port_range = nil
+        @din_port_range = Range.new(-1, -1)
         @aout_port_range = Range.new(8, 11)
         @dout_port_range = Range.new(12, 15)
         @input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 18 ports
         @ain_ports = 8
         @din_ports = 0
+        @ain_unpack_pattern = 'x' + 'a2' * @ain_ports
       elsif (CONFIGURATION_3 <=> config_data) == 0 then
         @configuration = 3
         @ain_port_range = Range.new(0, 3)
         @din_port_range = Range.new(4, 7)
         @aout_port_range = Range.new(8, 15)
-        @dout_port_range = nil
+        @dout_port_range = Range.new(-1, -1)
         @input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 18 ports
         @ain_ports = 4
         @din_ports = 4
+        @ain_unpack_pattern = 'x' + 'a2' * @ain_ports
       elsif (CONFIGURATION_4 <=> config_data) == 0 then
         @configuration = 4
         @ain_port_range = Range.new(0, 7)
-        @din_port_range = nil
+        @din_port_range = Range.new(-1, -1)
         @aout_port_range = Range.new(8, 15)
-        @dout_port_range = nil
+        @dout_port_range = Range.new(-1, -1)
         @input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 18 ports
         @ain_ports = 8
         @din_ports = 0
+        @ain_unpack_pattern = 'x' + 'a2' * @ain_ports
       elsif (CONFIGURATION_5 <=> config_data) == 0 then
         @configuration = 5
-        @ain_port_range = nil
+        @ain_port_range = Range.new(-1, -1)
         @din_port_range = Range.new(0, 15)
-        @aout_port_range = nil
-        @dout_port_range = nil
+        @aout_port_range = Range.new(-1, -1)
+        @dout_port_range = Range.new(-1, -1)
         @input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 16 ports
         @ain_ports = 0
         @din_ports = 16
       elsif (CONFIGURATION_6 <=> config_data) == 0 then
         @configuration = 6
-        @ain_port_range = nil
-        @din_port_range = nil
-        @aout_port_range = nil
+        @ain_port_range = Range.new(-1, -1)
+        @din_port_range = Range.new(-1, -1)
+        @aout_port_range = Range.new(-1, -1)
         @dout_port_range = Range.new(0, 15)
         @input.clear
         @ain_ports = 0
         @din_ports = 0
       elsif (CONFIGURATION_7 <=> config_data) == 0 then
         @configuration = 7
-        @ain_port_range = nil
-        @din_port_range = nil
+        @ain_port_range = Range.new(-1, -1)
+        @din_port_range = Range.new(-1, -1)
         @aout_port_range = Range.new(0, 63)
-        @dout_port_range = nil
+        @dout_port_range = Range.new(-1, -1)
         @input.clear
         @ain_ports = 0
         @din_ports = 0
       elsif (CONFIGURATION_8 <=> config_data) == 0 then
         @configuration = 8
-        @ain_port_range = nil
+        @ain_port_range = Range.new(-1, -1)
         @din_port_range = Range.new(0, 7)
-        @aout_port_range = nil
+        @aout_port_range = Range.new(-1, -1)
         @dout_port_range = Range.new(8, 15)
         @input = [0, 0, 0, 0, 0, 0, 0, 0]
         @ain_ports = 0
@@ -269,8 +269,16 @@ module Funnel
     end
 
     def start_polling
-      @command_queue.push('i') if @ain_ports > 0  # analog inputs
-      @command_queue.push('r') if @din_ports > 0  # digital inputs
+#      @command_queue.push('i') if @ain_ports > 0  # analog inputs
+#      @command_queue.push('r') if @din_ports > 0  # digital inputs
+      if @ain_ports > 0 then
+        @command_queue.push('i')
+        puts "queued notification of analog inputs"
+      end
+      if @din_ports > 0 then
+        @command_queue.push('r')
+        puts "queued notification of digital inputs"
+      end
     end
 
     def end_polling
@@ -286,13 +294,13 @@ module Funnel
 
       @service_thread = Thread.new do
         while !@quit_requested
-          if !@command_queue.empty? then
+          unless @command_queue.empty? then
             command_to_output = @command_queue.pop
             write(command_to_output + '*')
           end
 
-          if (bytes_available < 1) then
-            sleep(0.01)
+          if (bytes_available < 2) then
+            sleep(0.005)
             next
           end
 
@@ -320,11 +328,10 @@ module Funnel
       @commands.each do |command|
         case command[0]
         when ?i
-          values = command.unpack('x' + 'a2' * @ain_ports)
-          offset = @ain_port_range.first
-          @ain_ports.times {|i| @input[offset + i] = values.at(i).hex / 255.0}   # convert from integer to float
-          #@event_handler.call(offset, @input[offset, @ain_ports])
-          @notifier_queue.push([offset, @input[offset, @ain_ports]])
+          values = command.unpack(@ain_unpack_pattern)
+          values.collect! {|value| value.hex / 255.0}
+          @input[@ain_port_range.first, values.size] = values
+          @notifier_queue.push([@ain_port_range.first, @input[@ain_port_range.first, @ain_ports]])
         when ?r
           val = command.unpack('xa4').at(0).hex
           offset = @din_port_range.first
