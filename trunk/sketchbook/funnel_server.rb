@@ -38,7 +38,7 @@ class FunnelServer
 
     if io[0]["com"] == nil then
       case Config::CONFIG["target_os"].downcase
-      when 'darwin8.0'
+      when /darwin*/
         # i.e. Mac OS X
         Dir.foreach('/dev') do | deviceName |
           devices.push('/dev/' + deviceName) if (deviceName.index("cu.usbserial") == 0)
