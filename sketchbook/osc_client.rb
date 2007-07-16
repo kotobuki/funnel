@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 
-require "socket"
-require "yaml"
+require 'socket'
+require 'yaml'
+require 'timeout'
 require 'osc'
 
 require "gainer_io"
@@ -22,7 +23,8 @@ def send_commands
   @xs.each do |x|
     p x
     @client.send(x.encode, 0)
-    packet = @client.recv(4096)
+    packet = nil
+    timeout(5) {packet = @client.recv(4096)}
     begin
       OSC::Packet.decode(packet).each do |time, message|
         puts "received: #{message.address}, #{message.to_a}"
@@ -68,6 +70,8 @@ end
 end
 
 @xs << OSC::Message.new('/in', 'ii', 3, 100)
+@xs << OSC::Message.new('/in/[1..3]')
+@xs << OSC::Message.new('/in/*')
 
 send_commands
 
