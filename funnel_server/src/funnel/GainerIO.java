@@ -20,20 +20,16 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.illposed.osc.OSCMessage;
 
-public class GainerIO implements SerialPortEventListener {
-
+public class GainerIO extends IOModule implements SerialPortEventListener {
+	private SerialPort port;
+	private InputStream input;
+	private OutputStream output;
 	private FunnelServer parent;
-	public SerialPort port;
+
 	private final int rate = 38400;
 	private final int parity = SerialPort.PARITY_NONE;
 	private final int databits = 8;
 	private final int stopbits = SerialPort.STOPBITS_1;
-	public InputStream input;
-	public OutputStream output;
-	byte buffer[] = new byte[64];
-	int bufferIndex;
-	int bufferLast;
-	int bufferSize = 64;
 
 	private funnel.BlockingQueue rebootCommandQueue;
 	private funnel.BlockingQueue endCommandQueue;
@@ -57,32 +53,26 @@ public class GainerIO implements SerialPortEventListener {
 			PORT_AIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_AOUT,
 			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 			PORT_DOUT, PORT_DOUT, PORT_DIN };
-
 	private final Integer CONFIGURATION_2[] = { PORT_AIN, PORT_AIN, PORT_AIN,
 			PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AOUT,
 			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 			PORT_DOUT, PORT_DOUT, PORT_DIN };
-
 	private final Integer CONFIGURATION_3[] = { PORT_AIN, PORT_AIN, PORT_AIN,
 			PORT_AIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_AOUT,
 			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
 			PORT_AOUT, PORT_DOUT, PORT_DIN };
-
 	private final Integer CONFIGURATION_4[] = { PORT_AIN, PORT_AIN, PORT_AIN,
 			PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AOUT,
 			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
 			PORT_AOUT, PORT_DOUT, PORT_DIN };
-
 	private final Integer CONFIGURATION_5[] = { PORT_DIN, PORT_DIN, PORT_DIN,
 			PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
 			PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
 			PORT_DIN, };
-
 	private final Integer CONFIGURATION_6[] = { PORT_DOUT, PORT_DOUT,
 			PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 			PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 			PORT_DOUT, PORT_DOUT, };
-
 	private final Integer CONFIGURATION_7[] = {
 			PORT_AOUT,
 			PORT_AOUT,
@@ -128,18 +118,25 @@ public class GainerIO implements SerialPortEventListener {
 			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
 			PORT_AOUT, PORT_AOUT, // [0..7, 7]
 	};
-
 	private final Integer CONFIGURATION_8[] = { PORT_DIN, PORT_DIN, PORT_DIN,
 			PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DOUT,
 			PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 			PORT_DOUT, };
 
 	private int configuration = 0;
+
 	private float[] inputs;
-	Integer ledPort;
-	Float zero;
 
 	private LinkedBlockingQueue<OSCMessage> notifierQueue;
+
+	byte buffer[] = new byte[64];
+	int bufferIndex;
+	int bufferLast;
+	int bufferSize = 64;
+
+	Integer ledPort;
+
+	Float zero;
 
 	public GainerIO(FunnelServer server, String serialPortName,
 			LinkedBlockingQueue<OSCMessage> notifierQueue) {
@@ -195,32 +192,6 @@ public class GainerIO implements SerialPortEventListener {
 		zero = new Float(0.0);
 	}
 
-	// 自動でシリアルポート名を得る
-	static public String autoPortName() {
-		String dname = null;
-
-		try {
-			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
-			while (portList.hasMoreElements()) {
-				CommPortIdentifier portId = (CommPortIdentifier) portList
-						.nextElement();
-				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-
-					String pname = portId.getName();
-					if (pname.startsWith("/dev/cu.usbserial-")) {
-						dname = pname;
-					} else if (pname.startsWith("COM")) {
-						dname = "COM3";
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return dname;
-	}
-
 	// シリアルポートを停止する
 	public void dispose() {
 		port.removeEventListener();
@@ -243,6 +214,50 @@ public class GainerIO implements SerialPortEventListener {
 			e.printStackTrace();
 		}
 		port = null;
+	}
+
+	public Object[] getInputs(String address, Object[] arguments)
+			throws IllegalArgumentException {
+		int from = 0;
+		int counts = inputs.length;
+
+		if (address.equals("/in")) {
+			from = (Integer) arguments[0];
+			counts = (Integer) arguments[1];
+		} else if (address.equals("/in/*")) {
+			from = 0;
+			counts = inputs.length;
+		} else if (address.startsWith("/in/[")) {
+			from = Integer
+					.parseInt(address.substring(5, address.indexOf("..")));
+			counts = Integer.parseInt(address.substring(
+					address.indexOf("..") + 2, address.length() - 1))
+					- from;
+		}
+
+		if ((from + counts) > inputs.length) {
+			counts = inputs.length - from;
+		}
+
+		if ((from >= inputs.length) || (counts <= 0)) {
+			throw new IllegalArgumentException("");
+		}
+
+		Object[] results = new Object[1 + counts];
+		results[0] = new Integer(from);
+		for (int i = 0; i < counts; i++) {
+			results[1 + i] = new Float(inputs[from + i]);
+		}
+		return results;
+	}
+
+	public void reboot() {
+		write("Q*");
+		rebootCommandQueue.pop(1000);
+		rebootCommandQueue.sleep(100);
+		write("?*");
+		String versionString = (String) versionCommandQueue.pop(1000);
+		printMessage("version: " + versionString);
 	}
 
 	// シリアルから入力があったら
@@ -273,197 +288,6 @@ public class GainerIO implements SerialPortEventListener {
 
 			}
 
-		}
-	}
-
-	private void dispatch(String command) {
-		if (command.equals("Q*")) {
-			rebootCommandQueue.push(new Integer(0));
-		} else if (command.equals("E*")) {
-			endCommandQueue.push(new Integer(0));
-		} else if (command.startsWith("?")) {
-			versionCommandQueue.push(command);
-		} else if (command.startsWith("KONFIGURATION_")) {
-			configCommandQueue.push(command);
-		} else if (command.equals("h*") || command.equals("l*")) {
-			ledCommandQueue.push(command);
-		} else if (command.startsWith("a") || command.startsWith("A")) {
-			aoutCommandQueue.push(command);
-		} else if (command.startsWith("H") || command.startsWith("L")
-				|| command.startsWith("D")) {
-			doutCommandQueue.push(command);
-		} else if (command.startsWith("i") || command.startsWith("I")) {
-			String value;
-			for (int i = 0; i < ainPortRange.getCounts(); i++) {
-				value = command.substring(2 * i + 1, 2 * (i + 1) + 1);
-				inputs[ainPortRange.getMin() + i] = (float) Integer.parseInt(
-						value, 16) / 255.0f;
-			}
-			Object arguments[] = new Object[1 + ainPortRange.getCounts()];
-			arguments[0] = new Integer(ainPortRange.getMin());
-			for (int i = 0; i < ainPortRange.getCounts(); i++) {
-				arguments[1 + i] = new Float(inputs[ainPortRange.getMin() + i]);
-			}
-			OSCMessage message = new OSCMessage("/in", arguments);
-			try {
-				notifierQueue.put(message);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		} else if (command.startsWith("r") || command.startsWith("R")) {
-			int value = Integer.parseInt(command.substring(1, 5), 16);
-			for (int i = 0; i < dinPortRange.getCounts(); i++) {
-				int c = 1 & (value >> i);
-				if (c == 1) {
-					inputs[dinPortRange.getMin() + i] = 1.0f;
-				} else {
-					inputs[dinPortRange.getMin() + i] = 0.0f;
-				}
-			}
-			Object arguments[] = new Object[1 + dinPortRange.getCounts()];
-			arguments[0] = new Integer(dinPortRange.getMin());
-			for (int i = 0; i < dinPortRange.getCounts(); i++) {
-				arguments[1 + i] = new Float(inputs[dinPortRange.getMin() + i]);
-			}
-			OSCMessage message = new OSCMessage("/in", arguments);
-			try {
-				notifierQueue.put(message);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		} else {
-			System.out.print("unknown: " + command);
-		}
-	}
-
-	// バッファを空にする
-	public void clear() {
-		bufferLast = 0;
-		bufferIndex = 0;
-	}
-
-	// 指定した文字までバッファを読み文字列で返す
-	public String readStringUntil(int interesting) {
-		byte b[] = readBytesUntil(interesting);
-		if (b == null)
-			return null;
-		return new String(b);
-	}
-
-	// 指定した文字までバッファを読みバイト列で返す
-	private byte[] readBytesUntil(int interesting) {
-		if (bufferIndex == bufferLast)
-			return null;
-		byte what = (byte) interesting;
-
-		synchronized (buffer) {
-			int found = -1;
-			for (int k = bufferIndex; k < bufferLast; k++) {
-				if (buffer[k] == what) {
-					found = k;
-					break;
-				}
-			}
-			if (found == -1)
-				return null;
-
-			int length = found - bufferIndex + 1;
-			byte outgoing[] = new byte[length];
-			System.arraycopy(buffer, bufferIndex, outgoing, 0, length);
-
-			bufferIndex = 0; // rewind
-			bufferLast = 0;
-			return outgoing;
-		}
-	}
-
-	// GAINERに文字列を送る
-	public void write(String what) {
-		try {
-			output.write(what.getBytes());
-			output.flush();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void reboot() {
-		write("Q*");
-		rebootCommandQueue.pop(1000);
-		rebootCommandQueue.sleep(100);
-		write("?*");
-		String versionString = (String) versionCommandQueue.pop(1000);
-		printMessage("version: " + versionString);
-	}
-
-	public Object[] getInputs(String address, Object[] arguments)
-			throws IllegalArgumentException {
-		int from = 0;
-		int counts = inputs.length;
-		printMessage("address = " + address);
-
-		if (address.equals("/in")) {
-			printMessage(":-P");
-			from = (Integer) arguments[0];
-			counts = (Integer) arguments[1];
-		} else if (address.equals("/in/*")) {
-			printMessage(":-)");
-			from = 0;
-			counts = inputs.length;
-		} else if (address.startsWith("/in/[")) {
-			printMessage(":-O");
-			from = Integer
-					.parseInt(address.substring(5, address.indexOf("..")));
-			counts = Integer.parseInt(address.substring(
-					address.indexOf("..") + 2, address.length() - 1))
-					- from;
-			printMessage("from, counts = " + from + ", " + counts);
-		}
-
-		if ((from + counts) > inputs.length) {
-			counts = inputs.length - from;
-		}
-
-		if ((from >= inputs.length) || (counts <= 0)) {
-			throw new IllegalArgumentException("");
-		}
-
-		Object[] results = new Object[1 + counts];
-		results[0] = new Integer(from);
-		for (int i = 0; i < counts; i++) {
-			results[1 + i] = new Float(inputs[from + i]);
-		}
-		return results;
-	}
-
-	public void setOutput(Object[] arguments) {
-		printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
-		if (aoutPortRange.contains((Integer) arguments[0])) {
-			for (int i = 0; i < aoutPortRange.getMax(); i++) {
-				if (arguments[i + 1] != null
-						&& arguments[i + 1] instanceof Float) {
-					setAnalogOutput(i,
-							(int) ((Float) arguments[i + 1] * 255.0f));
-				}
-			}
-		} else if (doutPortRange.contains((Integer) arguments[0])) {
-			for (int i = 0; i < doutPortRange.getMax(); i++) {
-				if (arguments[i + 1] != null) {
-					if (zero.equals(arguments[i + 1])) {
-						setDigitalOutputLow(i);
-					} else {
-						setDigitalOutputHigh(i);
-					}
-				}
-			}
-		} else if (ledPort.equals(arguments[0])) {
-			if (zero.equals(arguments[1])) {
-				write("l*");
-				ledCommandQueue.pop(1000);
-			} else {
-				write("h*");
-				ledCommandQueue.pop(1000);
-			}
 		}
 	}
 
@@ -535,6 +359,37 @@ public class GainerIO implements SerialPortEventListener {
 		configCommandQueue.sleep(100);
 	}
 
+	public void setOutput(Object[] arguments) {
+		printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
+		if (aoutPortRange.contains((Integer) arguments[0])) {
+			for (int i = 0; i < aoutPortRange.getMax(); i++) {
+				if (arguments[i + 1] != null
+						&& arguments[i + 1] instanceof Float) {
+					setAnalogOutput(i,
+							(int) ((Float) arguments[i + 1] * 255.0f));
+				}
+			}
+		} else if (doutPortRange.contains((Integer) arguments[0])) {
+			for (int i = 0; i < doutPortRange.getMax(); i++) {
+				if (arguments[i + 1] != null) {
+					if (zero.equals(arguments[i + 1])) {
+						setDigitalOutputLow(i);
+					} else {
+						setDigitalOutputHigh(i);
+					}
+				}
+			}
+		} else if (ledPort.equals(arguments[0])) {
+			if (zero.equals(arguments[1])) {
+				write("l*");
+				ledCommandQueue.pop(1000);
+			} else {
+				write("h*");
+				ledCommandQueue.pop(1000);
+			}
+		}
+	}
+
 	public void setPolling(Object[] arguments) {
 		if (arguments[0] instanceof Integer) {
 			if (new Integer(1).equals(arguments[0])) {
@@ -559,9 +414,117 @@ public class GainerIO implements SerialPortEventListener {
 	}
 
 	public void stopPolling() {
-		printMessage("polling stopped");
-		write("E*");
-		endCommandQueue.pop(1000);
+		if (port != null) {
+			printMessage("polling stopped");
+			write("E*");
+			endCommandQueue.pop(1000);
+		}
+	}
+
+	// バッファを空にする
+	private void clear() {
+		bufferLast = 0;
+		bufferIndex = 0;
+	}
+
+	private void dispatch(String command) {
+		if (command.equals("Q*")) {
+			rebootCommandQueue.push(new Integer(0));
+		} else if (command.equals("E*")) {
+			endCommandQueue.push(new Integer(0));
+		} else if (command.startsWith("?")) {
+			versionCommandQueue.push(command);
+		} else if (command.startsWith("KONFIGURATION_")) {
+			configCommandQueue.push(command);
+		} else if (command.equals("h*") || command.equals("l*")) {
+			ledCommandQueue.push(command);
+		} else if (command.startsWith("a") || command.startsWith("A")) {
+			aoutCommandQueue.push(command);
+		} else if (command.startsWith("H") || command.startsWith("L")
+				|| command.startsWith("D")) {
+			doutCommandQueue.push(command);
+		} else if (command.startsWith("i") || command.startsWith("I")) {
+			String value;
+			for (int i = 0; i < ainPortRange.getCounts(); i++) {
+				value = command.substring(2 * i + 1, 2 * (i + 1) + 1);
+				inputs[ainPortRange.getMin() + i] = (float) Integer.parseInt(
+						value, 16) / 255.0f;
+			}
+			Object arguments[] = new Object[1 + ainPortRange.getCounts()];
+			arguments[0] = new Integer(ainPortRange.getMin());
+			for (int i = 0; i < ainPortRange.getCounts(); i++) {
+				arguments[1 + i] = new Float(inputs[ainPortRange.getMin() + i]);
+			}
+			OSCMessage message = new OSCMessage("/in", arguments);
+			try {
+				notifierQueue.put(message);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} else if (command.startsWith("r") || command.startsWith("R")) {
+			int value = Integer.parseInt(command.substring(1, 5), 16);
+			for (int i = 0; i < dinPortRange.getCounts(); i++) {
+				int c = 1 & (value >> i);
+				if (c == 1) {
+					inputs[dinPortRange.getMin() + i] = 1.0f;
+				} else {
+					inputs[dinPortRange.getMin() + i] = 0.0f;
+				}
+			}
+			Object arguments[] = new Object[1 + dinPortRange.getCounts()];
+			arguments[0] = new Integer(dinPortRange.getMin());
+			for (int i = 0; i < dinPortRange.getCounts(); i++) {
+				arguments[1 + i] = new Float(inputs[dinPortRange.getMin() + i]);
+			}
+			OSCMessage message = new OSCMessage("/in", arguments);
+			try {
+				notifierQueue.put(message);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.print("unknown: " + command);
+		}
+	}
+
+	// メッセージをテキストエリアに出力
+	private void printMessage(String msg) {
+		parent.printMessage(msg);
+	}
+
+	// 指定した文字までバッファを読みバイト列で返す
+	private byte[] readBytesUntil(int interesting) {
+		if (bufferIndex == bufferLast)
+			return null;
+		byte what = (byte) interesting;
+
+		synchronized (buffer) {
+			int found = -1;
+			for (int k = bufferIndex; k < bufferLast; k++) {
+				if (buffer[k] == what) {
+					found = k;
+					break;
+				}
+			}
+			if (found == -1)
+				return null;
+
+			int length = found - bufferIndex + 1;
+			byte outgoing[] = new byte[length];
+			System.arraycopy(buffer, bufferIndex, outgoing, 0, length);
+
+			bufferIndex = 0; // rewind
+			bufferLast = 0;
+			return outgoing;
+		}
+	}
+
+	// 指定した文字までバッファを読み文字列で返す
+	private String readStringUntil(int interesting) {
+		byte b[] = readBytesUntil(interesting);
+		if (b == null)
+			return null;
+		return new String(b);
 	}
 
 	private void setAnalogOutput(int ch, int value) {
@@ -602,24 +565,6 @@ public class GainerIO implements SerialPortEventListener {
 		aoutCommandQueue.pop(1000);
 	}
 
-	private void setDigitalOutput(int chs) {
-		if (chs <= 0xFFFF) {
-			String val = Integer.toHexString(chs).toUpperCase();
-			String sv = "";
-			// ïKÇ∏4åÖ
-			for (int i = 0; i < 4 - val.length(); i++) {
-				sv += "0";
-			}
-			sv += val;
-
-			String s = "D" + sv + "*";
-			write(s);
-			doutCommandQueue.pop(1000);
-		} else {
-			throw new IndexOutOfBoundsException("Out of bounds: dout");
-		}
-	}
-
 	private void setDigitalOutput(boolean[] values) {
 		int chs = 0;
 		if (doutPortRange.getCounts() == values.length) {
@@ -643,7 +588,25 @@ public class GainerIO implements SerialPortEventListener {
 		doutCommandQueue.pop(1000);
 	}
 
-	public void setDigitalOutputHigh(int ch) {
+	private void setDigitalOutput(int chs) {
+		if (chs <= 0xFFFF) {
+			String val = Integer.toHexString(chs).toUpperCase();
+			String sv = "";
+			// ïKÇ∏4åÖ
+			for (int i = 0; i < 4 - val.length(); i++) {
+				sv += "0";
+			}
+			sv += val;
+
+			String s = "D" + sv + "*";
+			write(s);
+			doutCommandQueue.pop(1000);
+		} else {
+			throw new IndexOutOfBoundsException("Out of bounds: dout");
+		}
+	}
+
+	private void setDigitalOutputHigh(int ch) {
 		if (doutPortRange.contains(ch)) {
 			String s = "H" + Integer.toHexString(ch).toUpperCase() + "*";
 			write(s);
@@ -654,7 +617,7 @@ public class GainerIO implements SerialPortEventListener {
 		}
 	}
 
-	public void setDigitalOutputLow(int ch) {
+	private void setDigitalOutputLow(int ch) {
 		if (doutPortRange.contains(ch)) {
 			String s = "L" + Integer.toHexString(ch).toUpperCase() + "*";
 			write(s);
@@ -665,8 +628,13 @@ public class GainerIO implements SerialPortEventListener {
 		}
 	}
 
-	// メッセージをテキストエリアに出力
-	public void printMessage(String msg) {
-		parent.printMessage(msg);
+	// GAINERに文字列を送る
+	private void write(String what) {
+		try {
+			output.write(what.getBytes());
+			output.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
