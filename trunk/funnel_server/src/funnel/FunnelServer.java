@@ -41,8 +41,7 @@ public class FunnelServer extends Frame {
 		// Close the I/O module when the window is closed
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent evt) {
-				if (gainer.port != null)
-					gainer.write("E*");
+				gainer.stopPolling();
 				System.exit(0);
 			}
 		});
@@ -102,7 +101,7 @@ public class FunnelServer extends Frame {
 
 			if (modules.get("com") == null) {
 				printMessage("Since a serial port is not specified, use an automatically detected port.");
-				serialPort = GainerIO.autoPortName();
+				serialPort = GainerIO.getSerialPortName();
 			} else {
 				serialPort = modules.get("com").toString();
 			}
@@ -110,7 +109,7 @@ public class FunnelServer extends Frame {
 			printMessage("Since no settings file was found, use default settings instead.");
 			commandPort = "9000";
 			notificationPort = "9001";
-			serialPort = GainerIO.autoPortName();
+			serialPort = GainerIO.getSerialPortName();
 		}
 
 		// Dump read setting from the settings file
