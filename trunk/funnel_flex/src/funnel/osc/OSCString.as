@@ -4,7 +4,7 @@ package funnel.osc
 	
 	public class OSCString extends OSCType
 	{
-		private static const _ENCODING:String = "ascii";
+		private static const ENCODING:String = "ascii";
 		
 		public function OSCString(value:*) {
 			super(value);
@@ -15,7 +15,7 @@ package funnel.osc
 		}
 
 		override public function writeToBytes(bytes:ByteArray):void {
-			bytes.writeMultiByte(_value, _ENCODING);
+			bytes.writeMultiByte(_value, ENCODING);
 			padZero(bytes);
 		}
 		
@@ -34,5 +34,6 @@ package funnel.osc
 			for (var i:uint = 0; i < numOfZero; ++i)
 			    bytes.writeByte(0);
 		}
+		
 	}
 }

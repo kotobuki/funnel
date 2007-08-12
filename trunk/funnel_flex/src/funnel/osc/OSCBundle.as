@@ -4,10 +4,10 @@ package funnel.osc
 	
 	public class OSCBundle extends OSCPacket
 	{
-		private static const _BUNDLE:String = "#bundle";
+		private static const BUNDLE:String = "#bundle";
 		
 		public function OSCBundle() {
-			super(_BUNDLE);
+			super(BUNDLE);
 		}
 		
 		//TODO:とりあえず0にしておくが
@@ -26,7 +26,7 @@ package funnel.osc
 		
 		internal static function createWithBytes(bytes:ByteArray, end:int):OSCBundle {
 			var bundle:OSCBundle = new OSCBundle();
-			if (OSCString.createWithBytes(bytes).value != _BUNDLE)
+			if (OSCString.createWithBytes(bytes).value != BUNDLE)
 			    return null;
 			bytes.position += 8; //TODO: readLongしてtimeに格納すべき
 			while (bytes.position < end) 

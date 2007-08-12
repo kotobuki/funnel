@@ -5,7 +5,7 @@ package {
 
 	public class FunnelTest extends Sprite
 	{
-		include "shortcut.as"
+		include "alias.as"
 		private var f:Funnel;
 		private var frameCount:uint;
 		

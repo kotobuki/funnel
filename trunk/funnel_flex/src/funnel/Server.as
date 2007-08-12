@@ -9,6 +9,13 @@ package funnel
 	
 	public class Server extends Deferred
 	{
+		private static const NO_ERROR:uint = 0;
+		private static const ERROR_MESSAGES:Array = [
+			"NO_ERROR",
+			"ERROR",
+			"REBOOT_ERROR",
+			"CONFIGURATION_ERROR"];
+		
 		private var _socket:Socket;
 		private var _sendAndWait:Function;
 
@@ -23,6 +30,15 @@ package funnel
 		
 		private function sendMessage(msg:OSCMessage):void {
 		    addCallback(null, _sendAndWait, msg.toBytes());
+		    addCallback(this, checkError);
+		}
+		
+		private function checkError():void {
+			var response:ByteArray = new ByteArray();
+			_socket.readBytes(response);
+			var errorCode:uint = OSCPacket.createWithBytes(response).value[0];
+			if (errorCode != NO_ERROR)
+				throw new Error(ERROR_MESSAGES[errorCode]);
 		}
 		
 		private function connect(host:String, port:Number):void {

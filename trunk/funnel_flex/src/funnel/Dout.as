@@ -7,11 +7,11 @@ package funnel
 		}
 			
 		override public function get direction():uint {
-			return 1;
+			return PortDirection.OUTPUT;
 		}
 		
 		override public function get type():uint {
-			return 1;
+			return PortType.DIGITAL;
 		}
 		
 		override public function set value(val:Number):void {
