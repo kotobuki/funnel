@@ -1,6 +1,7 @@
 package funnel
 {
 	import flash.errors.IllegalOperationError;
+	import funnel.command.Out;
 	
 	public class Port
 	{
@@ -9,24 +10,32 @@ package funnel
 		public static const AOUT:uint = 2;
 		public static const DOUT:uint = 3;
 		
+		public var average:Number;
+		public var minimum:Number;
+		public var maximum:Number;
+		public var edgeDetection:Boolean;
+		public var onRisingEdge:Function;
+		public var onFallingEdge:Function;
+		
 		protected var _funnel:Funnel;
-		protected var _server:Server;
+		protected var _commandPort:CommandPort;
 		protected var _portNum:uint;
 		protected var _value:Number;
 		
-		public function Port(funnel:Funnel, sender:Server, portNum:uint) {
+		public function Port(funnel:Funnel, commandPort:CommandPort, portNum:uint) {
+			edgeDetection = true;
 		    _funnel = funnel;
-			_server = sender;
+			_commandPort = commandPort;
 			_portNum = portNum;
 			_value = 0;
 		}
 		
-		internal static function createWithType(type:uint, funnel:Funnel, server:Server, portNum:uint):Port {
+		internal static function createWithType(type:uint, funnel:Funnel, commandPort:CommandPort, portNum:uint):Port {
 			switch(type) {
-				case AIN: return new Ain(funnel, server, portNum);
-				case DIN: return new Din(funnel, server, portNum);
-				case AOUT: return new Aout(funnel, server, portNum);
-				case DOUT: return new Dout(funnel, server, portNum);
+				case AIN: return new AnalogInput(funnel, commandPort, portNum);
+				case DIN: return new DigitalInput(funnel, commandPort, portNum);
+				case AOUT: return new AnalogOutput(funnel, commandPort, portNum);
+				case DOUT: return new DigitalOutput(funnel, commandPort, portNum);
 				default: throw new IllegalOperationError("タイプコードの値が不正");
 			}
 		}
@@ -48,7 +57,17 @@ package funnel
 		}
 		
 		public function update():void {
-			_server.setPortValues(_portNum, _value);
+			_commandPort.writeCommand(new Out(_portNum, _value));
+		}
+		
+		protected function detectEdge(val:Number):void {
+			if (!edgeDetection) 
+				return;
+			
+			if (value == 0 && val != 0 && onRisingEdge != null) 
+				onRisingEdge();
+			else if (value != 0 && val == 0 && onFallingEdge != null)
+				onFallingEdge();
 		}
 	}
 }

@@ -7,7 +7,8 @@ package funnel.osc
 		public function OSCMessage(address:String, ...args) {
 			super(address);
 			for each (var arg:* in args)
-			    if (arg is OSCType) addValue(arg);
+			    if (arg is OSCType)
+			    	addValue(arg);
 		}
 		
 		public function addValue(value:OSCType):void {

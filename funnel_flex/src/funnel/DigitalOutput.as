@@ -1,22 +1,22 @@
 package funnel
 {
-	public class Aout extends Port
-	{	
-		public function Aout(funnel:Funnel, server:Server, portNum:uint) {
-			super(funnel, server, portNum);
+	public class DigitalOutput extends Port
+	{
+		public function DigitalOutput(funnel:Funnel, commandPort:CommandPort, portNum:uint) {
+			super(funnel, commandPort, portNum);
 		}
-		
+			
 		override public function get direction():uint {
 			return PortDirection.OUTPUT;
 		}
 		
 		override public function get type():uint {
-			return PortType.ANALOG;
+			return PortType.DIGITAL;
 		}
 		
 		override public function set value(val:Number):void {
 			_value = val;
-			if (_funnel.autoUpadate) 
+			if (_funnel.autoUpadate)
 			    update();
 		}
 	}
