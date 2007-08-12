@@ -33,5 +33,10 @@ package funnel.osc
 				default: throw new IllegalOperationError("タイプコードの値が不正");
 			}
 		}
+		
+		public function toString():String {
+			return value.toString();
+		}
+		
 	}
 }

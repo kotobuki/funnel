@@ -5,7 +5,7 @@ package funnel.osc
 	
 	public class OSCPacket
 	{		
-		private static const _NUMBERSIGN:int = 35;
+		private static const NUMBERSIGN:int = 35;
 		
 		protected var _address:OSCString;
 		protected var _values:Array;
@@ -43,10 +43,14 @@ package funnel.osc
 			if (end == -1)
 			    end = bytes.length;
 			
-			if (bytes[bytes.position] == _NUMBERSIGN)
+			if (bytes[bytes.position] == NUMBERSIGN)
 			    return OSCBundle.createWithBytes(bytes, end);
 			else
 			    return OSCMessage.createWithBytes(bytes);
+		}
+		
+		public function toString():String {
+			return "[" + _address.toString() + " " + _values.toString() + "]";
 		}
 	}
 }
