@@ -28,7 +28,7 @@ public class FunnelServer extends Frame {
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
-	public GainerIO gainer;
+	public IOModule ioModule;
 	private TextArea loggingArea;
 	private boolean logEnable = false;
 	private final int width = 480;
@@ -41,7 +41,7 @@ public class FunnelServer extends Frame {
 		// Close the I/O module when the window is closed
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent evt) {
-				gainer.stopPolling();
+				ioModule.stopPolling();
 				System.exit(0);
 			}
 		});
@@ -71,6 +71,7 @@ public class FunnelServer extends Frame {
 		printMessage("Funnelは未踏ソフトウェア創造事業の支援を受けました");
 		printMessage("");
 
+		String type = "";
 		String commandPort = "9000";
 		String notificationPort = "9001";
 		String serialPort = "";
@@ -99,9 +100,16 @@ public class FunnelServer extends Frame {
 			printMessage("com:" + modules.get("com"));
 			printMessage("");
 
+			if (modules.get("type") == null) {
+				printMessage("Since a type is not specified, use the default type (i.e. Gainer).");
+				type = "Gainer";
+			} else {
+				type = modules.get("type").toString();
+			}
+
 			if (modules.get("com") == null) {
 				printMessage("Since a serial port is not specified, use an automatically detected port.");
-				serialPort = GainerIO.getSerialPortName();
+				serialPort = IOModule.getSerialPortName();
 			} else {
 				serialPort = modules.get("com").toString();
 			}
@@ -109,7 +117,7 @@ public class FunnelServer extends Frame {
 			printMessage("Since no settings file was found, use default settings instead.");
 			commandPort = "9000";
 			notificationPort = "9001";
-			serialPort = GainerIO.getSerialPortName();
+			serialPort = IOModule.getSerialPortName();
 		}
 
 		// Dump read setting from the settings file
@@ -123,8 +131,13 @@ public class FunnelServer extends Frame {
 		notificationPortServer = new NotificationPortServer(this, Integer
 				.parseInt(notificationPort), queue);
 		notificationPortServer.start();
-		gainer = new GainerIO(this, serialPort, queue);
-		// gainer.reboot();
+		if (type.equalsIgnoreCase("Gainer")) {
+			ioModule = new GainerIO(this, serialPort, queue);
+			ioModule.reboot();
+		} else if (type.equalsIgnoreCase("Arduino")) {
+			ioModule = new ArduinoIO(this, serialPort, queue);
+			ioModule.reboot();
+		}
 	}
 
 	// Print a message on the logging console
