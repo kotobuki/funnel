@@ -54,7 +54,7 @@ public class NotificationPortServer extends Server {
 				} catch (IOException e) {
 					printMessage(c.getIP() + " disconnected.");
 					clist.remove(c);
-					e.printStackTrace();
+					// e.printStackTrace();
 					break;
 				}
 			}

@@ -151,12 +151,8 @@ public class CommandPortClient extends Client implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		// buffers were 1500 bytes in size, but this was
-		// increased to 1536, as this is a common MTU
-		byte[] buffer = new byte[1536];
+		byte[] buffer = new byte[1536]; // this is a common MTU
 		try {
-			// while (isListening) {
-			// in.read(buffer, 0, 1536);
 			while (in.read(buffer, 0, 1536) != -1 && isListening) {
 				OSCPacket oscPacket = converter.convert(buffer, in.available());
 				dispatcher.dispatchPacket(oscPacket);
@@ -164,6 +160,7 @@ public class CommandPortClient extends Client implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
+			server.ioModule().reboot();
 			close();
 		}
 
