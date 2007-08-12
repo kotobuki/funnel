@@ -4,6 +4,7 @@ package funnel
 	import flash.events.*;
 	import flash.utils.ByteArray;
 	import funnel.osc.*;
+	import funnel.command.*;
 
 	public class Funnel extends EventDispatcher
 	{
@@ -12,13 +13,13 @@ package funnel
 		public var serviceInterval:int;
 		public var port:Array;
 		
-		private var _server:Server;
+		private var _commandPort:CommandPort;
 		private var _notificationPort:Socket;
 
 		public function Funnel(configuration:Array, host:String = "localhost", port:Number = 9000, samplingInterval:int = 8, serviceInterval:int = 20) {
 			super();
 			
-			_server = new Server(host, port);
+			_commandPort = new CommandPort(host, port);
 			_notificationPort = new Socket(host, port+1);
 			_notificationPort.addEventListener(ProgressEvent.SOCKET_DATA, parseNotificationPortValue);
 			
@@ -38,21 +39,21 @@ package funnel
 			}
 		}
 	
-		private function initPortsWithConfiguration(config:Array):void {
+		private function initPortsWithConfiguration(configuration:Array):void {
 			port = new Array();
-			for (var i:uint = 0; i < config.length; ++i) {
-				var aPort:Port = Port.createWithType(config[i], this, _server, i);
+			for (var i:uint = 0; i < configuration.length; ++i) {
+				var aPort:Port = Port.createWithType(configuration[i], this, _commandPort, i);
 				port.push(aPort);
 			}
 		}
 
 		private function initIOModule(configuration:Array, samplingInterval:uint):void {
-		    _server.reset();
-			_server.setConfiguration(configuration);
-			_server.setSamplingInterval(samplingInterval);
-			_server.startPolling();
-			_server.callback();
-			_server.addErrback(null, trace);
+		    _commandPort.writeCommand(new Reset());
+			_commandPort.writeCommand(new Configure(configuration));
+			_commandPort.writeCommand(new SamplingInterval(samplingInterval));
+			_commandPort.writeCommand(new Polling(true));
+			_commandPort.callback();
+			_commandPort.addErrback(null, trace);
 		}
 
 	}
