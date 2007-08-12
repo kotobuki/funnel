@@ -24,7 +24,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	private SerialPort port;
 	private InputStream input;
 	private OutputStream output;
-	private FunnelServer parent;
+	// private FunnelServer parent;
 
 	private final int rate = 38400;
 	private final int parity = SerialPort.PARITY_NONE;
@@ -127,16 +127,15 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 	private float[] inputs;
 
-	private LinkedBlockingQueue<OSCMessage> notifierQueue;
+	// private LinkedBlockingQueue<OSCMessage> notifierQueue;
 
 	byte buffer[] = new byte[64];
 	int bufferIndex;
 	int bufferLast;
 	int bufferSize = 64;
 
-	Integer ledPort;
-
-	Float zero;
+	private final Integer LED_PORT = 16;
+	private final Float FLOAT_ZERO = 0.0f;
 
 	public GainerIO(FunnelServer server, String serialPortName,
 			LinkedBlockingQueue<OSCMessage> notifierQueue) {
@@ -162,7 +161,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 						port.addEventListener(this);
 						port.notifyOnDataAvailable(true);
 
-						parent.printMessage("GAINER started on port "
+						parent.printMessage("Gainer started on port "
 								+ serialPortName);
 					}
 				}
@@ -188,14 +187,12 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		dinPortRange = new funnel.PortRange();
 		aoutPortRange = new funnel.PortRange();
 		doutPortRange = new funnel.PortRange();
-		ledPort = new Integer(16);
-		zero = new Float(0.0);
 	}
 
 	// シリアルポートを停止する
 	public void dispose() {
 		port.removeEventListener();
-		printMessage("dispose Gainer ..");
+		printMessage("Disposing communication with the Gainer I/O module...");
 		try {
 			if (input != null)
 				input.close();
@@ -372,15 +369,15 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		} else if (doutPortRange.contains((Integer) arguments[0])) {
 			for (int i = 0; i < doutPortRange.getMax(); i++) {
 				if (arguments[i + 1] != null) {
-					if (zero.equals(arguments[i + 1])) {
+					if (FLOAT_ZERO.equals(arguments[i + 1])) {
 						setDigitalOutputLow(i);
 					} else {
 						setDigitalOutputHigh(i);
 					}
 				}
 			}
-		} else if (ledPort.equals(arguments[0])) {
-			if (zero.equals(arguments[1])) {
+		} else if (LED_PORT.equals(arguments[0])) {
+			if (FLOAT_ZERO.equals(arguments[1])) {
 				write("l*");
 				ledCommandQueue.pop(1000);
 			} else {
@@ -393,23 +390,27 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	public void setPolling(Object[] arguments) {
 		if (arguments[0] instanceof Integer) {
 			if (new Integer(1).equals(arguments[0])) {
-				if (ainPortRange.getCounts() > 0) {
-					printMessage("polling started: ain");
-					write("i*");
-				}
-				configCommandQueue.sleep(100);
-				if (dinPortRange.getCounts() > 0) {
-					printMessage("polling started: din");
-					write("r*");
-				}
+				startPolling();
 			} else {
-				printMessage("polling stopped");
-				write("E*");
-				endCommandQueue.pop(1000);
+				stopPolling();
 			}
 		} else {
 			throw new IllegalArgumentException(
 					"The first argument of /polling is not an integer value");
+		}
+	}
+
+	public void startPolling() {
+		if (port != null) {
+			if (ainPortRange.getCounts() > 0) {
+				printMessage("polling started: ain");
+				write("i*");
+			}
+			configCommandQueue.sleep(100);
+			if (dinPortRange.getCounts() > 0) {
+				printMessage("polling started: din");
+				write("r*");
+			}
 		}
 	}
 
@@ -488,9 +489,9 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	}
 
 	// メッセージをテキストエリアに出力
-	private void printMessage(String msg) {
-		parent.printMessage(msg);
-	}
+	// private void printMessage(String msg) {
+	// parent.printMessage(msg);
+	// }
 
 	// 指定した文字までバッファを読みバイト列で返す
 	private byte[] readBytesUntil(int interesting) {

@@ -3,9 +3,12 @@
  */
 package funnel;
 
-import gnu.io.CommPortIdentifier;
-
 import java.util.Enumeration;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import com.illposed.osc.OSCMessage;
+
+import gnu.io.CommPortIdentifier;
 
 /**
  * The abstract class for I/O module classes
@@ -14,6 +17,9 @@ import java.util.Enumeration;
  * @see GainerIO
  */
 public abstract class IOModule {
+	protected LinkedBlockingQueue<OSCMessage> notifierQueue;
+	protected FunnelServer parent;
+
 	/**
 	 * Get the name of the first I/O module
 	 * 
@@ -85,7 +91,28 @@ public abstract class IOModule {
 	abstract public void setPolling(Object[] arguments);
 
 	/**
+	 * Start polling
+	 */
+	abstract public void startPolling();
+
+	/**
 	 * Stop polling
 	 */
 	abstract public void stopPolling();
+
+	protected void printMessage(String msg) {
+		parent.printMessage(msg);
+	}
+
+	/**
+	 * @param msec
+	 *            sleep time in milliseconds
+	 */
+	protected synchronized void sleep(long msec) {
+		try {
+			wait(msec);
+		} catch (InterruptedException e) {
+		}
+	}
+
 }

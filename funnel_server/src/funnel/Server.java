@@ -45,8 +45,8 @@ public class Server extends Thread {
 		super(group, target, name, stackSize);
 	}
 
-	public GainerIO ioModule() {
-		return parent.gainer;
+	public IOModule ioModule() {
+		return parent.ioModule;
 	}
 
 	public synchronized int getClientsCount() {
@@ -61,7 +61,7 @@ public class Server extends Thread {
 		try {
 			srvsocket.close();
 			printMessage("serversocket closed");
-	
+
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
