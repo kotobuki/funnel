@@ -1,11 +1,10 @@
-﻿package funnel;
-
-/**
- * Serial class
- *
- * @author PDP Project
- * @version 1.0
+﻿/**
+ * A hardware abstraction layer for the Gainer I/O module v1.0
+ * 
+ * @see http://gainer.cc
  */
+
+package funnel;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -24,7 +23,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	private SerialPort port;
 	private InputStream input;
 	private OutputStream output;
-	// private FunnelServer parent;
 
 	private final int rate = 38400;
 	private final int parity = SerialPort.PARITY_NONE;
@@ -44,36 +42,31 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	private funnel.PortRange aoutPortRange;
 	private funnel.PortRange doutPortRange;
 
-	private final int PORT_AIN = 0;
-	private final int PORT_DIN = 1;
-	private final int PORT_AOUT = 2;
-	private final int PORT_DOUT = 3;
-
-	private final Integer CONFIGURATION_1[] = { PORT_AIN, PORT_AIN, PORT_AIN,
-			PORT_AIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_AOUT,
-			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
-			PORT_DOUT, PORT_DOUT, PORT_DIN };
-	private final Integer CONFIGURATION_2[] = { PORT_AIN, PORT_AIN, PORT_AIN,
-			PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AOUT,
-			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
-			PORT_DOUT, PORT_DOUT, PORT_DIN };
-	private final Integer CONFIGURATION_3[] = { PORT_AIN, PORT_AIN, PORT_AIN,
-			PORT_AIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_AOUT,
+	private final static Integer CONFIGURATION_1[] = { PORT_AIN, PORT_AIN,
+			PORT_AIN, PORT_AIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_DOUT, PORT_DOUT,
+			PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DIN };
+	private final static Integer CONFIGURATION_2[] = { PORT_AIN, PORT_AIN,
+			PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
+			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_DOUT, PORT_DOUT,
+			PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DIN };
+	private final static Integer CONFIGURATION_3[] = { PORT_AIN, PORT_AIN,
+			PORT_AIN, PORT_AIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
 			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
-			PORT_AOUT, PORT_DOUT, PORT_DIN };
-	private final Integer CONFIGURATION_4[] = { PORT_AIN, PORT_AIN, PORT_AIN,
-			PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AOUT,
+			PORT_AOUT, PORT_AOUT, PORT_DOUT, PORT_DIN };
+	private final static Integer CONFIGURATION_4[] = { PORT_AIN, PORT_AIN,
+			PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
 			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
-			PORT_AOUT, PORT_DOUT, PORT_DIN };
-	private final Integer CONFIGURATION_5[] = { PORT_DIN, PORT_DIN, PORT_DIN,
+			PORT_AOUT, PORT_AOUT, PORT_DOUT, PORT_DIN };
+	private final static Integer CONFIGURATION_5[] = { PORT_DIN, PORT_DIN,
 			PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
 			PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
-			PORT_DIN, };
-	private final Integer CONFIGURATION_6[] = { PORT_DOUT, PORT_DOUT,
+			PORT_DIN, PORT_DIN, };
+	private final static Integer CONFIGURATION_6[] = { PORT_DOUT, PORT_DOUT,
 			PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 			PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 			PORT_DOUT, PORT_DOUT, };
-	private final Integer CONFIGURATION_7[] = {
+	private final static Integer CONFIGURATION_7[] = {
 			PORT_AOUT,
 			PORT_AOUT,
 			PORT_AOUT,
@@ -118,24 +111,22 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
 			PORT_AOUT, PORT_AOUT, // [0..7, 7]
 	};
-	private final Integer CONFIGURATION_8[] = { PORT_DIN, PORT_DIN, PORT_DIN,
-			PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DOUT,
+	private final static Integer CONFIGURATION_8[] = { PORT_DIN, PORT_DIN,
+			PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
 			PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
-			PORT_DOUT, };
+			PORT_DOUT, PORT_DOUT, };
 
 	private int configuration = 0;
-
 	private float[] inputs;
-
-	// private LinkedBlockingQueue<OSCMessage> notifierQueue;
 
 	byte buffer[] = new byte[64];
 	int bufferIndex;
 	int bufferLast;
 	int bufferSize = 64;
 
-	private final Integer LED_PORT = 16;
-	private final Float FLOAT_ZERO = 0.0f;
+	private final static Integer LED_PORT = new Integer(16);
+	private final static int BUTTON_PORT = 17;
+	private final static Float FLOAT_ZERO = new Float(0.0f);
 
 	public GainerIO(FunnelServer server, String serialPortName,
 			LinkedBlockingQueue<OSCMessage> notifierQueue) {
@@ -189,7 +180,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		doutPortRange = new funnel.PortRange();
 	}
 
-	// シリアルポートを停止する
 	public void dispose() {
 		port.removeEventListener();
 		printMessage("Disposing communication with the Gainer I/O module...");
@@ -254,10 +244,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		rebootCommandQueue.sleep(100);
 		write("?*");
 		String versionString = (String) versionCommandQueue.pop(1000);
-		printMessage("version: " + versionString);
+		printMessage("The I/O module rebooted successfully.");
+		printMessage("Firmware version: " + versionString.substring(1, 9));
 	}
 
-	// シリアルから入力があったら
 	synchronized public void serialEvent(SerialPortEvent serialEvent) {
 		if (serialEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
@@ -271,9 +261,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 						buffer[bufferLast++] = (byte) input.read();
 
 						if (buffer[bufferLast - 1] == '*') {
-							// parent.sendToFlash(readStringUntil('*'));
 							String command = readStringUntil('*');
-							// printMessage(command);
 							dispatch(command);
 							clear();
 						} else {
@@ -357,32 +345,34 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void setOutput(Object[] arguments) {
-		printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
-		if (aoutPortRange.contains((Integer) arguments[0])) {
-			for (int i = 0; i < aoutPortRange.getMax(); i++) {
-				if (arguments[i + 1] != null
-						&& arguments[i + 1] instanceof Float) {
-					setAnalogOutput(i,
-							(int) ((Float) arguments[i + 1] * 255.0f));
-				}
-			}
-		} else if (doutPortRange.contains((Integer) arguments[0])) {
-			for (int i = 0; i < doutPortRange.getMax(); i++) {
-				if (arguments[i + 1] != null) {
-					if (FLOAT_ZERO.equals(arguments[i + 1])) {
-						setDigitalOutputLow(i);
+		// printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
+		int start = (Integer) arguments[0];
+		for (int i = 0; i < (arguments.length - 1); i++) {
+			int port = start + i;
+			int index = 1 + i;
+			if (doutPortRange.contains(port)) {
+				if (arguments[index] != null
+						&& arguments[index] instanceof Float) {
+					if (FLOAT_ZERO.equals(arguments[index])) {
+						setDigitalOutputLow(port);
 					} else {
-						setDigitalOutputHigh(i);
+						setDigitalOutputHigh(port);
 					}
 				}
-			}
-		} else if (LED_PORT.equals(arguments[0])) {
-			if (FLOAT_ZERO.equals(arguments[1])) {
-				write("l*");
-				ledCommandQueue.pop(1000);
-			} else {
-				write("h*");
-				ledCommandQueue.pop(1000);
+			} else if (aoutPortRange.contains(port)) {
+				if (arguments[index] != null
+						&& arguments[index] instanceof Float) {
+					setAnalogOutput(port,
+							(int) ((Float) arguments[index] * 255.0f));
+				}
+			} else if (LED_PORT.equals(port)) {
+				if (FLOAT_ZERO.equals(arguments[index])) {
+					write("l*");
+					ledCommandQueue.pop(1000);
+				} else {
+					write("h*");
+					ledCommandQueue.pop(1000);
+				}
 			}
 		}
 	}
@@ -483,15 +473,21 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		} else if (command.equals("F*") || command.equals("N*")) {
+			inputs[BUTTON_PORT] = command.equals("N*") ? 1.0f : 0.0f;
+			Object arguments[] = new Object[2];
+			arguments[0] = new Integer(BUTTON_PORT);
+			arguments[1] = new Float(inputs[BUTTON_PORT]);
+			OSCMessage message = new OSCMessage("/in", arguments);
+			try {
+				notifierQueue.put(message);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		} else {
 			System.out.print("unknown: " + command);
 		}
 	}
-
-	// メッセージをテキストエリアに出力
-	// private void printMessage(String msg) {
-	// parent.printMessage(msg);
-	// }
 
 	// 指定した文字までバッファを読みバイト列で返す
 	private byte[] readBytesUntil(int interesting) {
@@ -629,7 +625,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		}
 	}
 
-	// GAINERに文字列を送る
 	private void write(String what) {
 		try {
 			output.write(what.getBytes());

@@ -17,6 +17,11 @@ import gnu.io.CommPortIdentifier;
  * @see GainerIO
  */
 public abstract class IOModule {
+	public final static Integer PORT_AIN = new Integer(0);
+	public final static Integer PORT_DIN = new Integer(1);
+	public final static Integer PORT_AOUT = new Integer(2);
+	public final static Integer PORT_DOUT = new Integer(3);
+
 	protected LinkedBlockingQueue<OSCMessage> notifierQueue;
 	protected FunnelServer parent;
 

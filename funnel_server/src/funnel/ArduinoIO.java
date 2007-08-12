@@ -1,5 +1,5 @@
 /**
- * A hardware abstraction layer for the Firmata v1.0 firmware for Arduino
+ * A hardware abstraction layer for the Arduino I/O board with Firmata v1.0 firmware
  * 
  * References:
  * Erik Sjödin's implementation for ActionScript 3
@@ -50,7 +50,7 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	private final int databits = 8;
 	private final int stopbits = SerialPort.STOPBITS_1;
 
-	// data processing varaibles
+	// data processing variables
 	private int waitForData = 0;
 	private int executeMultiByteCommand = 0;
 	private int multiByteChannel = 0;
@@ -64,11 +64,6 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 
 	private funnel.PortRange analogPortRange;
 	private funnel.PortRange digitalPortRange;
-
-	private final Integer PORT_AIN = 0;
-	private final Integer PORT_DIN = 1;
-	private final Integer PORT_AOUT = 2;
-	private final Integer PORT_DOUT = 3;
 
 	private final Float FLOAT_ZERO = 0.0f;
 
@@ -336,13 +331,16 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	public void setOutput(Object[] arguments) {
 		printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
 		int start = (Integer) arguments[0];
-		for (int i = 1; i < arguments.length; i++) {
-			if (digitalPortRange.contains(start + i)) {
-				if (arguments[i] != null && arguments[i] instanceof Float) {
-					if (FLOAT_ZERO.equals(arguments[i])) {
-						writeDigitalPin(i - digitalPortRange.getMin(), 0);
+		for (int i = 0; i < (arguments.length - 1); i++) {
+			int port = start + i;
+			int index = 1 + i;
+			if (digitalPortRange.contains(port)) {
+				if (arguments[index] != null
+						&& arguments[index] instanceof Float) {
+					if (FLOAT_ZERO.equals(arguments[index])) {
+						writeDigitalPin(port - digitalPortRange.getMin(), 0);
 					} else {
-						writeDigitalPin(i - digitalPortRange.getMin(), 1);
+						writeDigitalPin(port - digitalPortRange.getMin(), 1);
 					}
 				}
 			}
@@ -450,17 +448,14 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	}
 
 	private void writeDigitalPin(int pin, int mode) {
-		int mask = mode << pin; // get pins 8-13
+		int bitMask = 1 << pin;
 
-		// set the bit
-		if (mode == 1)
-			digitalPins |= (mode << pin);
+		if (mode == 1) {
+			digitalPins |= bitMask;
+		} else if (mode == 0) {
+			digitalPins &= ~bitMask;
+		}
 
-		// clear the bit
-		if (mode == 0)
-			digitalPins &= ~(1 << pin);
-
-		// transmit
 		writeByte(ARD_DIGITAL_MESSAGE);
 		writeByte(digitalPins % 128); // Tx pins 0-6
 		writeByte(digitalPins >> 7); // Tx pins 7-13
