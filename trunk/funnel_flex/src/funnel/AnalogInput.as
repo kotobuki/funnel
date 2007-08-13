@@ -29,6 +29,7 @@ package funnel
 			detectEdge(val);
 			
 		    _value = val;
+		    //trace(_value);
 		}
 	}
 }

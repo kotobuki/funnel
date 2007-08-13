@@ -32,16 +32,16 @@ package funnel
 		private function parseNotificationPortValue(event:Event):void {
 			var response:ByteArray = new ByteArray();
 			_notificationPort.readBytes(response);
-			var bundles:Array = splitBytes(response);
+			var bundles:Array = splitBundles(response);
 			for (var i:uint = 0; i < bundles.length; ++i) 
 				parseBundleBytes(bundles[i]);
 		}
 		
-		private static function splitBytes(bytes:ByteArray):Array {
+		private static function splitBundles(bytes:ByteArray):Array {
 			var bundles:Array = new Array();
 			var offset:uint = 0;
 			for (var i:uint = 0; i < bytes.length; ++i) {
-				if (bytes[i+1] == null || isBundle(bytes, i+1)) {
+				if (bytes[i+1] == null || OSCBundle.isBundle(bytes, i+1)) {
 					var bundleBytes:ByteArray = new ByteArray();
 					bytes.readBytes(bundleBytes, 0, i - offset + 1);
 					bundles.push(bundleBytes);
@@ -51,17 +51,6 @@ package funnel
 			return bundles;
 		}
 		
-		private static function isBundle(bytes:ByteArray, start:int):Boolean {
-			if (bytes[start] != 35) return false;
-			if (bytes[start+1] != 98) return false;
-			if (bytes[start+2] != 117) return false;
-			if (bytes[start+3] != 110) return false;
-			if (bytes[start+4] != 100) return false;
-			if (bytes[start+5] != 108) return false;
-			if (bytes[start+6] != 101) return false;
-			return true;
-		}
-		
 		private function parseBundleBytes(bundleBytes:ByteArray):void {
 			var messages:Array = OSCPacket.createWithBytes(bundleBytes).value;
 			for (var i:uint = 0; i < messages.length; ++i) {
@@ -69,6 +58,7 @@ package funnel
 				var startPortNum:uint = inputs[0].value;
 				for (var j:uint = 0; j < inputs.length - 1; ++j) {
 					port[startPortNum + j].value = inputs[j + 1].value;
+					//trace(port[0].value);
 				}
 			}
 		}

@@ -5,6 +5,7 @@ package funnel.osc
 	public class OSCBundle extends OSCPacket
 	{
 		private static const BUNDLE:String = "#bundle";
+		private static const SHARP:int = 35;
 		
 		public function OSCBundle() {
 			super(BUNDLE);
@@ -38,6 +39,17 @@ package funnel.osc
 		
 		public function addValue(value:OSCPacket):void {
 			_values.push(value);
+		}
+		
+		public static function isBundle(bytes:ByteArray, start:int):Boolean {
+			if (bytes[start] != SHARP) return false;
+			
+			var oldPosition:int = bytes.position;
+			bytes.position = start;
+			var str:String = OSCString.createWithBytes(bytes).value;
+			bytes.position = oldPosition;
+			
+			return (str == BUNDLE);
 		}
 		
 	}
