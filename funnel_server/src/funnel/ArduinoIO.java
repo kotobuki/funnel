@@ -17,7 +17,9 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
+import com.illposed.osc.OSCPacket;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -41,6 +43,9 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	private static final int ARD_REPORT_VERSION = 0xF9;
 	private static final int ARD_SYSTEM_RESET = 0xFF;
 
+	private static final int ARD_PIN_MODE_IN = 0x00;
+	private static final int ARD_PIN_MODE_OUT = 0x01;
+
 	private SerialPort port;
 	private InputStream input;
 	private OutputStream output;
@@ -56,10 +61,11 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	private int multiByteChannel = 0;
 
 	// data
-	private int[] storedInputData;
-	private float[] analogData;
-	private float[] digitalData;
-	private int[] firmwareVersion;
+	private int[] storedInputData = new int[ARD_MAX_DATA_BYTES];;
+	private float[] analogData = new float[ARD_TOTAL_ANALOG_PINS];
+	private float[] digitalData = new float[ARD_TOTAL_DIGITAL_PINS];
+	private int[] digitalPinMode = new int[ARD_TOTAL_DIGITAL_PINS];
+	private int[] firmwareVersion = new int[ARD_MAX_DATA_BYTES];
 	private int digitalPins = 0;
 
 	private funnel.PortRange analogPortRange;
@@ -67,16 +73,9 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 
 	private final Float FLOAT_ZERO = 0.0f;
 
-	public ArduinoIO(FunnelServer server, String serialPortName,
-			LinkedBlockingQueue<OSCMessage> notifierQueue) {
-
+	public ArduinoIO(FunnelServer server, String serialPortName) {
 		this.parent = server;
-		this.notifierQueue = notifierQueue;
 		parent.printMessage("Starting the Gainer I/O module...");
-		storedInputData = new int[ARD_MAX_DATA_BYTES];
-		digitalData = new float[ARD_TOTAL_DIGITAL_PINS];
-		firmwareVersion = new int[ARD_MAX_DATA_BYTES];
-		analogData = new float[ARD_TOTAL_ANALOG_PINS];
 
 		analogPortRange = new funnel.PortRange();
 		analogPortRange.setRange(0, 7); // 8 ports
@@ -190,6 +189,26 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 		return results;
 	}
 
+	public OSCBundle getAllInputsAsBundle() {
+		OSCBundle bundle = new OSCBundle();
+
+		Object ainArguments[] = new Object[1 + analogPortRange.getCounts()];
+		ainArguments[0] = new Integer(analogPortRange.getMin());
+		for (int i = 0; i < analogPortRange.getCounts(); i++) {
+			ainArguments[1 + i] = new Float(analogData[i]);
+		}
+		bundle.addPacket(new OSCMessage("/in", ainArguments));
+
+		Object dinArguments[] = new Object[1 + digitalPortRange.getCounts()];
+		dinArguments[0] = new Integer(digitalPortRange.getMin());
+		for (int i = 0; i < digitalPortRange.getCounts(); i++) {
+			dinArguments[1 + i] = new Float(digitalData[i]);
+		}
+		bundle.addPacket(new OSCMessage("/in", dinArguments));
+
+		return bundle;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -246,19 +265,6 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 								break;
 							case ARD_ANALOG_MESSAGE:
 								analogData[multiByteChannel] = (float) ((storedInputData[0] << 7) | storedInputData[1]) / 1023.0f;
-								Object arguments[] = new Object[2];
-								arguments[0] = new Integer(analogPortRange
-										.getMin()
-										+ multiByteChannel);
-								arguments[1] = new Float(
-										analogData[multiByteChannel]);
-								OSCMessage message = new OSCMessage("/in",
-										arguments);
-								try {
-									notifierQueue.put(message);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
 								break;
 							}
 
@@ -308,15 +314,25 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 					"The number of pins does not match to that of the Arduino I/O module");
 		}
 		for (int i = 0; i < arguments.length; i++) {
-			if (digitalPortRange.contains(i)) {
+			if (analogPortRange.contains(i)) {
 				if (arguments[i] != null && arguments[i] instanceof Integer) {
-					if (PORT_DIN.equals(arguments[i])) {
-						setPinMode(i - digitalPortRange.getMin(), 0);
-					} else if (PORT_DOUT.equals(arguments[i])) {
-						setPinMode(i - digitalPortRange.getMin(), 1);
+					if (!PORT_AIN.equals(arguments[i])) {
+						throw new IllegalArgumentException("Wrong port mode ("
+								+ i + ")");
 					}
 				} else {
-					throw new IllegalArgumentException("Wrong port mode: " + i);
+					throw new IllegalArgumentException("Wrong port mode (" + i
+							+ ")");
+				}
+			} else if (digitalPortRange.contains(i)) {
+				if (arguments[i] != null && arguments[i] instanceof Integer) {
+					int pinMode = PORT_DIN.equals(arguments[i]) ? ARD_PIN_MODE_IN
+							: ARD_PIN_MODE_OUT;
+					setPinMode(i - digitalPortRange.getMin(), pinMode);
+					digitalPinMode[i - digitalPortRange.getMin()] = pinMode;
+				} else {
+					throw new IllegalArgumentException("Wrong port mode (" + i
+							+ ")");
 				}
 			}
 		}
@@ -411,18 +427,6 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 		for (int i = 2; i < ARD_TOTAL_DIGITAL_PINS; ++i) {
 			mask = 1 << i;
 			digitalData[i] = (float) ((twoBytesForPorts & mask) >> i);
-		}
-
-		Object arguments[] = new Object[1 + digitalPortRange.getCounts()];
-		arguments[0] = new Integer(digitalPortRange.getMin());
-		for (int i = 0; i < digitalPortRange.getCounts(); i++) {
-			arguments[1 + i] = new Float(digitalData[i]);
-		}
-		OSCMessage message = new OSCMessage("/in", arguments);
-		try {
-			notifierQueue.put(message);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 	}
 

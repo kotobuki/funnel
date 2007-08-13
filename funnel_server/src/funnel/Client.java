@@ -1,5 +1,6 @@
 package funnel;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,6 +17,7 @@ public abstract class Client extends TcpOSCPort {
 	protected OSCByteArrayToJavaConverter converter = new OSCByteArrayToJavaConverter();
 	protected InputStream in;
 	protected OutputStream out;
+	protected BufferedOutputStream bufferedOut;
 
 	public Client(Server server, Socket socket) throws IOException {
 		super();
@@ -24,6 +26,9 @@ public abstract class Client extends TcpOSCPort {
 		this.ip = this.socket.getInetAddress().getHostAddress();
 		this.in = this.socket.getInputStream();
 		this.out = this.socket.getOutputStream();
+		this.bufferedOut = new BufferedOutputStream(this.socket
+				.getOutputStream());
+		// this.socket.setTcpNoDelay(true);
 	}
 
 	/**
@@ -35,9 +40,25 @@ public abstract class Client extends TcpOSCPort {
 
 		try {
 			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
 			in.close();
 		} catch (IOException e) {
-			server.printMessage("connection error on Client: " + ip);
+			e.printStackTrace();
+		}
+
+		try {
+			bufferedOut.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			out.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -62,8 +83,8 @@ public abstract class Client extends TcpOSCPort {
 		 * byteArray.length, address, port); socket.send(packet);
 		 */
 
-		out.write(byteArray, 0, byteArray.length);
-		out.flush();
+		bufferedOut.write(byteArray, 0, byteArray.length);
+		bufferedOut.flush();
 	}
 
 }

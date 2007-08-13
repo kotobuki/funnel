@@ -6,7 +6,8 @@ package funnel;
 import java.util.Enumeration;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.illposed.osc.OSCMessage;
+import com.illposed.osc.OSCBundle;
+import com.illposed.osc.OSCPacket;
 
 import gnu.io.CommPortIdentifier;
 
@@ -22,7 +23,6 @@ public abstract class IOModule {
 	public final static Integer PORT_AOUT = new Integer(2);
 	public final static Integer PORT_DOUT = new Integer(3);
 
-	protected LinkedBlockingQueue<OSCMessage> notifierQueue;
 	protected FunnelServer parent;
 
 	/**
@@ -31,7 +31,7 @@ public abstract class IOModule {
 	 * @return The serial port name of the first I/O module if found
 	 */
 	static public String getSerialPortName() {
-		String dname = null;
+		String theSerialPortName = null;
 
 		try {
 			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
@@ -39,12 +39,11 @@ public abstract class IOModule {
 				CommPortIdentifier portId = (CommPortIdentifier) portList
 						.nextElement();
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-
-					String pname = portId.getName();
-					if (pname.startsWith("/dev/cu.usbserial-")) {
-						dname = pname;
-					} else if (pname.startsWith("COM")) {
-						dname = "COM3";
+					String foundPortName = portId.getName();
+					if (foundPortName.startsWith("/dev/cu.usbserial-")) {
+						theSerialPortName = foundPortName;
+					} else if (foundPortName.startsWith("COM")) {
+						theSerialPortName = "COM3";
 					}
 				}
 			}
@@ -52,7 +51,7 @@ public abstract class IOModule {
 			e.printStackTrace();
 		}
 
-		return dname;
+		return theSerialPortName;
 	}
 
 	/**
@@ -68,6 +67,11 @@ public abstract class IOModule {
 	 * @return
 	 */
 	abstract public Object[] getInputs(String address, Object[] arguments);
+
+	/**
+	 * @return
+	 */
+	abstract public OSCBundle getAllInputsAsBundle();
 
 	/**
 	 * Reboot the I/O module
