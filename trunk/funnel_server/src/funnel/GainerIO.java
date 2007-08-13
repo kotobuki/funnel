@@ -6,18 +6,21 @@
 
 package funnel;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
+import com.illposed.osc.OSCPacket;
+import com.illposed.osc.utility.OSCByteArrayToJavaConverter;
+
+import gnu.io.CommPortIdentifier;
+import gnu.io.SerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
 
 public class GainerIO extends IOModule implements SerialPortEventListener {
 	private SerialPort port;
@@ -128,11 +131,11 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	private final static int BUTTON_PORT = 17;
 	private final static Float FLOAT_ZERO = new Float(0.0f);
 
-	public GainerIO(FunnelServer server, String serialPortName,
-			LinkedBlockingQueue<OSCMessage> notifierQueue) {
+	private float lastButton = 0.0f;
+
+	public GainerIO(FunnelServer server, String serialPortName) {
 
 		this.parent = server;
-		this.notifierQueue = notifierQueue;
 		parent.printMessage("Starting the Gainer I/O module...");
 
 		try {
@@ -236,6 +239,43 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			results[1 + i] = new Float(inputs[from + i]);
 		}
 		return results;
+	}
+
+	public OSCBundle getAllInputsAsBundle() {
+		if (inputs == null) {
+			return null;
+		} else {
+			OSCBundle bundle = new OSCBundle();
+
+			if (ainPortRange.getCounts() > 0) {
+				Object[] ainArguments = new Object[1 + ainPortRange.getCounts()];
+				ainArguments[0] = new Integer(ainPortRange.getMin());
+				for (int i = 0; i < ainPortRange.getCounts(); i++) {
+					ainArguments[1 + i] = new Float(inputs[ainPortRange
+							.getMin()
+							+ i]);
+				}
+				bundle.addPacket(new OSCMessage("/in", ainArguments));
+			}
+
+			if (dinPortRange.getCounts() > 0) {
+				Object[] dinArguments = new Object[1 + dinPortRange.getCounts()];
+				dinArguments[0] = new Integer(dinPortRange.getMin());
+				for (int i = 0; i < dinPortRange.getCounts(); i++) {
+					dinArguments[1 + i] = new Float(inputs[dinPortRange
+							.getMin()
+							+ i]);
+				}
+				bundle.addPacket(new OSCMessage("/in", dinArguments));
+			}
+
+			Object[] buttonArguments = new Object[2];
+			buttonArguments[0] = new Integer(BUTTON_PORT);
+			buttonArguments[1] = new Float(inputs[BUTTON_PORT]);
+			bundle.addPacket(new OSCMessage("/in", buttonArguments));
+
+			return bundle;
+		}
 	}
 
 	public void reboot() {
@@ -441,17 +481,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 				inputs[ainPortRange.getMin() + i] = (float) Integer.parseInt(
 						value, 16) / 255.0f;
 			}
-			Object arguments[] = new Object[1 + ainPortRange.getCounts()];
-			arguments[0] = new Integer(ainPortRange.getMin());
-			for (int i = 0; i < ainPortRange.getCounts(); i++) {
-				arguments[1 + i] = new Float(inputs[ainPortRange.getMin() + i]);
-			}
-			OSCMessage message = new OSCMessage("/in", arguments);
-			try {
-				notifierQueue.put(message);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		} else if (command.startsWith("r") || command.startsWith("R")) {
 			int value = Integer.parseInt(command.substring(1, 5), 16);
 			for (int i = 0; i < dinPortRange.getCounts(); i++) {
@@ -462,28 +491,8 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 					inputs[dinPortRange.getMin() + i] = 0.0f;
 				}
 			}
-			Object arguments[] = new Object[1 + dinPortRange.getCounts()];
-			arguments[0] = new Integer(dinPortRange.getMin());
-			for (int i = 0; i < dinPortRange.getCounts(); i++) {
-				arguments[1 + i] = new Float(inputs[dinPortRange.getMin() + i]);
-			}
-			OSCMessage message = new OSCMessage("/in", arguments);
-			try {
-				notifierQueue.put(message);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		} else if (command.equals("F*") || command.equals("N*")) {
 			inputs[BUTTON_PORT] = command.equals("N*") ? 1.0f : 0.0f;
-			Object arguments[] = new Object[2];
-			arguments[0] = new Integer(BUTTON_PORT);
-			arguments[1] = new Float(inputs[BUTTON_PORT]);
-			OSCMessage message = new OSCMessage("/in", arguments);
-			try {
-				notifierQueue.put(message);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		} else {
 			System.out.print("unknown: " + command);
 		}

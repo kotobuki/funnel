@@ -6,6 +6,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 public class Server extends Thread {
+	protected static int samplingInterval = 100;
 
 	protected ServerSocket srvsocket;
 	protected Vector<Client> clist;
@@ -45,8 +46,8 @@ public class Server extends Thread {
 		super(group, target, name, stackSize);
 	}
 
-	public IOModule ioModule() {
-		return parent.ioModule;
+	public IOModule getIOModule() {
+		return parent.getIOModule();
 	}
 
 	public synchronized int getClientsCount() {
@@ -80,6 +81,14 @@ public class Server extends Thread {
 				c.stopListening();
 			}
 		}
+	}
+
+	public static int getSamplingInterval() {
+		return samplingInterval;
+	}
+
+	public static void setSamplingInterval(int samplingInterval) {
+		Server.samplingInterval = samplingInterval;
 	}
 
 }

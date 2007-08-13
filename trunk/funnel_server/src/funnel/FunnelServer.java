@@ -23,17 +23,17 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.jvyaml.YAML;
 
 import com.illposed.osc.OSCMessage;
+import com.illposed.osc.OSCPacket;
 
 public class FunnelServer extends Frame {
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
-	public IOModule ioModule;
+	private IOModule ioModule = null;
 	private TextArea loggingArea;
 	private boolean logEnable = false;
 	private final int width = 480;
 	private final int height = 270;
-	private LinkedBlockingQueue<OSCMessage> queue;
 
 	public FunnelServer() {
 		super();
@@ -127,17 +127,20 @@ public class FunnelServer extends Frame {
 		commandPortServer = new CommandPortServer(this, Integer
 				.parseInt(commandPort));
 		commandPortServer.start();
-		queue = new LinkedBlockingQueue<OSCMessage>();
 		notificationPortServer = new NotificationPortServer(this, Integer
-				.parseInt(notificationPort), queue);
+				.parseInt(notificationPort));
 		notificationPortServer.start();
 		if (type.equalsIgnoreCase("Gainer")) {
-			ioModule = new GainerIO(this, serialPort, queue);
+			ioModule = new GainerIO(this, serialPort);
 			ioModule.reboot();
 		} else if (type.equalsIgnoreCase("Arduino")) {
-			ioModule = new ArduinoIO(this, serialPort, queue);
+			ioModule = new ArduinoIO(this, serialPort);
 			ioModule.reboot();
 		}
+	}
+
+	public IOModule getIOModule() {
+		return ioModule;
 	}
 
 	// Print a message on the logging console

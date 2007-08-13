@@ -6,20 +6,24 @@ import java.net.Socket;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
-import com.illposed.osc.OSCMessage;
+import com.illposed.osc.OSCBundle;
+import com.illposed.osc.OSCPacket;
 
 public class NotificationPortServer extends Server {
 	class Notifier implements Runnable {
 		public void run() {
 			while (true) {
-				try {
-					OSCMessage message = (OSCMessage) queue.poll(1000L,
-							TimeUnit.MILLISECONDS);
-					if (message != null) {
-						sendMessageToClients(message);
+				if (parent.getIOModule() != null) {
+					OSCBundle bundle = parent.getIOModule()
+							.getAllInputsAsBundle();
+					if (bundle != null) {
+						sendMessageToClients(bundle);
 					}
+				}
+
+				try {
+					Thread.sleep(Server.getSamplingInterval());
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -29,14 +33,11 @@ public class NotificationPortServer extends Server {
 
 	Notifier notifier;
 	Thread notifierThread;
-	LinkedBlockingQueue<OSCMessage> queue;
 	boolean isNotifierRunning = false;
 
-	public NotificationPortServer(FunnelServer parent, int port,
-			LinkedBlockingQueue<OSCMessage> queue) {
+	public NotificationPortServer(FunnelServer parent, int port) {
 		this.parent = parent;
 		this.port = port;
-		this.queue = queue;
 		clist = new Vector<Client>();
 		isNotifierRunning = true;
 		notifier = new Notifier();
@@ -44,7 +45,7 @@ public class NotificationPortServer extends Server {
 		notifierThread.start();
 	}
 
-	public void sendMessageToClients(OSCMessage message) {
+	public void sendMessageToClients(OSCPacket message) {
 		if (clist != null) {
 			Enumeration elements = clist.elements();
 			while (elements.hasMoreElements()) {
