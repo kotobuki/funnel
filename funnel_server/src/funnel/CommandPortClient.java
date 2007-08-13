@@ -118,7 +118,7 @@ public class CommandPortClient extends Client implements Runnable {
 			// server.printMessage("Sampling interval: "
 			// + message.getArguments()[0] + "\n");
 			Integer samplingInterval = (Integer) message.getArguments()[0];
-			server.setSamplingInterval(samplingInterval.intValue());
+			Server.setSamplingInterval(samplingInterval.intValue());
 			sendSimpleReply(message.getAddress(), NO_ERROR);
 		} else if (message.getAddress().equals("/configure")) {
 			// server.printMessage("Configuration requested\n");

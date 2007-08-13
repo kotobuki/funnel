@@ -4,10 +4,8 @@
 package funnel;
 
 import java.util.Enumeration;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import com.illposed.osc.OSCBundle;
-import com.illposed.osc.OSCPacket;
 
 import gnu.io.CommPortIdentifier;
 
@@ -24,6 +22,7 @@ public abstract class IOModule {
 	public final static Integer PORT_DOUT = new Integer(3);
 
 	protected FunnelServer parent;
+	protected boolean isPolling = false;
 
 	/**
 	 * Get the name of the first I/O module

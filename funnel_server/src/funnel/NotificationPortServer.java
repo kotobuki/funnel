@@ -47,7 +47,7 @@ public class NotificationPortServer extends Server {
 
 	public void sendMessageToClients(OSCPacket message) {
 		if (clist != null) {
-			Enumeration elements = clist.elements();
+			Enumeration<Client> elements = clist.elements();
 			while (elements.hasMoreElements()) {
 				Client c = (Client) (elements.nextElement());
 				try {
