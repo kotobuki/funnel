@@ -3,7 +3,7 @@ package {
 	import funnel.*;
 	import flash.events.*;
 	import flash.text.*;
-
+	
 	public class FunnelTest extends Sprite
 	{
 		/*
@@ -29,6 +29,15 @@ package {
 		    new Funnel(config);
 			*/
 			fio = new Funnel(GAINER_MODE1);
+			fio.port[0].onRisingEdge = function():void {
+				trace("port0 rising");
+			}
+			fio.port[4].onRisingEdge = function():void {
+				trace("port4 rising");
+			}
+			fio.port[4].onFallingEdge = function():void {
+				trace("port4 falling");
+			}
 			createView();
 		}
 		

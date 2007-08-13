@@ -43,10 +43,11 @@ package funnel.osc
 			if (end == -1)
 			    end = bytes.length;
 			
-			if (bytes[bytes.position] == NUMBERSIGN)
+			if (bytes[bytes.position] == NUMBERSIGN) {
 			    return OSCBundle.createWithBytes(bytes, end);
-			else
+			} else {
 			    return OSCMessage.createWithBytes(bytes);
+			}
 		}
 		
 		public function toString():String {
