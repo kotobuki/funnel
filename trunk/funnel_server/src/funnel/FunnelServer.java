@@ -18,12 +18,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.jvyaml.YAML;
-
-import com.illposed.osc.OSCMessage;
-import com.illposed.osc.OSCPacket;
 
 public class FunnelServer extends Frame {
 

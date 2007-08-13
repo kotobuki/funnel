@@ -8,7 +8,7 @@ public class BlockingQueue extends LinkedList {
 		super();
 	}
 
-	public synchronized void sleep(long msec) { // 指定ミリ秒実行を止めるメソッド
+	public synchronized void sleep(long msec) {
 		try {
 			wait(msec);
 		} catch (InterruptedException e) {

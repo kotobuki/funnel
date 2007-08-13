@@ -75,7 +75,7 @@ public class Server extends Thread {
 
 	public void dispose() {
 		if (clist != null) {
-			Enumeration e = clist.elements();
+			Enumeration<Client> e = clist.elements();
 			while (e.hasMoreElements()) {
 				CommandPortClient c = (CommandPortClient) (e.nextElement());
 				c.stopListening();

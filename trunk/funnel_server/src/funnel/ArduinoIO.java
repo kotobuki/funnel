@@ -15,11 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
-import com.illposed.osc.OSCPacket;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -190,6 +188,10 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public OSCBundle getAllInputsAsBundle() {
+		if (!this.isPolling) {
+			return null;
+		}
+
 		OSCBundle bundle = new OSCBundle();
 
 		Object ainArguments[] = new Object[1 + analogPortRange.getCounts()];
@@ -397,6 +399,7 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 			setAnalogPinReporting(pin, 1);
 		}
 		enableDigitalPinReporting();
+		this.isPolling = true;
 	}
 
 	/*
@@ -410,6 +413,7 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 			return;
 		}
 
+		this.isPolling = false;
 		for (int pin = 0; pin < 8; pin++) {
 			setAnalogPinReporting(pin, 0);
 		}
