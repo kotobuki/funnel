@@ -22,12 +22,15 @@ package funnel
 		protected var _portNum:uint;
 		protected var _value:Number;
 		
+		private var _inputAvailable:Boolean;
+		
 		public function Port(funnel:Funnel, commandPort:CommandPort, portNum:uint) {
 			edgeDetection = true;
 		    _funnel = funnel;
 			_commandPort = commandPort;
 			_portNum = portNum;
 			_value = 0;
+			_inputAvailable = false;
 		}
 		
 		internal static function createWithType(type:uint, funnel:Funnel, commandPort:CommandPort, portNum:uint):Port {
@@ -63,6 +66,12 @@ package funnel
 		protected function detectEdge(val:Number):void {
 			if (!edgeDetection) 
 				return;
+			
+			//ポートの初期値が0になっていることで発生してしまうイベントを抑止
+			if (!_inputAvailable) {
+				_inputAvailable = true;
+				return;
+			}
 			
 			if (value == 0 && val != 0 && onRisingEdge != null) 
 				onRisingEdge();

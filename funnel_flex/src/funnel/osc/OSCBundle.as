@@ -29,9 +29,10 @@ package funnel.osc
 			if (OSCString.createWithBytes(bytes).value != BUNDLE)
 			    return null;
 			bytes.position += 8; //TODO: readLongしてtimeに格納すべき
-			while (bytes.position < end) 
-				bundle.addValue(OSCPacket.createWithBytes(bytes, OSCInt.createWithBytes(bytes).value));
-			
+			while (bytes.position < end) {
+				var packet:OSCPacket = OSCPacket.createWithBytes(bytes, OSCInt.createWithBytes(bytes).value);
+				bundle.addValue(packet);
+			}
 			return bundle;
 		}
 		

@@ -16,7 +16,7 @@ package funnel
 		private var _commandPort:CommandPort;
 		private var _notificationPort:Socket;
 
-		public function Funnel(configuration:Array, host:String = "localhost", port:Number = 9000, samplingInterval:int = 8, serviceInterval:int = 20) {
+		public function Funnel(configuration:Array, host:String = "localhost", port:Number = 9000, samplingInterval:int = 33, serviceInterval:int = 20) {
 			super();
 			
 			_commandPort = new CommandPort(host, port);
@@ -32,10 +32,44 @@ package funnel
 		private function parseNotificationPortValue(event:Event):void {
 			var response:ByteArray = new ByteArray();
 			_notificationPort.readBytes(response);
-			var inputs:Array = OSCPacket.createWithBytes(response).value;
-			var startPortNum:uint = inputs[0].value;
-			for (var i:uint = 0; i < inputs.length - 1; ++i) {
-				port[startPortNum + i].value = inputs[i + 1].value;
+			var bundles:Array = splitBytes(response);
+			for (var i:uint = 0; i < bundles.length; ++i) 
+				parseBundleBytes(bundles[i]);
+		}
+		
+		private static function splitBytes(bytes:ByteArray):Array {
+			var bundles:Array = new Array();
+			var offset:uint = 0;
+			for (var i:uint = 0; i < bytes.length; ++i) {
+				if (bytes[i+1] == null || isBundle(bytes, i+1)) {
+					var bundleBytes:ByteArray = new ByteArray();
+					bytes.readBytes(bundleBytes, 0, i - offset + 1);
+					bundles.push(bundleBytes);
+					offset = i+1;
+				}
+			}
+			return bundles;
+		}
+		
+		private static function isBundle(bytes:ByteArray, start:int):Boolean {
+			if (bytes[start] != 35) return false;
+			if (bytes[start+1] != 98) return false;
+			if (bytes[start+2] != 117) return false;
+			if (bytes[start+3] != 110) return false;
+			if (bytes[start+4] != 100) return false;
+			if (bytes[start+5] != 108) return false;
+			if (bytes[start+6] != 101) return false;
+			return true;
+		}
+		
+		private function parseBundleBytes(bundleBytes:ByteArray):void {
+			var messages:Array = OSCPacket.createWithBytes(bundleBytes).value;
+			for (var i:uint = 0; i < messages.length; ++i) {
+				var inputs:Array = messages[i].value;
+				var startPortNum:uint = inputs[0].value;
+				for (var j:uint = 0; j < inputs.length - 1; ++j) {
+					port[startPortNum + j].value = inputs[j + 1].value;
+				}
 			}
 		}
 	
