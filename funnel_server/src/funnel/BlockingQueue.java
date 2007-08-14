@@ -4,6 +4,11 @@ import java.util.LinkedList;
 
 public class BlockingQueue extends LinkedList {
 
+	/**
+	 * Generated serialVersionUID
+	 */
+	private static final long serialVersionUID = 7156118094416432414L;
+
 	public BlockingQueue() {
 		super();
 	}

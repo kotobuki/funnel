@@ -9,7 +9,7 @@ public class Server extends Thread {
 	protected static int samplingInterval = 100;
 
 	protected ServerSocket srvsocket;
-	protected Vector<Client> clist;
+	protected Vector clist;
 	protected int port;
 	protected FunnelServer parent;
 
@@ -61,7 +61,7 @@ public class Server extends Thread {
 	protected void stopServer() {
 		try {
 			srvsocket.close();
-			printMessage("serversocket closed");
+			printMessage(Messages.getString("Server.SocketClosed")); //$NON-NLS-1$
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -69,13 +69,13 @@ public class Server extends Thread {
 	}
 
 	public void deleteClient(Client c) {
-		printMessage(c.getIP() + " disconnected.");
+		printMessage(c.getIP() + Messages.getString("Server.ClientDisconnected")); //$NON-NLS-1$
 		clist.remove(c);
 	}
 
 	public void dispose() {
 		if (clist != null) {
-			Enumeration<Client> e = clist.elements();
+			Enumeration e = clist.elements();
 			while (e.hasMoreElements()) {
 				CommandPortClient c = (CommandPortClient) (e.nextElement());
 				c.stopListening();

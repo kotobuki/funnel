@@ -16,25 +16,28 @@ public class CommandPortServer extends Server {
 	public CommandPortServer(FunnelServer parent, int port) {
 		this.parent = parent;
 		this.port = port;
-		clist = new Vector<Client>();
+		clist = new Vector();
 	}
 
 	public void run() {
-		printMessage("CommandPortServer: starting server...");
+		printMessage(Messages.getString("CommandPortServer.Starting")); //$NON-NLS-1$
 
 		try {
 			srvsocket = new ServerSocket(port);
-			printMessage("CommandPortServer: started on port " + port);
+			printMessage(Messages.getString("CommandPortServer.Started") + port); //$NON-NLS-1$
 
 			while (true) {
 				Socket sock = srvsocket.accept();
 				CommandPortClient client = new CommandPortClient(this, sock);
 				clist.add(client);
 				client.startListening();
-				printMessage(client.getIP() + " connected to the server.");
+				printMessage(client.getIP()
+						+ Messages
+								.getString("CommandPortServer.ClientConnected")); //$NON-NLS-1$
 			}
 		} catch (IOException ioe) {
-			printMessage("connection error inside Server. closing serversocket...");
+			printMessage(Messages
+					.getString("CommandPortServer.ErrorInsideServer")); //$NON-NLS-1$
 			ioe.printStackTrace();
 			stopServer();
 		}

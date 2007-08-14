@@ -5,7 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Enumeration;
 import java.util.Vector;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCPacket;
@@ -38,7 +37,7 @@ public class NotificationPortServer extends Server {
 	public NotificationPortServer(FunnelServer parent, int port) {
 		this.parent = parent;
 		this.port = port;
-		clist = new Vector<Client>();
+		clist = new Vector();
 		isNotifierRunning = true;
 		notifier = new Notifier();
 		notifierThread = new Thread(notifier);
@@ -47,13 +46,13 @@ public class NotificationPortServer extends Server {
 
 	public void sendMessageToClients(OSCPacket message) {
 		if (clist != null) {
-			Enumeration<Client> elements = clist.elements();
+			Enumeration elements = clist.elements();
 			while (elements.hasMoreElements()) {
 				Client c = (Client) (elements.nextElement());
 				try {
 					c.send(message);
 				} catch (IOException e) {
-					printMessage(c.getIP() + " disconnected.");
+					printMessage(c.getIP() + Messages.getString("NotificationPortServer.ClientDisconnected")); //$NON-NLS-1$
 					clist.remove(c);
 					// e.printStackTrace();
 					break;
@@ -63,21 +62,21 @@ public class NotificationPortServer extends Server {
 	}
 
 	public void run() {
-		printMessage("NotificationPortServer: starting server...");
+		printMessage(Messages.getString("NotificationPortServer.Starting")); //$NON-NLS-1$
 
 		try {
 			srvsocket = new ServerSocket(port);
-			printMessage("NotificationPortServer: started on port " + port);
+			printMessage(Messages.getString("NotificationPortServer.Started") + port); //$NON-NLS-1$
 
 			while (true) {
 				Socket sock = srvsocket.accept();
 				NotificationPortClient client = new NotificationPortClient(
 						this, sock);
 				clist.add(client);
-				printMessage(client.getIP() + " connected to the server.");
+				printMessage(client.getIP() + Messages.getString("NotificationPortServer.ClientConnected")); //$NON-NLS-1$
 			}
 		} catch (IOException ioe) {
-			printMessage("connection error inside Server. closing serversocket...");
+			printMessage(Messages.getString("NotificationPortServer.ErrorInsideServer")); //$NON-NLS-1$
 			ioe.printStackTrace();
 			stopServer();
 		}
