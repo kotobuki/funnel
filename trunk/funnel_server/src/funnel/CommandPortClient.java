@@ -3,7 +3,6 @@ package funnel;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.regex.Pattern;
 
 import com.illposed.osc.OSCListener;
 import com.illposed.osc.OSCMessage;
@@ -32,6 +31,13 @@ public class CommandPortClient extends Client implements Runnable {
 		public void acceptMessage(java.util.Date time, OSCMessage message) {
 			parent.handleMessage(message);
 		}
+
+		/**
+		 * This is a dummy method to constrain 'never used locally' warning
+		 */
+		public void init() {
+
+		}
 	}
 
 	// state for listening
@@ -54,6 +60,7 @@ public class CommandPortClient extends Client implements Runnable {
 	public CommandPortClient(Server server, Socket socket) throws IOException {
 		super(server, socket);
 		tokenizer = new Tokenizer(this);
+		tokenizer.init();
 	}
 
 	/**

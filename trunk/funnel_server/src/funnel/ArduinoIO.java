@@ -69,7 +69,7 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	private funnel.PortRange analogPortRange;
 	private funnel.PortRange digitalPortRange;
 
-	private final Float FLOAT_ZERO = 0.0f;
+	private final Float FLOAT_ZERO = new Float(0.0f);
 
 	public ArduinoIO(FunnelServer server, String serialPortName) {
 		this.parent = server;
@@ -119,7 +119,6 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	 * 
 	 * @see funnel.IOModule#dispose()
 	 */
-	@Override
 	public void dispose() {
 		port.removeEventListener();
 		printMessage("Disposing communication with the Arduino board...");
@@ -148,7 +147,6 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	 * 
 	 * @see funnel.IOModule#getInputs(java.lang.String, java.lang.Object[])
 	 */
-	@Override
 	public Object[] getInputs(String address, Object[] arguments)
 			throws IllegalArgumentException {
 		int from = 0;
@@ -157,8 +155,8 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 				+ digitalPortRange.getCounts();
 
 		if (address.equals("/in")) {
-			from = (Integer) arguments[0];
-			counts = (Integer) arguments[1];
+			from = ((Integer) arguments[0]).intValue();
+			counts = ((Integer) arguments[1]).intValue();
 		} else if (address.equals("/in/*")) {
 			from = 0;
 			counts = totalPortCounts;
@@ -216,7 +214,6 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	 * 
 	 * @see funnel.IOModule#reboot()
 	 */
-	@Override
 	public void reboot() {
 		if (port == null) {
 			return;
@@ -309,7 +306,6 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	 * 
 	 * @see funnel.IOModule#setConfiguration(java.lang.Object[])
 	 */
-	@Override
 	public void setConfiguration(Object[] arguments) {
 		if (arguments.length != (ARD_TOTAL_ANALOG_PINS + ARD_TOTAL_DIGITAL_PINS)) {
 			throw new IllegalArgumentException(
@@ -345,10 +341,9 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	 * 
 	 * @see funnel.IOModule#setOutput(java.lang.Object[])
 	 */
-	@Override
 	public void setOutput(Object[] arguments) {
 		printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
-		int start = (Integer) arguments[0];
+		int start = ((Integer) arguments[0]).intValue();
 		for (int i = 0; i < (arguments.length - 1); i++) {
 			int port = start + i;
 			int index = 1 + i;
@@ -370,7 +365,6 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	 * 
 	 * @see funnel.IOModule#setPolling(java.lang.Object[])
 	 */
-	@Override
 	public void setPolling(Object[] arguments) {
 		if (arguments[0] instanceof Integer) {
 			if (new Integer(1).equals(arguments[0])) {
@@ -389,7 +383,6 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	 * 
 	 * @see funnel.IOModule#stopPolling()
 	 */
-	@Override
 	public void startPolling() {
 		if (port == null) {
 			return;
@@ -407,7 +400,6 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	 * 
 	 * @see funnel.IOModule#stopPolling()
 	 */
-	@Override
 	public void stopPolling() {
 		if (port == null) {
 			return;
@@ -469,11 +461,11 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 		writeByte(digitalPins >> 7); // Tx pins 7-13
 	}
 
-	private void writeAnalogPin(int pin, int value) {
-		writeByte(ARD_ANALOG_MESSAGE + pin);
-		writeByte(value >> 7);
-		writeByte(value % 128);
-	}
+	// private void writeAnalogPin(int pin, int value) {
+	// writeByte(ARD_ANALOG_MESSAGE + pin);
+	// writeByte(value >> 7);
+	// writeByte(value % 128);
+	// }
 
 	private void writeByte(int data) {
 		try {

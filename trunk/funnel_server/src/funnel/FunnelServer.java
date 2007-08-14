@@ -16,18 +16,22 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Locale;
 import java.util.Map;
 
 import org.jvyaml.YAML;
 
 public class FunnelServer extends Frame {
 
+	/**
+	 * Generated serialVersionUID
+	 */
+	private static final long serialVersionUID = -2518876146630199843L;
+
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
 	private IOModule ioModule = null;
 	private TextArea loggingArea;
-	private boolean logEnable = false;
+	// private boolean logEnable = false;
 	private final int width = 480;
 	private final int height = 270;
 
@@ -43,96 +47,118 @@ public class FunnelServer extends Frame {
 		});
 
 		// Create the GUI elements
-		setTitle("FunnelServer");
+		setTitle("Funnel Server"); //$NON-NLS-1$
 		setSize(width, height);
 		show();
 		setLayout(null);
 		setResizable(false);
-		loggingArea = new TextArea("FunnelServer\n", 5, 10,
-				TextArea.SCROLLBARS_VERTICAL_ONLY);
+		loggingArea = new TextArea(
+				"Funnel Server build 009\n\n", 5, 10, TextArea.SCROLLBARS_VERTICAL_ONLY); //$NON-NLS-1$
 		Insets insets = this.getInsets();
 		loggingArea.setBounds(insets.left, insets.top, width
 				- (insets.left + insets.right), height
 				- (insets.top + insets.bottom));
 		loggingArea.setEditable(false);
-		loggingArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		loggingArea.setFont(new Font("Monospaced", Font.PLAIN, 12)); //$NON-NLS-1$
 		this.add(loggingArea);
 
-		printMessage("Funnel is developed by the Funnel development team, and");
-		printMessage("distributed under the New BSD License.");
+		printMessage(Messages.getString("FunnelServer.License")); //$NON-NLS-1$
+		printMessage("");
+		printMessage(Messages.getString("FunnelServer.Acknowledgements")); //$NON-NLS-1$
 		printMessage("");
 
-		printMessage("Acknowledgements:");
-		printMessage("Funnel is supported by Exploratory Software Project 2007 of IPA");
-		printMessage("Funnelは未踏ソフトウェア創造事業の支援を受けました");
-		printMessage("");
-
-		String type = "";
-		String commandPort = "9000";
-		String notificationPort = "9001";
-		String serialPort = "";
+		String type = ""; //$NON-NLS-1$
+		String commandPort = "9000"; //$NON-NLS-1$
+		String notificationPort = "9001"; //$NON-NLS-1$
+		String serialPort = null;
 
 		try {
-			Map settings = (Map) YAML.load(new FileReader("settings.yaml"));
-			printMessage("Settings:");
+			Map settings = (Map) YAML.load(new FileReader("settings.yaml")); //$NON-NLS-1$
+			// printMessage("Settings:"); //$NON-NLS-1$
 
-			Map serverSettings = (Map) settings.get("server");
-			if (serverSettings.get("command port") == null) {
-				commandPort = "9000";
+			Map serverSettings = (Map) settings.get("server"); //$NON-NLS-1$
+			if (serverSettings.get("command port") == null) { //$NON-NLS-1$
+				commandPort = "9000"; //$NON-NLS-1$
 			} else {
-				commandPort = serverSettings.get("command port").toString();
-				printMessage("command port:" + commandPort);
+				commandPort = serverSettings.get("command port").toString(); //$NON-NLS-1$
+				// printMessage("command port:" + commandPort); //$NON-NLS-1$
 			}
-			if (serverSettings.get("notification port") == null) {
-				notificationPort = "9001";
+			if (serverSettings.get("notification port") == null) { //$NON-NLS-1$
+				notificationPort = "9001"; //$NON-NLS-1$
 			} else {
-				notificationPort = serverSettings.get("notification port")
+				notificationPort = serverSettings.get("notification port") //$NON-NLS-1$
 						.toString();
-				printMessage("notification port:" + notificationPort);
+				// printMessage("notification port:" + notificationPort);
+				// //$NON-NLS-1$
 			}
 
-			Map modules = (Map) settings.get("io");
-			printMessage("type:" + modules.get("type"));
-			printMessage("com:" + modules.get("com"));
-			printMessage("");
+			Map modules = (Map) settings.get("io"); //$NON-NLS-1$
+			// printMessage("type:" + modules.get("type")); //$NON-NLS-1$
+			// //$NON-NLS-2$
+			// printMessage("com:" + modules.get("com")); //$NON-NLS-1$
+			// //$NON-NLS-2$
+			// printMessage(""); //$NON-NLS-1$
 
-			if (modules.get("type") == null) {
-				printMessage("Since a type is not specified, use the default type (i.e. Gainer).");
-				type = "Gainer";
+			if (modules.get("type") == null) { //$NON-NLS-1$
+				printMessage(Messages
+						.getString("FunnelServer.TypeIsNotSpecified")); //$NON-NLS-1$
+				type = "Gainer"; //$NON-NLS-1$
 			} else {
-				type = modules.get("type").toString();
+				type = modules.get("type").toString(); //$NON-NLS-1$
 			}
 
-			if (modules.get("com") == null) {
-				printMessage("Since a serial port is not specified, use an automatically detected port.");
+			if (modules.get("com") == null) { //$NON-NLS-1$
+				printMessage(Messages
+						.getString("FunnelServer.PortIsNotSpecified")); //$NON-NLS-1$
 				serialPort = IOModule.getSerialPortName();
 			} else {
-				serialPort = modules.get("com").toString();
+				serialPort = modules.get("com").toString(); //$NON-NLS-1$
 			}
 		} catch (FileNotFoundException e) {
-			printMessage("Since no settings file was found, use default settings instead.");
-			commandPort = "9000";
-			notificationPort = "9001";
+			printMessage(Messages.getString("FunnelServer.NoSettingsFile")); //$NON-NLS-1$
+			commandPort = "9000"; //$NON-NLS-1$
+			notificationPort = "9001"; //$NON-NLS-1$
 			serialPort = IOModule.getSerialPortName();
 		}
 
+		if (serialPort == null) {
+			printMessage(Messages.getString("FunnelServer.NoSerialPorts")); //$NON-NLS-1$
+			return;
+		}
+
 		// Dump read setting from the settings file
-		printMessage("command server port: " + commandPort);
-		printMessage("notification server port: " + notificationPort);
-		printMessage("serial port: " + serialPort);
+		// printMessage("command server port: " + commandPort); //$NON-NLS-1$
+		// printMessage("notification server port: " + notificationPort);
+		// //$NON-NLS-1$
+		// printMessage("serial port: " + serialPort); //$NON-NLS-1$
+
+		if (type.equalsIgnoreCase("Gainer")) { //$NON-NLS-1$
+			try {
+				ioModule = new GainerIO(this, serialPort);
+				ioModule.reboot();
+			} catch (RuntimeException e) {
+				printMessage(Messages
+						.getString("FunnelServer.CannotOpenGainer")); //$NON-NLS-1$
+				return;
+			}
+		} else if (type.equalsIgnoreCase("Arduino")) { //$NON-NLS-1$
+			try {
+				ioModule = new ArduinoIO(this, serialPort);
+				ioModule.reboot();
+			} catch (RuntimeException e) {
+				printMessage(Messages
+						.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
+				return;
+			}
+		}
+
 		commandPortServer = new CommandPortServer(this, Integer
 				.parseInt(commandPort));
 		commandPortServer.start();
+
 		notificationPortServer = new NotificationPortServer(this, Integer
 				.parseInt(notificationPort));
 		notificationPortServer.start();
-		if (type.equalsIgnoreCase("Gainer")) {
-			ioModule = new GainerIO(this, serialPort);
-			ioModule.reboot();
-		} else if (type.equalsIgnoreCase("Arduino")) {
-			ioModule = new ArduinoIO(this, serialPort);
-			ioModule.reboot();
-		}
 	}
 
 	public IOModule getIOModule() {
@@ -141,25 +167,17 @@ public class FunnelServer extends Frame {
 
 	// Print a message on the logging console
 	public void printMessage(String msg) {
-		loggingArea.append(msg + "\n");
+		loggingArea.append(msg + "\n"); //$NON-NLS-1$
 	}
 
 	// This is the start point of this application
 	public static void main(String[] args) {
-		String libPath = System.getProperty("java.library.path");
-		System.out.println("library path: " + libPath);
-		String classPath = System.getProperty("java.class.path");
-		System.out.println("class path: " + classPath);
-		System.out.println("current directory: "
-				+ new File(".").getAbsolutePath());
-
-		Locale locale = Locale.getDefault();
-		System.out.println("国：" + locale.getDisplayCountry());
-		System.out.println("国／地域コード：" + locale.getCountry());
-		System.out.println("言語：" + locale.getDisplayLanguage());
-		System.out.println("言語コード：" + locale.getLanguage());
-		System.out.println("ロケールの名前：" + locale.getDisplayName());
-		System.out.println("プログラム上の名前：" + locale.toString());
+		String libPath = System.getProperty("java.library.path"); //$NON-NLS-1$
+		System.out.println("library path: " + libPath); //$NON-NLS-1$
+		String classPath = System.getProperty("java.class.path"); //$NON-NLS-1$
+		System.out.println("class path: " + classPath); //$NON-NLS-1$
+		System.out.println("current directory: " //$NON-NLS-1$
+				+ new File(".").getAbsolutePath()); //$NON-NLS-1$
 
 		new FunnelServer();
 	}
