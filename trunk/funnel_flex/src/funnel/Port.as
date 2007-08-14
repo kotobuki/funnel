@@ -52,6 +52,12 @@ package funnel
 		
 		public function update():void {}
 		
+		public function get filters():Array {
+			return null;
+		}
+		
+		public function set filters(array:Array):void {}
+		
 		
 	}
 }
