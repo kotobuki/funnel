@@ -32,7 +32,7 @@ package funnel
 		internal function setInputValue(val:Number):void {
 			var filteredValue:Number = applyFilters(val);
 			detectEdge(filteredValue);
-		    _value = filteredValue;
+			_value = filteredValue;
 		}
 		
 		private function detectEdge(val:Number):void {

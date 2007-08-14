@@ -67,10 +67,10 @@ package funnel
 			
 			_d = new Deferred();
 			_d.addCallback(_commandPort, _commandPort.connect, host, portNum);//throw ServerNotFoundError
-		    _d.addCallback(_commandPort, _commandPort.writeCommand, new Reset());//throw RebootError
-		    _d.addCallback(_commandPort, _commandPort.writeCommand, new Configure(configuration));//throw ConfigurationError
-		    this.samplingInterval = samplingInterval;
-		    _d.addCallback(_commandPort, _commandPort.writeCommand, new Polling(true));
+			_d.addCallback(_commandPort, _commandPort.writeCommand, new Reset());//throw RebootError
+			_d.addCallback(_commandPort, _commandPort.writeCommand, new Configure(configuration));//throw ConfigurationError
+			this.samplingInterval = samplingInterval;
+			_d.addCallback(_commandPort, _commandPort.writeCommand, new Polling(true));
 			_d.addCallback(_notificationPort, _notificationPort.connect, host, portNum+1);//throw NotificatonPortNotFoundError
 			
 			_d.addCallback(this, callReadyHandler);
