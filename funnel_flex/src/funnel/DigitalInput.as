@@ -14,7 +14,7 @@ package funnel
 			return PortType.DIGITAL;
 		}
 		
-		override public function set value(val:Number):void {
+		internal function setInputValue(val:Number):void {
 			detectEdge(val);
 		    _value = val;
 		}

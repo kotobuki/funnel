@@ -29,16 +29,30 @@ package {
 		    new Funnel(config);
 			*/
 			fio = new Funnel(GAINER_MODE1);
+			fio.onReady = function():void {
+				trace("onReady");
+			}
+			fio.onFatalError = function(e:Error):void {
+				trace(e);
+			}
+			
 			fio.port[0].onRisingEdge = function():void {
 				trace("port0 rising");
 			}
+			fio.port[0].onFallingEdge = function():void {
+				trace("port0 falling");
+			}
 			fio.port[4].onRisingEdge = function():void {
-				trace("port4 rising");
+				trace("port4" + "rising");
 			}
 			fio.port[4].onFallingEdge = function():void {
 				trace("port4 falling");
 			}
 			createView();
+			
+			addEventListener(KeyboardEvent.KEY_DOWN, function():void {
+				trace(fio.port[4].minimum);
+			});
 		}
 		
 		private function createView():void {
