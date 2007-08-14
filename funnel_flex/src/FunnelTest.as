@@ -35,7 +35,6 @@ package {
 			fio.onFatalError = function(e:Error):void {
 				trace(e);
 			}
-			
 			fio.port[0].onRisingEdge = function():void {
 				trace("port0 rising");
 			}
