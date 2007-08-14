@@ -1,33 +1,26 @@
 package funnel
 {
 	import flash.net.Socket;
-	import flash.events.*;
-	import flash.utils.ByteArray;
-	import funnel.osc.*;
 	import funnel.command.*;
+	import funnel.async.*;
 
-	public class Funnel extends EventDispatcher
+	public class Funnel
 	{
-		public var autoUpadate:Boolean;
-		//public var serviceInterval:int;
+		public var autoUpdate:Boolean;
 		public var port:Array;
 		public var onReady:Function;
 		public var onFatalError:Function;
 		
+		private var _d:Deferred;
 		private var _samplingInterval:int;
 		private var _commandPort:CommandPort;
-		private var _notificationPort:Socket;
+		private var _notificationPort:NotificationPort;
 
-		public function Funnel(configuration:Array, host:String = "localhost", port:Number = 9000, samplingInterval:int = 33) {
+		public function Funnel(configuration:Array, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
 			super();
-
-			_commandPort = new CommandPort(host, port);
-			_notificationPort = new Socket(host, port+1);
-
+			autoUpdate = true;
 			initPortsWithConfiguration(configuration);
-			autoUpadate = true;
-			
-			initIOModule(configuration, samplingInterval);
+			connectServerAndInitIOModule(host, portNum, configuration, samplingInterval);
 		}
 		
 		public function get samplingInterval():int {
@@ -36,75 +29,46 @@ package funnel
 		
 		public function set samplingInterval(val:int):void {
 			_samplingInterval = val;
-			_commandPort.writeCommand(new SamplingInterval(val));
-		}
-
-		private function parseNotificationPortValue(event:Event):void {
-			var response:ByteArray = new ByteArray();
-			_notificationPort.readBytes(response);
-			var bundles:Array = splitBundles(response);
-			for (var i:uint = 0; i < bundles.length; ++i) 
-				parseBundleBytes(bundles[i]);
+			_d.addCallback(_commandPort, _commandPort.writeCommand, new SamplingInterval(val));
 		}
 		
-		private static function splitBundles(bytes:ByteArray):Array {
-			var bundles:Array = new Array();
-			var offset:uint = 0;
-			for (var i:uint = 0; i < bytes.length; ++i) {
-				if (bytes[i+1] == null || OSCBundle.isBundle(bytes, i+1)) {
-					var bundleBytes:ByteArray = new ByteArray();
-					bytes.readBytes(bundleBytes, 0, i - offset + 1);
-					bundles.push(bundleBytes);
-					offset = i+1;
-				}
-			}
-			return bundles;
+		private function exportValue(portNum:uint, portValue:Number):void {
+			if (autoUpdate)
+				_d.addCallback(_commandPort, _commandPort.writeCommand, new Out(portNum, portValue));
 		}
 		
-		private function parseBundleBytes(bundleBytes:ByteArray):void {
-			var messages:Array = OSCPacket.createWithBytes(bundleBytes).value;
-			for (var i:uint = 0; i < messages.length; ++i) {
-				var portValues:Array = messages[i].value;
-				var startPortNum:uint = portValues[0].value;
-				for (var j:uint = 0; j < portValues.length - 1; ++j) {
-					port[startPortNum + j].setInputValue(portValues[j + 1].value);
-				}
-			}
+		private function callReadyHandler():void {
+			if (onReady != null) onReady();
+		}
+		
+		private function callErrorHandler(e:Error):void {
+			if (onFatalError != null) onFatalError(e);
 		}
 	
 		private function initPortsWithConfiguration(configuration:Array):void {
 			port = new Array();
 			for (var i:uint = 0; i < configuration.length; ++i) {
-				var aPort:Port = Port.createWithType(configuration[i], this, _commandPort, i);
+				var aPort:Port = Port.createWithType(configuration[i], exportValue, i);
 				port.push(aPort);
 			}
 		}
 
-		private function initIOModule(configuration:Array, samplingInterval:uint):void {
-		    _commandPort.writeCommand(new Reset());
-		    
-			_commandPort.writeCommand(new Configure(configuration));
+		private function connectServerAndInitIOModule(host:String, portNum:Number, configuration:Array, samplingInterval:uint):void {
+			_commandPort = new CommandPort();
+			_notificationPort = new NotificationPort(port);
 			
-			_commandPort.addCallback(_notificationPort,
-				_notificationPort.addEventListener,
-				ProgressEvent.SOCKET_DATA, 
-				parseNotificationPortValue);
+			_d = new Deferred();
+			_d.addCallback(_commandPort, _commandPort.connect, host, portNum);//throw ServerNotFoundError
+		    _d.addCallback(_commandPort, _commandPort.writeCommand, new Reset());//throw RebootError
+		    _d.addCallback(_commandPort, _commandPort.writeCommand, new Configure(configuration));//throw ConfigurationError
+		    this.samplingInterval = samplingInterval;
+		    _d.addCallback(_commandPort, _commandPort.writeCommand, new Polling(true));
+			_d.addCallback(_notificationPort, _notificationPort.connect, host, portNum+1);//throw NotificatonPortNotFoundError
 			
-			this.samplingInterval = samplingInterval;
-			
-			_commandPort.writeCommand(new Polling(true));
-			
-			_commandPort.addCallback(null, function():void {
-				if (onReady != null)
-					onReady();
-			});
-			_commandPort.addErrback(null, function(e:Error):void {
-				if (onFatalError != null)
-					onFatalError(e);
-			});
-			
-			_commandPort.callback();
+			_d.addCallback(this, callReadyHandler);
+			_d.addErrback(this, callErrorHandler);
+			_d.callback();
 		}
-
+		
 	}
 }

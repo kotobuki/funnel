@@ -1,5 +1,6 @@
 package funnel
 {
+	
 	public class Configuration
 	{
 		public static const GAINER_MODE1:Array = [
