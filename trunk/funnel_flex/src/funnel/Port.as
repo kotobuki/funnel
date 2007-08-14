@@ -52,9 +52,7 @@ package funnel
 			return _value;
 		}
 		
-		public function set value(val:Number):void {
-		    _value = val;
-		}
+		public function set value(val:Number):void {}
 		
 		public function update():void {
 			_commandPort.writeCommand(new Out(_portNum, _value));

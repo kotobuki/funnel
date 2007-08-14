@@ -9,24 +9,34 @@ package funnel
 	public class Funnel extends EventDispatcher
 	{
 		public var autoUpadate:Boolean;
-		public var samplingInterval:int;
-		public var serviceInterval:int;
+		//public var serviceInterval:int;
 		public var port:Array;
+		public var onReady:Function;
+		public var onFatalError:Function;
 		
+		private var _samplingInterval:int;
 		private var _commandPort:CommandPort;
 		private var _notificationPort:Socket;
 
-		public function Funnel(configuration:Array, host:String = "localhost", port:Number = 9000, samplingInterval:int = 33, serviceInterval:int = 20) {
+		public function Funnel(configuration:Array, host:String = "localhost", port:Number = 9000, samplingInterval:int = 33) {
 			super();
-			
+
 			_commandPort = new CommandPort(host, port);
 			_notificationPort = new Socket(host, port+1);
-			_notificationPort.addEventListener(ProgressEvent.SOCKET_DATA, parseNotificationPortValue);
-			
+
 			initPortsWithConfiguration(configuration);
 			autoUpadate = true;
 			
 			initIOModule(configuration, samplingInterval);
+		}
+		
+		public function get samplingInterval():int {
+			return _samplingInterval;
+		}
+		
+		public function set samplingInterval(val:int):void {
+			_samplingInterval = val;
+			_commandPort.writeCommand(new SamplingInterval(val));
 		}
 
 		private function parseNotificationPortValue(event:Event):void {
@@ -54,11 +64,10 @@ package funnel
 		private function parseBundleBytes(bundleBytes:ByteArray):void {
 			var messages:Array = OSCPacket.createWithBytes(bundleBytes).value;
 			for (var i:uint = 0; i < messages.length; ++i) {
-				var inputs:Array = messages[i].value;
-				var startPortNum:uint = inputs[0].value;
-				for (var j:uint = 0; j < inputs.length - 1; ++j) {
-					port[startPortNum + j].value = inputs[j + 1].value;
-					//trace(port[0].value);
+				var portValues:Array = messages[i].value;
+				var startPortNum:uint = portValues[0].value;
+				for (var j:uint = 0; j < portValues.length - 1; ++j) {
+					port[startPortNum + j].setInputValue(portValues[j + 1].value);
 				}
 			}
 		}
@@ -73,11 +82,28 @@ package funnel
 
 		private function initIOModule(configuration:Array, samplingInterval:uint):void {
 		    _commandPort.writeCommand(new Reset());
+		    
 			_commandPort.writeCommand(new Configure(configuration));
-			_commandPort.writeCommand(new SamplingInterval(samplingInterval));
+			
+			_commandPort.addCallback(_notificationPort,
+				_notificationPort.addEventListener,
+				ProgressEvent.SOCKET_DATA, 
+				parseNotificationPortValue);
+			
+			this.samplingInterval = samplingInterval;
+			
 			_commandPort.writeCommand(new Polling(true));
+			
+			_commandPort.addCallback(null, function():void {
+				if (onReady != null)
+					onReady();
+			});
+			_commandPort.addErrback(null, function(e:Error):void {
+				if (onFatalError != null)
+					onFatalError(e);
+			});
+			
 			_commandPort.callback();
-			_commandPort.addErrback(null, trace);
 		}
 
 	}

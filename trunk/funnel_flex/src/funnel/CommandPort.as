@@ -6,6 +6,7 @@ package funnel
 	import flash.utils.Timer;
 	import funnel.async.Deferred;
 	import funnel.osc.*;
+	import funnel.error.*;
 	
 	public class CommandPort extends Deferred
 	{
@@ -63,6 +64,13 @@ package funnel
 					[IOErrorEvent.IO_ERROR, SecurityErrorEvent.SECURITY_ERROR]),
 			    host,
 			    port);
+			
+			
+			addErrback(
+				null,
+				function():void {
+					throw new ServerNotFoundError();
+				});
 		}
 		
 	}

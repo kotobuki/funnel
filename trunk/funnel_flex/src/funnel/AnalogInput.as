@@ -19,17 +19,13 @@ package funnel
 			return PortType.ANALOG;
 		}
 		
-		override public function set value(val:Number):void {
+		internal function setInputValue(val:Number):void {
 			minimum = Math.min(val, minimum);
 			maximum = Math.max(val, maximum);
-			//TODO:このままだとオーバフローするので、移動平均にする
 			_sum += val;
 			average = _sum / (++_sampleCount);
-			
 			detectEdge(val);
-			
 		    _value = val;
-		    //trace(_value);
 		}
 	}
 }
