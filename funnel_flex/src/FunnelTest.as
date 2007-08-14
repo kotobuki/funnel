@@ -3,6 +3,7 @@ package {
 	import funnel.*;
 	import flash.events.*;
 	import flash.text.*;
+	import funnel.filter.*;
 	
 	public class FunnelTest extends Sprite
 	{
@@ -32,26 +33,15 @@ package {
 			fio.onReady = function():void {
 				trace("onReady");
 			}
-			fio.onFatalError = function(e:Error):void {
-				trace(e);
+			fio.port[1].filters = [new Threshold(0.5, 0.1), new Convolution(Convolution.MOVING_AVERAGE)];
+			fio.port[1].onRisingEdge = function():void {
+				trace("rising");
 			}
-			fio.port[0].onRisingEdge = function():void {
-				trace("port0 rising");
+			fio.port[1].onFallingEdge = function():void {
+				trace("falling");
 			}
-			fio.port[0].onFallingEdge = function():void {
-				trace("port0 falling");
-			}
-			fio.port[4].onRisingEdge = function():void {
-				trace("port4" + "rising");
-			}
-			fio.port[4].onFallingEdge = function():void {
-				trace("port4 falling");
-			}
-			createView();
 			
-			addEventListener(KeyboardEvent.KEY_DOWN, function():void {
-				trace(fio.port[4].minimum);
-			});
+			createView();
 		}
 		
 		private function createView():void {

@@ -1,3 +1,10 @@
+/*
+FunnelはFunnel開発チームによって開発され、修正版BSDライセンスの元で配布されています。
+
+謝辞：
+Funnel v1.0は未踏ソフトウェア創造事業2007年度第I期の支援を受けて開発されました。
+*/
+
 package funnel
 {
 	import flash.net.Socket;
@@ -42,6 +49,7 @@ package funnel
 		}
 		
 		private function callErrorHandler(e:Error):void {
+			trace(e);
 			if (onFatalError != null) onFatalError(e);
 		}
 	
