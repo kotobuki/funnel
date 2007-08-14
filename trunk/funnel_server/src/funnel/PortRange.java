@@ -45,7 +45,7 @@ public class PortRange {
 		if (this.min > this.max) {
 			this.max = this.min;
 		}
-		if (this.max == this.min) {
+		if (this.max < 0 && this.min < 0) {
 			this.counts = 0;
 		} else {
 			this.counts = max - min + 1;
