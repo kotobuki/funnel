@@ -29,7 +29,7 @@ package funnel
 		}
 		
 		public function delay(delay:Number):Deferred {
-		    var timer:Timer = new Timer(delay, 1);
+			var timer:Timer = new Timer(delay, 1);
 			return Deferred.createDeferredFunctionWithEvent(
 				timer,
 				timer.start,

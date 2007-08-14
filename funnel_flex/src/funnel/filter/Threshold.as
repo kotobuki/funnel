@@ -20,7 +20,7 @@ package funnel.filter
 			else if (val > (_threshold + _hysteresis))
 				status = 1;
 			else
-               	status = _lastStatus;
+				status = _lastStatus;
 			
 			_lastStatus = status;
 			

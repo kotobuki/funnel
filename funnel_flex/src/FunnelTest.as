@@ -16,6 +16,7 @@ package {
 		include "alias.as"
 		
 		private var fio:Funnel;
+		private var osc:Osc;
 		
 		public function FunnelTest()
 		{
@@ -39,6 +40,16 @@ package {
 			}
 			fio.port[1].onFallingEdge = function():void {
 				trace("falling");
+			}
+			
+			/*
+			Osc(波形, 周波数, 振幅, オフセット, 位相, 更新間隔, 繰り返し回数)
+			波形、周波数、位相は正規化されている
+			以下の例では1秒間に２回点滅する
+			*/
+			osc = new Osc(Osc.SQUARE, 2, 1, 0, 0, 33, 1);
+			osc.onUpdate = function(val:Number):void {
+				trace(val);
 			}
 			
 			createView();
