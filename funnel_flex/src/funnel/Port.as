@@ -10,30 +10,37 @@ package funnel
 		public static const AOUT:uint = 2;
 		public static const DOUT:uint = 3;
 		
-		public var average:Number;
-		public var minimum:Number;
-		public var maximum:Number;
 		public var edgeDetection:Boolean;
 		public var onRisingEdge:Function;
 		public var onFallingEdge:Function;
 		
-		protected var _portNum:uint;
 		protected var _value:Number;
 		
-		public function Port(portNum:uint) {
+		public function Port() {
 			edgeDetection = true;
-			_portNum = portNum;
 			_value = 0;
 		}
 		
-		internal static function createWithType(type:uint, exportMethod:Function, portNum:uint):Port {
+		internal static function createWithType(type:uint):Port {
 			switch(type) {
-				case AIN: return new AnalogInput(portNum);
-				case DIN: return new DigitalInput(portNum);
-				case AOUT: return new AnalogOutput(portNum, exportMethod);
-				case DOUT: return new DigitalOutput(portNum, exportMethod);
+				case AIN: return new AnalogInput();
+				case DIN: return new DigitalInput();
+				case AOUT: return new AnalogOutput();
+				case DOUT: return new DigitalOutput();
 				default: throw new IllegalOperationError("タイプコードの値が不正");
 			}
+		}
+		
+		public function get average():Number {
+			return NaN;
+		}
+		
+		public function get minimum():Number {
+			return NaN;
+		}
+		
+		public function get maximum():Number {
+			return NaN;
 		}
 		
 		public function get direction():uint {
@@ -50,14 +57,13 @@ package funnel
 		
 		public function set value(val:Number):void {}
 		
-		public function update():void {}
-		
 		public function get filters():Array {
 			return null;
 		}
 		
 		public function set filters(array:Array):void {}
 		
+		public function clear():void {}
 		
 	}
 }

@@ -2,8 +2,8 @@ package funnel
 {
 	public class AnalogOutput extends OutputPort
 	{	
-		public function AnalogOutput(portNum:uint, exportMethod:Function) {
-			super(portNum, exportMethod);
+		public function AnalogOutput() {
+			super();
 		}
 		
 		override public function get type():uint {

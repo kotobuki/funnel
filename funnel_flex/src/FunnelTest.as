@@ -31,25 +31,28 @@ package {
 		    new Funnel(config);
 			*/
 			fio = new Funnel(GAINER_MODE1);
+			//fio.autoUpdate = true;
 			fio.onReady = function():void {
 				trace("onReady");
 			}
-			fio.port[1].filters = [new Threshold(0.5, 0.1), new Convolution(Convolution.MOVING_AVERAGE)];
-			fio.port[1].onRisingEdge = function():void {
+			fio.port(1).filters = [new Threshold(0.5, 0.1), new Convolution(Convolution.MOVING_AVERAGE)];
+			fio.port(1).onRisingEdge = function():void {
 				trace("rising");
 			}
-			fio.port[1].onFallingEdge = function():void {
+			fio.port(1).onFallingEdge = function():void {
 				trace("falling");
 			}
 			
 			/*
 			Osc(波形, 周波数, 振幅, オフセット, 位相, 更新間隔, 繰り返し回数)
 			波形、周波数、位相は正規化されている
-			以下の例では1秒間に２回点滅する
+			以下の例では1秒間に２回点滅する、点滅回数は5回
 			*/
-			osc = new Osc(Osc.SQUARE, 2, 1, 0, 0, 33, 1);
+			osc = new Osc(Osc.SIN, 1, 1, 0, 0, 33, 0);
 			osc.onUpdate = function(val:Number):void {
-				trace(val);
+				//trace(val);
+				fio.port(8).value = val;
+				//fio.update();
 			}
 			
 			createView();
@@ -64,8 +67,8 @@ package {
 			//入力値の表示を更新するenterframeイベントハンドラを設定
 			addEventListener(Event.ENTER_FRAME, function(event:Event):void {
 				var inputInfo:String = "";
-				for (var i:uint = 0; i < fio.port.length; ++i) {
-					var aPort:Port = fio.port[i];
+				for (var i:uint = 0; i < fio.portCount; ++i) {
+					var aPort:Port = fio.port(i);
 					if(aPort.direction == INPUT) {
 						var pad:String = i < 10 ? "0" : "";
 						inputInfo += "port[" + pad + i + "]: ";

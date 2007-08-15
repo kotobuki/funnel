@@ -8,9 +8,9 @@ package funnel
 		
 		private var _filters:Array;
 		
-		public function InputPort(portNum:uint)
+		public function InputPort()
 		{
-			super(portNum);
+			super();
 			_inputAvailable = false;
 		}
 		
@@ -44,20 +44,20 @@ package funnel
 				return;
 			}
 			
-			if (_value == 0 && val != 0 && onRisingEdge != null) {
+			if (_value == 0 && val != 0 && onRisingEdge != null)
 				onRisingEdge();
-			} else if (_value != 0 && val == 0 && onFallingEdge != null) {
+			else if (_value != 0 && val == 0 && onFallingEdge != null)
 				onFallingEdge();
-			}
+
 		}
 		
 		private function applyFilters(val:Number):Number {
 			if (_filters == null) return val;
 			
 			var result:Number = val;
-			for (var i:uint = 0; i < _filters.length; ++i) {
+			for (var i:uint = 0; i < _filters.length; ++i) 
 				result = _filters[i].processSample(result);
-			}
+			
 			return result;
 		}
 		

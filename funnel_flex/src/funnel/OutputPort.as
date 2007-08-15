@@ -2,12 +2,14 @@ package funnel
 {
 	public class OutputPort extends Port
 	{
-		private var _exportMethod:Function;
+		internal var onUpdate:Function;
 		
-		public function OutputPort(portNum:uint, exportMethod:Function)
+		public function OutputPort()
 		{
-			super(portNum);
-			_exportMethod = exportMethod;
+			super();
+			onUpdate = function():void {
+				;
+			}
 		}
 		
 		override public function get direction():uint {
@@ -16,11 +18,7 @@ package funnel
 		
 		override public function set value(val:Number):void {
 			_value = val;
-			update();
-		}
-		
-		override public function update():void {
-			_exportMethod(_portNum, _value);
+			onUpdate(_value);
 		}
 		
 	}

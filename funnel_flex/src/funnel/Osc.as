@@ -1,6 +1,6 @@
 package funnel
 {
-	import flash.utils.Timer;
+	import flash.utils.*;
 	import flash.events.TimerEvent;
 	import flash.events.Event;
 	
@@ -14,41 +14,47 @@ package funnel
 		private var _amplitude:Number;
 		private var _offset:Number;
 		private var _phase:Number;
-		private var _serviceInterval:uint;
 		private var _repeatCount:Number;
 		private var _time:uint;
+		private var _oldTime:int;
 		
-		public function Osc(wave:Function = null, freq:Number = 1, amplitude:Number = 1,
-							offset:Number = 0, phase:Number = 0, serviceInterval:uint = 33, repeatCount:Number = 0) {
+		public function Osc(
+			wave:Function = null,
+			freq:Number = 1,
+			amplitude:Number = 1,
+			offset:Number = 0,
+			phase:Number = 0,
+			serviceInterval:uint = 33,
+			repeatCount:Number = 0
+		) {
+			if (freq == 0) throw new Error("Frequency should be larger than 0...");
 			
-			if (freq == 0) throw new Error("Specified frequency is invalid...");
 			if (wave == null) _wave = SIN;
 			else _wave = wave;
 			_freq = freq;
 			_amplitude = amplitude;
 			_offset = offset;
 			_phase = phase;
-			_serviceInterval = serviceInterval;
 			_repeatCount = repeatCount;
 			
 			_time = 0;
+			_oldTime = getTimer();
 			_timer = new Timer(serviceInterval);
 			_timer.addEventListener(TimerEvent.TIMER, update);
 			_timer.start();
 		}
 		
 		private function update(event:Event):void {
-			_time += _serviceInterval;
+			_time += getTimer() - _oldTime;
+			_oldTime = getTimer();
 			var sec:Number = _time / 1000;
-			var result:Number;
 			
 			if (_repeatCount != 0 && _freq * sec >= _repeatCount) {
-				//sec = _repeatCount / _freq;
 				_timer.removeEventListener(TimerEvent.TIMER, update);
 				return;
 			}
-			result = _amplitude * _wave(_freq * (sec + _phase)) + _offset;
-			onUpdate(result);
+			
+			onUpdate(_amplitude * _wave(_freq * (sec + _phase)) + _offset);
 		}
 		
 		public static function SIN(val:Number):Number {
@@ -70,6 +76,11 @@ package funnel
 			val %= 1;
 			if (val <= 0.5) return val + 0.5;
 			else return val - 0.5;
+		}
+		
+		public static function IMPULSE(val:Number):Number {
+			if (val <= 1) return 1;
+			else return 0;
 		}
 	}
 }

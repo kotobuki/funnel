@@ -23,7 +23,6 @@ package funnel.filter
 				status = _lastStatus;
 			
 			_lastStatus = status;
-			
 			return status;
 		}
 		

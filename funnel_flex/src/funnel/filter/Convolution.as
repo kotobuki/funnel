@@ -20,9 +20,8 @@ package funnel.filter
 			_buffer.pop();
 			
 			var result:Number = 0;
-			for (var i:uint = 0; i < _buffer.length; i++) {
+			for (var i:uint = 0; i < _buffer.length; i++)
 				result += _coef[i] * _buffer[i];
-			}
 			
 			return result;
 		}
