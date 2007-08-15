@@ -59,7 +59,8 @@ package funnel
 		private function checkError():void {
 			var response:ByteArray = new ByteArray();
 			_socket.readBytes(response);
-			var errorCode:uint = OSCPacket.createWithBytes(response).value[0];
+			var packet:OSCPacket = OSCPacket.createWithBytes(response);
+			var errorCode:uint = packet.value[0];
 			if (errorCode != NO_ERROR)
 				throw new SERVER_ERRORS[errorCode];
 		}

@@ -25,7 +25,6 @@ package funnel.filter
 		{
 			var normVal:Number = (val - _inMin) / _inRange;
 			normVal = Math.max(0, Math.min(1, normVal));//入力を0-1でクランプ
-
 			return _outRange * _curve(normVal) + _outMin;
 		}
 		

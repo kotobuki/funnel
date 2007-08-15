@@ -14,20 +14,24 @@ package funnel
 	public class Funnel
 	{
 		public var autoUpdate:Boolean;
-		public var port:Array;
 		public var onReady:Function;
 		public var onFatalError:Function;
+		public var portCount:uint;
 		
+		private var _ioPorts:Array;
 		private var _d:Deferred;
 		private var _samplingInterval:int;
 		private var _commandPort:CommandPort;
 		private var _notificationPort:NotificationPort;
 
 		public function Funnel(configuration:Array, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
-			super();
 			autoUpdate = true;
 			initPortsWithConfiguration(configuration);
 			connectServerAndInitIOModule(host, portNum, configuration, samplingInterval);
+		}
+		
+		public function port(portNum:uint):Port {
+			return Port(_ioPorts[portNum]);
 		}
 		
 		public function get samplingInterval():int {
@@ -39,9 +43,15 @@ package funnel
 			_d.addCallback(_commandPort, _commandPort.writeCommand, new SamplingInterval(val));
 		}
 		
+		public function update():void {
+			for (var i:uint = 0; i < _ioPorts.length; ++i) {
+				var aPort:Port = _ioPorts[i];
+				if (aPort is OutputPort) exportValue(i, aPort.value);
+			}
+		}
+		
 		private function exportValue(portNum:uint, portValue:Number):void {
-			if (autoUpdate)
-				_d.addCallback(_commandPort, _commandPort.writeCommand, new Out(portNum, portValue));
+			_d.addCallback(_commandPort, _commandPort.writeCommand, new Out(portNum, portValue));
 		}
 		
 		private function callReadyHandler():void {
@@ -54,16 +64,24 @@ package funnel
 		}
 	
 		private function initPortsWithConfiguration(configuration:Array):void {
-			port = new Array();
+			_ioPorts = new Array();
 			for (var i:uint = 0; i < configuration.length; ++i) {
-				var aPort:Port = Port.createWithType(configuration[i], exportValue, i);
-				port.push(aPort);
+				var aPort:Port = Port.createWithType(configuration[i]);
+				if (aPort is OutputPort) {
+					OutputPort(aPort).onUpdate = function(id:uint):Function {
+						return function(portValue:Number):void {
+							if (autoUpdate) exportValue(id, portValue);
+						};
+					}(i);
+				}
+				_ioPorts.push(aPort);
 			}
+			portCount = _ioPorts.length;
 		}
 
 		private function connectServerAndInitIOModule(host:String, portNum:Number, configuration:Array, samplingInterval:uint):void {
 			_commandPort = new CommandPort();
-			_notificationPort = new NotificationPort(port);
+			_notificationPort = new NotificationPort(_ioPorts);
 			
 			_d = new Deferred();
 			_d.addCallback(_commandPort, _commandPort.connect, host, portNum);//throw ServerNotFoundError
