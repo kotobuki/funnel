@@ -27,6 +27,8 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
+	private static final String buildNumber = "010";
+
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
 	private IOModule ioModule = null;
@@ -53,7 +55,7 @@ public class FunnelServer extends Frame {
 		setLayout(null);
 		setResizable(false);
 		loggingArea = new TextArea(
-				"Funnel Server build 009\n\n", 5, 10, TextArea.SCROLLBARS_VERTICAL_ONLY); //$NON-NLS-1$
+				"Funnel Server (build " + buildNumber + ")\n\n", 5, 10, TextArea.SCROLLBARS_VERTICAL_ONLY); //$NON-NLS-1$
 		Insets insets = this.getInsets();
 		loggingArea.setBounds(insets.left, insets.top, width
 				- (insets.left + insets.right), height

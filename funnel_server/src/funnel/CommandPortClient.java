@@ -167,6 +167,7 @@ public class CommandPortClient extends Client implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
+			server.printMessage(Messages.getString("FunnelServer.CommandPort") + getIP() + Messages.getString("Server.ClientDisconnected")); //$NON-NLS-1$
 			server.getIOModule().reboot();
 			close();
 		}

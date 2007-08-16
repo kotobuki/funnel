@@ -411,7 +411,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void setOutput(Object[] arguments) {
-		// printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
+//		printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
 		int start = ((Integer) arguments[0]).intValue();
 		for (int i = 0; i < (arguments.length - 1); i++) {
 			int port = start + i;
@@ -568,7 +568,8 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 	private void setAnalogOutput(int ch, int value) {
 		if (aoutPortRange.contains(ch)) {
-			String s = "a" + Integer.toHexString(ch).toUpperCase(); //$NON-NLS-1$
+			int outChannel = ch - aoutPortRange.getMin();
+			String s = "a" + Integer.toHexString(outChannel).toUpperCase(); //$NON-NLS-1$
 			value = value < 0 ? 0 : value;
 			value = value > 255 ? 255 : value;
 
@@ -647,7 +648,8 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 	private void setDigitalOutputHigh(int ch) {
 		if (doutPortRange.contains(ch)) {
-			String s = "H" + Integer.toHexString(ch).toUpperCase() + "*"; //$NON-NLS-1$ //$NON-NLS-2$
+			int outChannel = ch - doutPortRange.getMin();
+			String s = "H" + Integer.toHexString(outChannel).toUpperCase() + "*"; //$NON-NLS-1$ //$NON-NLS-2$
 			write(s);
 			doutCommandQueue.pop(1000);
 		} else {
@@ -658,7 +660,8 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 	private void setDigitalOutputLow(int ch) {
 		if (doutPortRange.contains(ch)) {
-			String s = "L" + Integer.toHexString(ch).toUpperCase() + "*"; //$NON-NLS-1$ //$NON-NLS-2$
+			int outChannel = ch - doutPortRange.getMin();
+			String s = "L" + Integer.toHexString(outChannel).toUpperCase() + "*"; //$NON-NLS-1$ //$NON-NLS-2$
 			write(s);
 			doutCommandQueue.pop(1000);
 		} else {

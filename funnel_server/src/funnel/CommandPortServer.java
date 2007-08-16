@@ -31,7 +31,7 @@ public class CommandPortServer extends Server {
 				CommandPortClient client = new CommandPortClient(this, sock);
 				clist.add(client);
 				client.startListening();
-				printMessage(client.getIP()
+				printMessage(Messages.getString("FunnelServer.CommandPort") + client.getIP()
 						+ Messages
 								.getString("CommandPortServer.ClientConnected")); //$NON-NLS-1$
 			}
