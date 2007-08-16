@@ -7,17 +7,37 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import com.illposed.osc.OSCBundle;
+import com.illposed.osc.OSCMessage;
 import com.illposed.osc.OSCPacket;
 
 public class NotificationPortServer extends Server {
 	class Notifier implements Runnable {
 		public void run() {
 			while (true) {
+				if (clist != null && clist.isEmpty()) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					continue;
+				}
+
 				if (parent.getIOModule() != null) {
 					OSCBundle bundle = parent.getIOModule()
 							.getAllInputsAsBundle();
 					if (bundle != null) {
 						sendMessageToClients(bundle);
+					} else {
+						// It seems that not polling now, so let's say hello to
+						// find disconnected clients
+						OSCMessage message = new OSCMessage("/greetings");
+						sendMessageToClients(message);
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 
@@ -48,13 +68,13 @@ public class NotificationPortServer extends Server {
 		if (clist != null) {
 			Enumeration elements = clist.elements();
 			while (elements.hasMoreElements()) {
-				Client c = (Client) (elements.nextElement());
+				Client client = (Client) elements.nextElement();
 				try {
-					c.send(message);
+					client.send(message);
 				} catch (IOException e) {
-					printMessage(c.getIP() + Messages.getString("NotificationPortServer.ClientDisconnected")); //$NON-NLS-1$
-					clist.remove(c);
-					// e.printStackTrace();
+					printMessage(Messages
+							.getString("FunnelServer.NotificationPort") + client.getIP() + Messages.getString("NotificationPortServer.ClientDisconnected")); //$NON-NLS-1$
+					clist.remove(client);
 					break;
 				}
 			}
@@ -73,10 +93,12 @@ public class NotificationPortServer extends Server {
 				NotificationPortClient client = new NotificationPortClient(
 						this, sock);
 				clist.add(client);
-				printMessage(client.getIP() + Messages.getString("NotificationPortServer.ClientConnected")); //$NON-NLS-1$
+				printMessage(Messages
+						.getString("FunnelServer.NotificationPort") + client.getIP() + Messages.getString("NotificationPortServer.ClientConnected")); //$NON-NLS-1$
 			}
 		} catch (IOException ioe) {
-			printMessage(Messages.getString("NotificationPortServer.ErrorInsideServer")); //$NON-NLS-1$
+			printMessage(Messages
+					.getString("NotificationPortServer.ErrorInsideServer")); //$NON-NLS-1$
 			ioe.printStackTrace();
 			stopServer();
 		}

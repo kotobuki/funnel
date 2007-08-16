@@ -69,7 +69,6 @@ public class Server extends Thread {
 	}
 
 	public void deleteClient(Client c) {
-		printMessage(c.getIP() + Messages.getString("Server.ClientDisconnected")); //$NON-NLS-1$
 		clist.remove(c);
 	}
 

@@ -51,4 +51,11 @@ public abstract class TcpOSCPort {
 		}
 	}
 
+	public boolean isAlive() {
+		if (this.socket == null) {
+			return false;
+		}
+
+		return this.socket.isConnected();
+	}
 }
