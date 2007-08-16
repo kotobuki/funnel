@@ -29,9 +29,9 @@ import gnu.io.SerialPortEventListener;
  * 
  */
 public class ArduinoIO extends IOModule implements SerialPortEventListener {
-	private static final int ARD_TOTAL_ANALOG_PINS = 8;
+	private static final int ARD_TOTAL_ANALOG_PINS = 6;
 	private static final int ARD_TOTAL_DIGITAL_PINS = 14;
-	private static final int ARD_MAX_DATA_BYTES = 2;
+	private static final int ARD_MAX_DATA_BYTES = 3;
 
 	private static final int ARD_ANALOG_MESSAGE = 0xE0;
 	private static final int ARD_DIGITAL_MESSAGE = 0x90;
@@ -73,12 +73,12 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 
 	public ArduinoIO(FunnelServer server, String serialPortName) {
 		this.parent = server;
-		parent.printMessage("Starting the Gainer I/O module...");
+		parent.printMessage("Starting the Arduino I/O board...");
 
 		analogPortRange = new funnel.PortRange();
-		analogPortRange.setRange(0, 7); // 8 ports
+		analogPortRange.setRange(0, 5); // 6 ports
 		digitalPortRange = new funnel.PortRange();
-		digitalPortRange.setRange(8, 21); // 14 ports
+		digitalPortRange.setRange(6, 19); // 14 ports
 
 		try {
 			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
@@ -223,7 +223,7 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 
 		// This is dummy, since the system reset function is not implemented in
 		// the Firmata firmware v1.0
-		sleep(1000);
+		sleep(100);
 
 		writeByte(ARD_REPORT_VERSION);
 		printMessage("...finished!");
@@ -257,9 +257,12 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 								firmwareVersion[0] = storedInputData[0]; // major
 								firmwareVersion[1] = storedInputData[1]; // minor
 								firmwareVersion[2] = 0;
-								printMessage("firmware version: "
-										+ firmwareVersion[0] + "."
-										+ firmwareVersion[1] + "."
+								printMessage(Messages
+										.getString("GainerIO.FirmwareVesrion")
+										+ firmwareVersion[0]
+										+ "."
+										+ firmwareVersion[1]
+										+ "."
 										+ firmwareVersion[2]);
 								break;
 							case ARD_ANALOG_MESSAGE:
