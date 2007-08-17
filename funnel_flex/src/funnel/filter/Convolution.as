@@ -2,7 +2,7 @@ package funnel.filter
 {
 	public class Convolution implements IFilter
 	{
-		public static const LPH:Array = [1/3, 1/3, 1/3];
+		public static const LPF:Array = [1/3, 1/3, 1/3];
 		public static const HPF:Array = [1/3, -2/3, 1/3];
 		public static const MOVING_AVERAGE:Array = [1/8, 1/8, 1/8, 1/8, 1/8, 1/8, 1/8, 1/8];
 		

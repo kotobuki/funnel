@@ -2,22 +2,18 @@ package funnel
 {
 	import flash.errors.IllegalOperationError;
 	import funnel.command.Out;
+	import flash.events.EventDispatcher;
 	
-	public class Port
+	public class Port extends EventDispatcher
 	{
 		public static const AIN:uint = 0;
 		public static const DIN:uint = 1;
 		public static const AOUT:uint = 2;
 		public static const DOUT:uint = 3;
 		
-		public var edgeDetection:Boolean;
-		public var onRisingEdge:Function;
-		public var onFallingEdge:Function;
-		
 		protected var _value:Number;
 		
 		public function Port() {
-			edgeDetection = true;
 			_value = 0;
 		}
 		

@@ -3,11 +3,10 @@ package funnel
 	import flash.utils.*;
 	import flash.events.TimerEvent;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	
-	public class Osc
+	public class Osc extends EventDispatcher
 	{
-		public var onUpdate:Function;
-		
 		private var _timer:Timer;
 		private var _wave:Function;
 		private var _freq:Number;
@@ -17,6 +16,8 @@ package funnel
 		private var _repeatCount:Number;
 		private var _time:uint;
 		private var _oldTime:int;
+		
+		private var _value:Number;
 		
 		public function Osc(
 			wave:Function = null,
@@ -44,6 +45,10 @@ package funnel
 			_timer.start();
 		}
 		
+		public function get value():Number {
+			return _value;
+		}
+		
 		private function update(event:Event):void {
 			_time += getTimer() - _oldTime;
 			_oldTime = getTimer();
@@ -54,7 +59,8 @@ package funnel
 				return;
 			}
 			
-			onUpdate(_amplitude * _wave(_freq * (sec + _phase)) + _offset);
+			dispatchEvent(new Event(Event.CHANGE));
+			_value = _amplitude * _wave(_freq * (sec + _phase)) + _offset;
 		}
 		
 		public static function SIN(val:Number):Number {
