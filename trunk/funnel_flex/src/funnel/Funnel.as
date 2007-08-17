@@ -32,7 +32,6 @@ package funnel
 
 		public function Funnel(configuration:Array, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
 			autoUpdate = true;
-			_updatedPortIndices = new Array();
 			initPortsWithConfiguration(configuration);
 			connectServerAndInitIOModule(host, portNum, configuration, samplingInterval);
 		}
@@ -85,12 +84,15 @@ package funnel
 		
 		private function onReceiveBundle(event:Event):void {
 			var messages:Array = _notificationPort.inputPacket.value;
+var debugStr:String = "update from notification port:";
 			for (var i:uint = 0; i < messages.length; ++i) {
 				var portValues:Array = messages[i].value;
 				var startPortNum:uint = portValues[0].value;
+debugStr += " " + startPortNum + "-" + (startPortNum + portValues.length - 2);
 				for (var j:uint = 0; j < portValues.length - 1; ++j)
 					_ioPorts[startPortNum + j].value = portValues[j + 1].value;
 			}
+trace(debugStr);
 		}
 		
 		private function callReadyHandler():void {
@@ -104,6 +106,7 @@ package funnel
 	
 		private function initPortsWithConfiguration(configuration:Array):void {
 			_ioPorts = new Array();
+			_updatedPortIndices = new Array();
 			for (var i:uint = 0; i < configuration.length; ++i) {
 				var aPort:Port = Port.createWithType(configuration[i]);
 				if (aPort is OutputPort)
