@@ -20,7 +20,6 @@ package {
 		
 		private var fio:Funnel;
 		private var osc:Osc;
-		private var led:DigitalOutput;
 		
 		public function FunnelTest()
 		{
@@ -39,7 +38,7 @@ package {
 			fio.addEventListener(FATAL_ERROR, onFatalError);
 			
 			var cds:AnalogInput = fio.port(1) as AnalogInput;
-			led = fio.port(12) as DigitalOutput;
+			var led:DigitalOutput = fio.port(12) as DigitalOutput;
 
 			cds.filters = [new Threshold(0.5, 0.1)];
 			cds.addEventListener(RISING_EDGE, onLightening);
@@ -49,18 +48,16 @@ package {
 			Osc(波形, 周波数, 振幅, オフセット, 位相, 更新間隔, 繰り返し回数)
 			波形、周波数、位相は正規化されている
 			*/
-			/*
 			osc = new Osc(Osc.SQUARE, 1, 1, 0, 0, 33, 0);
 			osc.addEventListener(UPDATE, function():void {
 				led.value = osc.value;
 			});
-			*/
+			
 			createView();
 		}
 		
 		private function onReady(event:Event):void {
 			trace("onReady");
-			led.value = 1;
 		}
 		
 		private function onFatalError(event:Event):void {
