@@ -1,4 +1,4 @@
-package funnel
+package funnel.event
 {
 	import flash.events.Event;
 	

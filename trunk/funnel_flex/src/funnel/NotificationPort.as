@@ -7,14 +7,18 @@ package funnel
 	import funnel.error.*;
 	import funnel.osc.*;
 	
-	public class NotificationPort
+	public class NotificationPort extends EventDispatcher
 	{
-		private var _socket:Socket;
-		private var _ioPorts:Array;
+		private var _inputPacket:OSCPacket;
 		
-		public function NotificationPort(ports:Array) {
+		private var _socket:Socket;
+		
+		public function NotificationPort() {
 			_socket = new Socket();
-			_ioPorts = ports;
+		}
+		
+		public function get inputPacket():OSCPacket {
+			return _inputPacket;
 		}
 		
 		public function connect(host:String, port:Number):Deferred {
@@ -36,8 +40,10 @@ package funnel
 			var response:ByteArray = new ByteArray();
 			_socket.readBytes(response);
 			var bundles:Array = splitBundles(response);
-			for (var i:uint = 0; i < bundles.length; ++i) 
-				parseBundleBytes(bundles[i]);
+			for (var i:uint = 0; i < bundles.length; ++i) {
+				_inputPacket = OSCPacket.createWithBytes(bundles[i]);
+				dispatchEvent(new Event(Event.CHANGE));
+			}
 		}
 		
 		private static function splitBundles(bytes:ByteArray):Array {
@@ -52,17 +58,6 @@ package funnel
 				}
 			}
 			return bundles;
-		}
-		
-		private function parseBundleBytes(bundleBytes:ByteArray):void {
-			var messages:Array = OSCPacket.createWithBytes(bundleBytes).value;
-			for (var i:uint = 0; i < messages.length; ++i) {
-				var portValues:Array = messages[i].value;
-				var startPortNum:uint = portValues[0].value;
-				for (var j:uint = 0; j < portValues.length - 1; ++j) {
-					_ioPorts[startPortNum + j].setInputValue(portValues[j + 1].value);
-				}
-			}
 		}
 		
 	}

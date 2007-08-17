@@ -1,6 +1,7 @@
-package funnel
+package funnel.ioport
 {
 	import flash.events.Event;
+	import funnel.event.PortEvent;
 	
 	public class OutputPort extends Port
 	{

@@ -1,7 +1,6 @@
 package funnel.osc
 {
 	import flash.utils.ByteArray;
-	import flash.errors.IllegalOperationError;
 	
 	public class OSCType
 	{
@@ -30,7 +29,7 @@ package funnel.osc
 				case FLOAT: return OSCFloat.createWithBytes(bytes);
 				case INT: return OSCInt.createWithBytes(bytes);
 				case STRING: return OSCString.createWithBytes(bytes);
-				default: throw new IllegalOperationError("タイプコードの値が不正:" + type);
+				default: throw new Error("Type code is illegal...");
 			}
 		}
 		

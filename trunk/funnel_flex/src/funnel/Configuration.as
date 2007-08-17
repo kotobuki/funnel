@@ -1,6 +1,8 @@
 package funnel
 {
 	
+	import funnel.ioport.Port;
+	
 	public class Configuration
 	{
 		public static const GAINER_MODE1:Array = [

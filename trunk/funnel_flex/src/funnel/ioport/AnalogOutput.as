@@ -1,7 +1,7 @@
-package funnel
+package funnel.ioport
 {
-	public class AnalogInput extends InputPort
-	{
+	public class AnalogOutput extends OutputPort
+	{	
 		override public function get type():uint {
 			return PortType.ANALOG;
 		}

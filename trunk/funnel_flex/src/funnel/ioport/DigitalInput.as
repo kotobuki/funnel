@@ -1,4 +1,4 @@
-package funnel
+package funnel.ioport
 {
 	public class DigitalInput extends InputPort
 	{

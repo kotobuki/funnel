@@ -1,6 +1,5 @@
-package funnel
+package funnel.ioport
 {
-	import flash.errors.IllegalOperationError;
 	import funnel.command.Out;
 	import flash.events.EventDispatcher;
 	
@@ -17,13 +16,13 @@ package funnel
 			_value = 0;
 		}
 		
-		internal static function createWithType(type:uint):Port {
+		public static function createWithType(type:uint):Port {
 			switch(type) {
 				case AIN: return new AnalogInput();
 				case DIN: return new DigitalInput();
 				case AOUT: return new AnalogOutput();
 				case DOUT: return new DigitalOutput();
-				default: throw new IllegalOperationError("タイプコードの値が不正");
+				default: throw new Error("Type code is illegal...");
 			}
 		}
 		

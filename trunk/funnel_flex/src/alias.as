@@ -11,21 +11,21 @@ static private const GAINER_MODE6:Array = Configuration.GAINER_MODE6;
 static private const GAINER_MODE7:Array = Configuration.GAINER_MODE7;
 static private const GAINER_MODE8:Array = Configuration.GAINER_MODE8;
 
-static private const INPUT:uint = PortDirection.INPUT;
-static private const OUTPUT:uint = PortDirection.OUTPUT;
-static private const DIGITAL:uint = PortType.DIGITAL;
-static private const ANALOG:uint = PortType.ANALOG;
+static private const INPUT:uint = funnel.ioport.PortDirection.INPUT;
+static private const OUTPUT:uint = funnel.ioport.PortDirection.OUTPUT;
+static private const DIGITAL:uint = funnel.ioport.PortType.DIGITAL;
+static private const ANALOG:uint = funnel.ioport.PortType.ANALOG;
 
-static private const AIN:uint = Port.AIN;
-static private const AOUT:uint = Port.AOUT;
-static private const DIN:uint = Port.DIN;
-static private const DOUT:uint = Port.DOUT;
+static private const AIN:uint = funnel.ioport.Port.AIN;
+static private const AOUT:uint = funnel.ioport.Port.AOUT;
+static private const DIN:uint = funnel.ioport.Port.DIN;
+static private const DOUT:uint = funnel.ioport.Port.DOUT;
 
-static private const READY:String = FunnelEvent.READY;
-static private const FATAL_ERROR:String = FunnelEvent.FATAL_ERROR;
-static private const RISING_EDGE:String = PortEvent.RISING_EDGE;
-static private const FALLING_EDGE:String = PortEvent.FALLING_EDGE;
-static private const UPDATE:String = PortEvent.UPDATE;
+static private const READY:String = funnel.event.FunnelEvent.READY;
+static private const FATAL_ERROR:String = funnel.event.FunnelEvent.FATAL_ERROR;
+static private const RISING_EDGE:String = funnel.event.PortEvent.RISING_EDGE;
+static private const FALLING_EDGE:String = funnel.event.PortEvent.FALLING_EDGE;
+static private const UPDATE:String = funnel.event.PortEvent.UPDATE;
 /*
 static private const LPH:Array = funnel.filter.Convolution.LPF;
 static private const HPF:Array = funnel.filter.Convolution.HPF;

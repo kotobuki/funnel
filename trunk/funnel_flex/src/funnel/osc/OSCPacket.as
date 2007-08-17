@@ -42,12 +42,11 @@ package funnel.osc
 		public static function createWithBytes(bytes:ByteArray, end:int = -1):OSCPacket {
 			if (end == -1)
 			    end = bytes.length;
-			
-			if (bytes[bytes.position] == NUMBERSIGN) {
-			    return OSCBundle.createWithBytes(bytes, end);
-			} else {
-			    return OSCMessage.createWithBytes(bytes);
-			}
+				
+			if (bytes[bytes.position] == NUMBERSIGN)
+		    	return OSCBundle.createWithBytes(bytes, end);
+			else
+				return OSCMessage.createWithBytes(bytes);
 		}
 		
 		public function toString():String {

@@ -1,9 +1,12 @@
 package {
-	import flash.display.*;
-	import funnel.*;
+	import flash.display.*;	
 	import flash.events.*;
 	import flash.text.*;
+	
+	import funnel.*;
 	import funnel.filter.*;
+	import funnel.ioport.*;
+	import funnel.event.*;
 	
 	public class FunnelTest extends Sprite
 	{
