@@ -1,5 +1,6 @@
 package funnel
 {
+	import flash.events.Event;
 	import funnel.filter.IFilter;
 	
 	public class InputPort extends Port
@@ -8,10 +9,23 @@ package funnel
 		
 		private var _filters:Array;
 		
+		private static const MAX_SAMPLES:Number = Number.MAX_VALUE;
+		private var _numSamples:Number;
+		private var _sum:Number;
+		private var _average:Number;
+		private var _minimum:Number;
+		private var _maximum:Number;
+		
 		public function InputPort()
 		{
 			super();
 			_inputAvailable = false;
+			
+			_minimum = 1;
+			_maximum = 0;
+			_average = 0;
+			_sum = 0;
+			_numSamples = 0;
 		}
 		
 		override public function get direction():uint {
@@ -29,25 +43,55 @@ package funnel
 			_filters = array;
 		}
 		
-		internal function setInputValue(val:Number):void {
+		override public function get average():Number {
+			return _average;
+		}
+		
+		override public function get minimum():Number {
+			return _minimum;
+		}
+		
+		override public function get maximum():Number {
+			return _maximum;
+		}
+		
+		override public function clear():void {
+			_minimum = _maximum = _average = _value;
+			clearWeight();
+		}
+		
+		private function clearWeight():void {
+			_sum = _average;
+			_numSamples = 1;
+		}
+		
+		internal function setInputValue(val:Number):void {	
+			calculateMinimumMaximumAndMean(val);
 			var filteredValue:Number = applyFilters(val);
 			detectEdge(filteredValue);
 			_value = filteredValue;
 		}
 		
-		private function detectEdge(val:Number):void {
-			if (!edgeDetection) 
-				return;
+		private function calculateMinimumMaximumAndMean(val:Number):void {
+			_minimum = Math.min(val, minimum);
+			_maximum = Math.max(val, maximum);
 			
+			_sum += val;
+			_average = _sum / (++_numSamples);
+			if (_numSamples >= MAX_SAMPLES)
+				clearWeight();
+		}
+		
+		private function detectEdge(val:Number):void {
 			if (!_inputAvailable) {
 				_inputAvailable = true;
 				return;
 			}
 			
-			if (_value == 0 && val != 0 && onRisingEdge != null)
-				onRisingEdge();
-			else if (_value != 0 && val == 0 && onFallingEdge != null)
-				onFallingEdge();
+			if (_value == 0 && val != 0)
+				dispatchEvent(new Event(PortEvent.RISING_EDGE));
+			else if (_value != 0 && val == 0)
+				dispatchEvent(new Event(PortEvent.FALLING_EDGE));
 
 		}
 		

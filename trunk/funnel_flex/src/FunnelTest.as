@@ -19,7 +19,7 @@ package {
 		private var osc:Osc;
 		
 		public function FunnelTest()
-		{
+		{		
 			/*
 			//コンフィギュレーションを配列で渡す場合、例えば以下のように記述する
 			var config:Array = [
@@ -31,31 +31,42 @@ package {
 		    new Funnel(config);
 			*/
 			fio = new Funnel(GAINER_MODE1);
-			//fio.autoUpdate = true;
-			fio.onReady = function():void {
-				trace("onReady");
-			}
-			fio.port(1).filters = [new Threshold(0.5, 0.1), new Convolution(Convolution.MOVING_AVERAGE)];
-			fio.port(1).onRisingEdge = function():void {
-				trace("rising");
-			}
-			fio.port(1).onFallingEdge = function():void {
-				trace("falling");
-			}
+			fio.addEventListener(READY, onReady);
+			fio.addEventListener(FATAL_ERROR, onFatalError);
+			
+			var cds:AnalogInput = fio.port(1) as AnalogInput;
+			var led:AnalogOutput = fio.port(8) as AnalogOutput;
+
+			cds.filters = [new Threshold(0.5, 0.1)];
+			cds.addEventListener(RISING_EDGE, onLightening);
+			cds.addEventListener(FALLING_EDGE, onDarkening);
 			
 			/*
 			Osc(波形, 周波数, 振幅, オフセット, 位相, 更新間隔, 繰り返し回数)
 			波形、周波数、位相は正規化されている
-			以下の例では1秒間に２回点滅する、点滅回数は5回
 			*/
 			osc = new Osc(Osc.SIN, 1, 1, 0, 0, 33, 0);
-			osc.onUpdate = function(val:Number):void {
-				//trace(val);
-				fio.port(8).value = val;
-				//fio.update();
-			}
+			osc.addEventListener(UPDATE, function():void {
+				led.value = osc.value;
+			});
 			
 			createView();
+		}
+		
+		private function onReady(event:Event):void {
+			trace("onReady");
+		}
+		
+		private function onFatalError(event:Event):void {
+			trace("onFatalError");
+		}
+		
+		private function onLightening(event:Event):void {
+			trace("onLightening");
+		}
+		
+		private function onDarkening(event:Event):void {
+			trace("onDarkening");
 		}
 		
 		private function createView():void {
@@ -73,11 +84,9 @@ package {
 						var pad:String = i < 10 ? "0" : "";
 						inputInfo += "port[" + pad + i + "]: ";
 						inputInfo += format(aPort.value, 3);
-						if (aPort.type == ANALOG) {
-							inputInfo += "    ave: " + format(aPort.average, 3);
-							inputInfo += "    min: " + format(aPort.minimum, 3);
-							inputInfo += "    max: " + format(aPort.maximum, 3);
-						}
+						inputInfo += "    ave: " + format(aPort.average, 3);
+						inputInfo += "    min: " + format(aPort.minimum, 3);
+						inputInfo += "    max: " + format(aPort.maximum, 3);
 						inputInfo += "\n";
 					}
 				}

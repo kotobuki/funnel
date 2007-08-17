@@ -7,18 +7,18 @@ Funnel v1.0は未踏ソフトウェア創造事業2007年度第I期の支援を�
 
 package funnel
 {
+	import flash.events.EventDispatcher;
+	import flash.events.Event;
 	import flash.net.Socket;
 	import funnel.command.*;
 	import funnel.async.*;
 
-	public class Funnel
+	public class Funnel extends EventDispatcher
 	{
 		public var autoUpdate:Boolean;
-		public var onReady:Function;
-		public var onFatalError:Function;
-		public var portCount:uint;
-		
+	
 		private var _ioPorts:Array;
+		private var _portCount:uint;
 		private var _d:Deferred;
 		private var _samplingInterval:int;
 		private var _commandPort:CommandPort;
@@ -32,6 +32,10 @@ package funnel
 		
 		public function port(portNum:uint):Port {
 			return Port(_ioPorts[portNum]);
+		}
+		
+		public function get portCount():uint {
+			return _portCount;
 		}
 		
 		public function get samplingInterval():int {
@@ -55,28 +59,30 @@ package funnel
 		}
 		
 		private function callReadyHandler():void {
-			if (onReady != null) onReady();
+			dispatchEvent(new Event(FunnelEvent.READY));
 		}
 		
 		private function callErrorHandler(e:Error):void {
 			trace(e);
-			if (onFatalError != null) onFatalError(e);
+			dispatchEvent(new Event(FunnelEvent.FATAL_ERROR));
 		}
 	
 		private function initPortsWithConfiguration(configuration:Array):void {
 			_ioPorts = new Array();
 			for (var i:uint = 0; i < configuration.length; ++i) {
 				var aPort:Port = Port.createWithType(configuration[i]);
-				if (aPort is OutputPort) {
-					OutputPort(aPort).onUpdate = function(id:uint):Function {
-						return function(portValue:Number):void {
-							if (autoUpdate) exportValue(id, portValue);
-						};
-					}(i);
-				}
+				if (aPort is OutputPort)
+					OutputPort(aPort).addEventListener(PortEvent.UPDATE, createOutputChangeHandler(i));
 				_ioPorts.push(aPort);
 			}
-			portCount = _ioPorts.length;
+			_portCount = _ioPorts.length;
+		}
+		
+		private function createOutputChangeHandler(id:uint):Function {
+			return function(event:Event):void {
+				if (autoUpdate)
+					exportValue(id, event.target.value);
+			}
 		}
 
 		private function connectServerAndInitIOModule(host:String, portNum:Number, configuration:Array, samplingInterval:uint):void {
