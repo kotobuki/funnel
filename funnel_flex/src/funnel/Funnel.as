@@ -12,12 +12,18 @@ package funnel
 	import flash.net.Socket;
 	import funnel.command.*;
 	import funnel.async.*;
+	import funnel.osc.OSCPacket;
+	import funnel.ioport.*;
+	import funnel.event.*;
+	import funnel.osc.OSCMessage;
+	import funnel.osc.OSCFloat;
 
 	public class Funnel extends EventDispatcher
 	{
 		public var autoUpdate:Boolean;
 	
 		private var _ioPorts:Array;
+		private var _updatedPortIndices:Array;
 		private var _portCount:uint;
 		private var _d:Deferred;
 		private var _samplingInterval:int;
@@ -26,12 +32,13 @@ package funnel
 
 		public function Funnel(configuration:Array, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
 			autoUpdate = true;
+			_updatedPortIndices = new Array();
 			initPortsWithConfiguration(configuration);
 			connectServerAndInitIOModule(host, portNum, configuration, samplingInterval);
 		}
 		
 		public function port(portNum:uint):Port {
-			return Port(_ioPorts[portNum]);
+			return _ioPorts[portNum] as Port;
 		}
 		
 		public function get portCount():uint {
@@ -48,14 +55,42 @@ package funnel
 		}
 		
 		public function update():void {
-			for (var i:uint = 0; i < _ioPorts.length; ++i) {
-				var aPort:Port = _ioPorts[i];
-				if (aPort is OutputPort) exportValue(i, aPort.value);
+			_updatedPortIndices.sort(Array.NUMERIC);
+			var index:uint;
+			var startIndex:uint;
+			var outputValues:Array;
+			for (var i:uint = 0; i < _updatedPortIndices.length; ++i) {
+				var isNotContinuous:Boolean = _updatedPortIndices[i] - index != 1;
+				index = _updatedPortIndices[i];
+				if (isNotContinuous) {
+					if (i != 0)
+						exportValue(startIndex, outputValues);
+					
+					startIndex = index;
+					outputValues = new Array();
+				}
+				outputValues.push(_ioPorts[index].value);
 			}
+			exportValue(startIndex, outputValues);
+			_updatedPortIndices = [];
 		}
 		
-		private function exportValue(portNum:uint, portValue:Number):void {
-			_d.addCallback(_commandPort, _commandPort.writeCommand, new Out(portNum, portValue));
+		private function exportValue(portNum:uint, portValues:Array):void {
+			var message:OSCMessage = new Out(portNum);
+			for (var i:uint = 0; i < portValues.length; ++i)
+				message.addValue(new OSCFloat(portValues[i]));
+			
+			_d.addCallback(_commandPort, _commandPort.writeCommand, message);
+		}
+		
+		private function onReceiveBundle(event:Event):void {
+			var messages:Array = _notificationPort.inputPacket.value;
+			for (var i:uint = 0; i < messages.length; ++i) {
+				var portValues:Array = messages[i].value;
+				var startPortNum:uint = portValues[0].value;
+				for (var j:uint = 0; j < portValues.length - 1; ++j)
+					_ioPorts[startPortNum + j].value = portValues[j + 1].value;
+			}
 		}
 		
 		private function callReadyHandler():void {
@@ -81,13 +116,16 @@ package funnel
 		private function createOutputChangeHandler(id:uint):Function {
 			return function(event:Event):void {
 				if (autoUpdate)
-					exportValue(id, event.target.value);
+					exportValue(id, [event.target.value]);
+				else if (_updatedPortIndices.indexOf(id) == -1)
+					_updatedPortIndices.push(id);
 			}
 		}
 
 		private function connectServerAndInitIOModule(host:String, portNum:Number, configuration:Array, samplingInterval:uint):void {
 			_commandPort = new CommandPort();
-			_notificationPort = new NotificationPort(_ioPorts);
+			_notificationPort = new NotificationPort();
+			_notificationPort.addEventListener(Event.CHANGE, onReceiveBundle);
 			
 			_d = new Deferred();
 			_d.addCallback(_commandPort, _commandPort.connect, host, portNum);//throw ServerNotFoundError

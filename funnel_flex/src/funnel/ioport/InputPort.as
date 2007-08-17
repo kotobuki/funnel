@@ -1,7 +1,8 @@
-package funnel
+package funnel.ioport
 {
 	import flash.events.Event;
 	import funnel.filter.IFilter;
+	import funnel.event.PortEvent;
 	
 	public class InputPort extends Port
 	{
@@ -65,7 +66,7 @@ package funnel
 			_numSamples = 1;
 		}
 		
-		internal function setInputValue(val:Number):void {	
+		override public function set value(val:Number):void {	
 			calculateMinimumMaximumAndMean(val);
 			var filteredValue:Number = applyFilters(val);
 			detectEdge(filteredValue);

@@ -16,7 +16,6 @@ package funnel
 		private var _repeatCount:Number;
 		private var _time:uint;
 		private var _oldTime:int;
-		
 		private var _value:Number;
 		
 		public function Osc(
