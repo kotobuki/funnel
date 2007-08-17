@@ -84,15 +84,15 @@ package funnel
 		
 		private function onReceiveBundle(event:Event):void {
 			var messages:Array = _notificationPort.inputPacket.value;
-var debugStr:String = "update from notification port:";
 			for (var i:uint = 0; i < messages.length; ++i) {
 				var portValues:Array = messages[i].value;
 				var startPortNum:uint = portValues[0].value;
-debugStr += " " + startPortNum + "-" + (startPortNum + portValues.length - 2);
-				for (var j:uint = 0; j < portValues.length - 1; ++j)
-					_ioPorts[startPortNum + j].value = portValues[j + 1].value;
+				for (var j:uint = 0; j < portValues.length - 1; ++j) {
+					var aPort:Port = _ioPorts[startPortNum + j];
+					if (aPort is InputPort) 
+						aPort.value = portValues[j + 1].value;
+				}
 			}
-trace(debugStr);
 		}
 		
 		private function callReadyHandler():void {
