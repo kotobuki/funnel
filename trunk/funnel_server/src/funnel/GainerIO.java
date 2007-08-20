@@ -132,7 +132,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	public GainerIO(FunnelServer server, String serialPortName) {
 
 		this.parent = server;
-		parent.printMessage(Messages.getString("GainerIO.Starting")); //$NON-NLS-1$
+		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 
 		try {
 			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
@@ -151,13 +151,14 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 						port.addEventListener(this);
 						port.notifyOnDataAvailable(true);
 
-						parent.printMessage(Messages.getString("GainerIO.Started") //$NON-NLS-1$
+						parent.printMessage(Messages
+								.getString("IOModule.Started") //$NON-NLS-1$
 								+ serialPortName);
 					}
 				}
 			}
 		} catch (Exception e) {
-			printMessage(Messages.getString("GainerIO.ErrorInsideSerial")); //$NON-NLS-1$
+			printMessage(Messages.getString("IOModule.InsideSerialError")); //$NON-NLS-1$
 			e.printStackTrace();
 			port = null;
 			input = null;
@@ -165,7 +166,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		}
 
 		if (port == null) {
-			printMessage(Messages.getString("GainerIO.CannotFind")); //$NON-NLS-1$
+			printMessage(Messages.getString("IOModule.PortNotFoundError")); //$NON-NLS-1$
 			throw new IllegalArgumentException(""); //$NON-NLS-1$
 		}
 
@@ -185,7 +186,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 	public void dispose() {
 		port.removeEventListener();
-		printMessage(Messages.getString("GainerIO.Disposing")); //$NON-NLS-1$
+		printMessage(Messages.getString("IOModule.Disposing")); //$NON-NLS-1$
 		try {
 			if (input != null)
 				input.close();
@@ -285,13 +286,14 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			return;
 		}
 
+		printMessage(Messages.getString("IOModule.Rebooting")); //$NON-NLS-1$
 		write("Q*"); //$NON-NLS-1$
 		rebootCommandQueue.pop(1000);
 		rebootCommandQueue.sleep(100);
 		write("?*"); //$NON-NLS-1$
 		String versionString = (String) versionCommandQueue.pop(1000);
-		printMessage(Messages.getString("GainerIO.Rebooted")); //$NON-NLS-1$
-		printMessage(Messages.getString("GainerIO.FirmwareVesrion") + versionString.substring(1, 9)); //$NON-NLS-1$
+		printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
+		printMessage(Messages.getString("IOModule.FirmwareVesrion") + versionString.substring(1, 9)); //$NON-NLS-1$
 	}
 
 	synchronized public void serialEvent(SerialPortEvent serialEvent) {
@@ -411,7 +413,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void setOutput(Object[] arguments) {
-//		printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
+		// printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
 		int start = ((Integer) arguments[0]).intValue();
 		for (int i = 0; i < (arguments.length - 1); i++) {
 			int port = start + i;

@@ -82,7 +82,6 @@ public class CommandPortClient extends Client implements Runnable {
 		// }
 
 		if (message.getAddress().equals("/reset")) {
-			// server.printMessage("Reset requested\n");
 			try {
 				server.getIOModule().reboot();
 			} catch (Exception e) {
@@ -91,8 +90,6 @@ public class CommandPortClient extends Client implements Runnable {
 				sendSimpleReply(message.getAddress(), NO_ERROR);
 			}
 		} else if (message.getAddress().equals("/polling")) {
-			// server.printMessage("Polling requested: "
-			// + message.getArguments()[0] + "\n");
 			try {
 				server.getIOModule().setPolling(message.getArguments());
 			} catch (Exception e) {
@@ -101,7 +98,6 @@ public class CommandPortClient extends Client implements Runnable {
 				sendSimpleReply(message.getAddress(), NO_ERROR);
 			}
 		} else if (message.getAddress().startsWith("/in")) {
-			// server.printMessage("Input requested\n");
 			Object[] reply = null;
 			try {
 				reply = server.getIOModule().getInputs(message.getAddress(),
@@ -113,7 +109,6 @@ public class CommandPortClient extends Client implements Runnable {
 			}
 			sendSimpleReply(message.getAddress(), 0);
 		} else if (message.getAddress().equals("/out")) {
-			// server.printMessage("Output requested\n");
 			try {
 				server.getIOModule().setOutput(message.getArguments());
 			} catch (Exception e) {
@@ -122,22 +117,21 @@ public class CommandPortClient extends Client implements Runnable {
 				sendSimpleReply(message.getAddress(), NO_ERROR);
 			}
 		} else if (message.getAddress().equals("/samplingInterval")) {
-			// server.printMessage("Sampling interval: "
-			// + message.getArguments()[0] + "\n");
 			Integer samplingInterval = (Integer) message.getArguments()[0];
 			Server.setSamplingInterval(samplingInterval.intValue());
 			sendSimpleReply(message.getAddress(), NO_ERROR);
 		} else if (message.getAddress().equals("/configure")) {
-			// server.printMessage("Configuration requested\n");
 			try {
 				server.getIOModule().setConfiguration(message.getArguments());
 			} catch (IllegalArgumentException e) {
-				sendSimpleReply(message.getAddress(), CONFIGURATION_ERROR);
+				Object[] reply = new Object[2];
+				reply[0] = new Integer(CONFIGURATION_ERROR);
+				reply[1] = new String(e.getMessage());
+				sendReply(message.getAddress(), reply);
 			} finally {
 				sendSimpleReply(message.getAddress(), NO_ERROR);
 			}
 		} else if (message.getAddress().equals("/quit")) {
-			// server.printMessage("Quit requested\n");
 			sendSimpleReply(message.getAddress(), NO_ERROR);
 			server.getIOModule().stopPolling();
 			System.exit(0);
@@ -167,7 +161,9 @@ public class CommandPortClient extends Client implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			server.printMessage(Messages.getString("FunnelServer.CommandPort") + getIP() + Messages.getString("Server.ClientDisconnected")); //$NON-NLS-1$
+			server
+					.printMessage(Messages
+							.getString("FunnelServer.CommandPort") + getIP() + Messages.getString("Server.ClientDisconnected")); //$NON-NLS-1$
 			server.getIOModule().reboot();
 			close();
 		}
