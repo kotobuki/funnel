@@ -4,10 +4,14 @@ package funnel
 	import flash.events.TimerEvent;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import funnel.filter.IFilter;
 	
 	public class Osc extends EventDispatcher
-	{
-		private var _timer:Timer;
+	{	
+		/*
+		TODO:タイマーをクラス変数にして共有できないか・・？
+		*/
+		
 		private var _wave:Function;
 		private var _freq:Number;
 		private var _amplitude:Number;
@@ -17,6 +21,20 @@ package funnel
 		private var _time:uint;
 		private var _oldTime:int;
 		private var _value:Number;
+	
+		private static var _timer:Timer = function():Timer {
+			var timer:Timer = new Timer(33);
+			timer.start();
+			return timer;
+		}();
+		
+		public static function set serviceInterval(interval:uint):void {
+			_timer.delay = interval;
+		}
+		
+		public static function get serviceInterval():uint {
+			return _timer.delay;
+		}
 		
 		public function Osc(
 			wave:Function = null,
@@ -24,7 +42,6 @@ package funnel
 			amplitude:Number = 1,
 			offset:Number = 0,
 			phase:Number = 0,
-			serviceInterval:uint = 33,
 			repeatCount:Number = 0
 		) {
 			if (freq == 0) throw new Error("Frequency should be larger than 0...");
@@ -37,15 +54,17 @@ package funnel
 			_phase = phase;
 			_repeatCount = repeatCount;
 			
-			_time = 0;
-			_oldTime = getTimer();
-			_timer = new Timer(serviceInterval);
-			_timer.addEventListener(TimerEvent.TIMER, update);
-			_timer.start();
+			start();
 		}
 		
 		public function get value():Number {
 			return _value;
+		}
+		
+		private function start():void {
+			_time = 0;
+			_oldTime = getTimer();
+			_timer.addEventListener(TimerEvent.TIMER, update);
 		}
 		
 		private function update(event:Event):void {
