@@ -10,73 +10,31 @@ package {
 	
 	public class FunnelTest extends Sprite
 	{
-		/*
-		以下のファイルをメンバ変数の宣言箇所でincludeすると、
-		DOUTやANALOG、enableといった定数が作成される
-		(実体はstatic変数であり、グローバル変数ではないので注意)
-		Flash CS3で利用する場合、flaファイルと同じ階層にalias.asを設置する
-		*/
 		include "alias.as"
 		
 		private var fio:Funnel;
-		private var osc:Osc;
 		
 		public function FunnelTest()
 		{
-			/*
-			//コンフィギュレーションを配列で渡す場合、例えば以下のように記述する
-			var config:Array = [
-		    	AIN,  AIN,  AIN,  AIN,
-		    	DIN,  DIN,  DIN,  DIN,
-		    	AOUT, AOUT, AOUT, AOUT,
-		    	DOUT, DOUT, DOUT, DOUT,
-		    	DOUT, DIN];
-		    new Funnel(config);
-			*/
 			fio = new Funnel(GAINER_MODE1);
-			fio.addEventListener(READY, onReady);
-			//fio.addEventListener(SERVER_NOT_FOUND_ERROR, serverNotFound);
-	
-			var button:DigitalInput = fio.port(4) as DigitalInput;
-			var cds:AnalogInput = fio.port(1) as AnalogInput;
-			var led:AnalogOutput = fio.port(8) as AnalogOutput;
-			
-			button.addEventListener(RISING_EDGE, function(event:Event):void {
-				//Osc.serviceInterval += 10;
-				
-				osc.update();
-			});
-			
-			cds.filters = [new Threshold(0.5, 0.1)];
-			cds.addEventListener(RISING_EDGE, onLightening);
-			cds.addEventListener(FALLING_EDGE, onDarkening);
-			
 			/*
-			Osc(波形, 周波数, 振幅, オフセット, 位相, 更新間隔, 繰り返し回数)
-			波形、周波数、位相は正規化されている
-			*/
-			osc = new Osc(Osc.SQUARE, 1, 1, 0, 0, 5);
-			osc.addEventListener(UPDATE, function():void {
-				led.value = osc.value;
+			//Funnelのイベントは以下のようにハンドリングする
+			fio.addEventListener(READY, function(event:Event):void {
+				trace("onReady");
 			});
+			fio.addEventListener(SERVER_NOT_FOUND_ERROR, function(event:ErrorEvent):void {
+				trace("Funnelサーバーが見つかりませんでした");
+				//trace(event.text); //エラーイベントの詳細を表示
+			});
+			*/
 			
+			//port8の立ち上がりを検出すると、port4に1周期のサイン波を出力する
+			fio.port(8).filters = [new Osc(Osc.SIN, 1, 1, 0, 0, 1)];
+			fio.port(4).addEventListener(RISING_EDGE, function(event:Event):void {
+				fio.port(8).filters[0].start();
+			});
+
 			createView();
-		}
-		
-		private function onReady(event:Event):void {
-			trace("onReady");
-		}
-		
-		private function serverNotFound(event:ErrorEvent):void {
-			trace(event.text);
-		}
-		
-		private function onLightening(event:Event):void {
-			trace("onLightening");
-		}
-		
-		private function onDarkening(event:Event):void {
-			trace("onDarkening");
 		}
 		
 		private function createView():void {
@@ -123,6 +81,6 @@ package {
 			}
 			return(cropped);
 		}
-		
+
 	}
 }
