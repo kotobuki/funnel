@@ -35,14 +35,16 @@ package {
 			*/
 			fio = new Funnel(GAINER_MODE1);
 			fio.addEventListener(READY, onReady);
-			fio.addEventListener(FATAL_ERROR, onFatalError);
-			
+			//fio.addEventListener(SERVER_NOT_FOUND_ERROR, serverNotFound);
+	
 			var button:DigitalInput = fio.port(4) as DigitalInput;
 			var cds:AnalogInput = fio.port(1) as AnalogInput;
 			var led:AnalogOutput = fio.port(8) as AnalogOutput;
 			
 			button.addEventListener(RISING_EDGE, function(event:Event):void {
-				Osc.serviceInterval += 10;
+				//Osc.serviceInterval += 10;
+				
+				osc.update();
 			});
 			
 			cds.filters = [new Threshold(0.5, 0.1)];
@@ -53,7 +55,7 @@ package {
 			Osc(波形, 周波数, 振幅, オフセット, 位相, 更新間隔, 繰り返し回数)
 			波形、周波数、位相は正規化されている
 			*/
-			osc = new Osc(Osc.SIN, 1, 1, 0, 0, 0);
+			osc = new Osc(Osc.SQUARE, 1, 1, 0, 0, 5);
 			osc.addEventListener(UPDATE, function():void {
 				led.value = osc.value;
 			});
@@ -65,8 +67,8 @@ package {
 			trace("onReady");
 		}
 		
-		private function onFatalError(event:Event):void {
-			trace("onFatalError");
+		private function serverNotFound(event:ErrorEvent):void {
+			trace(event.text);
 		}
 		
 		private function onLightening(event:Event):void {

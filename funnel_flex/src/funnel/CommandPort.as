@@ -7,21 +7,21 @@ package funnel
 	import funnel.async.Deferred;
 	import funnel.osc.*;
 	import funnel.error.*;
+	import funnel.event.FunnelEvent;
 	
-	public class CommandPort
+	public class CommandPort extends NetPort
 	{
 		private static const NO_ERROR:uint = 0;
-		private static const SERVER_ERRORS:Array = [
+		private static const ERROR_EVENTS:Array = [
 			,
-			CommunicationError,
-			RebootError,
-			ConfigurationError];
+			FunnelEvent.COMMUNICATION_ERROR,
+			FunnelEvent.REBOOT_ERROR,
+			FunnelEvent.CONFIGURATION_ERROR];
 		
-		private var _socket:Socket;
 		private var _sendAndWait:Function;
 
 		public function CommandPort() {
-			_socket = new Socket();
+			super();
 			_sendAndWait = Deferred.createDeferredFunctionWithEvent(
 				_socket,
 				_socket.writeBytes,
@@ -38,20 +38,6 @@ package funnel
 				timer.stop)();
 		}
 		
-		public function connect(host:String, port:Number):Deferred {
-			return Deferred.createDeferredFunctionWithEvent(
-				_socket, 
-				_socket.connect, 
-				[Event.CONNECT],
-				[IOErrorEvent.IO_ERROR, SecurityErrorEvent.SECURITY_ERROR]
-			)(host, port).addErrback(
-				null,
-				function():void {
-					throw new ServerNotFoundError();
-				}
-			);
-		}
-		
 		public function writeCommand(command:OSCMessage):Deferred {
 			return _sendAndWait(command.toBytes()).addCallback(this, checkError);
 		}
@@ -61,8 +47,9 @@ package funnel
 			_socket.readBytes(response);
 			var packet:OSCPacket = OSCPacket.createWithBytes(response);
 			var errorCode:uint = packet.value[0];
+			var message:String = packet.value[1];
 			if (errorCode != NO_ERROR)
-				throw new SERVER_ERRORS[errorCode];
+				throw new FunnelError(message, ERROR_EVENTS[errorCode]);
 		}
 	}
 }

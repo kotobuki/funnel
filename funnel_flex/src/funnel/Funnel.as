@@ -17,6 +17,8 @@ package funnel
 	import funnel.event.*;
 	import funnel.osc.OSCMessage;
 	import funnel.osc.OSCFloat;
+	import flash.events.ErrorEvent;
+	import funnel.error.FunnelError;
 
 	public class Funnel extends EventDispatcher
 	{
@@ -101,7 +103,10 @@ package funnel
 		
 		private function callErrorHandler(e:Error):void {
 			trace(e);
-			dispatchEvent(new Event(FunnelEvent.FATAL_ERROR));
+			if (e is FunnelError) {
+				var fe:FunnelError = e as FunnelError;
+				dispatchEvent(new ErrorEvent(fe.eventType, false, false, fe.message));
+			}
 		}
 	
 		private function initPortsWithConfiguration(configuration:Array):void {
