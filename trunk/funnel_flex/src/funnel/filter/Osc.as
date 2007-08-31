@@ -1,4 +1,4 @@
-package funnel
+package funnel.filter
 {
 	import flash.utils.*;
 	import flash.events.TimerEvent;
@@ -6,7 +6,7 @@ package funnel
 	import flash.events.EventDispatcher;
 	import funnel.filter.IFilter;
 	
-	public class Osc extends EventDispatcher
+	public class Osc extends EventDispatcher implements IGenerator
 	{	
 		private var _wave:Function;
 		private var _freq:Number;
@@ -76,8 +76,8 @@ package funnel
 				return;
 			}
 			
-			dispatchEvent(new Event(Event.CHANGE));
 			_value = _amplitude * _wave(_freq * (sec + _phase)) + _offset;
+			dispatchEvent(new Event(Event.CHANGE));
 		}
 		
 		public static function SIN(val:Number):Number {
