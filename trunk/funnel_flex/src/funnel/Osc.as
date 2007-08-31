@@ -8,10 +8,6 @@ package funnel
 	
 	public class Osc extends EventDispatcher
 	{	
-		/*
-		TODO:タイマーをクラス変数にして共有できないか・・？
-		*/
-		
 		private var _wave:Function;
 		private var _freq:Number;
 		private var _amplitude:Number;
@@ -53,21 +49,24 @@ package funnel
 			_offset = offset;
 			_phase = phase;
 			_repeatCount = repeatCount;
-			
-			start();
 		}
 		
 		public function get value():Number {
 			return _value;
 		}
 		
-		private function start():void {
-			_time = 0;
-			_oldTime = getTimer();
+		public function start():void {
+			stop();
 			_timer.addEventListener(TimerEvent.TIMER, update);
 		}
 		
-		private function update(event:Event):void {
+		private function stop():void {
+			_time = 0;
+			_oldTime = getTimer();
+			_timer.removeEventListener(TimerEvent.TIMER, update);
+		}
+		
+		public function update(event:Event = null):void {
 			_time += getTimer() - _oldTime;
 			_oldTime = getTimer();
 			var sec:Number = _time / 1000;
