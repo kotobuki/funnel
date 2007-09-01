@@ -46,9 +46,9 @@ public class CommandPortClient extends Client implements Runnable {
 	private Tokenizer tokenizer;
 
 	public final int NO_ERROR = 0;
-	public final int ERROR = 1;
-	public final int REBOOT_ERROR = 2;
-	public final int CONFIGURATION_ERROR = 3;
+	public final int ERROR = -1;
+	public final int REBOOT_ERROR = -2;
+	public final int CONFIGURATION_ERROR = -3;
 
 	/**
 	 * Create an OSCPort that listens on the specified port.
@@ -85,17 +85,18 @@ public class CommandPortClient extends Client implements Runnable {
 			try {
 				server.getIOModule().reboot();
 			} catch (Exception e) {
-				sendSimpleReply(message.getAddress(), REBOOT_ERROR);
+				sendSimpleReply(message.getAddress(), REBOOT_ERROR, e
+						.getMessage());
 			} finally {
-				sendSimpleReply(message.getAddress(), NO_ERROR);
+				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			}
 		} else if (message.getAddress().equals("/polling")) {
 			try {
 				server.getIOModule().setPolling(message.getArguments());
 			} catch (Exception e) {
-				sendSimpleReply(message.getAddress(), ERROR);
+				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
 			} finally {
-				sendSimpleReply(message.getAddress(), NO_ERROR);
+				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			}
 		} else if (message.getAddress().startsWith("/in")) {
 			Object[] reply = null;
@@ -103,36 +104,33 @@ public class CommandPortClient extends Client implements Runnable {
 				reply = server.getIOModule().getInputs(message.getAddress(),
 						message.getArguments());
 			} catch (IllegalArgumentException e) {
-				sendSimpleReply(message.getAddress(), ERROR);
+				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
 			} finally {
 				sendReply(message.getAddress(), reply);
 			}
-			sendSimpleReply(message.getAddress(), 0);
 		} else if (message.getAddress().equals("/out")) {
 			try {
 				server.getIOModule().setOutput(message.getArguments());
 			} catch (Exception e) {
-				sendSimpleReply(message.getAddress(), ERROR);
+				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
 			} finally {
-				sendSimpleReply(message.getAddress(), NO_ERROR);
+				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			}
 		} else if (message.getAddress().equals("/samplingInterval")) {
 			Integer samplingInterval = (Integer) message.getArguments()[0];
 			Server.setSamplingInterval(samplingInterval.intValue());
-			sendSimpleReply(message.getAddress(), NO_ERROR);
+			sendSimpleReply(message.getAddress(), NO_ERROR, null);
 		} else if (message.getAddress().equals("/configure")) {
 			try {
 				server.getIOModule().setConfiguration(message.getArguments());
 			} catch (IllegalArgumentException e) {
-				Object[] reply = new Object[2];
-				reply[0] = new Integer(CONFIGURATION_ERROR);
-				reply[1] = new String(e.getMessage());
-				sendReply(message.getAddress(), reply);
+				sendSimpleReply(message.getAddress(), CONFIGURATION_ERROR, e
+						.getMessage());
 			} finally {
-				sendSimpleReply(message.getAddress(), NO_ERROR);
+				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			}
 		} else if (message.getAddress().equals("/quit")) {
-			sendSimpleReply(message.getAddress(), NO_ERROR);
+			sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			server.getIOModule().stopPolling();
 			System.exit(0);
 		}
@@ -170,9 +168,13 @@ public class CommandPortClient extends Client implements Runnable {
 
 	}
 
-	private void sendSimpleReply(String address, int value) {
-		Object arguments[] = new Object[1];
+	private void sendSimpleReply(String address, int value, String message) {
+		int numArguments = (message == null) ? 1 : 2;
+		Object arguments[] = new Object[numArguments];
 		arguments[0] = new Integer(value);
+		if (message != null) {
+			arguments[0] = new String(message);
+		}
 		OSCMessage reply = new OSCMessage(address, arguments);
 		try {
 			send(reply);
