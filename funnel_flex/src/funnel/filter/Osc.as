@@ -15,7 +15,7 @@ package funnel.filter
 		private var _phase:Number;
 		private var _repeatCount:Number;
 		private var _time:uint;
-		private var _oldTime:int;
+		private var _startTime:int;
 		private var _value:Number;
 	
 		private static var _timer:Timer = function():Timer {
@@ -49,6 +49,8 @@ package funnel.filter
 			_offset = offset;
 			_phase = phase;
 			_repeatCount = repeatCount;
+			
+			resetTime();
 		}
 		
 		public function get value():Number {
@@ -56,24 +58,24 @@ package funnel.filter
 		}
 		
 		public function start():void {
-			stop();
+			resetTime();
+			_timer.removeEventListener(TimerEvent.TIMER, update);
 			_timer.addEventListener(TimerEvent.TIMER, update);
+			update();
 		}
 		
-		private function stop():void {
+		private function resetTime():void {
 			_time = 0;
-			_oldTime = getTimer();
-			_timer.removeEventListener(TimerEvent.TIMER, update);
+			_startTime = getTimer();
 		}
 		
 		public function update(event:Event = null):void {
-			_time += getTimer() - _oldTime;
-			_oldTime = getTimer();
+			_time = getTimer() - _startTime;
 			var sec:Number = _time / 1000;
 			
 			if (_repeatCount != 0 && _freq * sec >= _repeatCount) {
 				_timer.removeEventListener(TimerEvent.TIMER, update);
-				return;
+				sec = _repeatCount / _freq;
 			}
 			
 			_value = _amplitude * _wave(_freq * (sec + _phase)) + _offset;
