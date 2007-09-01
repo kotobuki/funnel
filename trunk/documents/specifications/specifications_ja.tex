@@ -190,7 +190,9 @@ Funnel—p‚ÉŠJ”­‚·‚éI/Oƒ‚ƒWƒ…[ƒ‹iFIOFƒtƒBƒIj‚ÍAˆÈ‰º‚Ìƒp[ƒg‚©‚ç\¬‚³‚ê‚Ü‚·B
 “üo—Íƒ|[ƒg‚Ìƒf[ƒ^‚ÍA0‚©‚ç1‚Ü‚Å‚ÌÀ”ifloatŒ^j‚Å•\Œ»‚µ‚Ü‚·B‚±‚ê‚É‚æ‚èAI/Oƒ‚ƒWƒ…[ƒ‹‚²‚Æ‚ÉA/D‚âD/Ai‚Ü‚½‚ÍPWMj‚Ì•ª‰ğ”\‚ªˆÙ‚È‚éê‡‚Å‚à“¯—l‚Éˆµ‚¦‚Ü‚·B
 
 \subsection{FunnelƒNƒ‰ƒX}
-FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/Oƒ‚ƒWƒ…[ƒ‹‚ğ’ŠÛ‰»‚µ‚ÄƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚µ‚Ü‚·B•¡”‚Ìƒ‚ƒWƒ…[ƒ‹‚ªÚ‘±‚³‚ê‚Ä‚¢‚éê‡‚É‚ÍAFunnelƒIƒuƒWƒFƒNƒg‚©‚ç˜A‘±‚µ‚½ƒ|[ƒg‚Æ‚µ‚Ä•\Œ»‚³‚ê‚Ü‚·B
+FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/Oƒ‚ƒWƒ…[ƒ‹‚ğ’ŠÛ‰»‚µ‚ÄA‹¤’Ê‚Ì•û–@‚ÅƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚µ‚Ü‚·B
+
+%•¡”‚Ìƒ‚ƒWƒ…[ƒ‹‚ªÚ‘±‚³‚ê‚Ä‚¢‚éê‡‚É‚ÍAFunnelƒIƒuƒWƒFƒNƒg‚©‚ç˜A‘±‚µ‚½ƒ|[ƒg‚Æ‚µ‚Ä•\Œ»‚³‚ê‚Ü‚·B
 
 \subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
 \texttt{Funnel(hostname:String, portNumber:int, config:Array, samplingInterval:int)}
@@ -238,8 +240,9 @@ FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/
 ƒCƒxƒ“ƒg–¼ & İ’èæ & à–¾ \\\hline
 %\texttt{port.onChange()} & “ü—Í‚Ì‚¢‚¸‚ê‚©‚ª•Ï‰»‚µ‚½ \\
 %\texttt{onReady()} & I/Oƒ‚ƒWƒ…[ƒ‹‚Æ‚Ì’ÊM‚ªŠm”F‚Å‚«‚Ä€”õ‚ªŠ®—¹‚µ‚½ \\
-\texttt{Event.RISING\_EDGE} & Šeƒ|[ƒg & “ü—Í‚Ì•Ï‰»i0¨0ˆÈŠOj \\
-\texttt{Event.FALLING\_EDGE} & Šeƒ|[ƒg & “ü—Í‚Ì•Ï‰»i0ˆÈŠO¨0j \\
+\texttt{Event.RISING\_EDGE} & Šeƒ|[ƒg & SetPointg—p‚É“ü—Í‚ª•Ï‰»i0¨0ˆÈŠOj \\
+\texttt{Event.FALLING\_EDGE} & Šeƒ|[ƒg & SetPointg—p‚É“ü—Í‚ª•Ï‰»i0ˆÈŠO¨0j \\
+\texttt{Event.CANGE} & Šeƒ|[ƒg & SetPointg—p‚É“ü—Í‚ª•Ï‰» \\
 %\texttt{onChange(float current, float last)} & “ü—Í‚ª•Ï‰»‚µ‚½iƒfƒWƒ^ƒ‹•ƒAƒiƒƒOj
 \end{tabular}
 
@@ -279,8 +282,7 @@ interface Filter {
 \begin{itemize}
 \item Convolution
 \item Scaler
-%\item EdgeDetector
-\item Threshold
+\item SetPoint
 \item Osc
 \end{itemize}
 
@@ -290,11 +292,12 @@ interface Filter {
 \texttt{funnel.port(0).filters = [filter1, filter2, filter3];
 }\end{tabular}
 
+‚»‚ê‚¼‚ê‚ÌƒtƒBƒ‹ƒ^‚ÍFunnel‚Ì“ü—Íƒ|[ƒgiOsc‚Ì‚İo—Íƒ|[ƒgj‚É‘Î‚µ‚Ä—˜—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚½‚à‚Ì‚Å‚·‚ªAprocessSample()ƒƒ\ƒbƒh‚ğè“®‚ÅŒÄ‚ñ‚ÅXV‚·‚é‚±‚Æ‚É‚æ‚èA‰æ–Ê•\¦‚È‚Ç‚Ì‘¼‚Ì•”•ª‚Å‚à—˜—p‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 \subsection{ConvolutionƒNƒ‰ƒX}
-ConvolutionƒNƒ‰ƒX‚Í“ü—Í‚É‘Î‚µ‚Ä‚¢‚í‚ä‚éƒfƒWƒ^ƒ‹M†ˆ—“I‚ÈƒtƒBƒ‹ƒ^ˆ—‚ğs‚¤‚½‚ß‚ÌƒNƒ‰ƒX‚Å‚·B×‚©‚¢ƒmƒCƒY‚ğæ‚èœ‚­‚½‚ß‚Ìƒ[ƒpƒXƒtƒBƒ‹ƒ^‚âAƒhƒŠƒtƒg‚ğæ‚èœ‚­‚½‚ß‚ÌƒnƒCƒpƒXƒtƒBƒ‹ƒ^‚ª‚ ‚è‚Ü‚·B‚ ‚ç‚©‚¶‚ß—Ç‚­g‚í‚ê‚éí—Ş‚Ì”gŒ`‚Í—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·‚ªAƒ†[ƒU‚ª“Æ©‚É’è‹`‚µ‚½ŠÖ”‚à—˜—p‚Å‚«‚Ü‚·B
+ConvolutionƒNƒ‰ƒX‚Í“ü—Í‚É‘Î‚µ‚Ä‚¢‚í‚ä‚éƒfƒWƒ^ƒ‹M†ˆ—“I‚ÈƒtƒBƒ‹ƒ^ˆ—‚ğs‚¤‚½‚ß‚ÌƒNƒ‰ƒX‚Å‚·B×‚©‚¢ƒmƒCƒY‚ğæ‚èœ‚­‚½‚ß‚Ìƒ[ƒpƒXƒtƒBƒ‹ƒ^‚âAƒhƒŠƒtƒg‚ğæ‚èœ‚­‚½‚ß‚ÌƒnƒCƒpƒXƒtƒBƒ‹ƒ^‚ª‚ ‚è‚Ü‚·B‚ ‚ç‚©‚¶‚ß—Ç‚­g‚í‚ê‚éí—Ş‚Ìˆ—‚É‘Î‚·‚éŒW”‚Í—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·‚ªAƒ†[ƒU‚ª“Æ©‚É’è‹`‚µ‚½ŒW”‚à—˜—p‚Å‚«‚Ü‚·B‚È‚¨A“®ì’†‚ÉŒW”‚ğ•ÏX‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·‚ªAŒW”‚Ì”‚ğ•ÏX‚µ‚½ê‡‚É‚Í‚»‚ê‚Ü‚Å‚Ì—š—ğ‚ªƒNƒŠƒA‚³‚ê‚Ü‚·B
 
-%Funnel‚Ìo—Íƒ|[ƒg‚É‘Î‚µ‚Ä—˜—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚½‚à‚Ì‚Å‚·‚ªA‰æ–Ê•\¦‚È‚Ç‚Ì‘¼‚Ì•”•ª‚Å‚à—˜—p‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·Bƒoƒbƒtƒ@‚Íˆø”‚Æ‚µ‚Ä—^‚¦‚ç‚ê‚é‚½‚ßA\texttt{buffer[0]}A\texttt{buffer[-1]}‚Ì‚æ‚¤‚É‚µ‚Äƒ†[ƒU’è‹`‚ÌŠÖ”‚©‚ç‚àƒAƒNƒZƒX‚Å‚«‚Ü‚·B
+%ƒoƒbƒtƒ@‚Íˆø”‚Æ‚µ‚Ä—^‚¦‚ç‚ê‚é‚½‚ßA\texttt{buffer[0]}A\texttt{buffer[-1]}‚Ì‚æ‚¤‚É‚µ‚Äƒ†[ƒU’è‹`‚ÌŠÖ”‚©‚ç‚àƒAƒNƒZƒX‚Å‚«‚Ü‚·B
 
 %\begin{lstlisting}[caption={ƒ†[ƒU’è‹`ŠÖ”‚ÌÀ‘•—á},label=useless]
 %function myFilterFunc(in:float, buffer:Array):float {
@@ -348,11 +351,14 @@ function myFilterFunc(in:float, buffer:Array):float {
 }
 \end{lstlisting}
 
-FunnelƒIƒuƒWƒFƒNƒg‚Ìport(n)‚ÌƒCƒ“ƒXƒ^ƒ“ƒX•Ï”\texttt{filters}‚ÉƒZƒbƒg‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·‚µA“Æ—§‚µ‚Ä•Ê‚ÌƒIƒuƒWƒFƒNƒg‚É‘Î‚µ‚Ä—˜—p‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·B
+w’è‚µ‚½“ü—Í‚Ì”ÍˆÍŠOiinMin‚©‚çinMaxj‚Ì’l‚ª“ü—Í‚³‚ê‚½ê‡AƒfƒtƒHƒ‹ƒg‚Å‚ÍƒŠƒ~ƒbƒ^‚ª‚©‚©‚è‚Ü‚¹‚ñB‚±‚Ì‚½‚ßAŒ‹‰Ê‚Æ‚µ‚Äo—Í‚Íw’è‚µ‚½”ÍˆÍioutMin‚©‚çoutMaxj‚ğ’´‚¦‚Ä‚µ‚Ü‚¢‚Ü‚·B“ü—Í‚Ì”ÍˆÍ‚ğ§ŒÀ‚µ‚½‚¢ê‡‚É‚ÍAÅŒã‚Ìˆø”‚ğtrue‚Éİ’è‚µ‚Ü‚·B
+
+%FunnelƒIƒuƒWƒFƒNƒg‚Ìport(n)‚ÌƒCƒ“ƒXƒ^ƒ“ƒX•Ï”\texttt{filters}‚ÉƒZƒbƒg‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·‚µA“Æ—§‚µ‚Ä•Ê‚ÌƒIƒuƒWƒFƒNƒg‚É‘Î‚µ‚Ä—˜—p‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·B
 
 \subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
 \begin{tabular}{l}
-\texttt{Scaler(float inMin, float inMax, float outMin, float outMax, function type)} \\
+\texttt{Scaler(inMin:float, inMax:float, outMin:float, outMax:float,} \\
+\texttt{	type:function, limiter:boolean)} \\
 %\texttt{Scaler(float inMin, float inMax, float outMin, float outMax, function(float in):float)}
 \end{tabular}
 
@@ -368,7 +374,9 @@ FunnelƒIƒuƒWƒFƒNƒg‚Ìport(n)‚ÌƒCƒ“ƒXƒ^ƒ“ƒX•Ï”\texttt{filters}‚ÉƒZƒbƒg‚·‚é‚±‚Æ‚à‚
 \texttt{outMin} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚éo—Í”ÍˆÍ‚ÌÅ¬’l \\
 \texttt{outMin = } & float & o—Í”ÍˆÍ‚ÌÅ¬’l‚ğİ’è‚·‚é \\
 \texttt{outMax} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚éo—Í”ÍˆÍ‚ÌÅ‘å’l \\
-\texttt{outMax = } & float & o—Í”ÍˆÍ‚ÌÅ‘å’l‚ğİ’è‚·‚é
+\texttt{outMax = } & float & o—Í”ÍˆÍ‚ÌÅ‘å’l‚ğİ’è‚·‚é \\
+\texttt{limiter} & boolean & Œ»İİ’è‚³‚ê‚Ä‚¢‚éƒŠƒ~ƒbƒ^‚Ìó‘Ô \\
+\texttt{limiter = } & void & ƒŠƒ~ƒbƒ^‚Ìó‘Ô‚ğİ’è‚·‚é \\
 \end{tabular}
 
 %\subsubsection{ƒƒ\ƒbƒh}
@@ -438,22 +446,22 @@ FunnelƒIƒuƒWƒFƒNƒg‚Ìport(n)‚ÌƒCƒ“ƒXƒ^ƒ“ƒX•Ï”\texttt{filters}‚ÉƒZƒbƒg‚·‚é‚±‚Æ‚à‚
 %\end{tabular}
 
 
-\subsection{ThresholdƒNƒ‰ƒX}
-ThresholdƒIƒuƒWƒFƒNƒg‚ÍAƒAƒiƒƒO‚Ì’l‚É‘Î‚µ‚Äè‡’l‚ÆƒqƒXƒeƒŠƒVƒX‚ğ‚Âƒ|ƒCƒ“ƒg‚ğƒZƒbƒg‚µAprocessSample()‚ğÀs‚·‚é“x‚ÉŒ»İ‚Ìó‘Ô‚ğ•Ô‚µ‚Ü‚·B
-%ƒ|ƒCƒ“ƒg‚ª1‚Â‚Ìê‡‚É‚Í•Ô‚è’l‚Í0‚Ü‚½‚Í1‚Ì2í—ŞAƒ|ƒCƒ“ƒg‚ª2‚Â‚Ìê‡‚É‚Í•Ô‚è’l‚Í0‚Ü‚½‚Í1‚Ü‚½‚Í2‚Ì3í—Ş‚É‚È‚è‚Ü‚·B
+\subsection{SetPointƒNƒ‰ƒX}
+SetPointƒIƒuƒWƒFƒNƒg‚ÍAƒAƒiƒƒO‚Ì’l‚É‘Î‚µ‚Äè‡’l‚ÆƒqƒXƒeƒŠƒVƒX‚ğ‚Âƒ|ƒCƒ“ƒg‚ğƒZƒbƒg‚µAprocessSample()‚ğÀs‚·‚é“x‚ÉŒ»İ‚Ìó‘Ô‚ğ”»’è‚µ‚Ä•Ô‚µ‚Ü‚·Bƒ|ƒCƒ“ƒg‚ª1‚Â‚Ìê‡‚Ì•Ô‚è’l‚Í0‚Ü‚½‚Í1‚Ì2í—ŞAƒ|ƒCƒ“ƒg‚ª2‚Â‚Ìê‡‚Í0‚Ü‚½‚Í1‚Ü‚½‚Í2‚Ì3í—ŞAƒ|ƒCƒ“ƒg‚ªnŒÂ‚Ìê‡‚Í0‚©‚çn‚Ü‚Å‚Ìní—Ş‚É‚È‚è‚Ü‚·B
 
 \subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
 \begin{tabular}{l}
-\texttt{Threshold(float threshold, float hysteresis)} \\
+\texttt{SetPoint(threshold:float, hysteresis:float)} \\
+\texttt{SetPoint(threshold:float[], hysteresis:float[])} \\
 \end{tabular}
 
 \subsubsection{ƒCƒ“ƒXƒ^ƒ“ƒX•Ï”}
 \begin{tabular}{lll}
 •Ï”–¼ & Œ^ & à–¾ \\\hline
-\texttt{threshold} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚éè‡’l \\
-\texttt{hysteresis} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚éƒqƒXƒeƒŠƒVƒX \\
-\texttt{threshold =} & float & è‡’l‚ğİ’è \\
-\texttt{hysteresis =} & float & ƒqƒXƒeƒŠƒVƒX‚ğİ’è \\
+\texttt{threshold[n]} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚én”Ô–Ú‚Ìè‡’l \\
+\texttt{threshold[n] =} & float & n”Ô–Ú‚Ìè‡’l‚ğİ’è \\
+\texttt{hysteresis[n]} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚én”Ô–Ú‚ÌƒqƒXƒeƒŠƒVƒX \\
+\texttt{hysteresis[n] =} & float & n”Ô–Ú‚ÌƒqƒXƒeƒŠƒVƒX‚ğİ’è \\
 %\texttt{point[n] = [threshold, histeresis]} & Array & ƒ|ƒCƒ“ƒg‚ğİ’è \\
 %\texttt{point = [[threshold, histeresis], ...]} & Array & •¡”‚Ìƒ|ƒCƒ“ƒg‚ğİ’è
 %\texttt{threshold} & Array & Œ»İİ’è‚³‚ê‚Ä‚¢‚éè‡’l \\
@@ -471,13 +479,14 @@ ThresholdƒIƒuƒWƒFƒNƒg‚ÍAƒAƒiƒƒO‚Ì’l‚É‘Î‚µ‚Äè‡’l‚ÆƒqƒXƒeƒŠƒVƒX‚ğ‚Âƒ|ƒCƒ“ƒg‚ğƒ
 %\texttt{port(n).onChange(float current, float last)} & “ü—Í‚ª•Ï‰»‚µ‚½
 %\end{tabular}
 
-\subsubsection{ƒƒ\ƒbƒh}
-\begin{tabular}{lll}
-ƒƒ\ƒbƒh–¼ & –ß‚è’l & à–¾ \\\hline
-\texttt{setThreshold(float threshold, float hysteresis)} & boolean & ƒ|ƒCƒ“ƒg‚ğİ’è‚·‚é \\
-%\texttt{setThreshold([[threshold, hysteresis], ...])} & boolean & •¡”‚Ìƒ|ƒCƒ“ƒg‚ğİ’è‚·‚é \\
-%\texttt{update()} & float & ÅV‚Ìó‘Ô‚ÉXV‚·‚é
-\end{tabular}
+%•¡”‚Ìƒ|ƒCƒ“ƒg‚ğİ’è‚µ‚È‚¢ŒÀ‚è‚±‚ê‚Í•s—vHHH
+%\subsubsection{ƒƒ\ƒbƒh}
+%\begin{tabular}{lll}
+%ƒƒ\ƒbƒh–¼ & –ß‚è’l & à–¾ \\\hline
+%\texttt{setThreshold(float threshold, float hysteresis)} & boolean & ƒ|ƒCƒ“ƒg‚ğİ’è‚·‚é \\
+%%\texttt{setThreshold([[threshold, hysteresis], ...])} & boolean & •¡”‚Ìƒ|ƒCƒ“ƒg‚ğİ’è‚·‚é \\
+%%\texttt{update()} & float & ÅV‚Ìó‘Ô‚ÉXV‚·‚é
+%\end{tabular}
 
 %¦FunnelƒIƒuƒWƒFƒNƒg‚ÉƒZƒbƒg‚µ‚½ê‡AFunnelƒIƒuƒWƒFƒNƒg‚ÌƒT[ƒrƒXƒ^ƒXƒN‚Å\texttt{update()}‚ªŒÄ‚Î‚ê‚é‚½‚ßAƒ†[ƒU‚ª‚±‚Ìƒƒ\ƒbƒh‚ğŒÄ‚Ô•K—v‚Í‚ ‚è‚Ü‚¹‚ñB
 
@@ -489,9 +498,7 @@ ThresholdƒIƒuƒWƒFƒNƒg‚ÍAƒAƒiƒƒO‚Ì’l‚É‘Î‚µ‚Äè‡’l‚ÆƒqƒXƒeƒŠƒVƒX‚ğ‚Âƒ|ƒCƒ“ƒg‚ğƒ
 
 
 \subsection{OscƒNƒ‰ƒX}
-OscƒNƒ‰ƒX‚Íå‚Éo—Í‚É—p‚¢ALED‚ğ‚Ó‚í‚Ó‚í“_–Å‚³‚¹‚½‚è‚·‚é‚È‚Ç‚Ég‚¢‚Ü‚·B‚Ü‚½A‰ñ”‚ğ1‰ñ‚Éİ’è‚·‚é‚ÆAƒƒ“ƒVƒ‡ƒbƒg‚Ì§Œä‚É‚àg‚¦‚Ü‚·B‚ ‚ç‚©‚¶‚ß—Ç‚­g‚í‚ê‚éí—Ş‚Ì”gŒ`‚Í—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·‚ªAƒ†[ƒU‚ª“Æ©‚É’è‹`‚µ‚½ŠÖ”‚à—˜—p‚Å‚«‚Ü‚·BƒT[ƒrƒXŠÔŠu‚ÍFunnelƒIƒuƒWƒFƒNƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒX•Ï”serviceInterval‚Ìİ’è‚É]‚¢‚Ü‚·B
-
-Funnel‚Ìo—Íƒ|[ƒg‚É‘Î‚µ‚Ä—˜—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚½‚à‚Ì‚Å‚·‚ªA‰æ–Ê•\¦‚È‚Ç‚Ì‘¼‚Ì•”•ª‚Å‚à—˜—p‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+OscƒNƒ‰ƒX‚Íå‚Éo—Í‚É—p‚¢ALED‚ğ‚Ó‚í‚Ó‚í“_–Å‚³‚¹‚½‚è‚·‚é‚È‚Ç‚Ég‚¢‚Ü‚·B‚Ü‚½A‰ñ”‚ğ1‰ñ‚Éİ’è‚·‚é‚ÆAƒƒ“ƒVƒ‡ƒbƒg‚Ì§Œä‚É‚àg‚¦‚Ü‚·B‚ ‚ç‚©‚¶‚ß—Ç‚­g‚í‚ê‚éí—Ş‚Ì”gŒ`‚Í—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·‚ªAƒ†[ƒU‚ª“Æ©‚É’è‹`‚µ‚½ŠÖ”‚à—˜—p‚Å‚«‚Ü‚·BƒT[ƒrƒXŠÔŠu‚ÍOscƒIƒuƒWƒFƒNƒg‚ÌƒNƒ‰ƒX•Ï”serviceInterval‚Ìİ’è‚É]‚¢‚Ü‚·Bè“®‚Å—˜—p‚·‚éê‡‚É‚ÍAupdate()ƒƒ\ƒbƒh‚ğ—˜—p‚µ‚Ü‚·B
 
 \subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
 \begin{tabular}{l}
@@ -518,7 +525,9 @@ Funnel‚Ìo—Íƒ|[ƒg‚É‘Î‚µ‚Ä—˜—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚½‚à‚Ì‚Å‚·‚ªA‰æ–Ê•\¦‚È‚Ç‚Ì‘¼‚Ì•”
 \texttt{offset} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚éƒIƒtƒZƒbƒg \\
 \texttt{offset =} & void & ƒIƒtƒZƒbƒg‚ğİ’è \\
 \texttt{phase} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚éˆÊ‘Šidegreej \\
-\texttt{phase =} & void & ˆÊ‘Š‚ğİ’èidegreej
+\texttt{phase =} & void & ˆÊ‘Š‚ğİ’èidegreej \\
+\texttt{times} & int & Œ»İİ’è‚³‚ê‚Ä‚¢‚é‰ñ”itimesj \\
+\texttt{times =} & void & ‰ñ”‚ğİ’èitimesj
 \end{tabular}
 
 \subsubsection{ƒCƒxƒ“ƒg}
@@ -532,8 +541,9 @@ Funnel‚Ìo—Íƒ|[ƒg‚É‘Î‚µ‚Ä—˜—p‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚½‚à‚Ì‚Å‚·‚ªA‰æ–Ê•\¦‚È‚Ç‚Ì‘¼‚Ì•”
 ƒƒ\ƒbƒh–¼ & –ß‚è’l & à–¾ \\\hline
 %\texttt{setWave(function wave)} & boolean & ”gŒ`‚ğİ’è \\
 \texttt{start()} & void & OscƒIƒuƒWƒFƒNƒg‚Ì“®ì‚ğƒXƒ^[ƒg‚·‚é \\
+\texttt{stop()} & void & OscƒIƒuƒWƒFƒNƒg‚Ì“®ì‚ğƒXƒgƒbƒv‚·‚é \\
 \texttt{update()} & void & OscƒIƒuƒWƒFƒNƒg‚Ìó‘Ô‚ğè“®‚ÅXV‚·‚é \\
-\texttt{addEventListener(Event e, function)} & void & ƒCƒxƒ“ƒgƒŠƒXƒi‚ğİ’è‚·‚é
+\texttt{addEventListener(e:Event, f:function)} & void & ƒCƒxƒ“ƒgƒŠƒXƒi‚ğİ’è‚·‚é
 \end{tabular}
 
 %¦FunnelƒIƒuƒWƒFƒNƒg‚ÉƒZƒbƒg‚µ‚½ê‡AFunnelƒIƒuƒWƒFƒNƒg‚ÌƒT[ƒrƒXƒ^ƒXƒN’†‚ÅƒZƒbƒg‚µ‚½OscƒIƒuƒWƒFƒNƒg‚Ì\texttt{update()}‚ğ©“®“I‚ÉŒÄ‚Ô‚½‚ßAƒ†[ƒU‚ª‚±‚Ìƒƒ\ƒbƒh‚ğŒÄ‚Ô•K—v‚Í‚ ‚è‚Ü‚¹‚ñB
@@ -696,13 +706,13 @@ Funnel‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ğg—p‚·‚é‚±‚Æ‚É‚æ‚èA‚Ç‚Ì’ö“xƒR[ƒh‚ªƒVƒ“ƒvƒ‹‚©‚Â‰Â“Ç«‚Ì‚‚¢
 \begin{lstlisting}[caption={\ref{pcode2}‚ÌÀ‘•—áiActionScript 2 + Gainerj},label=useless]
 var io:Gainer = new Gainer(...);
 var lastStatus:Number = -1;	// -1: unknown, 0: low, 1:high
-var thresholdL:Number = 50;
-var thresholdH:Number = 200;
+var threshold = 80;
+var hysteresis = 20;
 
 loop() {
-	if (io.analogInput[0] < thresholdL) {
+	if (io.analogInput[0] < (threshold - hysteresis)) {
 		status = 0;
-	} else if (io.analogInput[0] > thresholdH) {
+	} else if (io.analogInput[0] > (threshold + hysteresis)) {
 		status = 1;
 	} else {
 		status = lastStatus;
@@ -725,7 +735,7 @@ var fio:Funnel = new Funnel(...);
 var threshold:float = 0.3;
 var hysteresis:float = 0.1;
 
-fio.port(0).filters = [new Threshold(threshold, hysteresis)];
+fio.port(0).filters = [new SetPoint(threshold, hysteresis)];
 fio.port(0).addEventListener(FALLING_EDGE, handler);
 
 function handler():void {
@@ -746,7 +756,7 @@ function handler():void {
 var io:Gainer = new Gainer(...);
 var value:Boolean = false;
 
-var blinkTimer:Timer = new Timer(250, 0);		// 250ms, forever
+var blinkTimer:Timer = new Timer(250, 0);	// ŠÔŠuA‰ñ”i0‚Í–³ŒÀ‰ñj
 blinkTimer.addEventListener(TimerEvent.TIMER, blink);
 blinkTimer.start();
 
@@ -763,7 +773,7 @@ function blink():void {
 
 \begin{lstlisting}[caption={\ref{pcode4}‚ÌÀ‘•—á1iActionScript 3 + Funnelj},label=useless]
 var fio:Funnel = new Funnel(...);
-var blinkOsc:Osc = new Osc(Funnel::Osc.SQUARE, 2, 1, 0, 0); // ”gŒ`Aü”g”AU•AˆÊ‘ŠA‰ñ”i0‚Í–³ŒÀj
+var blinkOsc:Osc = new Osc(Funnel::Osc.SQUARE, 2, 0); // ”gŒ`Aü”g”A‰ñ”i0‚Í–³ŒÀ‰ñj
 
 fio.port(0).filters = [blinkOsc];
 blinkOsc.start();
@@ -772,7 +782,7 @@ blinkOsc.start();
 \begin{lstlisting}[caption={\ref{pcode4}‚ÌÀ‘•—á2iActionScript 3 + Funnelj},label=useless]
 var fio:Funnel = new Funnel(...);
 
-fio.port(0).filters = [new Osc(Funnel::Osc.SQUARE, 2, 1, 0, 0)];
+fio.port(0).filters = [new Osc(Funnel::Osc.SQUARE, 2, 0)]; // ”gŒ`Aü”g”A‰ñ”i0‚Í–³ŒÀ‰ñj
 fio.port(0).filters[0].start();
 \end{lstlisting}
 
@@ -809,7 +819,7 @@ function dimming():void {
 
 \begin{lstlisting}[caption={\ref{pcode6}‚ÌÀ‘•—á1iActionScript 3 + Funnelj},label=useless]
 var fio:Funnel = new Funnel(...);
-var dimmingOsc:Osc = new Osc(Wave.TRIANGLE, 0.5, 1, 0, 0); // ”gŒ`Aü”g”AU•AˆÊ‘ŠA‰ñ”i0‚Í–³ŒÀ‰ñj
+var dimmingOsc:Osc = new Osc(Wave.TRIANGLE, 0.5, 0); // ”gŒ`Aü”g”A‰ñ”i0‚Í–³ŒÀ‰ñj
 
 fio.port(0).filters = [dimmingOsc];
 dimmingOsc.start();
@@ -818,7 +828,7 @@ dimmingOsc.start();
 \begin{lstlisting}[caption={\ref{pcode6}‚ÌÀ‘•—á2iActionScript 3 + Funnelj},label=useless]
 var fio:Funnel = new Funnel(...);
 
-fio.port(0).filters = [new Osc(Wave.TRIANGLE, 0.5, 1, 0, 0)];
+fio.port(0).filters = [new Osc(Wave.TRIANGLE, 0.5, 0)]; // ”gŒ`Aü”g”A‰ñ”i0‚Í–³ŒÀ‰ñj
 fio.port(0).filters[0].start();
 \end{lstlisting}
 
@@ -835,7 +845,7 @@ var io:Gainer = new Gainer(...);
 
 function startTrigger():void {
 	io.digitalOutput(0, true);
-	var tTimer:Timer = new Timer(20, 1);	// duration, times
+	var tTimer:Timer = new Timer(20, 1);	// ŠÔŠuA‰ñ”
 	tTimer.addEventListener(TimerEvent.TIMER, finishTrigger);
 	tTimer.start();
 }
@@ -847,7 +857,7 @@ function finishTrigger():void {
 
 \begin{lstlisting}[caption={\ref{pcode3}‚ÌÀ‘•—áiActionScript 3 + Funnelj},label=useless]
 var fio:Funnel = new Funnel(...);
-var trigger:Osc = new Osc(Osc.IMPULSE, 50, 1, 0, 1);
+var trigger:Osc = new Osc(Osc.IMPULSE, 1000/20, 1);	// ”gŒ`Aü”g”A‰ñ”
 
 fio.port(0).filters = [trigger];
 trigger.start();
@@ -1176,13 +1186,12 @@ ActionScript 3‚ÆProcessing‚ÍAPCã‚Å“®ì‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚Ü‚·BPC‘¤‚Ìˆ—”\—Í
 
 ActionScript 3‚ğ‚Í‚¶‚ß‚Æ‚·‚éJavaScript‚ğATamarin\footnote{http://www.mozilla-japan.org/projects/tamarin/}‚È‚Ç‚Ì‰¼‘zƒ}ƒVƒ“‚ğ‘g‚İŒnƒfƒoƒCƒX‚ÉÀ‘•‚·‚é‚±‚Æ‚Å“®ì‚³‚¹‚é‚±‚Æ‚àl‚¦‚ç‚ê‚Ü‚·‚ªAFunnel v1.0‚Ì³®ƒŠƒŠ[ƒXŒã‚Ìó‹µ‚É‚æ‚èŒŸ“¢‚µ‚½‚¢‚Æl‚¦‚Ä‚¢‚Ü‚·B
 
-
 \section{XV—š—ğ}
 \begin{description}
-\item[ 2007.9.1] ’v–½“I‚ÈƒGƒ‰[‚ğŒÂ•Ê‚ÌƒCƒxƒ“ƒg‚É•ÏXBOsc‚ÌƒT[ƒrƒXŠÔŠu‚ğƒNƒ‰ƒX•ÏX‚É•ÏX‚µAstartƒƒ\ƒbƒh‚ğ’Ç‰ÁB
+\item[ 2007.9.2] Threshold‚ğSetPoint‚É‰ü–¼‚µA•¡”‚Ìƒ|ƒCƒ“ƒg‚ğƒZƒbƒg‚Å‚«‚é‚æ‚¤‚É•ÏXBScaler‚ÉƒŠƒ~ƒbƒ^‚ğ’Ç‰ÁB
+\item[ 2007.9.1] ’v–½“I‚ÈƒGƒ‰[‚ğŒÂ•Ê‚ÌƒCƒxƒ“ƒg‚É•ÏXBOsc‚ÌƒT[ƒrƒXŠÔŠu‚ğƒNƒ‰ƒX•ÏX‚É•ÏX‚µAstartƒƒ\ƒbƒh‚ğ’Ç‰ÁBOsc‚ÉƒCƒ“ƒXƒ^ƒ“ƒX•Ï”times‚ÆAƒCƒ“ƒXƒ^ƒ“ƒXƒƒ\ƒbƒhstop()‚ğ’Ç‰ÁB
 \item[ 2007.8.17] ƒCƒxƒ“ƒgƒnƒ“ƒhƒ‰‚ğ”p~‚µ‚ÄƒCƒxƒ“ƒgƒŠƒXƒi‚É•ÏXB
 \item[ 2007.7.3] ƒ|[ƒg‚ÌƒvƒƒpƒeƒBhysteresisA‚¨‚æ‚ÑOSCƒRƒ}ƒ“ƒh‚Ì’è”PORT\_DIN‚Ìà–¾‚ÉŒë‚è‚ª‚ ‚Á‚½‚Ì‚ğC³B
 \end{description}
-
 
 \end{document}
