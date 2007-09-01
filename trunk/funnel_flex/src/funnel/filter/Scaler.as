@@ -2,30 +2,29 @@ package funnel.filter
 {
 	public class Scaler implements IFilter
 	{
-		private var _inMin:Number;
-		private var _inMax:Number;
-		private var _outMin:Number;
-		private var _outMax:Number;
-		private var _inRange:Number;
-		private var _outRange:Number;
-		private var _curve:Function;
+		public var inMin:Number;
+		public var inMax:Number;
+		public var outMin:Number;
+		public var outMax:Number;
+		public var type:Function;
 			
-		public function Scaler(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, curve:Function = null) {
-			_inMin = inMin;
-			_inMax = inMax;
-			_outMin = outMin;
-			_outMax = outMax;
-			if (curve == null) _curve = LINEAR;
-			else _curve = curve;
-			_inRange = inMax - inMin;
-			_outRange = outMax - outMin;
+		public function Scaler(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, type:Function = null) {
+			this.inMin = inMin;
+			this.inMax = inMax;
+			this.outMin = outMin;
+			this.outMax = outMax;
+			if (type == null) this.type = LINEAR;
+			else this.type = type;
 		}
 		
 		public function processSample(val:Number):Number
 		{
-			var normVal:Number = (val - _inMin) / _inRange;
-			normVal = Math.max(0, Math.min(1, normVal));//入力を0-1でクランプ
-			return _outRange * _curve(normVal) + _outMin;
+			var inRange:Number = inMax - inMin;
+			var outRange:Number = outMax - outMin;
+			var normVal:Number = (val - inMin) / inRange;
+			var result:Number = outRange * type(normVal) + outMin;
+			//result = Math.max(outMin, Math.min(outMax, result));//出力範囲でクランプ
+			return result;
 		}
 		
 		public static function LINEAR(val:Number):Number {

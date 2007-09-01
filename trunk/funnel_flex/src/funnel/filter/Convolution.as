@@ -9,9 +9,19 @@ package funnel.filter
 		private var _coef:Array;
 		private var _buffer:Array;
 		
-		public function Convolution(coef:Array) {
-			_coef = coef;
+		public function Convolution(kernel:Array) {
+			coef = kernel;
+		}
+		
+		public function set coef(kernel:Array):void {
+			_coef = kernel;
 			_buffer = new Array(_coef.length);
+			for (var i:uint = 0; i < _buffer.length; i++)
+				_buffer[i] = 0;
+		}
+		
+		public function get coef():Array {
+			return _coef;
 		}
 		
 		public function processSample(val:Number):Number

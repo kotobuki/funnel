@@ -8,12 +8,13 @@ package funnel.filter
 	
 	public class Osc extends EventDispatcher implements IGenerator
 	{	
-		private var _wave:Function;
-		private var _freq:Number;
-		private var _amplitude:Number;
-		private var _offset:Number;
-		private var _phase:Number;
-		private var _repeatCount:Number;
+		public var wave:Function;
+		public var freq:Number;
+		public var amplitude:Number;
+		public var offset:Number;
+		public var phase:Number;
+		public var times:Number;
+		
 		private var _time:uint;
 		private var _startTime:int;
 		private var _value:Number;
@@ -38,17 +39,18 @@ package funnel.filter
 			amplitude:Number = 1,
 			offset:Number = 0,
 			phase:Number = 0,
-			repeatCount:Number = 0
+			times:Number = 0
 		) {
 			if (freq == 0) throw new Error("Frequency should be larger than 0...");
 			
-			if (wave == null) _wave = SIN;
-			else _wave = wave;
-			_freq = freq;
-			_amplitude = amplitude;
-			_offset = offset;
-			_phase = phase;
-			_repeatCount = repeatCount;
+			if (wave == null) this.wave = SIN;
+			else this.wave = wave;
+			
+			this.freq = freq;
+			this.amplitude = amplitude;
+			this.offset = offset;
+			this.phase = phase;
+			this.times = times;
 			
 			resetTime();
 		}
@@ -73,12 +75,12 @@ package funnel.filter
 			_time = getTimer() - _startTime;
 			var sec:Number = _time / 1000;
 			
-			if (_repeatCount != 0 && _freq * sec >= _repeatCount) {
+			if (times != 0 && freq * sec >= times) {
 				_timer.removeEventListener(TimerEvent.TIMER, update);
-				sec = _repeatCount / _freq;
+				sec = times / freq;
 			}
 			
-			_value = _amplitude * _wave(_freq * (sec + _phase)) + _offset;
+			_value = amplitude * wave(freq * (sec + phase)) + offset;
 			dispatchEvent(new Event(Event.CHANGE));
 		}
 		
