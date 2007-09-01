@@ -173,7 +173,7 @@ public class CommandPortClient extends Client implements Runnable {
 		Object arguments[] = new Object[numArguments];
 		arguments[0] = new Integer(value);
 		if (message != null) {
-			arguments[0] = new String(message);
+			arguments[1] = new String(message);
 		}
 		OSCMessage reply = new OSCMessage(address, arguments);
 		try {
