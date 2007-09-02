@@ -7,14 +7,15 @@ package funnel.filter
 		public var outMin:Number;
 		public var outMax:Number;
 		public var type:Function;
+		public var limiter:Boolean;
 			
-		public function Scaler(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, type:Function = null) {
+		public function Scaler(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, type:Function = null, limiter:Boolean = false) {
 			this.inMin = inMin;
 			this.inMax = inMax;
 			this.outMin = outMin;
 			this.outMax = outMax;
-			if (type == null) this.type = LINEAR;
-			else this.type = type;
+			this.type = (type != null) ? type : LINEAR;
+			this.limiter = limiter;
 		}
 		
 		public function processSample(val:Number):Number
@@ -22,9 +23,10 @@ package funnel.filter
 			var inRange:Number = inMax - inMin;
 			var outRange:Number = outMax - outMin;
 			var normVal:Number = (val - inMin) / inRange;
-			var result:Number = outRange * type(normVal) + outMin;
-			//result = Math.max(outMin, Math.min(outMax, result));//出力範囲でクランプ
-			return result;
+			if (limiter)
+				normVal = Math.max(0, Math.min(1, normVal));
+
+			return outRange * type(normVal) + outMin;
 		}
 		
 		public static function LINEAR(val:Number):Number {
@@ -32,11 +34,11 @@ package funnel.filter
 		}
 		
 		public static function LOG(val:Number):Number {
-			return Math.log(val);
+			return Math.log(val * (Math.E - 1) + 1);
 		}
 		
 		public static function EXP(val:Number):Number {
-			return Math.exp(val);
+			return (Math.exp(val) - 1) / (Math.E - 1);
 		}
 		
 		public static function SQUARE(val:Number):Number {

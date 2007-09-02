@@ -5,7 +5,7 @@ package funnel
 	import flash.events.*;
 	import funnel.async.Deferred;
 	import funnel.error.FunnelError;
-	import funnel.event.FunnelEvent;
+	import funnel.event.FunnelErrorEvent;
 
 	public class NetPort extends EventDispatcher
 	{
@@ -26,7 +26,7 @@ package funnel
 				function():void {
 					throw new FunnelError(
 						"Funnel server was not found...",
-						FunnelEvent.SERVER_NOT_FOUND_ERROR
+						FunnelErrorEvent.SERVER_NOT_FOUND_ERROR
 					);
 				}
 			);

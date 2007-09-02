@@ -4,6 +4,7 @@ package funnel.ioport
 	import flash.events.EventDispatcher;
 	import funnel.filter.IFilter;
 	import funnel.event.PortEvent;
+	import funnel.event.GeneratorEvent;
 	import funnel.filter.IGenerator;
 	
 	public class Port extends EventDispatcher
@@ -58,11 +59,10 @@ package funnel.ioport
 		}
 		
 		public function set value(val:Number):void {
-			var filterdValue:Number = processSample(val);
-			var changeValue:Boolean = (_value != filterdValue);
-			_value = filterdValue;
-			if (changeValue) 
-				dispatchEvent(new Event(PortEvent.UPDATE));
+			calculateMinimumMaximumAndMean(val);
+			var oldValue:Number = _value;
+			_value = applyFilters(val);
+			detectEdge(oldValue, _value);
 		}
 		
 		public function get average():Number {
@@ -83,7 +83,7 @@ package funnel.ioport
 		
 		public function set filters(array:Array):void {
 			if (_generator != null)
-				_generator.removeEventListener(Event.CHANGE, autoSetValue);
+				_generator.removeEventListener(GeneratorEvent.UPDATE, autoSetValue);
 			
 			if (array == null || array.length == 0) {
 				filters = null;
@@ -97,7 +97,7 @@ package funnel.ioport
 				} else if (array[i] is IGenerator) {
 					lastIndexOfGenerator = i;
 					_generator = array[i] as IGenerator;
-					_generator.addEventListener(Event.CHANGE, autoSetValue);
+					_generator.addEventListener(GeneratorEvent.UPDATE, autoSetValue);
 					break;
 				} else {
 					return;
@@ -120,13 +120,6 @@ package funnel.ioport
 			_numSamples = 1;
 		}
 		
-		private function processSample(val:Number):Number {
-			calculateMinimumMaximumAndMean(val);
-			var filteredValue:Number = applyFilters(val);
-			detectEdge(filteredValue);
-			return filteredValue;
-		}
-		
 		private function calculateMinimumMaximumAndMean(val:Number):void {
 			_minimum = Math.min(val, _minimum);
 			_maximum = Math.max(val, _maximum);
@@ -137,16 +130,20 @@ package funnel.ioport
 				clearWeight();
 		}
 		
-		private function detectEdge(val:Number):void {
+		private function detectEdge(oldValue:Number, newValue:Number):void {
 			if (!_inputAvailable) {
 				_inputAvailable = true;
 				return;
 			}
+
+			if (oldValue == newValue) return;
+
+			dispatchEvent(new PortEvent(PortEvent.CHANGE));
 			
-			if (_value == 0 && val != 0)
-				dispatchEvent(new Event(PortEvent.RISING_EDGE));
-			else if (_value != 0 && val == 0)
-				dispatchEvent(new Event(PortEvent.FALLING_EDGE));
+			if (oldValue == 0 && newValue != 0)
+				dispatchEvent(new PortEvent(PortEvent.RISING_EDGE));
+			else if (oldValue != 0 && newValue == 0)
+				dispatchEvent(new PortEvent(PortEvent.FALLING_EDGE));
 
 		}
 		

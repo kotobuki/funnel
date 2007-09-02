@@ -5,6 +5,7 @@ package funnel.filter
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import funnel.filter.IFilter;
+	import funnel.event.GeneratorEvent;
 	
 	public class Osc extends EventDispatcher implements IGenerator
 	{	
@@ -60,10 +61,14 @@ package funnel.filter
 		}
 		
 		public function start():void {
-			resetTime();
-			_timer.removeEventListener(TimerEvent.TIMER, update);
+			stop();
 			_timer.addEventListener(TimerEvent.TIMER, update);
 			update();
+		}
+		
+		public function stop():void {
+			resetTime();
+			_timer.removeEventListener(TimerEvent.TIMER, update);
 		}
 		
 		private function resetTime():void {
@@ -81,7 +86,7 @@ package funnel.filter
 			}
 			
 			_value = amplitude * wave(freq * (sec + phase)) + offset;
-			dispatchEvent(new Event(Event.CHANGE));
+			dispatchEvent(new GeneratorEvent(GeneratorEvent.UPDATE));
 		}
 		
 		public static function SIN(val:Number):Number {

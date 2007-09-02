@@ -1,11 +1,14 @@
 package funnel.event
 {
-	public class FunnelEvent
+	import flash.events.Event;
+	
+	public class FunnelEvent extends Event
 	{
 		public static const READY:String = "ready";
-		public static const COMMUNICATION_ERROR:String = "fatalError";
-		public static const CONFIGURATION_ERROR:String = "configurationError";
-		public static const REBOOT_ERROR:String = "rebootError";
-		public static const SERVER_NOT_FOUND_ERROR:String = "serverNotFoundError";
+	
+		public function FunnelEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false)
+		{
+			super(type, bubbles, cancelable);
+		}
 	}
 }
