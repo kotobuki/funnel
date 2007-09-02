@@ -15,7 +15,7 @@ package {
 		private var fio:Funnel;
 		
 		public function FunnelTest()
-		{
+		{	
 			fio = new Funnel(GAINER_MODE1);
 			/*
 			//Funnelのイベントは以下のようにハンドリングする

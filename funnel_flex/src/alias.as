@@ -1,4 +1,6 @@
 // Funnel alias
+import funnel.event.FunnelErrorEvent;
+
 static private const enable:Boolean = true;
 static private const disable:Boolean = false;
 
@@ -22,13 +24,14 @@ static private const DIN:uint = funnel.ioport.Port.DIN;
 static private const DOUT:uint = funnel.ioport.Port.DOUT;
 
 static private const READY:String = funnel.event.FunnelEvent.READY;
-static private const COMMUNICATION_ERROR:String = funnel.event.FunnelEvent.COMMUNICATION_ERROR;
-static private const CONFIGURATION_ERROR:String = funnel.event.FunnelEvent.CONFIGURATION_ERROR;
-static private const REBOOT_ERROR:String = funnel.event.FunnelEvent.REBOOT_ERROR;
-static private const SERVER_NOT_FOUND_ERROR:String = funnel.event.FunnelEvent.SERVER_NOT_FOUND_ERROR;
+static private const COMMUNICATION_ERROR:String = funnel.event.FunnelErrorEvent.COMMUNICATION_ERROR;
+static private const CONFIGURATION_ERROR:String = funnel.event.FunnelErrorEvent.CONFIGURATION_ERROR;
+static private const REBOOT_ERROR:String = funnel.event.FunnelErrorEvent.REBOOT_ERROR;
+static private const SERVER_NOT_FOUND_ERROR:String = funnel.event.FunnelErrorEvent.SERVER_NOT_FOUND_ERROR;
 static private const RISING_EDGE:String = funnel.event.PortEvent.RISING_EDGE;
 static private const FALLING_EDGE:String = funnel.event.PortEvent.FALLING_EDGE;
-static private const UPDATE:String = funnel.event.PortEvent.UPDATE;
+static private const CHANGE:String = funnel.event.PortEvent.CHANGE;
+static private const UPDATE:String = funnel.event.GeneratorEvent.UPDATE;
 /*
 static private const LPH:Array = funnel.filter.Convolution.LPF;
 static private const HPF:Array = funnel.filter.Convolution.HPF;

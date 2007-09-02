@@ -98,7 +98,7 @@ package funnel
 		}
 		
 		private function callReadyHandler():void {
-			dispatchEvent(new Event(FunnelEvent.READY));
+			dispatchEvent(new FunnelEvent(FunnelEvent.READY));
 		}
 		
 		private function callErrorHandler(e:Error):void {
@@ -115,7 +115,7 @@ package funnel
 			for (var i:uint = 0; i < configuration.length; ++i) {
 				var aPort:Port = Port.createWithType(configuration[i]);
 				if (aPort is OutputPort)
-					OutputPort(aPort).addEventListener(PortEvent.UPDATE, createOutputChangeHandler(i));
+					aPort.addEventListener(PortEvent.CHANGE, createOutputChangeHandler(i));
 				_ioPorts.push(aPort);
 			}
 			_portCount = _ioPorts.length;

@@ -7,16 +7,16 @@ package funnel
 	import funnel.async.Deferred;
 	import funnel.osc.*;
 	import funnel.error.*;
-	import funnel.event.FunnelEvent;
+	import funnel.event.FunnelErrorEvent;
 	
 	public class CommandPort extends NetPort
 	{
 		private static const NO_ERROR:uint = 0;
 		private static const ERROR_EVENTS:Array = [
 			,
-			FunnelEvent.COMMUNICATION_ERROR,
-			FunnelEvent.REBOOT_ERROR,
-			FunnelEvent.CONFIGURATION_ERROR];
+			FunnelErrorEvent.COMMUNICATION_ERROR,
+			FunnelErrorEvent.REBOOT_ERROR,
+			FunnelErrorEvent.CONFIGURATION_ERROR];
 		
 		private var _sendAndWait:Function;
 
@@ -46,10 +46,11 @@ package funnel
 			var response:ByteArray = new ByteArray();
 			_socket.readBytes(response);
 			var packet:OSCPacket = OSCPacket.createWithBytes(response);
-			var errorCode:uint = packet.value[0];
-			var message:String = packet.value[1];
-			if (errorCode != NO_ERROR)
+			if (packet.value[0] is Number && packet.value[0] < 0) {
+				var errorCode:uint = -packet.value[0];
+				var message:String = packet.value[1];
 				throw new FunnelError(message, ERROR_EVENTS[errorCode]);
+			}
 		}
 	}
 }
