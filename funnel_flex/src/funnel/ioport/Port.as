@@ -86,7 +86,7 @@ package funnel.ioport
 				_generator.removeEventListener(GeneratorEvent.UPDATE, autoSetValue);
 			
 			if (array == null || array.length == 0) {
-				filters = null;
+				filters = array;
 				return;
 			}
 			

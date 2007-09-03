@@ -19,7 +19,7 @@ package funnel.filter
 			if (threshold.length != hysteresis.length)
 				throw new Error("threshld and hysteresis should be the same lengths...");
 			
-			var points:Array = unzip( zip([threshold, hysteresis]).sortOn('0', Array.NUMERIC) );
+			var points:Array = zip( zip([threshold, hysteresis]).sortOn('0', Array.NUMERIC) );
 			this.threshold = points[0];
 			this.hysteresis = points[1];
 			_lastStatus = 0;
@@ -40,26 +40,14 @@ package funnel.filter
 			return status;
 		}
 		
-		private function zip(array:Array):Array {
+		private static function zip(array:Array):Array {
 			var result:Array = [];
 			for (var i:uint = 0; i < array[0].length; ++i) {
-				var tuple:Array = [];
+				var item:Array = [];
 				for (var j:uint = 0; j < array.length; ++j) {
-					tuple.push(array[j][i]);
+					item.push(array[j][i]);
 				}
-				result.push(tuple);
-			}
-			return result;
-		}
-		
-		private function unzip(array:Array):Array {
-			var result:Array = [];
-			for (var i:uint = 0; i < array[0].length; ++i) {
-				var list:Array = [];
-				for (var j:uint = 0; j < array.length; ++j) {
-					list.push(array[j][i]);
-				}
-				result.push(list);
+				result.push(item);
 			}
 			return result;
 		}
