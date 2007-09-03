@@ -122,9 +122,9 @@ package funnel
 		}
 		
 		private function createOutputChangeHandler(id:uint):Function {
-			return function(event:Event):void {
+			return function(event:PortEvent):void {
 				if (autoUpdate)
-					exportValue(id, [event.target.value]);
+					exportValue(id, [event.value]);
 				else if (_updatedPortIndices.indexOf(id) == -1)
 					_updatedPortIndices.push(id);
 			}

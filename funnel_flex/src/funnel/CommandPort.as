@@ -45,10 +45,10 @@ package funnel
 		private function checkError():void {
 			var response:ByteArray = new ByteArray();
 			_socket.readBytes(response);
-			var packet:OSCPacket = OSCPacket.createWithBytes(response);
-			if (packet.value[0] is Number && packet.value[0] < 0) {
-				var errorCode:uint = -packet.value[0];
-				var message:String = packet.value[1];
+			var args:Array = OSCPacket.createWithBytes(response).value;
+			if (args[0] is OSCInt && args[0].value < 0) {
+				var errorCode:uint = -args[0].value;
+				var message:String = args[1].value;
 				throw new FunnelError(message, ERROR_EVENTS[errorCode]);
 			}
 		}
