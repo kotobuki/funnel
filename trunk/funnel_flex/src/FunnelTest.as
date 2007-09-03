@@ -29,8 +29,20 @@ package {
 			
 			//port8の立ち上がりを検出すると、port4に1周期のサイン波を出力する
 			fio.port(8).filters = [new Osc(Osc.SIN, 1, 1, 0, 0, 1)];
-			fio.port(4).addEventListener(RISING_EDGE, function(event:Event):void {
+			fio.port(4).addEventListener(RISING_EDGE, function(e:Event):void {
 				fio.port(8).filters[0].start();
+			});
+			
+			//port3にSetPointを設定し、CHANGEイベントと組み合わせて状態遷移の情報をトレースする
+			fio.port(3).filters = [ new SetPoint([0.5, 0.7], [0.05, 0.05]) ];
+			var stateTransitionMatrix:Array = [
+				["0 -> 0", "0 -> 1", "0 -> 2"],
+				["1 -> 0", "1 -> 1", "1 -> 2"],
+				["2 -> 0", "2 -> 1", "2 -> 2"]
+			];
+			fio.port(3).addEventListener(CHANGE, function(e:PortEvent):void {
+				//PortEventは新旧の値を保持している
+				trace(stateTransitionMatrix[e.oldValue][e.value]);
 			});
 
 			createView();

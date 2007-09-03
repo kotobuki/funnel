@@ -91,7 +91,7 @@ package funnel.ioport
 			}
 			
 			var lastIndexOfGenerator:uint = 0;
-			for (var i:uint = array.length - 1; i >= 0; --i) {
+			for (var i:int = array.length - 1; i >= 0; --i) {
 				if (array[i] is IFilter) {
 					;
 				} else if (array[i] is IGenerator) {
@@ -138,12 +138,12 @@ package funnel.ioport
 
 			if (oldValue == newValue) return;
 
-			dispatchEvent(new PortEvent(PortEvent.CHANGE));
+			dispatchEvent(new PortEvent(PortEvent.CHANGE, newValue, oldValue));
 			
 			if (oldValue == 0 && newValue != 0)
-				dispatchEvent(new PortEvent(PortEvent.RISING_EDGE));
+				dispatchEvent(new PortEvent(PortEvent.RISING_EDGE, newValue, oldValue));
 			else if (oldValue != 0 && newValue == 0)
-				dispatchEvent(new PortEvent(PortEvent.FALLING_EDGE));
+				dispatchEvent(new PortEvent(PortEvent.FALLING_EDGE, newValue, oldValue));
 
 		}
 		

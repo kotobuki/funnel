@@ -8,9 +8,14 @@ package funnel.event
 		public static const FALLING_EDGE:String = "fallingEdge";
 		public static const CHANGE:String = "change";
 		
-		public function PortEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false)
+		public var value:Number;
+		public var oldValue:Number;
+		
+		public function PortEvent(type:String, value:Number, oldValue:Number, bubbles:Boolean = false, cancelable:Boolean = false)
 		{
 			super(type, bubbles, cancelable);
+			this.value = value;
+			this.oldValue = oldValue;
 		}
 	}
 }
