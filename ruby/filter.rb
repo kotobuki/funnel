@@ -26,7 +26,7 @@ module Funnel
       (@buffer.length - 1).downto(1) do |i|
         @buffer[i] = @buffer[i - 1]
       end
-      
+
       return result
     end
   end
@@ -70,6 +70,114 @@ module Funnel
   end
 
   class Osc < Filter
+    SIN = lambda { |val|
+      0.5 * (1 + Math.sin(2 * Math::PI * val))
+    }
+
+    SQUARE = lambda { |val|
+      return (val % 1 <= 0.5) ? 1 : 0
+    }
+
+    TRIANGLE = lambda { |val|
+      val %= 1;
+      if (val <= 0.25) then return 2 * val + 0.5
+      elsif (val <= 0.75) then return -2 * val + 1.5
+      else return 2 * val - 1.5
+      end
+    }
+
+    SAW = lambda { |val|
+      val %= 1;
+      if (val <= 0.5) then return val + 0.5
+      else return val - 0.5
+      end
+    }
+
+    IMPULSE = lambda { |val|
+      if (val <= 1) then return 1
+      else return 0
+      end
+    }
+
+    MINIMUM_SERVICE_INTERVAL = 5  # i.e. 5ms
+    @@interval = 0.033 # i.e. 30fps
+    @@service_thread = nil
+    @@listeners =[]
+
+    attr_reader :value
+
+    def self.service_interval
+      return (@@interval * 1000.0).to_i
+    end
+
+    def self.service_interval=(new_interval)
+      new_interval = MINIMUM_SERVICE_INTERVAL if new_interval < MINIMUM_SERVICE_INTERVAL
+      @@interval = new_interval.to_f / 1000.0
+    end
+
+    def initialize(wavefunc, frequency, *args)
+      @wavefunc = wavefunc
+      if frequency > 0 then
+        @frequency = frequency
+      else
+        raise ArgumentError, "frequency should be greater than 0"
+      end
+
+      if args.length == 4 then
+        @amplitude = args[0]
+        @offset = args[1]
+        @phase = args[2]
+        @times = args[3]
+      elsif args.length == 1 then
+        @amplitude = 1.0
+        @offset = 0.0
+        @phase = 0.0
+        @times = args[0]
+      else
+        raise ArgumentError, "wrong number of arguments"
+      end
+
+      @value = 0
+      @time = 0
+      @start_time = 0
+
+      if @@service_thread == nil then
+        @@service_thread = Thread.new do
+          loop do
+            @@listeners.each do |listener|
+              listener.send(:update)
+            end
+            sleep(@@interval)
+          end
+        end
+      end
+    end
+
+    def start
+      stop
+      @@listeners.push(self)
+      update
+    end
+
+    def stop
+      reset_time
+      @@listeners.delete(self)
+    end
+
+    def reset_time
+      @time = 0
+      @start_time = Time.now.to_f
+    end
+
+    def update
+      @time = Time.now.to_f - @start_time
+      if (@times != 0 and @frequency * @time >= @times) then
+        @@listeners.delete(self.update)
+        @time = @times / @frequency
+      end
+
+      @value = @amplitude * @wavefunc.call(@frequency * (@time + @phase)) + @offset
+    end
   end
 
   class Scaler < Filter
@@ -86,4 +194,15 @@ if __FILE__ == $0
   10.times do |i|
     puts "#{i}: #{lpf.process_sample(1.0)}"
   end
+
+  Funnel::Osc.service_interval = 20
+  puts "service interval: #{Funnel::Osc.service_interval}"
+
+  osc = Funnel::Osc.new(Funnel::Osc::SIN, 1.0, 0)
+  osc.start
+  20.times do
+    p osc.value
+    sleep(0.05)
+  end
+  osc.stop
 end
