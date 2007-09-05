@@ -115,8 +115,8 @@ module Funnel
       @@interval = new_interval.to_f / 1000.0
     end
 
-    def initialize(wavefunc, frequency, *args)
-      @wavefunc = wavefunc
+    def initialize(wave_func, frequency, *args)
+      @wave_func = wave_func
       if frequency > 0 then
         @frequency = frequency
       else
@@ -140,6 +140,7 @@ module Funnel
       @value = 0
       @time = 0
       @start_time = 0
+      @auto_update = false
 
       if @@service_thread == nil then
         @@service_thread = Thread.new do
@@ -156,48 +157,109 @@ module Funnel
     def start
       stop
       @@listeners.push(self)
+      @auto_update = true
       update
     end
 
     def stop
-      reset_time
+      @auto_update = false
       @@listeners.delete(self)
     end
 
-    def reset_time
+    def reset
       @time = 0
       @start_time = Time.now.to_f
     end
 
-    def update
-      @time = Time.now.to_f - @start_time
+    def update(*args)
+      if args.length == 1 then
+        @time = @time + args[0]
+      elsif @auto_update then
+        @time = Time.now.to_f - @start_time
+      else
+        @time = @time + @@interval
+      end
+
       if (@times != 0 and @frequency * @time >= @times) then
         @@listeners.delete(self.update)
         @time = @times / @frequency
       end
 
-      @value = @amplitude * @wavefunc.call(@frequency * (@time + @phase)) + @offset
+      @value = @amplitude * @wave_func.call(@frequency * (@time + @phase)) + @offset
     end
   end
 
   class Scaler < Filter
+    LINEAR = lambda { |val|
+      return val
+    }
+
+    LOG = lambda { |val|
+      return Math.log(val * (Math.E - 1) + 1)
+    }
+
+    EXP = lambda { |val|
+      return (Math.exp(val) - 1) / (Math.E - 1)
+    }
+
+    SQUARE = lambda { |val|
+      return val * val
+    }
+
+    SQUARE_ROOT = lambda { |val|
+      return val ** (1.0 / 2)
+    }
+
+    CUBE = lambda { |val|
+      return val * val * val * val
+    }
+
+    CUBE_ROOT = lambda { |val|
+      return val ** (1.0 / 4)
+    }
+
+    def initialize(in_min, in_max, out_min, out_max, curve_func, limiter = false)
+      @in_min = in_min
+      @in_max = in_max
+      @out_min = out_min
+      @out_max = out_max
+      @curve_func = curve_func
+      @limiter = limiter
+    end
+    
+    def process_sample(value)
+      if @limiter then
+        value = in_min if value < in_min
+        value = in_max if value > in_max
+      end
+
+      in_range = @in_max - @in_min
+      out_range = @out_max - @out_min
+      normalized_val = (value - @in_min) / in_range
+
+      return out_range * @curve_func.call(normalized_val) + @out_min
+    end
   end
 end
 
 if __FILE__ == $0
+  puts "TEST: SetPoint"
   th = Funnel::SetPoint.new([0.3, 0.7], [0.1, 0.1])
   0.0.step(1.0, 0.1) do |val|
     puts "#{val}: #{th.process_sample(val)}"
   end
+  puts ""
 
+  puts "TEST: Convolution"
   lpf = Funnel::Convolution.new(Funnel::Convolution::MOVING_AVERAGE)
   10.times do |i|
     puts "#{i}: #{lpf.process_sample(1.0)}"
   end
+  puts ""
 
+  puts "TEST: Osc"
   Funnel::Osc.service_interval = 20
   puts "service interval: #{Funnel::Osc.service_interval}"
-
   osc = Funnel::Osc.new(Funnel::Osc::SIN, 1.0, 0)
   osc.start
   20.times do
@@ -205,4 +267,11 @@ if __FILE__ == $0
     sleep(0.05)
   end
   osc.stop
+  puts ""
+  
+  puts "TEST: Scaler"
+  scaler = Funnel::Scaler.new(0, 1, 0, 1, Funnel::Scaler::SQUARE)
+  0.0.step(1.0, 0.1) do |val|
+    puts "#{val}: #{scaler.process_sample(val)}"
+  end
 end
