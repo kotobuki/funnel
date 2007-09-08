@@ -69,7 +69,14 @@ module Funnel
     end
 
     def filters=(filters)
-      @filters = filters
+      @filters.each do |filter|
+        filter.set_listener nil if filter.is_a? Generator
+      end
+
+      filters.each do |filter|
+        filter.set_listener { |val| self.value=(val) } if filter.is_a? Generator
+        @filters << filter
+      end
     end
 
     def detect_edge(last_value, current_value)
@@ -95,8 +102,13 @@ module Funnel
 
       result = value;
 
-      filters.each do |filter|
-        result = filter.process_sample(result) if filter.is_a? Filter
+      @filters.each do |filter|
+        if filter.is_a? Generator then
+          filter.update() if not filter.auto_update
+          result = filter.value
+        elsif filter.is_a? Filter then
+          result = filter.process_sample(result)
+        end
       end
       return result
     end

@@ -13,10 +13,18 @@ module Funnel
     MINIMUM_SAMPLING_INTERVAL = 10
 
     def initialize(host, port, config, interval)
-      @command_port = TCPSocket.open(host, port)
-      puts "command port: #{@command_port.addr.at(2)}, #{@command_port.addr.at(1)}"
-      @notification_port = TCPSocket.open(host, port + 1)
-      puts "notification port: #{@notification_port.addr.at(2)}, #{@notification_port.addr.at(1)}"
+      begin
+        @command_port = TCPSocket.open(host, port)
+        puts "command port: #{@command_port.addr.at(2)}, #{@command_port.addr.at(1)}"
+      rescue
+        raise RuntimeError, "can't connect to the command port (#{port}) of the funnel_server"
+      end
+      begin
+        @notification_port = TCPSocket.open(host, port + 1)
+        puts "notification port: #{@notification_port.addr.at(2)}, #{@notification_port.addr.at(1)}"
+      rescue
+        raise RuntimeError, "can't connect to the notification port (#{port + 1}) of the funnel_server"
+      end
 
       send_command(OSC::Message.new('/reset'))
       send_command(OSC::Message.new('/configure', 'i' * config.size, *config))
@@ -112,10 +120,6 @@ if __FILE__ == $0
       puts "ain 0: #{event.value}"
     end
 
-    fio.port(17).add_event_listener(Event::CHANGE) do |event|
-      puts "button: #{event.value}"
-    end
-
     fio.port(17).add_event_listener(Event::RISING_EDGE) do
       puts "button: pressed"
     end
@@ -124,12 +128,12 @@ if __FILE__ == $0
       puts "button: released"
     end
 
-    3.times do
-      fio.port(16).value = 1
-      fio.port(16).value = 0
-      sleep(0.1)
-    end
+    Osc.service_interval = 33
+    osc = Osc.new(Osc::SQUARE, 2.0, 0)
+    fio.port(16).filters = [osc]
+    osc.reset
+    osc.start
 
-    sleep(10)
+    sleep(5)
   end
 end

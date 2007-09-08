@@ -6,6 +6,11 @@ module Funnel
     end
   end
 
+  module Generator
+    def update(*args)
+    end
+  end
+
   class Convolution < Filter
     LPF = [1.0/3.0, 1.0/3.0, 1.0/3.0]
     HPF = [1.0/3.0, -2.0/3.0, 1.0/3.0]
@@ -32,29 +37,36 @@ module Funnel
   end
 
   class SetPoint < Filter
-    def initialize(threshold, hysteresis)
-      @threshold = []
-      @hysteresis = []
+    def initialize(*args)
       @range = []
-      if threshold.is_a? Array and hysteresis.is_a? Array then
-        if threshold.length != hysteresis.length then
-          raise ArgumentError, "the length of threshold should be same as the length of hysteresis"
+      @points = []
+
+      if args.is_a? Array and args.length == 1 then
+        args[0].each do |point|
+          @points << point
         end
-        @threshold = threshold
-        @hysteresis = hysteresis
-      elsif threshold.is_a? Numeric and hysteresis.is_a? Numeric then
-        @threshold = [threshold]
-        @hysteresis = [hysteresis]
+      elsif args.is_a? Array and args.length > 1 then
+        if args[0].is_a? Array then
+          args.each do |point|
+            @points << point
+          end
+        elsif args[0].is_a? Numeric then
+          @points << [args[0], args[1]]
+        end
       else
-        raise ArgumentError, "arguments to SetPoint should be (float, float) or (array, array)"
+        raise ArgumentError, "arguments to SetPoint should be [float, float] or [array, array, ...]"
       end
-      @range << [0.0, @threshold[0] - @hysteresis[0]]
-      points = @threshold.length
-      (points - 1).times do |i|
-        @range << [@threshold[i] + @hysteresis[i], @threshold[i + 1] - @hysteresis[i + 1]]
+
+      @range << [0.0, @points.first[0] - @points.first[1]]
+      (@points.length - 1).times do |i|
+        @range << [@points[i][0] + @points[i][1], @points[i + 1][0] - @points[i + 1][1]]
       end
-      @range << [@threshold[points - 1] + @hysteresis[points - 1], 1.0]
-      puts "SetPoint: #{@range}"
+      @range << [@points.last[0] + @points.last[1], 1.0]
+
+      @range.each_with_index do |range, index|
+        puts "range #{index}: #{range[0]} - #{range[1]}"
+      end
+
       @last_status = 0
     end
 
@@ -70,12 +82,14 @@ module Funnel
   end
 
   class Osc < Filter
+    include Generator
+    
     SIN = lambda { |val|
       0.5 * (1 + Math.sin(2 * Math::PI * val))
     }
 
     SQUARE = lambda { |val|
-      return (val % 1 <= 0.5) ? 1 : 0
+      return (val % 1 <= 0.5) ? 1.0 : 0.0
     }
 
     TRIANGLE = lambda { |val|
@@ -102,9 +116,10 @@ module Funnel
     MINIMUM_SERVICE_INTERVAL = 5  # i.e. 5ms
     @@interval = 0.033 # i.e. 30fps
     @@service_thread = nil
-    @@listeners =[]
+    @@listeners = []
 
     attr_reader :value
+    attr_reader :auto_update
 
     def self.service_interval
       return (@@interval * 1000.0).to_i
@@ -137,10 +152,11 @@ module Funnel
         raise ArgumentError, "wrong number of arguments"
       end
 
-      @value = 0
-      @time = 0
-      @start_time = 0
+      @value = 0.0
+      @time = 0.0
+      @start_time = 0.0
       @auto_update = false
+      @listener = nil
 
       if @@service_thread == nil then
         @@service_thread = Thread.new do
@@ -171,6 +187,10 @@ module Funnel
       @start_time = Time.now.to_f
     end
 
+    def set_listener(&proc)
+      @listener = proc
+    end
+
     def update(*args)
       if args.length == 1 then
         @time = @time + args[0]
@@ -186,6 +206,7 @@ module Funnel
       end
 
       @value = @amplitude * @wave_func.call(@frequency * (@time + @phase)) + @offset
+      @listener.call(@value) if @listener
     end
   end
 
@@ -244,7 +265,9 @@ end
 
 if __FILE__ == $0
   puts "TEST: SetPoint"
-  th = Funnel::SetPoint.new([0.3, 0.7], [0.1, 0.1])
+  # th = Funnel::SetPoint.new([[0.3, 0.1], [0.7, 0.1]])
+  th = Funnel::SetPoint.new([0.3, 0.1], [0.7, 0.1])
+  # th = Funnel::SetPoint.new(0.3, 0.1)
   0.0.step(1.0, 0.1) do |val|
     puts "#{val}: #{th.process_sample(val)}"
   end
@@ -260,15 +283,16 @@ if __FILE__ == $0
   puts "TEST: Osc"
   Funnel::Osc.service_interval = 20
   puts "service interval: #{Funnel::Osc.service_interval}"
-  osc = Funnel::Osc.new(Funnel::Osc::SIN, 1.0, 0)
+  osc = Funnel::Osc.new(Funnel::Osc::SQUARE, 2.0, 0)
+  osc.reset
   osc.start
   20.times do
-    p osc.value
+    puts "#{osc.value}"
     sleep(0.05)
   end
   osc.stop
   puts ""
-  
+
   puts "TEST: Scaler"
   scaler = Funnel::Scaler.new(0, 1, 0, 1, Funnel::Scaler::SQUARE)
   0.0.step(1.0, 0.1) do |val|
