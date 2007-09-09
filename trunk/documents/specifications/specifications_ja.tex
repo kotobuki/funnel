@@ -216,8 +216,8 @@ FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/
 \texttt{port(n).minimum} & float & Å¬’l \\
 \texttt{port(n).maximum} & float & Å‘å’l \\
 %\texttt{port(n).diff} & float & Œ»İ‚Ì’l‚Æ’¼‘O‚Ì’l‚Ì· \\
-\texttt{port(n).filters} & Filter[] & Œ»İİ’è‚³‚ê‚Ä‚¢‚éƒtƒBƒ‹ƒ^ \\
-\texttt{port(n).filters =} & Filter & ƒtƒBƒ‹ƒ^‚ğİ’è \\
+\texttt{port(n).filters} & Array & Œ»İİ’è‚³‚ê‚Ä‚¢‚éƒtƒBƒ‹ƒ^ \\
+\texttt{port(n).filters =} & Array & ƒtƒBƒ‹ƒ^‚ğİ’è \\
 %\texttt{port(n).edgeDetection =} & boolean & ƒGƒbƒWŒŸo‚Ì—LŒø^–³Œø‚ğØ‚è‘Ö‚¦‚é \\
 \end{tabular}
 
@@ -226,7 +226,7 @@ FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/
 ƒƒ\ƒbƒh–¼ & –ß‚è’l & à–¾ \\\hline
 \texttt{port(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚· \\
 %\texttt{port(n).set(float value)} & boolean & ƒ|[ƒgn‚Ì’l‚ğİ’èiƒ|[ƒg‚Ìdirection‚ª\texttt{OUTPUT}‚Ìê‡j \\
-\texttt{port(n).setFilters([Filter f1, Filter f2, ...])} & boolean & ƒtƒBƒ‹ƒ^‚ğİ’è \\
+%\texttt{port(n).setFilters([Filter f1, Filter f2, ...])} & boolean & ƒtƒBƒ‹ƒ^‚ğİ’è \\
 %\texttt{port(n).setEdgeDetection(boolean enabled)} & boolean & ƒGƒbƒWŒŸo‚Ì—LŒø^–³Œø‚ğİ’è \\
 %\texttt{port(n).setScaler(Scaler scaler)} & boolean & ƒXƒP[ƒ‰‚ğİ’è \\
 \texttt{port(n).clear()} & void & ƒqƒXƒgƒŠ‚ğƒŠƒZƒbƒg \\
@@ -235,7 +235,7 @@ FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/
 \texttt{port(n).addEventListener(e:Event, f:function)} & void & ƒCƒxƒ“ƒgƒŠƒXƒi‚ğİ’è
 \end{tabular}
 
-\subsubsection{ƒCƒxƒ“ƒg}
+\subsubsection{Event‚Ì’è”}
 \begin{tabular}{lll}
 ƒCƒxƒ“ƒg–¼ & İ’èæ & à–¾ \\\hline
 %\texttt{port.onChange()} & “ü—Í‚Ì‚¢‚¸‚ê‚©‚ª•Ï‰»‚µ‚½ \\
@@ -244,6 +244,24 @@ FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/
 \texttt{Event.FALLING\_EDGE} & Šeƒ|[ƒg & SetPointg—p‚É“ü—Í‚ª•Ï‰»i0ˆÈŠO¨0j \\
 \texttt{Event.CANGE} & Šeƒ|[ƒg & SetPointg—p‚É“ü—Í‚ª•Ï‰» \\
 %\texttt{onChange(float current, float last)} & “ü—Í‚ª•Ï‰»‚µ‚½iƒfƒWƒ^ƒ‹•ƒAƒiƒƒOj
+\end{tabular}
+
+\subsubsection{Event‚ÌƒCƒ“ƒXƒ^ƒ“ƒX•Ï”}
+\begin{tabular}{lll}
+•Ï”–¼ & Œ^ & à–¾ \\\hline
+\texttt{value} & float & Œ»İ‚Ì’l \\
+\texttt{lastValue} & float & ‘O‰ñ‚Ì’l \\
+\texttt{text} & String & ƒGƒ‰[ƒƒbƒZ[ƒW‚È‚Ç \\
+\end{tabular}
+
+\subsubsection{ƒGƒ‰[}
+\begin{tabular}{ll}
+–¼‘O & à–¾ \\\hline
+%\texttt{ErrorEvent.FATAL\_ERROR} & FunnelƒIƒuƒWƒFƒNƒg & I/Oƒ‚ƒWƒ…[ƒ‹‚Æ‚ÌŠÔ‚Å’v–½“I‚ÈƒGƒ‰[‚ª”­¶‚µ‚½ \\\hline
+%\texttt{CommunicationError} & I/Oƒ‚ƒWƒ…[ƒ‹‚Æ‚Ì’ÊM‚Åˆê”Ê“I‚ÈƒGƒ‰[‚ª”­¶‚µ‚½ \\
+\texttt{ErrorEvent.SERVER\_NOT\_FOUND\_ERROR} & Funnel Server‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ \\
+\texttt{ErrorEvent.REBOOT\_ERROR} & I/Oƒ‚ƒWƒ…[ƒ‹‚ÌÄ‹N“®‚É¸”s‚µ‚½ \\
+\texttt{ErrorEvent.CONFIGURATION\_ERROR} & ƒRƒ“ƒtƒBƒMƒ…ƒŒ[ƒVƒ‡ƒ“‚É¸”s‚µ‚½ \\
 \end{tabular}
 
 \subsubsection{’è”}
@@ -255,17 +273,6 @@ FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/
 \texttt{ANALOG} & ƒAƒiƒƒO \\
 %\texttt{enable} & true‚Ì•Ê–¼  \\
 %\texttt{disable} & false‚Ì•Ê–¼ \\
-\end{tabular}
-
-\subsubsection{ƒGƒ‰[}
-
-\begin{tabular}{ll}
-–¼‘O & à–¾ \\\hline
-%\texttt{ErrorEvent.FATAL\_ERROR} & FunnelƒIƒuƒWƒFƒNƒg & I/Oƒ‚ƒWƒ…[ƒ‹‚Æ‚ÌŠÔ‚Å’v–½“I‚ÈƒGƒ‰[‚ª”­¶‚µ‚½ \\\hline
-%\texttt{CommunicationError} & I/Oƒ‚ƒWƒ…[ƒ‹‚Æ‚Ì’ÊM‚Åˆê”Ê“I‚ÈƒGƒ‰[‚ª”­¶‚µ‚½ \\
-\texttt{ErrorEvent.SERVER\_NOT\_FOUND\_ERROR} & Funnel Server‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ \\
-\texttt{ErrorEvent.REBOOT\_ERROR} & I/Oƒ‚ƒWƒ…[ƒ‹‚ÌÄ‹N“®‚É¸”s‚µ‚½ \\
-\texttt{ErrorEvent.CONFIGURATION\_ERROR} & ƒRƒ“ƒtƒBƒMƒ…ƒŒ[ƒVƒ‡ƒ“‚É¸”s‚µ‚½ \\
 \end{tabular}
 
 \subsection{Filter‚É‚Â‚¢‚Ä}
@@ -309,7 +316,7 @@ ConvolutionƒNƒ‰ƒX‚Í“ü—Í‚É‘Î‚µ‚Ä‚¢‚í‚ä‚éƒfƒWƒ^ƒ‹M†ˆ—“I‚ÈƒtƒBƒ‹ƒ^ˆ—‚ğs‚¤‚½‚
 
 \subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
 \begin{tabular}{l}
-\texttt{Convolution(Array coef)} \\
+\texttt{Convolution(coef:Array)} \\
 \end{tabular}
 
 \subsubsection{ƒCƒ“ƒXƒ^ƒ“ƒX•Ï”}
@@ -336,9 +343,9 @@ ConvolutionƒNƒ‰ƒX‚Í“ü—Í‚É‘Î‚µ‚Ä‚¢‚í‚ä‚éƒfƒWƒ^ƒ‹M†ˆ—“I‚ÈƒtƒBƒ‹ƒ^ˆ—‚ğs‚¤‚½‚
 \subsubsection{’è”iŒ^Fconst Arrayj}
 \begin{tabular}{ll}
 –¼‘O & à–¾ \\\hline
-\texttt{Filter.LPF} & ƒ[ƒpƒXƒtƒBƒ‹ƒ^ \\
-\texttt{Filter.HPF} & ƒnƒCƒpƒXƒtƒBƒ‹ƒ^ \\
-\texttt{Filter.MOVING\_AVERAGE} & ˆÚ“®•½‹ÏƒtƒBƒ‹ƒ^
+\texttt{Convolution.LPF} & ƒ[ƒpƒXƒtƒBƒ‹ƒ^ \\
+\texttt{Convolution.HPF} & ƒnƒCƒpƒXƒtƒBƒ‹ƒ^ \\
+\texttt{Convolution.MOVING\_AVERAGE} & ˆÚ“®•½‹ÏƒtƒBƒ‹ƒ^
 \end{tabular}
 
 
@@ -391,8 +398,8 @@ function myFilterFunc(in:float, buffer:Array):float {
 \begin{tabular}{ll}
 –¼‘O & à–¾ \\\hline
 \texttt{Scaler.LINEAR} & ’¼üi$y = x$j \\
-\texttt{Scaler.LOG} & ‘Î”ƒJ[ƒu \\
-\texttt{Scaler.EXP} & w”ƒJ[ƒu \\
+%\texttt{Scaler.LOG} & ‘Î”ƒJ[ƒu \\
+%\texttt{Scaler.EXP} & w”ƒJ[ƒu \\
 \texttt{Scaler.SQUARE} & •½•ûƒJ[ƒui$y = x^{2}$j \\
 \texttt{Scaler.SQUARE\_ROOT} & •½•ûªƒJ[ƒui$y = \sqrt{x}$j \\
 \texttt{Scaler.CUBE} & —§•ûƒJ[ƒui$y = x^{4}$j \\
@@ -452,16 +459,16 @@ SetPointƒIƒuƒWƒFƒNƒg‚ÍAƒAƒiƒƒO‚Ì’l‚É‘Î‚µ‚Äè‡’l‚ÆƒqƒXƒeƒŠƒVƒX‚ğ‚Âƒ|ƒCƒ“ƒg‚ğƒZ
 \subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
 \begin{tabular}{l}
 \texttt{SetPoint(threshold:float, hysteresis:float)} \\
-\texttt{SetPoint(threshold:float[], hysteresis:float[])} \\
+\texttt{SetPoint([[t0:float, h0:float], [t1:float, h1:float], ...])} \\
 \end{tabular}
 
 \subsubsection{ƒCƒ“ƒXƒ^ƒ“ƒX•Ï”}
 \begin{tabular}{lll}
 •Ï”–¼ & Œ^ & à–¾ \\\hline
-\texttt{threshold[n]} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚én”Ô–Ú‚Ìè‡’l \\
-\texttt{threshold[n] =} & float & n”Ô–Ú‚Ìè‡’l‚ğİ’è \\
-\texttt{hysteresis[n]} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚én”Ô–Ú‚ÌƒqƒXƒeƒŠƒVƒX \\
-\texttt{hysteresis[n] =} & float & n”Ô–Ú‚ÌƒqƒXƒeƒŠƒVƒX‚ğİ’è \\
+\texttt{point[n]} & Array & Œ»İİ’è‚³‚ê‚Ä‚¢‚én”Ô–Ú‚Ìƒ|ƒCƒ“ƒgiè‡’l‚ÆƒqƒXƒeƒŠƒVƒXj \\
+%\texttt{threshold[n] =} & float & n”Ô–Ú‚Ìè‡’l‚ğİ’è \\
+%\texttt{hysteresis[n]} & float & Œ»İİ’è‚³‚ê‚Ä‚¢‚én”Ô–Ú‚ÌƒqƒXƒeƒŠƒVƒX \\
+%\texttt{hysteresis[n] =} & float & n”Ô–Ú‚ÌƒqƒXƒeƒŠƒVƒX‚ğİ’è \\
 %\texttt{point[n] = [threshold, histeresis]} & Array & ƒ|ƒCƒ“ƒg‚ğİ’è \\
 %\texttt{point = [[threshold, histeresis], ...]} & Array & •¡”‚Ìƒ|ƒCƒ“ƒg‚ğİ’è
 %\texttt{threshold} & Array & Œ»İİ’è‚³‚ê‚Ä‚¢‚éè‡’l \\
@@ -480,13 +487,15 @@ SetPointƒIƒuƒWƒFƒNƒg‚ÍAƒAƒiƒƒO‚Ì’l‚É‘Î‚µ‚Äè‡’l‚ÆƒqƒXƒeƒŠƒVƒX‚ğ‚Âƒ|ƒCƒ“ƒg‚ğƒZ
 %\end{tabular}
 
 %•¡”‚Ìƒ|ƒCƒ“ƒg‚ğİ’è‚µ‚È‚¢ŒÀ‚è‚±‚ê‚Í•s—vHHH
-%\subsubsection{ƒƒ\ƒbƒh}
-%\begin{tabular}{lll}
-%ƒƒ\ƒbƒh–¼ & –ß‚è’l & à–¾ \\\hline
+\subsubsection{ƒƒ\ƒbƒh}
+\begin{tabular}{lll}
+ƒƒ\ƒbƒh–¼ & –ß‚è’l & à–¾ \\\hline
+\texttt{addPoint(threshold:float, hysteresis:float)} & void & V‚µ‚¢ƒ|ƒCƒ“ƒg‚ğ’Ç‰Á‚·‚é \\
+\texttt{removePoint(threshold:float)} & void & w’è‚µ‚½ƒ|ƒCƒ“ƒg‚ğíœ‚·‚é
 %\texttt{setThreshold(float threshold, float hysteresis)} & boolean & ƒ|ƒCƒ“ƒg‚ğİ’è‚·‚é \\
 %%\texttt{setThreshold([[threshold, hysteresis], ...])} & boolean & •¡”‚Ìƒ|ƒCƒ“ƒg‚ğİ’è‚·‚é \\
 %%\texttt{update()} & float & ÅV‚Ìó‘Ô‚ÉXV‚·‚é
-%\end{tabular}
+\end{tabular}
 
 %¦FunnelƒIƒuƒWƒFƒNƒg‚ÉƒZƒbƒg‚µ‚½ê‡AFunnelƒIƒuƒWƒFƒNƒg‚ÌƒT[ƒrƒXƒ^ƒXƒN‚Å\texttt{update()}‚ªŒÄ‚Î‚ê‚é‚½‚ßAƒ†[ƒU‚ª‚±‚Ìƒƒ\ƒbƒh‚ğŒÄ‚Ô•K—v‚Í‚ ‚è‚Ü‚¹‚ñB
 
@@ -502,8 +511,8 @@ OscƒNƒ‰ƒX‚Íå‚Éo—Í‚É—p‚¢ALED‚ğ‚Ó‚í‚Ó‚í“_–Å‚³‚¹‚½‚è‚·‚é‚È‚Ç‚Ég‚¢‚Ü‚·B‚Ü‚½A
 
 \subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
 \begin{tabular}{l}
-\texttt{Osc(function wave, float freq, int times)} \\
-\texttt{Osc(function wave, float freq, float amp, float offset, float phase, int times)}
+\texttt{Osc(wave:function, freq:float, times:int)} \\
+\texttt{Osc(wave:function, freq:float, amp:float, offset:float, phase:float, times:int)}
 \end{tabular}
 
 \subsubsection{ƒNƒ‰ƒX•Ï”}
@@ -542,7 +551,9 @@ OscƒNƒ‰ƒX‚Íå‚Éo—Í‚É—p‚¢ALED‚ğ‚Ó‚í‚Ó‚í“_–Å‚³‚¹‚½‚è‚·‚é‚È‚Ç‚Ég‚¢‚Ü‚·B‚Ü‚½A
 %\texttt{setWave(function wave)} & boolean & ”gŒ`‚ğİ’è \\
 \texttt{start()} & void & OscƒIƒuƒWƒFƒNƒg‚Ì“®ì‚ğƒXƒ^[ƒg‚·‚é \\
 \texttt{stop()} & void & OscƒIƒuƒWƒFƒNƒg‚Ì“®ì‚ğƒXƒgƒbƒv‚·‚é \\
-\texttt{update()} & void & OscƒIƒuƒWƒFƒNƒg‚Ìó‘Ô‚ğè“®‚ÅXV‚·‚é \\
+\texttt{reset()} & void & OscƒIƒuƒWƒFƒNƒg‚Ì“®ì‚ğƒŠƒZƒbƒg‚·‚é \\
+\texttt{update(interval:int)} & void & w’è‚µ‚½ƒCƒ“ƒ^[ƒoƒ‹‚¾‚¯ŠÔ‚ği‚ß‚é \\
+\texttt{update()} & void & serviceInterval‚¾‚¯ŠÔ‚ği‚ß‚é \\
 \texttt{addEventListener(e:Event, f:function)} & void & ƒCƒxƒ“ƒgƒŠƒXƒi‚ğİ’è‚·‚é
 \end{tabular}
 
@@ -773,7 +784,7 @@ function blink():void {
 
 \begin{lstlisting}[caption={\ref{pcode4}‚ÌÀ‘•—á1iActionScript 3 + Funnelj},label=useless]
 var fio:Funnel = new Funnel(...);
-var blinkOsc:Osc = new Osc(Funnel::Osc.SQUARE, 2, 0); // ”gŒ`Aü”g”A‰ñ”i0‚Í–³ŒÀ‰ñj
+var blinkOsc:Osc = new Osc(Osc.SQUARE, 2, 0); // ”gŒ`Aü”g”A‰ñ”i0‚Í–³ŒÀ‰ñj
 
 fio.port(0).filters = [blinkOsc];
 blinkOsc.start();
@@ -782,7 +793,7 @@ blinkOsc.start();
 \begin{lstlisting}[caption={\ref{pcode4}‚ÌÀ‘•—á2iActionScript 3 + Funnelj},label=useless]
 var fio:Funnel = new Funnel(...);
 
-fio.port(0).filters = [new Osc(Funnel::Osc.SQUARE, 2, 0)]; // ”gŒ`Aü”g”A‰ñ”i0‚Í–³ŒÀ‰ñj
+fio.port(0).filters = [new Osc(Osc.SQUARE, 2, 0)]; // ”gŒ`Aü”g”A‰ñ”i0‚Í–³ŒÀ‰ñj
 fio.port(0).filters[0].start();
 \end{lstlisting}
 
@@ -1073,8 +1084,8 @@ trigger.start();
 %\subsubsection{•¡”‚ÌOsc‚É‚æ‚é‡ŒviAM‚ÆFMj}
 %\begin{lstlisting}[caption={•¡”‚ÌOsc‚É‚æ‚é‡¬iActionScript 3 + Funnelj},label=useless]
 %var fio:Funnel = new Funnel(...);
-%var osc1:Osc = new Osc(Funnel::Osc.SIN, 1);
-%var osc2:Osc = new Osc(Funnel::Osc.SIN, 5);
+%var osc1:Osc = new Osc(Osc.SIN, 1);
+%var osc2:Osc = new Osc(Osc.SIN, 5);
 
 %// amplitude modulation
 %// OscƒIƒuƒWƒFƒNƒg‚ÌonUpdate()‚ªŒÄ‚Î‚ê‚é‡˜‚ÍƒCƒ“ƒXƒ^ƒ“ƒX‚ª¶¬‚³‚ê‚½‡˜‚Ì‹t‡
@@ -1188,6 +1199,8 @@ ActionScript 3‚ğ‚Í‚¶‚ß‚Æ‚·‚éJavaScript‚ğATamarin\footnote{http://www.mozilla-ja
 
 \section{XV—š—ğ}
 \begin{description}
+\item[ 2007.9.9] Osc.update()‚Éˆø”‚ ‚è‚Ìƒo[ƒWƒ‡ƒ“‚ğ’Ç‰ÁBOsc‚Éreset()ƒƒ\ƒbƒh‚ğ’Ç‰ÁBScaler.LOG‚ÆScaler.EXP‚ğíœBEvent‚Ìà–¾‚ğ’Ç‰ÁB
+\item[ 2007.9.4] setFilters()ƒƒ\ƒbƒh‚ğíœBSetPoint‚Ìˆø”‚ÌŒ`®‚ğ•ÏXB
 \item[ 2007.9.2] Threshold‚ğSetPoint‚É‰ü–¼‚µA•¡”‚Ìƒ|ƒCƒ“ƒg‚ğƒZƒbƒg‚Å‚«‚é‚æ‚¤‚É•ÏXBScaler‚ÉƒŠƒ~ƒbƒ^‚ğ’Ç‰ÁB
 \item[ 2007.9.1] ’v–½“I‚ÈƒGƒ‰[‚ğŒÂ•Ê‚ÌƒCƒxƒ“ƒg‚É•ÏXBOsc‚ÌƒT[ƒrƒXŠÔŠu‚ğƒNƒ‰ƒX•ÏX‚É•ÏX‚µAstartƒƒ\ƒbƒh‚ğ’Ç‰ÁBOsc‚ÉƒCƒ“ƒXƒ^ƒ“ƒX•Ï”times‚ÆAƒCƒ“ƒXƒ^ƒ“ƒXƒƒ\ƒbƒhstop()‚ğ’Ç‰ÁB
 \item[ 2007.8.17] ƒCƒxƒ“ƒgƒnƒ“ƒhƒ‰‚ğ”p~‚µ‚ÄƒCƒxƒ“ƒgƒŠƒXƒi‚É•ÏXB
