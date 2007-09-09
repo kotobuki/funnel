@@ -73,9 +73,16 @@ module Funnel
         filter.set_listener nil if filter.is_a? Generator
       end
 
-      filters.each do |filter|
-        filter.set_listener { |val| self.value=(val) } if filter.is_a? Generator
-        @filters << filter
+      if filters.is_a? Array then
+        filters.each do |filter|
+          filter.set_listener { |val| self.value=(val) } if filter.is_a? Generator
+          @filters << filter
+        end
+      elsif filters.is_a? Filter then
+        filters.set_listener { |val| self.value=(val) } if filters.is_a? Generator
+        @filters << [filters]
+      else
+        raise ArgumentError, "wrong argument for filters ="
       end
     end
 
@@ -83,24 +90,23 @@ module Funnel
       return if last_value == current_value
 
       @on_change_listeners.each do |proc|
-        proc.call(Event.new(Event::CHANGE, @from_id, current_value))
+        proc.call(Event.new(Event::CHANGE, @from_id, last_value, current_value))
       end
 
       if (last_value == 0) and (current_value != 0) then
         @on_rising_edge_listeners.each do |proc|
-          proc.call(Event.new(Event::RISING_EDGE, @from_id, current_value))
+          proc.call(Event.new(Event::RISING_EDGE, @from_id, last_value, current_value))
         end
       elsif (last_value != 0) and (current_value == 0) then
         @on_falling_edge_listeners.each do |proc|
-          proc.call(Event.new(Event::FALLING_EDGE, @from_id, current_value))
+          proc.call(Event.new(Event::FALLING_EDGE, @from_id, last_value, current_value))
         end
       end
     end
 
     def apply_filters(value)
-      return value if (@filters == nil) or (@filters.size == 0)
-
-      result = value;
+      result = value
+      return result if (@filters == nil) or (@filters.size == 0)
 
       @filters.each do |filter|
         if filter.is_a? Generator then

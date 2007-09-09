@@ -23,12 +23,14 @@ module Funnel
     CHANGE              = 2
 
     attr_accessor :from
+    attr_accessor :last_value
     attr_accessor :value
     attr_accessor :text
 
-    def initialize(type, id, value, text = "")
+    def initialize(type, id, last_value, value, text = "")
       @from = id
       @type = type
+      @last_value = last_value
       @value = value
       @text = text
     end
@@ -105,5 +107,11 @@ module Funnel
       PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
       PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
     ]
+  end
+end
+
+if __FILE__ == $0
+  module Funnel
+    p port_def_to_str(PORT_AIN)
   end
 end
