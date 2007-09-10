@@ -2,35 +2,26 @@ package funnel.filter
 {
 	public class SetPoint implements IFilter
 	{
-		public var threshold:Array;
-		public var hysteresis:Array;
+		private var _points:Object;
+		private var _keys:Array;
 		private var _lastStatus:int;
 
-		public function SetPoint(threshold:* = 0.5, hysteresis:* = 0) {
-			if (threshold is Number)
-				threshold = [threshold];
-				
-			if (hysteresis is Number)
-				hysteresis = [hysteresis];
-
-			if (!(threshold is Array) || !(hysteresis is Array))
-				throw new Error("threshld and hysteresis should be the same type:(Number or Array)");
-				
-			if (threshold.length != hysteresis.length)
-				throw new Error("threshld and hysteresis should be the same lengths...");
+		public function SetPoint(points:Array = null) {
+			if (points == null) points = [[0.5, 0]];
 			
-			var points:Array = zip( zip([threshold, hysteresis]).sortOn('0', Array.NUMERIC) );
-			this.threshold = points[0];
-			this.hysteresis = points[1];
+			_points = new Array();
+			for each (var point:Array in points)
+				setPoint(point[0], point[1]);
+
 			_lastStatus = 0;
 		}
 		
 		public function processSample(val:Number):Number
 		{
-			var status:int = threshold.length;
-			for (var i:uint = 0; i < threshold.length; ++i) {
-				var t:Number = threshold[i];
-				var h:Number = hysteresis[i];
+			var status:int = _keys.length;
+			for (var i:uint = 0; i < _keys.length; ++i) {
+				var t:Number = _keys[i];
+				var h:Number = _points[t];
 				if (val > t+h) continue;
 				else if (val < t-h) status = i;
 				else status = _lastStatus;
@@ -40,17 +31,21 @@ package funnel.filter
 			return status;
 		}
 		
-		private static function zip(array:Array):Array {
-			var result:Array = [];
-			for (var i:uint = 0; i < array[0].length; ++i) {
-				var item:Array = [];
-				for (var j:uint = 0; j < array.length; ++j) {
-					item.push(array[j][i]);
-				}
-				result.push(item);
-			}
-			return result;
+		//TODO:レンジの重複チェック
+		public function setPoint(threshold:Number, hysteresis:Number = 0):void {
+			_points[threshold] = hysteresis;
+			_keys = getKeys(_points);
 		}
 		
+		public function removePoint(threshold:Number):void {
+			delete _points[threshold];
+			_keys = getKeys(_points);
+		}
+		
+		private static function getKeys(obj:Object):Array {
+			var keys:Array = [];
+			for (var key:Object in obj) keys.push(key);
+			return keys.sort();
+		}
 	}
 }

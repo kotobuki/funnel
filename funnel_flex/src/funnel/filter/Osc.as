@@ -53,7 +53,7 @@ package funnel.filter
 			this.phase = phase;
 			this.times = times;
 			
-			resetTime();
+			reset();
 		}
 		
 		public function get value():Number {
@@ -62,26 +62,36 @@ package funnel.filter
 		
 		public function start():void {
 			stop();
-			_timer.addEventListener(TimerEvent.TIMER, update);
-			update();
+			_timer.addEventListener(TimerEvent.TIMER, autoUpdate);
+			_startTime = getTimer();
+			autoUpdate(null);
 		}
 		
 		public function stop():void {
-			resetTime();
-			_timer.removeEventListener(TimerEvent.TIMER, update);
+			_timer.removeEventListener(TimerEvent.TIMER, autoUpdate);
 		}
 		
-		private function resetTime():void {
+		public function reset():void {
 			_time = 0;
-			_startTime = getTimer();
 		}
 		
-		public function update(event:Event = null):void {
+		public function update(interval:int = -1):void {
+			if (interval < 0) _time += _timer.delay;
+			else _time += interval;
+			
+			computeValue();
+		}
+		
+		private function autoUpdate(event:Event):void {
 			_time = getTimer() - _startTime;
+			computeValue();
+		}
+		
+		private function computeValue():void {
 			var sec:Number = _time / 1000;
 			
 			if (times != 0 && freq * sec >= times) {
-				_timer.removeEventListener(TimerEvent.TIMER, update);
+				stop();
 				sec = times / freq;
 			}
 			
