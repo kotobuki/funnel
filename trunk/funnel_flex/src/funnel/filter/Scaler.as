@@ -33,14 +33,6 @@ package funnel.filter
 			return val;
 		}
 		
-		public static function LOG(val:Number):Number {
-			return Math.log(val * (Math.E - 1) + 1);
-		}
-		
-		public static function EXP(val:Number):Number {
-			return (Math.exp(val) - 1) / (Math.E - 1);
-		}
-		
 		public static function SQUARE(val:Number):Number {
 			return val * val;
 		}
