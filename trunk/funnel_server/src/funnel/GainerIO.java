@@ -413,33 +413,84 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void setOutput(Object[] arguments) {
-		// printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
 		int start = ((Integer) arguments[0]).intValue();
-		for (int i = 0; i < (arguments.length - 1); i++) {
-			int port = start + i;
-			int index = 1 + i;
-			if (doutPortRange.contains(port)) {
-				if (arguments[index] != null
-						&& arguments[index] instanceof Float) {
+		for (int i = 1; i < arguments.length; i++) {
+			if (arguments[i] == null) {
+				throw new IllegalArgumentException("argument " + i + " is null");
+			} else if (!(arguments[i] instanceof Float)) {
+				throw new IllegalArgumentException("argument " + i
+						+ " is not Float");
+			}
+		}
+		if (arguments.length == 2) {
+			for (int i = 0; i < (arguments.length - 1); i++) {
+				int port = start + i;
+				int index = 1 + i;
+				if (doutPortRange.contains(port)) {
 					if (FLOAT_ZERO.equals(arguments[index])) {
 						setDigitalOutputLow(port);
 					} else {
 						setDigitalOutputHigh(port);
 					}
-				}
-			} else if (aoutPortRange.contains(port)) {
-				if (arguments[index] != null
-						&& arguments[index] instanceof Float) {
+					inputs[port] = ((Float) arguments[index]).floatValue();
+				} else if (aoutPortRange.contains(port)) {
 					setAnalogOutput(port, (int) (((Float) arguments[index])
 							.floatValue() * 255.0f));
+					inputs[port] = ((Float) arguments[index]).floatValue();
+				} else if (LED_PORT.intValue() == port) {
+					if (FLOAT_ZERO.equals(arguments[index])) {
+						write("l*"); //$NON-NLS-1$
+						ledCommandQueue.pop(1000);
+					} else {
+						write("h*"); //$NON-NLS-1$
+						ledCommandQueue.pop(1000);
+					}
+					inputs[port] = ((Float) arguments[index]).floatValue();
 				}
-			} else if (LED_PORT.intValue() == port) {
-				if (FLOAT_ZERO.equals(arguments[index])) {
-					write("l*"); //$NON-NLS-1$
-					ledCommandQueue.pop(1000);
-				} else {
-					write("h*"); //$NON-NLS-1$
-					ledCommandQueue.pop(1000);
+			}
+		} else {
+			int[] analogValues = new int[aoutPortRange.getCounts()];
+			for (int i = 0; i < aoutPortRange.getCounts(); i++) {
+				analogValues[i] = (int) (inputs[aoutPortRange.getMin() + i] * 255.0f);
+			}
+			int digitalValues = 0x0000;
+			for (int i = 0; i < doutPortRange.getCounts(); i++) {
+				digitalValues += (int) inputs[doutPortRange.getMin() + i] << i;
+			}
+			boolean hasAnalogValues = false;
+			boolean hasDigitalValues = false;
+			for (int i = 0; i < (arguments.length - 1); i++) {
+				int port = start + i;
+				int index = 1 + i;
+				if (doutPortRange.contains(port)) {
+					digitalValues += ((Float) arguments[index]).intValue() << (port - doutPortRange
+							.getMin());
+					inputs[port] = ((Float) arguments[index]).floatValue();
+					hasDigitalValues = true;
+				} else if (aoutPortRange.contains(port)) {
+					analogValues[port - aoutPortRange.getMin()] = (int) (((Float) arguments[index])
+							.floatValue() * 255.0f);
+					inputs[port] = ((Float) arguments[index]).floatValue();
+					hasAnalogValues = true;
+				} else if (LED_PORT.intValue() == port) {
+					if (FLOAT_ZERO.equals(arguments[index])) {
+						write("l*"); //$NON-NLS-1$
+						ledCommandQueue.pop(1000);
+					} else {
+						write("h*"); //$NON-NLS-1$
+						ledCommandQueue.pop(1000);
+					}
+					inputs[port] = ((Float) arguments[index]).floatValue();
+				}
+			}
+			if (hasAnalogValues) {
+				setAnalogOutputs(analogValues, hasDigitalValues);
+			}
+			if (hasDigitalValues) {
+				setDigitalOutputs(digitalValues);
+				if (hasAnalogValues) {
+					// let's pop the queue to clear
+					aoutCommandQueue.pop(1000);
 				}
 			}
 		}
@@ -587,25 +638,28 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		}
 	}
 
-	// private void setAnalogOutput(int[] values) {
-	// String s = "A";
-	// String sv = "";
-	// if (aoutPortRange.getCounts() == values.length) {
-	// for (int i = 0; i < values.length; i++) {
-	// values[i] = values[i] < 0 ? 0 : values[i];
-	// values[i] = values[i] > 255 ? 255 : values[i];
-	// sv = values[i] < 16 ? "0" : "";
-	// sv += Integer.toHexString(values[i]).toUpperCase();
-	// s += sv;
-	// }
-	// s += "*";
-	// } else {
-	// throw new IndexOutOfBoundsException(
-	// "Gainer error!! - number of analog outputs are wrong");
-	// }
-	// write(s);
-	// aoutCommandQueue.pop(1000);
-	// }
+	private void setAnalogOutputs(int[] values, boolean async) {
+		String s = "A";
+		String sv = "";
+
+		if (aoutPortRange.getCounts() != values.length) {
+			throw new IndexOutOfBoundsException(
+					"Gainer error!! - number of analog outputs are wrong");
+		}
+
+		for (int i = 0; i < values.length; i++) {
+			values[i] = values[i] < 0 ? 0 : values[i];
+			values[i] = values[i] > 255 ? 255 : values[i];
+			sv = values[i] < 16 ? "0" : "";
+			sv += Integer.toHexString(values[i]).toUpperCase();
+			s += sv;
+		}
+		s += "*";
+		write(s);
+		if (!async) {
+			aoutCommandQueue.pop(1000);
+		}
+	}
 
 	// private void setDigitalOutput(boolean[] values) {
 	// int chs = 0;
@@ -630,23 +684,22 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	// doutCommandQueue.pop(1000);
 	// }
 
-	// private void setDigitalOutput(int chs) {
-	// if (chs <= 0xFFFF) {
-	// String val = Integer.toHexString(chs).toUpperCase();
-	// String sv = "";
-	// // ïKÇ∏4åÖ
-	// for (int i = 0; i < 4 - val.length(); i++) {
-	// sv += "0";
-	// }
-	// sv += val;
-	//
-	// String s = "D" + sv + "*";
-	// write(s);
-	// doutCommandQueue.pop(1000);
-	// } else {
-	// throw new IndexOutOfBoundsException("Out of bounds: dout");
-	// }
-	// }
+	private void setDigitalOutputs(int chs) {
+		if (chs <= 0xFFFF) {
+			String val = Integer.toHexString(chs).toUpperCase();
+			String sv = "";
+			for (int i = 0; i < 4 - val.length(); i++) {
+				sv += "0";
+			}
+			sv += val;
+
+			String s = "D" + sv + "*";
+			write(s);
+			doutCommandQueue.pop(1000);
+		} else {
+			throw new IndexOutOfBoundsException("Out of bounds: dout");
+		}
+	}
 
 	private void setDigitalOutputHigh(int ch) {
 		if (doutPortRange.contains(ch)) {
