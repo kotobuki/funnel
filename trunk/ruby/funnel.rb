@@ -54,7 +54,7 @@ module Funnel
       @sampling_interval = interval
 
       @auto_update = true
-      @updated_port_indices = []
+      @updated_port_indices = Array.new(@port_count, false)
 
       Thread.new do
         loop do
@@ -68,10 +68,7 @@ module Funnel
               end
             end
           rescue EOFError
-            puts "EOFError: packet = #{packet}"
-            puts "(row bytes dump follows)"
-            p packet
-            exit
+            puts "notification port: EOF error"
           end
         end
       end
@@ -111,12 +108,11 @@ module Funnel
         port = Port.new(@port_count, type)
         @port.push(port)
         if port.direction == PortDirection::OUTPUT then
-          port.add_event_listener(Event::CHANGE) do |event|
-            # puts "changed(#{event.from}): #{event.value}"
+          port.add_event_listener(PortEvent::CHANGE) do |event|
             if (@auto_update) then
-              send_output_command(event.from, event.value)
+              send_output_command(event.target.number, event.target.value)
             else
-              @updated_port_indices << event.from
+              @updated_port_indices[event.target.number] = true
             end
           end
         end
@@ -139,23 +135,22 @@ module Funnel
     end
 
     def update()
-      @updated_port_indices.sort!
-      index = 0
       start = 0
       output_values = []
+      was_updated = false
 
-      @updated_port_indices.each_with_index do |number, i|
-        is_not_continuous = @updated_port_indices[i] - index != 1
-        index = @updated_port_indices[i]
-        if is_not_continuous then
-          send_output_command(start, output_values) unless i == 0
-          start = index
+      @updated_port_indices.each_with_index do |updated, index|
+        if updated then
+          output_values.push(@port[index].value)
+          @updated_port_indices[index] = false
+          start = index unless was_updated
+        elsif was_updated then
+          send_output_command(start, output_values) unless index == 0
           output_values = []
         end
-        output_values.push(@port[index].value)
+        was_updated = updated
       end
       send_output_command(start, output_values)
-      @updated_port_indices = []
     end
 
   end

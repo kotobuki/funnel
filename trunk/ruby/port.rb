@@ -2,14 +2,16 @@ require 'funneldefs'
 
 module Funnel
   class Port
+    attr_reader :number
     attr_reader :direction
     attr_reader :type
+    attr_reader :last_value
     attr_reader :maximum
     attr_reader :minimum
     attr_reader :average
 
     def initialize(id, type)
-      @from_id = id
+      @number = id
 
       case type
       when PORT_AIN
@@ -29,6 +31,7 @@ module Funnel
       end
       
       @value = 0.0
+      @last_value = @value
       @filters = []
       @maximum = 0.0
       @minimum = 1.0
@@ -89,17 +92,18 @@ module Funnel
     def detect_edge(last_value, current_value)
       return if last_value == current_value
 
+      @last_value == current_value
       @on_change_listeners.each do |proc|
-        proc.call(Event.new(Event::CHANGE, @from_id, last_value, current_value))
+        proc.call(PortEvent.new(PortEvent::CHANGE, self))
       end
 
       if (last_value == 0) and (current_value != 0) then
         @on_rising_edge_listeners.each do |proc|
-          proc.call(Event.new(Event::RISING_EDGE, @from_id, last_value, current_value))
+          proc.call(PortEvent.new(PortEvent::RISING_EDGE, self))
         end
       elsif (last_value != 0) and (current_value == 0) then
         @on_falling_edge_listeners.each do |proc|
-          proc.call(Event.new(Event::FALLING_EDGE, @from_id, last_value, current_value))
+          proc.call(PortEvent.new(PortEvent::FALLING_EDGE, self))
         end
       end
     end
@@ -121,11 +125,11 @@ module Funnel
 
     def add_event_listener(type, &proc)
       case type
-      when Event::CHANGE
+      when PortEvent::CHANGE
         @on_change_listeners << proc
-      when Event::RISING_EDGE
+      when PortEvent::RISING_EDGE
         @on_rising_edge_listeners << proc
-      when Event::FALLING_EDGE
+      when PortEvent::FALLING_EDGE
         @on_falling_edge_listeners << proc
       else
         raise ArgumentError, "unknown event type: #{type}"
