@@ -18,21 +18,22 @@ module Funnel
   end
 
   class Event
+    def initialize(type, text = "")
+      @type = type
+      @text = text
+    end
+  end
+
+  class PortEvent < Event
     RISING_EDGE         = 0
     FALLING_EDGE        = 1
     CHANGE              = 2
 
-    attr_accessor :from
-    attr_accessor :last_value
-    attr_accessor :value
-    attr_accessor :text
+    attr_reader :target
 
-    def initialize(type, id, last_value, value, text = "")
-      @from = id
-      @type = type
-      @last_value = last_value
-      @value = value
-      @text = text
+    def initialize(type, target)
+      super(type, "")
+      @target = target
     end
   end
 

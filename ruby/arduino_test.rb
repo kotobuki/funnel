@@ -15,7 +15,7 @@ module Funnel
   fio = Funnel.new('localhost', 9000, config, 33)
 
   fio.port(ANALOG_0).filters = [SetPoint.new(0.5, 0.1)]
-  fio.port(ANALOG_0).add_event_listener(Event::CHANGE) do |event|
+  fio.port(ANALOG_0).add_event_listener(PortEvent::CHANGE) do |event|
     puts "ain 0: #{event.last_value} => #{event.value}"
   end
 
@@ -26,7 +26,8 @@ module Funnel
   blinker.start
 
   fader = Osc.new(Osc::SIN, 1.0, 0)
-  fio.port(DIGITAL_11).filters = fader
+  scaler = Scaler.new(0.0, 1.0, 0.0, 1.0, Scaler::SQUARE)
+  fio.port(DIGITAL_11).filters = [fader, scaler]
   fader.reset
   fader.start
 
