@@ -79,13 +79,21 @@ public final class Funnel implements Runnable{
 		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
 				100,GAINER.CONFIGURATION_1);
 	}
-	
+
+	public Funnel(PApplet parent, int samplingInterval, Configuration config ){
+		
+		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
+				samplingInterval,config);
+	}
+
 	public Funnel(PApplet parent,
 			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config ){
 		
 		this(parent,"localhost",commandPortNumber,notifyPortNumber,
 				samplingInterval,config);
 	}
+	
+	
 	
 	//funnelのautupdate==trueに依存
 	public void run(){
@@ -204,7 +212,7 @@ public final class Funnel implements Runnable{
 		}
 		setSamplingInterval(samplingInterval);
 	
-		beginPolling();
+		
 
 		
 		//イベントハンドラのリフレクション
@@ -234,7 +242,7 @@ public final class Funnel implements Runnable{
 			
 			try {
 				onChange = 
-					parent.getClass().getMethod("Change",new Class[] { PortEvent.class });
+					parent.getClass().getMethod("change",new Class[] { PortEvent.class });
 				
 			} catch (Exception e) {
 	      // no such method, or an error.. which is fine, just ignore
@@ -245,6 +253,8 @@ public final class Funnel implements Runnable{
 		thread = new Thread(this,"funnelServiceThread");
 		isWorking = true;
 		thread.start();
+		
+		beginPolling();
 		
 		return true;
 	}
