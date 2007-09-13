@@ -455,7 +455,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			}
 			int digitalValues = 0x0000;
 			for (int i = 0; i < doutPortRange.getCounts(); i++) {
-				digitalValues += (int) inputs[doutPortRange.getMin() + i] << i;
+				digitalValues |= (int) inputs[doutPortRange.getMin() + i] << i;
 			}
 			boolean hasAnalogValues = false;
 			boolean hasDigitalValues = false;
@@ -463,9 +463,14 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 				int port = start + i;
 				int index = 1 + i;
 				if (doutPortRange.contains(port)) {
-					digitalValues += ((Float) arguments[index]).intValue() << (port - doutPortRange
-							.getMin());
-					inputs[port] = ((Float) arguments[index]).floatValue();
+					int bitsToShift = port - doutPortRange.getMin();
+					if (((Float) arguments[index]).intValue() == 0) {
+						digitalValues &= ~(1 << bitsToShift);
+						inputs[port] = 0.0f;
+					} else {
+						digitalValues |= 1 << bitsToShift;
+						inputs[port] = 1.0f;
+					}
 					hasDigitalValues = true;
 				} else if (aoutPortRange.contains(port)) {
 					analogValues[port - aoutPortRange.getMin()] = (int) (((Float) arguments[index])
