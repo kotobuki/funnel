@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require "funnel"
+require "gainer"
 
 module Funnel
   AIN_0 = 0
@@ -10,15 +11,15 @@ module Funnel
   fio = Funnel.new('localhost', 9000, GainerIO::MODE_1, 33)
 
   fio.port(AIN_0).filters = [SetPoint.new(0.5, 0.1)]
-  fio.port(AIN_0).add_event_listener(Event::CHANGE) do |event|
-    puts "ain 0: #{event.last_value} => #{event.value}"
+  fio.port(AIN_0).add_event_listener(PortEvent::CHANGE) do |event|
+    puts "ain 0: #{event.target.last_value} => #{event.target.value}"
   end
 
-  fio.port(BUTTON).add_event_listener(Event::RISING_EDGE) do
+  fio.port(BUTTON).add_event_listener(PortEvent::RISING_EDGE) do
     puts "button: pressed"
   end
 
-  fio.port(BUTTON).add_event_listener(Event::FALLING_EDGE) do
+  fio.port(BUTTON).add_event_listener(PortEvent::FALLING_EDGE) do
     puts "button: released"
   end
 

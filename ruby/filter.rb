@@ -64,7 +64,7 @@ module Funnel
       @range << [@points.last[0] + @points.last[1], 1.0]
 
       @range.each_with_index do |range, index|
-        puts "range #{index}: #{range[0]} - #{range[1]}"
+        puts "SetPoint: range #{index}: #{range[0]} - #{range[1]}"
       end
 
       @last_status = 0

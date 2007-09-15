@@ -4,7 +4,7 @@ require 'socket'
 require 'timeout'
 require 'osc'
 
-require 'funneldefs'
+require 'event'
 require 'port'
 require 'filter'
 
@@ -16,13 +16,13 @@ module Funnel
 
     def port_def_to_str(type)
       case type
-      when PORT_AIN
+      when Port::AIN
         return "analog input"
-      when PORT_DIN
+      when Port::DIN
         return "digital input"
-      when PORT_AOUT
+      when Port::AOUT
         return "analog output (PWM)"
-      when PORT_DOUT
+      when Port::DOUT
         return "digital output"
       end
     end
@@ -107,7 +107,7 @@ module Funnel
         puts "port(#{@port_count}): #{port_def_to_str(type)}"
         port = Port.new(@port_count, type)
         @port.push(port)
-        if port.direction == PortDirection::OUTPUT then
+        if port.type == Port::AOUT or port.type == Port::DOUT then
           port.add_event_listener(PortEvent::CHANGE) do |event|
             if (@auto_update) then
               send_output_command(event.target.number, event.target.value)
@@ -158,19 +158,21 @@ end
 
 
 if __FILE__ == $0
+  require 'gainer'
+
   module Funnel
     fio = Funnel.new('localhost', 9000, GainerIO::MODE_1, 33)
 
     fio.port(0).filters = [SetPoint.new(0.5, 0.1)]
-    fio.port(0).add_event_listener(Event::CHANGE) do |event|
-      puts "ain 0: #{event.value}"
+    fio.port(0).add_event_listener(PortEvent::CHANGE) do |event|
+      puts "ain 0: #{event.target.value}"
     end
 
-    fio.port(17).add_event_listener(Event::RISING_EDGE) do
+    fio.port(17).on(PortEvent::RISING_EDGE) do
       puts "button: pressed"
     end
 
-    fio.port(17).add_event_listener(Event::FALLING_EDGE) do
+    fio.port(17).on PortEvent::FALLING_EDGE do
       puts "button: released"
     end
 
