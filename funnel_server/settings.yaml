@@ -3,7 +3,7 @@ server:
   notification port: 9001
 
 io:
-  type: Gainer
+  type: Arduino
   com: 
 
 ...
