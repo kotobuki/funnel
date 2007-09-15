@@ -143,9 +143,10 @@ function myFilterFunc(in:float, buffer:Array):float {
 
 === Constants ===
 || *name* || *description* ||
+|| LINEAR || linear (y = x) ||
 || SQUARE || square curve (y = x^2^) ||
 || SQUARE_ROOT || square root curve (y = x^0.5^) ||
-|| CUBE || cube curve ($y = x^4^) ||
+|| CUBE || cube curve (y = x^4^) ||
 || CUBE_ROOT || cube root curve (y = x^0.25^) ||
 
 
@@ -210,5 +211,7 @@ Osc is a filter to generate various waves to control outputs.
 || SAW || sawtooth wave ||
 || TRIANGLE || triangle wave ||
 || IMPULSE || implse ||
+ 
+ 
  
  
