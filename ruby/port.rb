@@ -8,7 +8,6 @@ module Funnel
     DOUT  = 3
 
     attr_reader :number
-    attr_reader :direction
     attr_reader :type
     attr_reader :last_value
     attr_reader :maximum
@@ -18,11 +17,7 @@ module Funnel
     def initialize(id, type)
       @number = id
 
-      case type
-      when AIN
-      when DIN
-      when AOUT
-      when DOUT
+      if (type == AIN) or (type == DIN) or (type == AOUT) or (type == DOUT) then
         @type = type
       else
         raise ArgumentError, "unknown type: #{type}"
