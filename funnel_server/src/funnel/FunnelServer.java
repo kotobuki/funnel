@@ -27,7 +27,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildNumber = "013_2007-09-13";
+	private static final String buildNumber = "014_2007-09-15";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
@@ -146,7 +146,7 @@ public class FunnelServer extends Frame {
 		} else if (type.equalsIgnoreCase("Arduino")) { //$NON-NLS-1$
 			try {
 				ioModule = new ArduinoIO(this, serialPort);
-				ioModule.reboot();
+				// Arduino Diecimila will reboot automatically
 			} catch (RuntimeException e) {
 				printMessage(Messages
 						.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$

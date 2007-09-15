@@ -57,7 +57,7 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	private InputStream input;
 	private OutputStream output;
 
-	private final int rate = 115200;
+	private final int rate = 57600;
 	private final int parity = SerialPort.PARITY_NONE;
 	private final int databits = 8;
 	private final int stopbits = SerialPort.STOPBITS_1;
@@ -81,6 +81,8 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 
 	private final Float FLOAT_ZERO = new Float(0.0f);
 
+	private funnel.BlockingQueue firmwareVersionQueue;
+
 	public ArduinoIO(FunnelServer server, String serialPortName) {
 		this.parent = server;
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
@@ -90,6 +92,7 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 		digitalPortRange = new funnel.PortRange();
 		digitalPortRange.setRange(6, 19); // 14 ports
 		dinPortChunks = new Vector();
+		firmwareVersionQueue = new funnel.BlockingQueue();
 
 		try {
 			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
@@ -107,6 +110,10 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 								parity);
 						port.addEventListener(this);
 						port.notifyOnDataAvailable(true);
+
+						writeByte(ARD_REPORT_VERSION);
+						firmwareVersionQueue.pop(15000);
+						firmwareVersionQueue.clear();
 
 						parent.printMessage(Messages
 								.getString("IOModule.Started") //$NON-NLS-1$
@@ -251,10 +258,11 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 		writeByte(ARD_SYSTEM_RESET);
 
 		// This is dummy, since the system reset function is not implemented in
-		// the Firmata firmware v1.0
+		// the Firmata firmware 0.31
 		sleep(500);
 
 		writeByte(ARD_REPORT_VERSION);
+		firmwareVersionQueue.pop(15000);
 		printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
 	}
 
@@ -291,6 +299,7 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 										+ firmwareVersion[0] + "." //$NON-NLS-1$
 										+ firmwareVersion[1] + "." //$NON-NLS-1$
 										+ firmwareVersion[2]);
+								firmwareVersionQueue.push(new String(""));
 								break;
 							case ARD_ANALOG_MESSAGE:
 								analogData[multiByteChannel] = (float) ((storedInputData[0] << 7) | storedInputData[1]) / 1023.0f;
