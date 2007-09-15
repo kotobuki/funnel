@@ -1,7 +1,12 @@
-require 'funneldefs'
+require 'event'
 
 module Funnel
   class Port
+    AIN   = 0
+    DIN   = 1
+    AOUT  = 2
+    DOUT  = 3
+
     attr_reader :number
     attr_reader :direction
     attr_reader :type
@@ -14,22 +19,15 @@ module Funnel
       @number = id
 
       case type
-      when PORT_AIN
-        @direction = PortDirection::INPUT
-        @type = PortType::ANALOG
-      when PORT_DIN
-        @direction = PortDirection::INPUT
-        @type = PortType::DIGITAL
-      when PORT_AOUT
-        @direction = PortDirection::OUTPUT
-        @type = PortType::ANALOG
-      when PORT_DOUT
-        @direction = PortDirection::OUTPUT
-        @type = PortType::DIGITAL
+      when AIN
+      when DIN
+      when AOUT
+      when DOUT
+        @type = type
       else
         raise ArgumentError, "unknown type: #{type}"
       end
-      
+
       @value = 0.0
       @last_value = @value
       @filters = []
@@ -92,7 +90,7 @@ module Funnel
     def detect_edge(last_value, current_value)
       return if last_value == current_value
 
-      @last_value == current_value
+      @last_value = current_value
       @on_change_listeners.each do |proc|
         proc.call(PortEvent.new(PortEvent::CHANGE, self))
       end
@@ -135,5 +133,8 @@ module Funnel
         raise ArgumentError, "unknown event type: #{type}"
       end
     end
+
+    alias :on :add_event_listener
+
   end
 end
