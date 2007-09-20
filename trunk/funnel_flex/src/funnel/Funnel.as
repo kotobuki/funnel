@@ -91,7 +91,8 @@ package funnel
 				var startPortNum:uint = portValues[0].value;
 				for (var j:uint = 0; j < portValues.length - 1; ++j) {
 					var aPort:Port = _ioPorts[startPortNum + j];
-					if (aPort is InputPort) 
+					var type:uint = aPort.type;
+					if (type == Port.AIN || type == Port.DIN) 
 						aPort.value = portValues[j + 1].value;
 				}
 			}
@@ -113,8 +114,9 @@ package funnel
 			_ioPorts = new Array();
 			_updatedPortIndices = new Array();
 			for (var i:uint = 0; i < configuration.length; ++i) {
-				var aPort:Port = Port.createWithType(configuration[i]);
-				if (aPort is OutputPort)
+				var aPort:Port = new Port(i, configuration[i]);
+				var type:uint = aPort.type;
+				if (type == Port.AOUT || type == Port.DOUT)
 					aPort.addEventListener(PortEvent.CHANGE, createOutputChangeHandler(i));
 				_ioPorts.push(aPort);
 			}
@@ -124,7 +126,7 @@ package funnel
 		private function createOutputChangeHandler(id:uint):Function {
 			return function(event:PortEvent):void {
 				if (autoUpdate)
-					exportValue(id, [event.value]);
+					exportValue(id, [event.target.value]);
 				else if (_updatedPortIndices.indexOf(id) == -1)
 					_updatedPortIndices.push(id);
 			}

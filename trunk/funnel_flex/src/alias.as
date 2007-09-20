@@ -11,11 +11,6 @@ static private const GAINER_MODE6:Array = funnel.Configuration.GAINER_MODE6;
 static private const GAINER_MODE7:Array = funnel.Configuration.GAINER_MODE7;
 static private const GAINER_MODE8:Array = funnel.Configuration.GAINER_MODE8;
 
-static private const INPUT:uint = funnel.ioport.PortDirection.INPUT;
-static private const OUTPUT:uint = funnel.ioport.PortDirection.OUTPUT;
-static private const DIGITAL:uint = funnel.ioport.PortType.DIGITAL;
-static private const ANALOG:uint = funnel.ioport.PortType.ANALOG;
-
 static private const AIN:uint = funnel.ioport.Port.AIN;
 static private const AOUT:uint = funnel.ioport.Port.AOUT;
 static private const DIN:uint = funnel.ioport.Port.DIN;

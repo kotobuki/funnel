@@ -14,8 +14,10 @@ package funnel.ioport
 		public static const AOUT:uint = 2;
 		public static const DOUT:uint = 3;
 		
-		protected var _value:Number;
-		
+		private var _value:Number;
+		private var _lastValue:Number;
+		private var _number:uint;
+		private var _type:uint;	
 		private var _filters:Array;
 		private var _generator:IGenerator;
 		private var _inputAvailable:Boolean;
@@ -26,8 +28,11 @@ package funnel.ioport
 		private var _numSamples:Number;
 		private static const MAX_SAMPLES:Number = Number.MAX_VALUE;
 		
-		public function Port() {
+		public function Port(number:uint, type:uint) {
+			_number = number;
+			_type = type;
 			_value = 0;
+			_lastValue = 0;
 			_inputAvailable = false;
 			_minimum = 1;
 			_maximum = 0;
@@ -36,22 +41,12 @@ package funnel.ioport
 			_numSamples = 0;
 		}
 		
-		public static function createWithType(type:uint):Port {
-			switch(type) {
-				case AIN: return new AnalogInput();
-				case DIN: return new DigitalInput();
-				case AOUT: return new AnalogOutput();
-				case DOUT: return new DigitalOutput();
-				default: throw new Error("Type code is illegal...");
-			}
-		}
-		
-		public function get direction():uint {
-			return undefined;
+		public function get number():uint {
+			return _number;
 		}
 		
 		public function get type():uint {
-			return undefined;
+			return _type;
 		}
 		
 		public function get value():Number {
@@ -60,9 +55,13 @@ package funnel.ioport
 		
 		public function set value(val:Number):void {
 			calculateMinimumMaximumAndMean(val);
-			var oldValue:Number = _value;
+			_lastValue = _value;
 			_value = applyFilters(val);
-			detectEdge(oldValue, _value);
+			detectEdge(_lastValue, _value);
+		}
+		
+		public function get lastValue():Number {
+			return _lastValue;
 		}
 		
 		public function get average():Number {
@@ -138,12 +137,12 @@ package funnel.ioport
 
 			if (oldValue == newValue) return;
 
-			dispatchEvent(new PortEvent(PortEvent.CHANGE, newValue, oldValue));
+			dispatchEvent(new PortEvent(PortEvent.CHANGE));
 			
 			if (oldValue == 0 && newValue != 0)
-				dispatchEvent(new PortEvent(PortEvent.RISING_EDGE, newValue, oldValue));
+				dispatchEvent(new PortEvent(PortEvent.RISING_EDGE));
 			else if (oldValue != 0 && newValue == 0)
-				dispatchEvent(new PortEvent(PortEvent.FALLING_EDGE, newValue, oldValue));
+				dispatchEvent(new PortEvent(PortEvent.FALLING_EDGE));
 
 		}
 		
