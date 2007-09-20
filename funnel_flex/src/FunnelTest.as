@@ -34,7 +34,7 @@ package {
 			});
 			
 			//port3にSetPointを設定し、CHANGEイベントと組み合わせて状態遷移の情報をトレースする
-			fio.port(3).filters = [ new SetPoint([0.5, 0.7], [0.05, 0.05]) ];
+			fio.port(3).filters = [ new SetPoint([[0.5, 0.05], [0.7, 0.05]]) ];
 			var stateTransitionMatrix:Array = [
 				["0 -> 0", "0 -> 1", "0 -> 2"],
 				["1 -> 0", "1 -> 1", "1 -> 2"],
@@ -42,7 +42,7 @@ package {
 			];
 			fio.port(3).addEventListener(CHANGE, function(e:PortEvent):void {
 				//PortEventは新旧の値を保持している
-				trace(stateTransitionMatrix[e.oldValue][e.value]);
+				trace(stateTransitionMatrix[e.target.lastValue][e.target.value]);
 			});
 
 			createView();
@@ -59,7 +59,8 @@ package {
 				var inputInfo:String = "";
 				for (var i:uint = 0; i < fio.portCount; ++i) {
 					var aPort:Port = fio.port(i);
-					if(aPort.direction == INPUT) {
+					var type:uint = aPort.type;
+					if (type == AIN || type == DIN) {
 						var pad:String = i < 10 ? "0" : "";
 						inputInfo += "port[" + pad + i + "]: ";
 						inputInfo += format(aPort.value, 3);
