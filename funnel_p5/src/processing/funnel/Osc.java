@@ -54,7 +54,7 @@ public class Osc{
 		this.times = times;
 		
 		if(freq < 0){
-			parent.println("Frequency should be larger than 0.");
+			PApplet.println("Frequency should be larger than 0.");
 			parent.exit();
 		}
 		
@@ -75,7 +75,7 @@ public class Osc{
 			wavefunc = new OscFunctionIMPULSE();
 			break;
 		default:
-			parent.println("Error !! Osc function type");
+			PApplet.println("Error !! Osc function type");
 			parent.exit();
 			break;
 		}
