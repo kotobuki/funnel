@@ -322,22 +322,22 @@ public final class Funnel implements Runnable{
 	}
 	
 
-	private void peekOnece(){
-		Object args[] = new Object[2];
-		args[0] = new Integer(0);//指定したポートから
-		args[1] = new Integer(4);//指定したポート数
-		
-		OSCMessage message = execCode("/in",args,true);
-		
-		System.out.print(" /in  ");
-		for(int i=0;i<message.getArguments().length;i++){
-			//int returnCode = ((Integer)message.getArguments()[i]).intValue();
-			System.out.print(message.getArguments()[i] + "  ");
-
-		}
-		System.out.println("");
-		
-	}
+//	private void peekOnece(){
+//		Object args[] = new Object[2];
+//		args[0] = new Integer(0);//指定したポートから
+//		args[1] = new Integer(4);//指定したポート数
+//		
+//		OSCMessage message = execCode("/in",args,true);
+//		
+//		System.out.print(" /in  ");
+//		for(int i=0;i<message.getArguments().length;i++){
+//			//int returnCode = ((Integer)message.getArguments()[i]).intValue();
+//			System.out.print(message.getArguments()[i] + "  ");
+//
+//		}
+//		System.out.println("");
+//		
+//	}
 	
 	
 	
@@ -345,26 +345,19 @@ public final class Funnel implements Runnable{
 	//Analog  ０以下は０、1以上は１を出力
 	public void update(){
 		for(int i=0;i<port.length;i++){
-			if(port[i].direction==Port.OUTPUT){
-				switch(port[i].type){
-				case Port.DIGITAL:
-					if(port[i].value==0){
-						port[i].value = 0.0f;
-					}else{
-						port[i].value = 1.0f;
-					}
-
-					break;
-				case Port.ANALOG:
-					if(port[i].value<0){
-						port[i].value = 0.0f;
-					}else if(port[i].value>1.0f){
-						port[i].value = 1.0f;
-					}
-
-					break;
+			if(port[i].type==Port.DOUT){
+				if(port[i].value==0){
+					port[i].value = 0.0f;
+				}else{
+					port[i].value = 1.0f;
 				}
-				
+
+			}else if(port[i].type==Port.DIN){
+				if(port[i].value<0){
+					port[i].value = 0.0f;
+				}else if(port[i].value>1.0f){
+					port[i].value = 1.0f;
+				}
 			}
 		}
 		
@@ -389,32 +382,34 @@ public final class Funnel implements Runnable{
 
 	}
 	
+	//Portそのものを返す
 	public Port port(int nPort){
 		if(nPort<port.length){
 			return port[nPort];
 		}
 		return null;
 	}
+	
 
 	//
 	// funnel Port
-
 	public class Port {
 
 		PApplet parent;
 		
-		public final static int INPUT = 0x0000;
-		public final static int OUTPUT = 0x0001;
+		public final static int AIN = 0x1000;
+		public final static int DIN = 0x1100;
+		public final static int AOUT = 0x0001;
+		public final static int DOUT = 0x0011;
 		
-		public final static int DIGITAL = 0x1000;
-		public final static int ANALOG = 0x1100;
-		
-		public final int direction;
 		public final int type;
+		public final int number;//ポート通し番号
+		
+		
 		
 		public float value;
 		public float lastValue;
-		public final int number;
+		
 		//
 		public float average = 0;
 		public float minimum = Float.MAX_VALUE;
@@ -432,7 +427,7 @@ public final class Funnel implements Runnable{
 		private final int bufferSize = 8;
 		
 		
-		private boolean updated = false;
+		//private boolean updated = false;
 
 		
 		public Port(PApplet parent, int config, int n){
@@ -440,40 +435,27 @@ public final class Funnel implements Runnable{
 			number = n;
 			
 			filters = new Filter[0];
-			
 			buffer = new LinkedList();
 			
 			switch(config){
 			case GAINER.PORT_AIN:
-				direction = INPUT;
-				type = ANALOG;
+				type = Port.AIN;
 				break;
 			case GAINER.PORT_AOUT:
-				direction = OUTPUT;
-				type = ANALOG;
+				type = Port.AOUT;
 				break;
 			case GAINER.PORT_DIN:
-				direction = INPUT;
-				type = DIGITAL;
+				type = Port.DIN;
 				break;
 			case GAINER.PORT_DOUT:
-				direction = OUTPUT;
-				type = DIGITAL;
+				type = Port.DOUT;
 				break;
 			default:
-				direction = -1;
 				type = -1;
 				break;
 			}
 		}
 		
-//		public void addEventListener(int event, String functionName){
-//			//edgeDetectionメソッド名をみて自動判定
-//			//リフレクション登録
-//		}
-		
-		
-
 		
 		public void clear(){
 			times = 0;
@@ -564,9 +546,6 @@ public final class Funnel implements Runnable{
 			if(this.value != value){
 				lastValue = this.value;
 				this.value = value;
-				updated = true;
-			}else{
-				updated = false;
 			}
 		}
 		
