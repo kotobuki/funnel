@@ -110,7 +110,7 @@ package funnel.ioport
 		}
 		
 		public function clear():void {
-			_minimum = _maximum = _average = _value;
+			_minimum = _maximum = _average = _lastValue = _value;
 			clearWeight();
 		}
 		
