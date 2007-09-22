@@ -66,7 +66,7 @@ Event is the abstract class for all types of events.
 !PortEvent is the class for port specific events.
 
 === Constructor ===
-`Event(type:int, text:String, port:Port)`
+`PortEvent(type:int, text:String, port:Port)`
 
 === Instance variables ===
 || *name* || *return* || *description* ||
@@ -211,6 +211,8 @@ Osc is a filter to generate various waves to control outputs.
 || SAW || sawtooth wave ||
 || TRIANGLE || triangle wave ||
 || IMPULSE || implse ||
+ 
+ 
  
  
  
