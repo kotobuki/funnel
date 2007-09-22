@@ -27,6 +27,13 @@ Funnel is the class to represent an I/O module.
 || rfallingEdge(!PortEvent event)} || void || the handler for !PortEvent.FALLING_EDGE ||
 || change(!PortEvent event)} || void || the handler for !PortEvent.CHANGE ||
 
+=== Constants ===
+|| *name* || *description* ||
+|| AIN || analog inputs ||
+|| DIN || digital inputs ||
+|| AOUT || analog outputs (PWM) ||
+|| DOUT || digital outputs ||
+
 
 == Port ==
 Port is the class to represent each port of an I/O module.
@@ -34,8 +41,7 @@ Port is the class to represent each port of an I/O module.
 === Instance variables ===
 || *name* || *type* || *description* ||
 || number || int || the number of the port ||
-|| direction || int || direction of the port (`INPUT` or `OUTPUT`) ||
-|| type || int || type of the port (`DIGITAL` or `ANALOG`) ||
+|| type || int || type of the port (`AIN`, `DIN`, `AOUT` or `DOUT`) ||
 || value || float || current value of the port ||
 || value =  || float || set value of the port ||
 || lastValue || float || the value before a change ||
@@ -53,9 +59,6 @@ Port is the class to represent each port of an I/O module.
 
 == Event ==
 Event is the abstract class for all types of events.
-
-=== Constructor ===
-`Event(type, text)`
 
 === Instance variables ===
 || *name* || *return* || *description* ||
@@ -211,6 +214,9 @@ Osc is a filter to generate various waves to control outputs.
 || SAW || sawtooth wave ||
 || TRIANGLE || triangle wave ||
 || IMPULSE || implse ||
+ 
+ 
+ 
  
  
  
