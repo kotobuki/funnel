@@ -4,9 +4,8 @@
 = Getting Started =
 
 == Configuration for Arduino users ==
-
- # Open "server/settings.yaml" with your favorite text editor
- # Change "io: type" from *Gainer* to *Arduino*
+  # Open "server/settings.yaml" with your favorite text editor
+  # Change "io: type" from *Gainer* to *Arduino*
 {{{
 server:
   command port: 9000
@@ -16,7 +15,18 @@ io:
   type: Arduino
   com: 
 }}}
- # Save the settings file. You are ready to use your Arduino with Funnel. :)
+  # Save the settings file. You are ready to use your Arduino with Funnel. :)
+
+
+== How to try Funnel? ==
+  # Configure the settings file if needed
+  # Connect an I/O module
+  # Double click on "server/funnel_server.jar" to launch Funnel Server
+  # See examples at the following location
+    * !ActionScript 3 => libraries/actionscript3/src/!FunnelTestArduino.as (or !FunnelTest.as)
+    * Processing => libraries/processing/sketch_samples/
+    * Ruby => libraries/ruby/arduino_test.rb (or gainer_test.rb)
+
  
  
  
