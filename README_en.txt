@@ -20,6 +20,10 @@ REQUIREMENTS
     http://raa.ruby-lang.org/project/osc/
 * Runtime environments for the Funnel Server
   * Java Runtime Environment 1.4.2 or higher
+* Hardware
+  * Arduino USB/NG/Diecimila with Firmara firmware v1.0
+    http://www.arduino.cc/playground/Interfacing/Firmata
+  * Gainer I/O module v1.0
 
 
 BUG REPORTS AND REQUESTS

@@ -8,17 +8,24 @@ Gainer I/OモジュールとArduino I/Oボードに対応し、それぞれの入出力ポート
 性もあります。
 
 ■動作環境
-・動作確認を行ったOS
-　・Windows XP SP2
-　・Mac OS X 10.4
-・ライブラリの動作環境
-　・Flash CS3、Flex Builder 2、Flex 2 SDKなどActionScript 3で
-　　プログラミングできる環境
-　・Processing 0125
-　・Ruby 1.8.2（1.9では未確認）＋ふなばただよしさんのOSCライブラリ
-　　http://raa.ruby-lang.org/project/osc/
-・Funnel Serverの動作環境
-　・Javaランタイム実行環境1.4.2以上
+□動作確認を行ったOS
+・Windows XP SP2
+・Mac OS X 10.4
+
+□ライブラリの動作環境
+・Flash CS3、Flex Builder 2、Flex 2 SDKなどActionScript 3でプログラミング
+　できる環境
+・Processing 0125
+・Ruby 1.8.2（1.9では未確認）＋ふなばただよしさんのOSCライブラリ
+　http://raa.ruby-lang.org/project/osc/
+
+□Funnel Serverの動作環境
+・Javaランタイム実行環境1.4.2以上
+
+□ハードウェア
+・Gainer I/Oモジュールv1.0
+・Arduino USB/NG/Diecimila＋Firmata v1.0のファームウェア
+　http://www.arduino.cc/playground/Interfacing/Firmata
 
 ■バグレポートや要望など
 バグレポートや要望は、Google CodeのIssuesシステムを利用して下さい。
