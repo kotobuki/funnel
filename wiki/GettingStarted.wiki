@@ -1,0 +1,21 @@
+#summary How to start using Funnel
+
+= Getting Started =
+
+== Configuration for Arduino users ==
+
+ # Open "server/settings.yaml" with your favorite text editor
+ # Change "io: type" from *Gainer* to *Arduino*
+{{{
+server:
+  command port: 9000
+  notification port: 9001
+
+io:
+  type: Arduino
+  com: 
+}}}
+ # Save the settings file. You are ready to use your Arduino with Funnel. :)
+ 
+ 
+ 
