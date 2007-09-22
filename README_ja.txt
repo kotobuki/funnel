@@ -39,6 +39,15 @@ http://code.google.com/p/funnel/issues/list
 ・日本語：http://gainer.cc/forum/index.php?board=26.0
 ・英語：http://gainer.cc/forum/index.php?board=25.0
 
+■クレジット
+Funnelはオープンソースプロジェクトです。
+Funnel開発チームの構成メンバーは小林茂、遠藤孝則、増田一太郎です。
+FunnelはIllposed SoftwareによるJava OSC、Ola Bini氏によるJvYAML、
+Keane Jarvi氏によるRXTXを使用しています。
+・Java OSC：http://www.illposed.com/software/javaosc.html
+・JvYAML：https://jvyaml.dev.java.net/
+・RXTX：http://www.rxtx.org/
+
 ■更新履歴
 Funnel 000（2007.09.22）
 ・最初の公開ビルドです。
