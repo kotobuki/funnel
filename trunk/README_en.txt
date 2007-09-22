@@ -40,6 +40,20 @@ NOTE: To avoid unsolicited posts, you need to log into the
 forum to post articles.
 
 
+CREDITS
+Funnel is an open source project.
+
+The Funnel development team is composed of Shigeru Kobayashi, 
+Takanori Endo and Ichitaro Masuda.
+
+Funnel uses the Java OSC by Illposed Software, JvYAML by Ola 
+Bini and RXTX by Keane Jarvi.
+
+* Java OSC: http://www.illposed.com/software/javaosc.html
+* JvYAML: https://jvyaml.dev.java.net/
+* RXTX: http://www.rxtx.org/
+
+
 UPDATES
 Funnel 000 (2007.09.22)
 * The first public build
@@ -50,3 +64,4 @@ Funnel 000 (2007.09.22)
 
 ACKNOWLEDGMENTS
 Funnel is developed with the support of the Exploratory Software Project (the first half of 2007) of IPA (Information-technology Promotion Agency).
+
