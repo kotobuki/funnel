@@ -42,7 +42,9 @@ public class FunnelServer extends Frame {
 		// Close the I/O module when the window is closed
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent evt) {
-				ioModule.stopPolling();
+				if (ioModule != null) {
+					ioModule.stopPolling();
+				}
 				System.exit(0);
 			}
 		});
