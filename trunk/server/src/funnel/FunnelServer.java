@@ -4,7 +4,6 @@ package funnel;
  * FunnelServer
  *
  * @author Funnel Development Team
- * @version 0.0.7
  */
 
 import java.awt.Font;
@@ -27,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildNumber = "014_2007-09-15";
+	private static final String buildName = "Funnel 000 (2007-09-22)";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
@@ -55,7 +54,7 @@ public class FunnelServer extends Frame {
 		setLayout(null);
 		setResizable(false);
 		loggingArea = new TextArea(
-				"Funnel Server (build " + buildNumber + ")\n\n", 5, 10, TextArea.SCROLLBARS_VERTICAL_ONLY); //$NON-NLS-1$
+				buildName + "\n\n", 5, 10, TextArea.SCROLLBARS_VERTICAL_ONLY); //$NON-NLS-1$
 		Insets insets = this.getInsets();
 		loggingArea.setBounds(insets.left, insets.top, width
 				- (insets.left + insets.right), height
@@ -64,10 +63,12 @@ public class FunnelServer extends Frame {
 		loggingArea.setFont(new Font("Monospaced", Font.PLAIN, 12)); //$NON-NLS-1$
 		this.add(loggingArea);
 
-		printMessage(Messages.getString("FunnelServer.License")); //$NON-NLS-1$
-		printMessage("");
-		printMessage(Messages.getString("FunnelServer.Acknowledgements")); //$NON-NLS-1$
-		printMessage("");
+		// printMessage(Messages.getString("FunnelServer.License"));
+		// //$NON-NLS-1$
+		// printMessage("");
+		// printMessage(Messages.getString("FunnelServer.Acknowledgements"));
+		// //$NON-NLS-1$
+		// printMessage("");
 
 		String type = ""; //$NON-NLS-1$
 		String commandPort = "9000"; //$NON-NLS-1$
