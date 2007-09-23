@@ -56,7 +56,7 @@ module Funnel
     end
 
     def clear
-      @maximum = @minimum = @sum = @value
+      @maximum = @minimum = @sum = @last_value = @value
       @samples = 1
     end
 
@@ -85,7 +85,7 @@ module Funnel
     def detect_edge(last_value, current_value)
       return if last_value == current_value
 
-      @last_value = current_value
+      @last_value = last_value
       @on_change_listeners.each do |proc|
         proc.call(PortEvent.new(PortEvent::CHANGE, self))
       end
