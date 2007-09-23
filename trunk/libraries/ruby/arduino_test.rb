@@ -4,6 +4,7 @@ require "funnel"
 
 module Funnel
   ANALOG_0 = 0
+  DIGITAL_2 = 8
   DIGITAL_11 = 17
   DIGITAL_13 = 19
 
@@ -16,7 +17,11 @@ module Funnel
 
   fio.port(ANALOG_0).filters = [SetPoint.new(0.5, 0.1)]
   fio.port(ANALOG_0).add_event_listener(PortEvent::CHANGE) do |event|
-    puts "ain 0: #{event.last_value} => #{event.value}"
+    puts "Analog 0: #{event.target.last_value} => #{event.target.value}"
+  end
+
+  fio.port(DIGITAL_2).add_event_listener(PortEvent::CHANGE) do |event|
+    puts "Digital 0: #{event.target.last_value} => #{event.target.value}"
   end
 
   Osc.service_interval = 20
