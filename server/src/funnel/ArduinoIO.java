@@ -221,11 +221,10 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 		for (int j = 0; j < dinPortChunks.size(); j++) {
 			PortRange range = (PortRange) dinPortChunks.get(j);
 			Object dinArguments[] = new Object[1 + range.getCounts()];
-			dinArguments[0] = new Integer(digitalPortRange.getMin()
-					+ range.getMin());
+			dinArguments[0] = new Integer(range.getMin());
+			int offset = range.getMin() - digitalPortRange.getMin();
 			for (int i = 0; i < range.getCounts(); i++) {
-				dinArguments[1 + i] = new Float(digitalData[range.getMin()
-						- digitalPortRange.getMin() + i]);
+				dinArguments[1 + i] = new Float(digitalData[offset + i]);
 			}
 			bundle.addPacket(new OSCMessage("/in", dinArguments)); //$NON-NLS-1$
 		}
