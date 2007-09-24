@@ -49,7 +49,7 @@ Keane Jarvi氏によるRXTXを使用しています。
 ・RXTX：http://www.rxtx.org/
 
 ■更新履歴
-Funnel 000（2007.09.22）
+Funnel 000（2007.09.24）
 ・最初の公開ビルドです。
 ・対象とするI/OモジュールはGainer I/OモジュールとArduino I/Oボードです。
 　ArduinoはFirmata 0.3.1ファームウェアを書き込んだArduino NGとArduino 

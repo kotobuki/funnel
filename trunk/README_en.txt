@@ -55,7 +55,7 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
-Funnel 000 (2007.09.22)
+Funnel 000 (2007.09.24)
 * The first public build
 * Supports Arduino NG, Arduino Diecimila and Gainer I/O module
 * Funnel Server supports OSC via TCP only
@@ -64,4 +64,3 @@ Funnel 000 (2007.09.22)
 
 ACKNOWLEDGMENTS
 Funnel is developed with the support of the Exploratory Software Project (the first half of 2007) of IPA (Information-technology Promotion Agency).
-
