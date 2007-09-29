@@ -196,7 +196,7 @@ FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/
 %•¡”‚Ìƒ‚ƒWƒ…[ƒ‹‚ªÚ‘±‚³‚ê‚Ä‚¢‚éê‡‚É‚ÍAFunnelƒIƒuƒWƒFƒNƒg‚©‚ç˜A‘±‚µ‚½ƒ|[ƒg‚Æ‚µ‚Ä•\Œ»‚³‚ê‚Ü‚·B
 
 \subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
-\texttt{Funnel(hostname:String, portNumber:int, config:Array, samplingInterval:int)}
+\texttt{Funnel(hostname:String, portNumber:int, config:Configuration, samplingInterval:int)}
 
 \subsubsection{ƒCƒ“ƒXƒ^ƒ“ƒX•Ï”}
 \begin{tabular}{lll}
@@ -211,6 +211,12 @@ FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/
 \begin{tabular}{lll}
 ƒƒ\ƒbƒh–¼ & –ß‚è’l & à–¾ \\\hline
 \texttt{port(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚· \\
+\texttt{analogInput(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚·iGainer—pj \\
+\texttt{digitalInput(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚·iGainer—pj \\
+\texttt{analogOutput(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚·iGainer—pj \\
+\texttt{digitalOutput(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚·iGainer—pj \\
+\texttt{analogPin(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚·iArduino—pj \\
+\texttt{digitalPin(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚·iArduino—pj \\
 \texttt{update()} & void & ‘S‚Ä‚Ìo—Íƒ|[ƒg‚Ìó‘Ô‚ğè“®‚ÅXV‚·‚é \\
 \end{tabular}
 
@@ -229,6 +235,33 @@ FunnelƒNƒ‰ƒX‚ÍFunnel‚ÌŠî–{‚Æ‚È‚éƒNƒ‰ƒX‚Å‚·BFunnelƒIƒuƒWƒFƒNƒg‚ÍPC‚ÉÚ‘±‚³‚ê‚½I/
 \texttt{DIN} & ƒfƒWƒ^ƒ‹“ü—Í \\
 \texttt{AOUT} & ƒAƒiƒƒOi‚Ü‚½‚ÍPWMjo—Í \\
 \texttt{DOUT} & ƒfƒWƒ^ƒ‹o—Í \\
+\end{tabular}
+
+\subsection{ConfigurationƒNƒ‰ƒX}
+ConfigurationƒNƒ‰ƒX‚ÍI/Oƒ‚ƒWƒ…[ƒ‹‚ÌƒRƒ“ƒtƒBƒMƒ…ƒŒ[ƒVƒ‡ƒ“‚ğİ’è‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX‚Å‚·B
+
+\subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
+\begin{tabular}{l}
+\texttt{Configuration(model:int, mode:int)} \\
+\texttt{Configuration(model:int)}
+\end{tabular}
+
+\subsubsection{ƒƒ\ƒbƒh}
+\begin{tabular}{lll}
+ƒƒ\ƒbƒh–¼ & –ß‚è’l & à–¾ \\\hline
+\texttt{setDigitalPinMode(pin:int, mode:int)} & void & ƒfƒWƒ^ƒ‹ƒsƒ“‚Ìƒ‚[ƒh‚ğİ’èiAdruinoj \\
+\end{tabular}
+
+\subsubsection{’è”}
+\begin{tabular}{lll}
+–¼‘O & à–¾ \\\hline
+\texttt{GAINER} & Gainer I/Oƒ‚ƒWƒ…[ƒ‹ \\
+\texttt{ARDUINO} & Arduino I/Oƒ{[ƒh \\
+\texttt{FUNNEL} & Funnel I/Oƒ‚ƒWƒ…[ƒ‹ \\
+\texttt{IN} & ƒfƒWƒ^ƒ‹“ü—Í \\
+\texttt{OUT} & ƒfƒWƒ^ƒ‹o—Í \\
+\texttt{PWM} & ‹^—ƒAƒiƒƒOiPWMjo—Í \\
+%\texttt{onChange(float current, float last)} & “ü—Í‚ª•Ï‰»‚µ‚½iƒfƒWƒ^ƒ‹•ƒAƒiƒƒOj
 \end{tabular}
 
 \subsection{PortƒNƒ‰ƒX}
@@ -256,7 +289,7 @@ PortƒNƒ‰ƒX‚ÍAI/Oƒ‚ƒWƒ…[ƒ‹‚Ì“üo—Íƒ|[ƒg‚ğ•\Œ»‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX‚Å‚·Bƒ†[ƒU‚©‚ç‚
 \texttt{addEventListener(e:Event, f:function)} & void & ƒCƒxƒ“ƒgƒŠƒXƒi‚ğİ’è
 \end{tabular}
 
-\newpage
+
 \subsection{EventƒNƒ‰ƒX}
 EventƒNƒ‰ƒX‚Í‘S‚Ä‚ÌƒCƒxƒ“ƒg‚ÌŠî–{‚Æ‚È‚é’ŠÛƒNƒ‰ƒX‚Å‚·B
 
@@ -1229,8 +1262,10 @@ ActionScript 3‚ÆProcessing‚ÍAPCã‚Å“®ì‚·‚é‚±‚Æ‚ğ‘z’è‚µ‚Ä‚¢‚Ü‚·BPC‘¤‚Ìˆ—”\—Í
 
 ActionScript 3‚ğ‚Í‚¶‚ß‚Æ‚·‚éJavaScript‚ğATamarin\footnote{http://www.mozilla-japan.org/projects/tamarin/}‚È‚Ç‚Ì‰¼‘zƒ}ƒVƒ“‚ğ‘g‚İŒnƒfƒoƒCƒX‚ÉÀ‘•‚·‚é‚±‚Æ‚Å“®ì‚³‚¹‚é‚±‚Æ‚àl‚¦‚ç‚ê‚Ü‚·‚ªAFunnel v1.0‚Ì³®ƒŠƒŠ[ƒXŒã‚Ìó‹µ‚É‚æ‚èŒŸ“¢‚µ‚½‚¢‚Æl‚¦‚Ä‚¢‚Ü‚·B
 
+\newpage
 \section{XV—š—ğ}
 \begin{description}
+\item[ 2007.9.29] ConfigurationƒNƒ‰ƒX‚ğ’Ç‰ÁBFunnelƒNƒ‰ƒX‚ÉanalogInput()‚È‚Ç‚Ìƒƒ\ƒbƒh‚ğ’Ç‰ÁB
 \item[ 2007.9.22] FIO‚Ì\¬‚ğXBee‚Ü‚½‚ÍXBee Pro‚ğ‘z’è‚µ‚½ƒvƒ‰ƒ“‚É•ÏXBFunnelƒNƒ‰ƒX‚ÆPortƒNƒ‰ƒX‚Ìà–¾‚ğ•ªŠ„B ‚»‚Ì‘¼×‚©‚È‹Lqã‚ÌŠÔˆá‚¢‚ğC³B
 \item[ 2007.9.13] Port‚ÌƒCƒ“ƒXƒ^ƒ“ƒX•Ï”‚ÉlastValue‚ğ’Ç‰ÁBEvent‚©‚çvalue‚ÆlastValue‚ğíœ‚µAPortEvent‚Étarget‚ğ’Ç‰ÁB
 \item[ 2007.9.9] Osc.update()‚Éˆø”‚ ‚è‚Ìƒo[ƒWƒ‡ƒ“‚ğ’Ç‰ÁBOsc‚Éreset()ƒƒ\ƒbƒh‚ğ’Ç‰ÁBScaler.LOG‚ÆScaler.EXP‚ğíœBEvent‚Ìà–¾‚ğ’Ç‰ÁB
