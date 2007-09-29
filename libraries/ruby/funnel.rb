@@ -4,11 +4,15 @@ require 'socket'
 require 'timeout'
 require 'osc'
 
+require 'configuration'
 require 'event'
 require 'port'
 require 'filter'
 
 module Funnel
+  (GAINER, ARDUINO, FUNNEL) = Array(Configuration::GAINER..Configuration::FUNNEL)
+  (IN, OUT, PWM) = Array(Configuration::IN..Configuration::PWM)
+
   class Funnel
     MINIMUM_SAMPLING_INTERVAL = 10
 
@@ -42,10 +46,20 @@ module Funnel
       end
 
       send_command(OSC::Message.new('/reset'), 5)
-      send_command(OSC::Message.new('/configure', 'i' * config.size, *config))
+      send_command(OSC::Message.new('/configure', 'i' * config.to_a.size, *config.to_a))
       @port = []
       @port_count = 0
-      init_ports(config)
+
+      @ain_ports = config.ain_ports
+      @din_ports = config.din_ports
+      @aout_ports = config.aout_ports
+      @dout_ports = config.dout_ports
+      @analog_pins = config.analog_pins
+      @digital_pins = config.digital_pins
+      @button = config.button
+      @led = config.led
+
+      init_ports(config.to_a)
 
       if interval < MINIMUM_SAMPLING_INTERVAL
         then interval = MINIMUM_SAMPLING_INTERVAL
@@ -129,6 +143,54 @@ module Funnel
       @port[number]
     end
 
+    def analog_input(number)
+      return if @ain_ports == nil
+      raise ArguentError, "analog input is not availabe at #{number}" if @ain_ports.at(number) == nil
+      @port[@ain_ports.at(number)]
+    end
+
+    def digital_input(number)
+      return if @din_ports == nil
+      raise ArguentError, "digital input is not availabe at #{number}" if @din_ports.at(number) == nil
+      @port[@din_ports.at(number)]
+    end
+
+    def analog_output(number)
+      return if @aout_ports == nil
+      raise ArguentError, "analog output is not availabe at #{number}" if @aout_ports.at(number) == nil
+      @port[@aout_ports.at(number)]
+    end
+
+    def digital_output(number)
+      return if @dout_ports == nil
+      raise ArguentError, "digital output is not availabe at #{number}" if @dout_ports.at(number) == nil
+      @port[@dout_ports.at(number)]
+    end
+
+    def analog_pin(number)
+      return if @analog_pins == nil
+      raise ArguentError, "analog pin is not availabe at #{number}" if @analog_pins.at(number) == nil
+      @port[@analog_pins.at(number)]
+    end
+
+    def digital_pin(number)
+      return if @digital_pins == nil
+      raise ArguentError, "digital pin is not availabe at #{number}" if @digital_pins.at(number) == nil
+      @port[@digital_pins.at(number)]
+    end
+
+    def button(number = 0)
+      return if @button == nil
+      raise ArguentError, "button is not availabe at #{number}" if @button.at(number) == nil
+      @port[@button.at(number)]
+    end
+
+    def led(number = 0)
+      return if @led == nil
+      raise ArguentError, "LED is not availabe at #{number}" if @led.at(number) == nil
+      @port[@led.at(number)]
+    end
+
     def send_output_command(start, values)
       command = OSC::Message.new('/out', 'if', start, *values)
       send_command(command)
@@ -158,27 +220,25 @@ end
 
 
 if __FILE__ == $0
-  require 'gainer'
-
   module Funnel
-    fio = Funnel.new('localhost', 9000, GainerIO::MODE_1, 33)
+    gio = Funnel.new('localhost', 9000, Gainer::MODE1, 33)
 
-    fio.port(0).filters = [SetPoint.new(0.5, 0.1)]
-    fio.port(0).add_event_listener(PortEvent::CHANGE) do |event|
+    gio.port(0).filters = [SetPoint.new(0.5, 0.1)]
+    gio.port(0).add_event_listener(PortEvent::CHANGE) do |event|
       puts "ain 0: #{event.target.value}"
     end
 
-    fio.port(17).on(PortEvent::RISING_EDGE) do
+    gio.port(17).on(PortEvent::RISING_EDGE) do
       puts "button: pressed"
     end
 
-    fio.port(17).on PortEvent::FALLING_EDGE do
+    gio.port(17).on PortEvent::FALLING_EDGE do
       puts "button: released"
     end
 
     Osc.service_interval = 33
     osc = Osc.new(Osc::SQUARE, 2.0, 0)
-    fio.port(16).filters = [osc]
+    gio.port(16).filters = [osc]
     osc.reset
     osc.start
 
