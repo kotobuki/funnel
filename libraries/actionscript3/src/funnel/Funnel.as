@@ -7,18 +7,21 @@ Funnel v1.0は未踏ソフトウェア創造事業2007年度第I期の支援を�
 
 package funnel
 {
-	import flash.events.EventDispatcher;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.net.Socket;
-	import funnel.command.*;
-	import funnel.async.*;
+	import funnel.async.Task;
+	import funnel.async.turn;
+	import funnel.async.cmd;
+	import funnel.command.*;;
+	import funnel.event.FunnelEvent;
+	import funnel.event.FunnelErrorEvent;
+	import funnel.event.PortEvent;
+	import funnel.ioport.Port;
 	import funnel.osc.OSCPacket;
-	import funnel.ioport.*;
-	import funnel.event.*;
 	import funnel.osc.OSCMessage;
 	import funnel.osc.OSCFloat;
-	import flash.events.ErrorEvent;
-	import funnel.error.FunnelError;
+	
 
 	public class Funnel extends EventDispatcher
 	{
@@ -27,7 +30,7 @@ package funnel
 		private var _ioPorts:Array;
 		private var _updatedPortIndices:Array;
 		private var _portCount:uint;
-		private var _d:Deferred;
+		private var _task:Task;
 		private var _samplingInterval:int;
 		private var _commandPort:CommandPort;
 		private var _notificationPort:NotificationPort;
@@ -36,8 +39,9 @@ package funnel
 		public function Funnel(configuration:Object, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
 			autoUpdate = true;
 			_config = configuration;
-			initPortsWithConfiguration(_config.config);
-			connectServerAndInitIOModule(host, portNum, _config.config, samplingInterval);
+			_samplingInterval = samplingInterval;
+			initPortsWithConfiguration();
+			connectServerAndInitIOModule(host, portNum);
 		}
 		
 		public function port(portNum:uint):Port {
@@ -82,7 +86,7 @@ package funnel
 		
 		public function setDigitalPinMode(portNum:uint, mode:uint):void {
 			_config.setDigitalPinMode(portNum, mode);
-			_d.addCallback(_commandPort, _commandPort.writeCommand, new Configure(_config.config));
+			_task.completed = cmd(_commandPort.writeCommand, new Configure(_config.config));
 		}
 		
 		public function get samplingInterval():int {
@@ -91,7 +95,7 @@ package funnel
 		
 		public function set samplingInterval(val:int):void {
 			_samplingInterval = val;
-			_d.addCallback(_commandPort, _commandPort.writeCommand, new SamplingInterval(val));
+			_task.completed = cmd(_commandPort.writeCommand, new SamplingInterval(val));
 		}
 		
 		public function update():void {
@@ -120,7 +124,7 @@ package funnel
 			for (var i:uint = 0; i < portValues.length; ++i)
 				message.addValue(new OSCFloat(portValues[i]));
 			
-			_d.addCallback(_commandPort, _commandPort.writeCommand, message);
+			_task.completed = cmd(_commandPort.writeCommand, message);
 		}
 		
 		private function onReceiveBundle(event:Event):void {
@@ -136,20 +140,9 @@ package funnel
 				}
 			}
 		}
-		
-		private function callReadyHandler():void {
-			dispatchEvent(new FunnelEvent(FunnelEvent.READY));
-		}
-		
-		private function callErrorHandler(e:Error):void {
-			trace(e);
-			if (e is FunnelError) {
-				var fe:FunnelError = e as FunnelError;
-				dispatchEvent(new ErrorEvent(fe.eventType, false, false, fe.message));
-			}
-		}
-	
-		private function initPortsWithConfiguration(configuration:Array):void {
+
+		private function initPortsWithConfiguration():void {
+			var configuration:Array = _config.config;
 			_ioPorts = new Array();
 			_updatedPortIndices = new Array();
 			for (var i:uint = 0; i < configuration.length; ++i) {
@@ -171,23 +164,21 @@ package funnel
 			}
 		}
 
-		private function connectServerAndInitIOModule(host:String, portNum:Number, configuration:Array, samplingInterval:uint):void {
+		private function connectServerAndInitIOModule(host:String, portNum:Number):void {
 			_commandPort = new CommandPort();
 			_notificationPort = new NotificationPort();
 			_notificationPort.addEventListener(Event.CHANGE, onReceiveBundle);
 			
-			_d = new Deferred();
-			_d.addCallback(_commandPort, _commandPort.connect, host, portNum);//throw ServerNotFoundError
-			_d.addCallback(_commandPort, _commandPort.writeCommand, new Reset());//throw RebootError
-			_d.addCallback(_commandPort, _commandPort.writeCommand, new Configure(configuration));//throw ConfigurationError
-			this.samplingInterval = samplingInterval;
-			_d.addCallback(_commandPort, _commandPort.writeCommand, new Polling(true));
-			_d.addCallback(_notificationPort, _notificationPort.connect, host, portNum+1);//throw NotificatonPortNotFoundError
-			
-			_d.addCallback(this, callReadyHandler);
-			_d.addErrback(this, callErrorHandler);
-			_d.callback();
+			_task = turn (
+				cmd (_commandPort.connect, host, portNum),
+				cmd (_commandPort.writeCommand, new Reset()),
+				cmd (_commandPort.writeCommand, new Configure(_config.config)),
+				cmd (_commandPort.writeCommand, new SamplingInterval(_samplingInterval)),
+				cmd (_commandPort.writeCommand, new Polling(true)),
+				cmd (_notificationPort.connect, host, portNum+1),
+				cmd (dispatchEvent, new FunnelEvent(FunnelEvent.READY))
+			)();
+			_task.failed = dispatchEvent;
 		}
-		
 	}
 }
