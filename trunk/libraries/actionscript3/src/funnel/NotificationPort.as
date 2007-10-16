@@ -1,12 +1,11 @@
 package funnel
 {
 	import flash.utils.ByteArray;
-	import flash.events.*;
+	import flash.events.Event;
+	import flash.events.ProgressEvent;
 	import flash.net.Socket;
-	import funnel.async.Deferred;
-	import funnel.error.*;
-	import funnel.osc.*;
-	import funnel.event.FunnelEvent;
+	import funnel.osc.OSCBundle;
+	import funnel.osc.OSCPacket;
 	
 	public class NotificationPort extends NetPort
 	{

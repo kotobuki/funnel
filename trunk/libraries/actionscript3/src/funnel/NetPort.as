@@ -2,10 +2,12 @@ package funnel
 {
 	import flash.events.EventDispatcher;
 	import flash.net.Socket;
-	import flash.events.*;
-	import funnel.async.Deferred;
-	import funnel.error.FunnelError;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
 	import funnel.event.FunnelErrorEvent;
+	import funnel.async.Task;
+	import funnel.async.waitEvent;
 
 	public class NetPort extends EventDispatcher
 	{
@@ -15,21 +17,15 @@ package funnel
 			_socket = new Socket();
 		}
 		
-		public function connect(host:String, port:Number):Deferred {
-			return Deferred.createDeferredFunctionWithEvent(
-				_socket, 
-				_socket.connect, 
-				[Event.CONNECT],
-				[IOErrorEvent.IO_ERROR, SecurityErrorEvent.SECURITY_ERROR]
-			)(host, port).addErrback(
-				null,
-				function():void {
-					throw new FunnelError(
-						"Funnel server was not found...",
-						FunnelErrorEvent.SERVER_NOT_FOUND_ERROR
-					);
-				}
+		public function connect(host:String, port:Number):Task {
+			var task:Task = waitEvent(
+				_socket,
+				Event.CONNECT,
+				IOErrorEvent.IO_ERROR,
+				SecurityErrorEvent.SECURITY_ERROR
 			);
+			_socket.connect(host, port);
+			return task;
 		}
 	}
 }
