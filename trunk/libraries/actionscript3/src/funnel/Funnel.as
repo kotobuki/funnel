@@ -31,19 +31,58 @@ package funnel
 		private var _samplingInterval:int;
 		private var _commandPort:CommandPort;
 		private var _notificationPort:NotificationPort;
+		private var _config:Object;
 
-		public function Funnel(configuration:Array, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
+		public function Funnel(configuration:Object, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
 			autoUpdate = true;
-			initPortsWithConfiguration(configuration);
-			connectServerAndInitIOModule(host, portNum, configuration, samplingInterval);
+			_config = configuration;
+			initPortsWithConfiguration(_config.config);
+			connectServerAndInitIOModule(host, portNum, _config.config, samplingInterval);
 		}
 		
 		public function port(portNum:uint):Port {
-			return _ioPorts[portNum] as Port;
+			return _ioPorts[portNum];
 		}
 		
 		public function get portCount():uint {
 			return _portCount;
+		}
+		
+		public function analogInput(portNum:uint):Port {
+			return _ioPorts[_config.ainPorts[portNum]];
+		}
+		
+		public function digitalInput(portNum:uint):Port {
+			return _ioPorts[_config.dinPorts[portNum]];
+		}
+		
+		public function analogOutput(portNum:uint):Port {
+			return _ioPorts[_config.aoutPorts[portNum]];
+		}
+		
+		public function digitalOutput(portNum:uint):Port {
+			return _ioPorts[_config.doutPorts[portNum]];
+		}
+		
+		public function get button():Port {
+			return _ioPorts[_config.button];
+		}
+		
+		public function get led():Port {
+			return _ioPorts[_config.led];
+		}
+		
+		public function analogPin(portNum:uint):Port {
+			return _ioPorts[_config.analogPins[portNum]];
+		}
+		
+		public function digitalPin(portNum:uint):Port {
+			return _ioPorts[_config.digitalPins[portNum]];
+		}
+		
+		public function setDigitalPinMode(portNum:uint, mode:uint):void {
+			_config.setDigitalPinMode(portNum, mode);
+			_d.addCallback(_commandPort, _commandPort.writeCommand, new Configure(_config.config));
 		}
 		
 		public function get samplingInterval():int {
