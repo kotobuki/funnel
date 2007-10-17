@@ -36,7 +36,7 @@ package funnel
 			if (args[0] is OSCInt && args[0].value < 0) {
 				var errorCode:uint = -args[0].value;
 				var message:String = '';
-				if (args[1] != null) args[1].value;
+				if (args[1] != null) message = args[1].value;
 				task.fail(new FunnelErrorEvent(ERROR_EVENTS[errorCode], false, false, message));
 			} else {
 				task.complete();
