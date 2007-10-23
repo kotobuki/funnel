@@ -4,10 +4,10 @@ require 'socket'
 require 'timeout'
 require 'osc'
 
-require 'configuration'
-require 'event'
-require 'port'
-require 'filter'
+require 'funnel/configuration'
+require 'funnel/event'
+require 'funnel/port'
+require 'funnel/filter'
 
 module Funnel
   (GAINER, ARDUINO, FUNNEL) = Array(Configuration::GAINER..Configuration::FUNNEL)

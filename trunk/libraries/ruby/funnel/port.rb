@@ -1,4 +1,4 @@
-require 'event'
+require 'funnel/event'
 
 module Funnel
   class Port
