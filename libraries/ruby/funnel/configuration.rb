@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'port'
+require 'funnel/port'
 
 module Funnel
   class Configuration
