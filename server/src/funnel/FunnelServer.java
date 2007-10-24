@@ -155,6 +155,13 @@ public class FunnelServer extends Frame {
 						.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
 				return;
 			}
+		} else if (type.equalsIgnoreCase("XBee")) { //$NON-NLS-1$
+			try {
+				ioModule = new XbeeIO(this, serialPort);
+			} catch (RuntimeException e) {
+				printMessage(Messages.getString("FunnelServer.CannotOpenXbee")); //$NON-NLS-1$
+				return;
+			}
 		}
 
 		commandPortServer = new CommandPortServer(this, Integer
