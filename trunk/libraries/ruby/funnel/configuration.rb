@@ -201,6 +201,11 @@ module Funnel
     MODE7 = Configuration.new(Configuration::GAINER, Configuration::MODE7)
     MODE8 = Configuration.new(Configuration::GAINER, Configuration::MODE8)
   end
+
+  module Arduino
+    FIRMATA = Configuration.new(Configuration::ARDUINO)
+  end
+
 end
 
 
