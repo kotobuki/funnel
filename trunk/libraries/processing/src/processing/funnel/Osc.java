@@ -29,12 +29,13 @@ public class Osc{
 	public float phase;
 	public int times;
 	
-	public static int serviceInterval = 1000;
+	public static int serviceInterval = 0;//serviceInterval‚ª0‚Ì‚Æ‚«‚Íauto update‚µ‚È‚¢
 	private static OscThread serviceThread = null;
 
 	private long startTickMillis;//Šî€‚ÌŽžŠÔ
 	private long spendTickMillis;
 	
+	private boolean isMoving = false;
 	
 	
 	public Osc(PApplet parent, int wave, float freq, int times){
@@ -80,10 +81,8 @@ public class Osc{
 			break;
 		}
 		
-		
-		
-		
-		
+
+		//1ŒÂ‚¾‚¯‹¤’Ê‚ÌserviceThread
 		if(serviceThread == null || !serviceThread.isAlive()){
 			serviceThread = new OscThread(wave);
 			serviceThread.startThread();
@@ -101,12 +100,17 @@ public class Osc{
 	}
 	
 	public void start(){
-		startTickMillis = System.currentTimeMillis();
-		serviceThread.addOsc(this);
+		if(!isMoving){
+			startTickMillis = System.currentTimeMillis();
+			serviceThread.addOsc(this);
+			isMoving = true;
+		}
 	}
 	
 	public void stop(){
-		serviceThread.removeOsc(this);
+		if(isMoving){
+			serviceThread.removeOsc(this);
+		}
 	}
 	
 	public void reset(){
@@ -142,7 +146,8 @@ public class Osc{
 		
 		value = amplitude * wavefunc.calculate(freq * (sec + phase)) + offset;
 		
-		if(onUpdate != null  ){
+		if(onUpdate != null ){
+			
 			try{
 				onUpdate.invoke(parent,new Object[]{ this });
 			}catch(Exception e){
@@ -151,7 +156,7 @@ public class Osc{
 //				errorMessage("onRisingEdge handler error !!");
 			}
 		}
-		
+
 	}
 	
 	public void update(long millis){
@@ -203,7 +208,7 @@ public class Osc{
 			serviceTickMillis = System.currentTimeMillis();
 			while(isWorking){
 				long now = System.currentTimeMillis();
-				if(now - serviceTickMillis > Osc.serviceInterval){
+				if(now - serviceTickMillis > Osc.serviceInterval && Osc.serviceInterval != 0){
 				
 					synchronized(oscList){
 						ListIterator it = oscList.listIterator();
@@ -211,6 +216,7 @@ public class Osc{
 							
 							Osc osc = (Osc)i.next();
 							osc.update();
+
 						}
 					}
 					

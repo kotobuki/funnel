@@ -74,10 +74,10 @@ public final class Funnel implements Runnable{
 		
 	}
 	
-	public Funnel(PApplet parent){
+	public Funnel(PApplet parent,Configuration config){
 		
 		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
-				100,GAINER.CONFIGURATION_1);
+				33,config);
 	}
 
 	public Funnel(PApplet parent, int samplingInterval, Configuration config ){
@@ -363,6 +363,7 @@ public final class Funnel implements Runnable{
 		
 		int[] outport = config.getOutputPortNumber();
 		for(int i=0;i<outport.length;i+=2){
+			
 			int start = outport[i];
 			int num = outport[i+1];
 			Object args[] = new Object[num+1];
@@ -370,6 +371,7 @@ public final class Funnel implements Runnable{
 			for(int n=0;n<num;n++){
 				args[n+1] = new Float(port(start+n).value);
 			}
+			
 			OSCMessage message = execCode("/out",args,true);
 		}
 		

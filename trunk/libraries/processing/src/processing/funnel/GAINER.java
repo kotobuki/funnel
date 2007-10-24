@@ -5,6 +5,10 @@ import java.util.Arrays;
 public final class GAINER implements IoModule{
 
 	public static final int moduleID = 0x1000;//
+	//出力ポートのはじめの番号と数の列挙
+	///[outstart1,outnum1,outstart2,outnum2.....]
+	private int[] outputPortNumber;
+	
 	
 	private static final int[] conf1 = {
 		PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
@@ -95,6 +99,7 @@ public final class GAINER implements IoModule{
 	public static final Configuration CONFIGURATION_8 = new Configuration(moduleID,conf8);
 	
 	
+	//ポートの機能
 	public static int LED;
 	public static int button;
 	public static int analogInput[];
@@ -103,12 +108,9 @@ public final class GAINER implements IoModule{
 	public static int digitalOutput[];
 	
 
-	///[outstart1,outnum1,outstart2,outnum2.....]
-	public int[] outputPortNumber;
-	
 	public GAINER(){}
 	
-	public void initialize(int[] config){
+	public int[] initialize(int[] config){
 		if(Arrays.equals(config,conf1)){
 			int[] nums = {8,4,12,4,16,1};
 			outputPortNumber = nums;
@@ -120,7 +122,7 @@ public final class GAINER implements IoModule{
 			
 			analogInput = ain;
 			digitalInput = din;
-			digitalOutput = aout;
+			analogOutput = aout;
 			digitalOutput = dout;
 			
 			LED = 16;
@@ -137,7 +139,7 @@ public final class GAINER implements IoModule{
 			
 			analogInput = ain;
 			digitalInput = din;
-			digitalOutput = aout;
+			analogOutput = aout;
 			digitalOutput = dout;
 			
 			LED = 16;
@@ -153,7 +155,7 @@ public final class GAINER implements IoModule{
 			
 			analogInput = ain;
 			digitalInput = din;
-			digitalOutput = aout;
+			analogOutput = aout;
 			digitalOutput = dout;
 			
 			LED = 16;
@@ -169,7 +171,7 @@ public final class GAINER implements IoModule{
 			
 			analogInput = ain;
 			digitalInput = din;
-			digitalOutput = aout;
+			analogOutput = aout;
 			digitalOutput = dout;
 			
 			LED = 16;
@@ -185,7 +187,7 @@ public final class GAINER implements IoModule{
 			
 			analogInput = ain;
 			digitalInput = din;
-			digitalOutput = aout;
+			analogOutput = aout;
 			digitalOutput = dout;
 	
 		}else if(Arrays.equals(config,conf6)){
@@ -199,7 +201,7 @@ public final class GAINER implements IoModule{
 			
 			analogInput = ain;
 			digitalInput = din;
-			digitalOutput = aout;
+			analogOutput = aout;
 			digitalOutput = dout;
 
 			
@@ -217,7 +219,7 @@ public final class GAINER implements IoModule{
 			
 			analogInput = ain;
 			digitalInput = din;
-			digitalOutput = aout;
+			analogOutput = aout;
 			digitalOutput = dout;
 
 			
@@ -232,11 +234,11 @@ public final class GAINER implements IoModule{
 			
 			analogInput = ain;
 			digitalInput = din;
-			digitalOutput = aout;
+			analogOutput = aout;
 			digitalOutput = dout;
 
 		}
-		
+		return config;
 	}
 
 	public int[] getOutputPortNumber(){
