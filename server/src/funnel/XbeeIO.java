@@ -34,9 +34,9 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private static final int MAX_CLIENTS = 32;
 	private static final int MAX_FRAME_SIZE = 100;
 
-	private static final int DEFAULT_SOURCE_ADDRESS = 2;
+	private static final int DEFAULT_REMOTE_ADDRESS = 2;
 
-	private final Float FLOAT_ZERO = new Float(0.0f);
+	// private final Float FLOAT_ZERO = new Float(0.0f);
 
 	private boolean wasEscaped = false;
 	private int rxIndex = 0;
@@ -55,8 +55,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private final int databits = 8;
 	private final int stopbits = SerialPort.STOPBITS_1;
 
-	private funnel.PortRange dioPortRange;
-	private funnel.PortRange pwmPortRange;
+	// private funnel.PortRange dioPortRange;
+	// private funnel.PortRange pwmPortRange;
 
 	public XbeeIO(FunnelServer server, String serialPortName) {
 		this.parent = server;
@@ -83,8 +83,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 								.getString("IOModule.Started") //$NON-NLS-1$
 								+ serialPortName);
 
-						sendATCommand("ND");
 						sendATCommand("VR");
+						sendATCommand("ND");
 					}
 				}
 			}
@@ -129,7 +129,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		Object arguments[] = new Object[1 + MAX_IO_PORT];
 		arguments[0] = new Integer(0);
 		for (int i = 0; i < MAX_IO_PORT; i++) {
-			arguments[1 + i] = new Float(inputData[DEFAULT_SOURCE_ADDRESS][i]);
+			arguments[1 + i] = new Float(inputData[DEFAULT_REMOTE_ADDRESS][i]);
 		}
 		bundle.addPacket(new OSCMessage("/in", arguments)); //$NON-NLS-1$
 
@@ -162,7 +162,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		for (int i = 0; i < counts; i++) {
 			// TODO
 			// modify to handle address request
-			results[1 + i] = new Float(inputData[DEFAULT_SOURCE_ADDRESS][i]);
+			results[1 + i] = new Float(inputData[DEFAULT_REMOTE_ADDRESS][i]);
 		}
 		return results;
 	}
@@ -176,19 +176,22 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void setOutput(Object[] arguments) {
-		int start = ((Integer) arguments[0]).intValue();
-		for (int i = 0; i < (arguments.length - 1); i++) {
-			int port = start + i;
-			int index = 1 + i;
-			if (arguments[index] != null && arguments[index] instanceof Float) {
-				if (dioPortRange.contains(port)) {
-					digitalWrite(port, FLOAT_ZERO.equals(arguments[index]) ? 0
-							: 1);
-				} else if (pwmPortRange.contains(port)) {
-					analogWrite(port, ((Float) arguments[index]).floatValue());
-				}
-			}
-		}
+		// int start = ((Integer) arguments[0]).intValue();
+		// for (int i = 0; i < (arguments.length - 1); i++) {
+		// int port = start + i;
+		// int index = 1 + i;
+		// if (arguments[index] != null && arguments[index] instanceof Float) {
+		// if (dioPortRange.contains(port)) {
+		// digitalWrite(port, FLOAT_ZERO.equals(arguments[index]) ? 0
+		// : 1);
+		// } else if (pwmPortRange.contains(port)) {
+		// analogWrite(port, ((Float) arguments[index]).floatValue());
+		// }
+		// }
+		// }
+		// NOTE: Output side control is not supported in XBee series 1
+		// TODO: Implement output control support for XBee series 2
+		return;
 	}
 
 	public void setPolling(Object[] arguments) {
@@ -246,7 +249,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 				}
 			}
 		} catch (IOException e) {
-
+			e.printStackTrace();
 		}
 	}
 
@@ -328,7 +331,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 							+ Integer.toHexString(sl) + ", dB=" + db
 							+ ", NI=\'" + ni + "\'";
 					parent.printMessage(info);
-					analogWrite(9, 1.0f);
 				}
 			} else if (data[5] == 'V' && data[6] == 'R') {
 				String info = "FIRMWARE VERSION: ";
@@ -345,80 +347,60 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		}
 	}
 
-	private void digitalWrite(int pin, int mode) {
-		int bitMask = 1 << pin;
-		int outData = 0;
+	// private void digitalWrite(int pin, int mode) {
+	// int bitMask = 1 << pin;
+	// int outData = 0;
+	//
+	// if (mode == 1) {
+	// outData = 1 << pin;
+	// }
+	//
+	// byte[] rfData = new byte[14];
+	// rfData[0] = 0x7E; // Frame Delimiter
+	// rfData[1] = 0x00; // Length MSB
+	// rfData[2] = 0x0A; // Length LSB
+	// rfData[3] = (byte) 0x83; // API ID
+	// rfData[4] = 0x00; // Source Address MSB
+	// rfData[5] = 0x01; // Source Address LSB
+	// rfData[6] = 0x20; // RSSI
+	// rfData[7] = 0x00; // Options
+	// rfData[8] = 0x01; // Samples
+	// rfData[9] = (byte) (bitMask >> 8); // I/O Enable MSB
+	// rfData[10] = (byte) (bitMask & 0xFF); // I/O Enable LSB
+	// rfData[11] = (byte) (outData >> 8); // I/O Status MSB
+	// rfData[12] = (byte) (outData & 0xFF); // I/O Status LSB
+	// int sum = 0;
+	// for (int i = 3; i < 13; i++) {
+	// sum += rfData[i];
+	// }
+	// rfData[13] = (byte) (0xFF - (sum & 0xFF));
+	// }
 
-		if (mode == 1) {
-			outData = 1 << pin;
-		}
-
-		byte[] rfData = new byte[14];
-		rfData[0] = 0x7E; // Frame Delimiter
-		rfData[1] = 0x00; // Length MSB
-		rfData[2] = 0x0A; // Length LSB
-		rfData[3] = (byte) 0x83; // API ID
-		rfData[4] = 0x00; // Source Address MSB
-		rfData[5] = 0x01; // Source Address LSB
-		rfData[6] = 0x20; // RSSI
-		rfData[7] = 0x00; // Options
-		rfData[8] = 0x01; // Samples
-		rfData[9] = (byte) (bitMask >> 8); // I/O Enable MSB
-		rfData[10] = (byte) (bitMask & 0xFF); // I/O Enable LSB
-		rfData[11] = (byte) (outData >> 8); // I/O Status MSB
-		rfData[12] = (byte) (outData & 0xFF); // I/O Status LSB
-		int sum = 0;
-		for (int i = 3; i < 13; i++) {
-			sum += rfData[i];
-		}
-		rfData[13] = (byte) (0xFF - (sum & 0xFF));
-	}
-
-	private void analogWrite(int pin, float value) {
-		int intValue = Math.round(value * 1023.0f);
-		intValue = (intValue < 0) ? 0 : intValue;
-		intValue = (intValue > 1023) ? 1023 : intValue;
-
-		// byte[] rfData = new byte[14];
-		// rfData[0] = 0x7E; // Frame Delimiter
-		// rfData[1] = 0x00; // Length MSB
-		// rfData[2] = 0x0A; // Length LSB
-		// rfData[3] = (byte) 0x83; // API ID
-		// rfData[4] = 0x00; // Source Address MSB
-		// rfData[5] = 0x01; // Source Address LSB
-		// rfData[6] = 0x20; // RSSI
-		// rfData[7] = 0x00; // Options
-		// rfData[8] = 0x01; // Samples
-		// rfData[9] = (byte) (1 << (pin - 9 + 1)); // I/O Enable MSB
-		// rfData[10] = 0x00; // I/O Enable LSB
-		// rfData[11] = (byte) (intValue >> 8); // I/O Status MSB
-		// rfData[12] = (byte) (intValue & 0xFF); // I/O Status LSB
-		// int sum = 0;
-		// for (int i = 3; i < 13; i++) {
-		// sum += rfData[i];
-		// }
-		// rfData[13] = (byte) (0xFF - (sum & 0xFF));
-
-		byte[] rfData = new byte[12];
-		rfData[0] = 0x7E; // Frame Delimiter
-		rfData[1] = 0x00; // Length MSB
-		rfData[2] = 0x08; // Length LSB
-		rfData[3] = (byte) 0x08; // API ID
-		rfData[4] = 0x01; // Frame ID
-		rfData[5] = 'M'; // Source Address LSB
-		rfData[6] = '0'; // RSSI
-		rfData[7] = '0'; // Options
-		rfData[8] = '3'; // Options
-		rfData[9] = 'F'; // Samples
-		rfData[10] = 'F'; // I/O Enable MSB
-		int sum = 0;
-		for (int i = 3; i < 11; i++) {
-			sum += rfData[i];
-		}
-		rfData[11] = (byte) (0xFF - (sum & 0xFF));
-
-		sendTransmitRequest(DEFAULT_SOURCE_ADDRESS, rfData);
-	}
+	// private void analogWrite(int pin, float value) {
+	// int intValue = Math.round(value * 1023.0f);
+	// intValue = (intValue < 0) ? 0 : intValue;
+	// intValue = (intValue > 1023) ? 1023 : intValue;
+	//
+	// byte[] rfData = new byte[12];
+	// rfData[0] = 0x7E; // Frame Delimiter
+	// rfData[1] = 0x00; // Length MSB
+	// rfData[2] = 0x08; // Length LSB
+	// rfData[3] = (byte) 0x08; // API ID
+	// rfData[4] = 0x01; // Frame ID
+	// rfData[5] = 'M'; // Source Address LSB
+	// rfData[6] = '0'; // RSSI
+	// rfData[7] = '0'; // Options
+	// rfData[8] = '3'; // Options
+	// rfData[9] = 'F'; // Samples
+	// rfData[10] = 'F'; // I/O Enable MSB
+	// int sum = 0;
+	// for (int i = 3; i < 11; i++) {
+	// sum += rfData[i];
+	// }
+	// rfData[11] = (byte) (0xFF - (sum & 0xFF));
+	//
+	// sendTransmitRequest(DEFAULT_REMOTE_ADDRESS, rfData);
+	// }
 
 	private void sendATCommand(String command) {
 		byte[] outData = new byte[2 + command.length()];
@@ -430,18 +412,18 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		sendCommand(outData);
 	}
 
-	private void sendTransmitRequest(int destAddress, byte[] rfData) {
-		byte[] outData = new byte[5 + rfData.length];
-		outData[0] = 0x01; // Transmit Request
-		outData[1] = 0x01; // Frame ID
-		outData[2] = (byte) (destAddress >> 8);
-		outData[3] = (byte) (destAddress & 0xFF);
-		outData[4] = 0x00; // Options
-		for (int i = 0; i < rfData.length; i++) {
-			outData[5 + i] = rfData[i];
-		}
-		sendCommand(outData);
-	}
+	// private void sendTransmitRequest(int destAddress, byte[] rfData) {
+	// byte[] outData = new byte[5 + rfData.length];
+	// outData[0] = 0x01; // Transmit Request
+	// outData[1] = 0x01; // Frame ID
+	// outData[2] = (byte) (destAddress >> 8);
+	// outData[3] = (byte) (destAddress & 0xFF);
+	// outData[4] = 0x00; // Options
+	// for (int i = 0; i < rfData.length; i++) {
+	// outData[5 + i] = rfData[i];
+	// }
+	// sendCommand(outData);
+	// }
 
 	private void sendCommand(byte[] frameData) {
 		byte[] outData = new byte[4 + frameData.length];
