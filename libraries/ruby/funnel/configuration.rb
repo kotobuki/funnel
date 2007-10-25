@@ -4,7 +4,7 @@ require 'funnel/port'
 
 module Funnel
   class Configuration
-    (GAINER, ARDUINO, FUNNEL) = Array(0..2)
+    (GAINER, ARDUINO, XBEE, FUNNEL) = Array(0..3)
     (IN, OUT, PWM) = Array(0..2)
     (MODE1, MODE2, MODE3, MODE4, MODE5, MODE6, MODE7, MODE8) = Array(1..8)
 
@@ -166,6 +166,19 @@ module Funnel
         @digital_pins = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
         @button = nil
         @led = nil
+      when XBEE
+        @config = [
+          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
+          Port::DIN, Port::DIN, Port::DIN
+        ]
+        @ain_ports = nil
+        @din_ports = nil
+        @aout_ports = nil
+        @dout_ports = nil
+        @analog_pins = nil
+        @digital_pins = nil
+        @button = nil
+        @led = nil
       when FUNNEL
         raise ArgumentError, "Funnel I/O module is not yet supported"
       end
@@ -204,6 +217,10 @@ module Funnel
 
   module Arduino
     FIRMATA = Configuration.new(Configuration::ARDUINO)
+  end
+  
+  module Xbee
+    DEFAULT = Configuration.new(Configuration::XBEE)
   end
 
 end

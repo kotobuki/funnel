@@ -10,7 +10,7 @@ require 'funnel/port'
 require 'funnel/filter'
 
 module Funnel
-  (GAINER, ARDUINO, FUNNEL) = Array(Configuration::GAINER..Configuration::FUNNEL)
+  (GAINER, ARDUINO, XBEE, FUNNEL) = Array(Configuration::GAINER..Configuration::FUNNEL)
   (IN, OUT, PWM) = Array(Configuration::IN..Configuration::PWM)
 
   class Funnel
