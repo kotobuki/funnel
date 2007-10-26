@@ -1,8 +1,8 @@
 package funnel
 {
-	import flash.events.EventDispatcher;
 	import flash.net.Socket;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
 	import funnel.event.FunnelErrorEvent;

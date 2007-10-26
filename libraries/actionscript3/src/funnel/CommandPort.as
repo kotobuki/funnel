@@ -5,7 +5,6 @@ package funnel
 	import flash.events.*;
 	import flash.utils.Timer;
 	import funnel.osc.*;
-	import funnel.error.*;
 	import funnel.event.FunnelErrorEvent;
 	import funnel.async.*;
 	
