@@ -16,7 +16,7 @@ void setup()
   myFont = loadFont("CourierNewPSMT-24.vlw");
   textFont(myFont, 24);
   
-  arduino = new Funnel(this,ARDUINO.USER);
+  arduino = new Funnel(this,ARDUINO.FIRMATA);
  
 }
 

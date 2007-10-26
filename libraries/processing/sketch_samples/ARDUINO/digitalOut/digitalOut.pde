@@ -14,7 +14,7 @@ void setup()
   size(200,200);
   frameRate(25);
   
-  Configuration config = ARDUINO.USER;
+  Configuration config = ARDUINO.FIRMATA;
   config.setDigitalPinMode(ledPin,ARDUINO.OUT);
   arduino = new Funnel(this,config);
   arduino.autoUpdate = true;
