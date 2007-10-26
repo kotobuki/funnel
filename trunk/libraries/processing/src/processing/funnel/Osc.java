@@ -110,6 +110,7 @@ public class Osc{
 	public void stop(){
 		if(isMoving){
 			serviceThread.removeOsc(this);
+			isMoving=false;
 		}
 	}
 	
