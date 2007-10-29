@@ -20,7 +20,6 @@ package funnel.ioport
 		private var _type:uint;	
 		private var _filters:Array;
 		private var _generator:IGenerator;
-		private var _inputAvailable:Boolean;
 		private var _sum:Number;
 		private var _average:Number;
 		private var _minimum:Number;
@@ -33,7 +32,6 @@ package funnel.ioport
 			_type = type;
 			_value = 0;
 			_lastValue = 0;
-			_inputAvailable = false;
 			_minimum = 1;
 			_maximum = 0;
 			_average = 0;
@@ -130,11 +128,6 @@ package funnel.ioport
 		}
 		
 		private function detectEdge(oldValue:Number, newValue:Number):void {
-			if (!_inputAvailable) {
-				_inputAvailable = true;
-				return;
-			}
-
 			if (oldValue == newValue) return;
 
 			dispatchEvent(new PortEvent(PortEvent.CHANGE));
