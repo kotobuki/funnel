@@ -386,9 +386,9 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			inputPortCounts = 0;
 		} else if (java.util.Arrays.equals(CONFIGURATION_7, arguments)) {
 			configuration = 7;
-			ainPortRange.setRange(0, 63);
+			ainPortRange.setRange(-1, -1);
 			dinPortRange.setRange(-1, -1);
-			aoutPortRange.setRange(-1, -1);
+			aoutPortRange.setRange(0, 63);
 			doutPortRange.setRange(-1, -1);
 			buttonPortRange.setRange(-1, -1);
 			inputs = new float[64];
@@ -414,6 +414,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 	public void setOutput(Object[] arguments) {
 		int start = ((Integer) arguments[0]).intValue();
+		float depth = (configuration == 7) ? 15.0f : 255.0f;
 		for (int i = 1; i < arguments.length; i++) {
 			if (arguments[i] == null) {
 				throw new IllegalArgumentException("argument " + i + " is null");
@@ -426,7 +427,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			for (int i = 0; i < (arguments.length - 1); i++) {
 				int port = start + i;
 				int index = 1 + i;
-				if (doutPortRange.contains(port)) {
+				if ((configuration == 7) && aoutPortRange.contains(port)) {
+					inputs[port] = ((Float) arguments[index]).floatValue();
+					scanMatrix(port / 8);
+				} else if (doutPortRange.contains(port)) {
 					if (FLOAT_ZERO.equals(arguments[index])) {
 						setDigitalOutputLow(port);
 					} else {
@@ -435,7 +439,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 					inputs[port] = ((Float) arguments[index]).floatValue();
 				} else if (aoutPortRange.contains(port)) {
 					setAnalogOutput(port, (int) (((Float) arguments[index])
-							.floatValue() * 255.0f));
+							.floatValue() * depth));
 					inputs[port] = ((Float) arguments[index]).floatValue();
 				} else if (LED_PORT.intValue() == port) {
 					if (FLOAT_ZERO.equals(arguments[index])) {
@@ -451,7 +455,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		} else {
 			int[] analogValues = new int[aoutPortRange.getCounts()];
 			for (int i = 0; i < aoutPortRange.getCounts(); i++) {
-				analogValues[i] = (int) (inputs[aoutPortRange.getMin() + i] * 255.0f);
+				analogValues[i] = (int) (inputs[aoutPortRange.getMin() + i] * depth);
 			}
 			int digitalValues = 0x0000;
 			for (int i = 0; i < doutPortRange.getCounts(); i++) {
@@ -474,7 +478,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 					hasDigitalValues = true;
 				} else if (aoutPortRange.contains(port)) {
 					analogValues[port - aoutPortRange.getMin()] = (int) (((Float) arguments[index])
-							.floatValue() * 255.0f);
+							.floatValue() * depth);
 					inputs[port] = ((Float) arguments[index]).floatValue();
 					hasAnalogValues = true;
 				} else if (LED_PORT.intValue() == port) {
@@ -489,7 +493,15 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 				}
 			}
 			if (hasAnalogValues) {
-				setAnalogOutputs(analogValues, hasDigitalValues);
+				if (configuration == 7) {
+					int from = start / 8;
+					int to = (start + arguments.length - 1) / 8 + 1;
+					for (int line = from; line < to; line++) {
+						scanMatrix(line);
+					}
+				} else {
+					setAnalogOutputs(analogValues, hasDigitalValues);
+				}
 			}
 			if (hasDigitalValues) {
 				setDigitalOutputs(digitalValues);
@@ -664,6 +676,22 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		if (!async) {
 			aoutCommandQueue.pop(1000);
 		}
+	}
+
+	private void scanMatrix(int line) {
+		String s = "a";
+		s += Integer.toHexString(line).toUpperCase();
+
+		int offset = line * 8;
+		for (int i = 0; i < 8; i++) {
+			int index = offset + i;
+			inputs[index] = inputs[index] < 0.0f ? 0.0f : inputs[index];
+			inputs[index] = inputs[index] > 1.0f ? 1.0f : inputs[index];
+			s += Integer.toHexString((int) (inputs[index] * 15.0f + 0.5f))
+					.toUpperCase();
+		}
+		s += "*";
+		write(s);
 	}
 
 	// private void setDigitalOutput(boolean[] values) {
