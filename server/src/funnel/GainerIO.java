@@ -496,7 +496,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 				if (configuration == 7) {
 					int from = start / 8;
 					int to = (start + arguments.length - 2) / 8;
-					printMessage("from:" + from + "," + "to:" + to);
 					for (int line = from; line <= to; line++) {
 						scanMatrix(line);
 					}
