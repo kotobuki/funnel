@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<actionScriptProperties mainApplicationPath="FunnelTest.as" version="1">
+<actionScriptProperties mainApplicationPath="MatrixLEDTest.as" version="1">
 <compiler additionalCompilerArguments="-default-background-color=0xCCCCCC -default-frame-rate 30 -default-size 500 500" copyDependentFiles="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="true" htmlPlayerVersion="9.0.0" htmlPlayerVersionCheck="true" outputFolderPath="bin" sourceFolderPath="src" strict="true" warn="true">
 <compilerSourcePath/>
 <libraryPath>
@@ -12,7 +12,9 @@
 </sourceAttachmentPath>
 </compiler>
 <applications>
-<application path="FunnelTest.as"/>
+<application path="MatrixLEDTest.as"/>
+<application path="GainerTest.as"/>
+<application path="src/ButtonAndLED.as"/>
 </applications>
 <buildCSSFiles/>
 </actionScriptProperties>

@@ -28,7 +28,7 @@ package funnel
 		public var autoUpdate:Boolean;
 	
 		private var _ioPorts:Array;
-		private var _updatedPortIndices:Array;
+		private var _updatedValues:Array;
 		private var _portCount:uint;
 		private var _task:Task;
 		private var _samplingInterval:int;
@@ -99,27 +99,28 @@ package funnel
 		}
 		
 		public function update():void {
-			_updatedPortIndices.sort(Array.NUMERIC);
-			var index:uint;
+			var value:Number;
+			var adjoiningValues:Array;
 			var startIndex:uint;
-			var outputValues:Array;
-			for (var i:uint = 0; i < _updatedPortIndices.length; ++i) {
-				var isNotContinuous:Boolean = _updatedPortIndices[i] - index != 1;
-				index = _updatedPortIndices[i];
-				if (isNotContinuous) {
-					if (i != 0)
-						exportValue(startIndex, outputValues);
-					
-					startIndex = index;
-					outputValues = new Array();
+			for (var i:uint = 0; i < _portCount; ++i) {
+				if (_updatedValues[i] != null) {
+					if (adjoiningValues == null) {
+						adjoiningValues = [];
+						startIndex = i;
+					}
+					adjoiningValues.push(_updatedValues[i]);
+					_updatedValues[i] = null;
+				} else if (adjoiningValues != null) {
+					exportValue(startIndex, adjoiningValues);
+					adjoiningValues = null;
 				}
-				outputValues.push(_ioPorts[index].value);
 			}
-			exportValue(startIndex, outputValues);
-			_updatedPortIndices = [];
+			if (adjoiningValues != null) {
+				exportValue(startIndex, adjoiningValues);
+			}
 		}
 		
-		private function exportValue(portNum:uint, portValues:Array):void {
+		public function exportValue(portNum:uint, portValues:Array):void {
 			var message:OSCMessage = new Out(portNum);
 			for (var i:uint = 0; i < portValues.length; ++i)
 				message.addValue(new OSCFloat(portValues[i]));
@@ -143,25 +144,25 @@ package funnel
 
 		private function initPortsWithConfiguration():void {
 			var configuration:Array = _config.config;
-			_ioPorts = new Array();
-			_updatedPortIndices = new Array();
-			for (var i:uint = 0; i < configuration.length; ++i) {
+			_portCount = configuration.length;
+			_ioPorts = new Array(_portCount);
+			_updatedValues = new Array(_portCount);
+			for (var i:uint = 0; i < _portCount; ++i) {
 				var aPort:Port = new Port(i, configuration[i]);
 				var type:uint = aPort.type;
 				if (type == Port.AOUT || type == Port.DOUT)
-					aPort.addEventListener(PortEvent.CHANGE, createOutputChangeHandler(i));
-				_ioPorts.push(aPort);
+					aPort.addEventListener(PortEvent.CHANGE, handleChange);
+				_ioPorts[i] = aPort;
 			}
-			_portCount = _ioPorts.length;
 		}
 		
-		private function createOutputChangeHandler(id:uint):Function {
-			return function(event:PortEvent):void {
-				if (autoUpdate)
-					exportValue(id, [event.target.value]);
-				else if (_updatedPortIndices.indexOf(id) == -1)
-					_updatedPortIndices.push(id);
-			}
+		private function handleChange(event:PortEvent):void {
+			var port:Port = event.target as Port;
+			var index:uint = port.number;
+			if (autoUpdate)
+				exportValue(index, [port.value]);
+			else
+				_updatedValues[index] = port.value;
 		}
 
 		private function connectServerAndInitIOModule(host:String, portNum:Number):void {
