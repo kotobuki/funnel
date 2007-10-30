@@ -1,4 +1,4 @@
-﻿/**
+/**
  * A hardware abstraction layer for the Gainer I/O module v1.0
  * 
  * @see http://gainer.cc
@@ -495,8 +495,9 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			if (hasAnalogValues) {
 				if (configuration == 7) {
 					int from = start / 8;
-					int to = (start + arguments.length - 1) / 8 + 1;
-					for (int line = from; line < to; line++) {
+					int to = (start + arguments.length - 2) / 8;
+					printMessage("from:" + from + "," + "to:" + to);
+					for (int line = from; line <= to; line++) {
 						scanMatrix(line);
 					}
 				} else {
@@ -554,7 +555,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		endCommandQueue.pop(1000);
 	}
 
-	// バッファを空にする
 	private void clear() {
 		bufferLast = 0;
 		bufferIndex = 0;
@@ -601,7 +601,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		}
 	}
 
-	// 指定した文字までバッファを読みバイト列で返す
 	private byte[] readBytesUntil(int interesting) {
 		if (bufferIndex == bufferLast)
 			return null;
@@ -628,7 +627,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		}
 	}
 
-	// 指定した文字までバッファを読み文字列で返す
 	private String readStringUntil(int interesting) {
 		byte b[] = readBytesUntil(interesting);
 		if (b == null)
