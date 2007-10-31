@@ -15,13 +15,14 @@ REQUIREMENTS
 * Runtime environments for software libraries
   * Various programming environments for ActionScript 3 (e.g. 
     Flash CS3, Flex Builder 2, Flex SDK 2)
-  * Processing 0125
+  * Processing 0133
   * Ruby 1.8.2 with OSC library by Tadayoshi Funaba
     http://raa.ruby-lang.org/project/osc/
 * Runtime environments for the Funnel Server
   * Java Runtime Environment 1.4.2 or higher
 * Hardware
   * Arduino USB/NG/Diecimila with Firmara firmware v1.0
+    Standard_Firmata_334
     http://www.arduino.cc/playground/Interfacing/Firmata
   * Gainer I/O module v1.0
 
@@ -55,6 +56,20 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
+Funnel 001 (2007.10.31)
+* added Configuration class and shortcuts for Gainer and 
+  Arduino
+* added Arduino examples for the Processing library
+* added an utility class and an example for Gainer.MODE7 for 
+  the AS3 library
+* added experimental XBee support, please refer the following 
+  scripts to configure
+  * sketchbook/configure_xbee_base.py
+  * sketchbook/configure_xbee_remote.py
+* added XBee example for the Ruby library
+* Funnel Server supports OSC via TCP only (i.e. no UDP support)
+* Not optimized
+
 Funnel 000 (2007.09.24)
 * The first public build
 * Supports Arduino NG, Arduino Diecimila and Gainer I/O module
@@ -63,4 +78,6 @@ Funnel 000 (2007.09.24)
 
 
 ACKNOWLEDGMENTS
-Funnel is developed with the support of the Exploratory Software Project (the first half of 2007) of IPA (Information-technology Promotion Agency).
+Funnel is developed with the support of the Exploratory 
+Software Project (the first half of 2007) of IPA (Information-
+technology Promotion Agency).
