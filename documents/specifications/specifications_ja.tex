@@ -43,7 +43,7 @@ Funnelのターゲットは、Flash CS3/Flex 2やProcessingをある程度扱ったことがあり、PC
 %\item 2007年7月：非公開レビュー（IAMASにて）→その後も必要に応じて随時
 %\item 2007年9月：公開ワークショップ（名古屋？）
 \item 2007年9月：最初の公開ビルドをリリース
-\item 2007年11月：公開ワークショップ（東京または名古屋）
+\item 2007年11月：公開ワークショップ（東京）
 \item 2007年12月：v1.0リリース
 \end{itemize}
 
@@ -109,7 +109,7 @@ function handler() {
 
 \begin{lstlisting}[caption={コード例\ref{pseudo_code}の実装例（ActionScript 3 + Funnel）},label=useless]
 var fio:Funnel = new Funnel(...);
-fio.port(0).addEventListener(RISING_EDGE, buttonPressed);
+fio.button.addEventListener(RISING_EDGE, buttonPressed);
 
 function buttonPressed():void {
 	...
@@ -188,7 +188,7 @@ Funnel用に開発するI/Oモジュール（FIO：フィオ）は、以下のパートから構成されます。
 \section{APIリファレンス}
 
 \subsection{データの表現について}
-入出力ポートのデータは、0から1までの実数（float型）で表現します。これにより、I/OモジュールごとにA/DやD/A（またはPWM）の分解能が異なる場合でも同様に扱えます。
+入出力ポートのデータは、0から1までの実数（AS3ではNumber、Processingではfloat）で表現します。これにより、I/OモジュールごとにA/DやD/A（またはPWM）の分解能が異なる場合でも同様に扱えます。
 
 \subsection{Funnelクラス}
 FunnelクラスはFunnelの基本となるクラスです。FunnelオブジェクトはPCに接続されたI/Oモジュールを抽象化して、共通の方法でアクセスできるようにします。
@@ -257,6 +257,7 @@ ConfigurationクラスはI/Oモジュールのコンフィギュレーションを設定するためのクラス
 名前 & 説明 \\\hline
 \texttt{GAINER} & Gainer I/Oモジュール \\
 \texttt{ARDUINO} & Arduino I/Oボード \\
+\texttt{XBEE} & XBeeモジュール \\
 \texttt{FUNNEL} & Funnel I/Oモジュール \\
 \texttt{IN} & デジタル入力 \\
 \texttt{OUT} & デジタル出力 \\
@@ -808,11 +809,11 @@ function handler():void {
 
 \begin{lstlisting}[caption={\ref{pcode2}の実装例（ActionScript 3 + Funnel）},label=useless]
 var fio:Funnel = new Funnel(...);
-var threshold:float = 0.3;
-var hysteresis:float = 0.1;
+var threshold:Number = 0.3;
+var hysteresis:Number = 0.1;
 
-fio.port(0).filters = [new SetPoint(threshold, hysteresis)];
-fio.port(0).addEventListener(FALLING_EDGE, handler);
+fio.analogInput(0).filters = [new SetPoint(threshold, hysteresis)];
+fio.analogInput(0).addEventListener(FALLING_EDGE, handler);
 
 function handler():void {
 	...
@@ -851,15 +852,15 @@ function blink():void {
 var fio:Funnel = new Funnel(...);
 var blinkOsc:Osc = new Osc(Osc.SQUARE, 2, 0); // 波形、周波数、回数（0は無限回）
 
-fio.port(0).filters = [blinkOsc];
+fio.digitalOutput(0).filters = [blinkOsc];
 blinkOsc.start();
 \end{lstlisting}
 
 \begin{lstlisting}[caption={\ref{pcode4}の実装例2（ActionScript 3 + Funnel）},label=useless]
 var fio:Funnel = new Funnel(...);
 
-fio.port(0).filters = [new Osc(Osc.SQUARE, 2, 0)]; // 波形、周波数、回数（0は無限回）
-fio.port(0).filters[0].start();
+fio.digitalOutput(0).filters = [new Osc(Osc.SQUARE, 2, 0)]; // 波形、周波数、回数（0は無限回）
+fio.digitalOutput(0).filters[0].start();
 \end{lstlisting}
 
 \newpage
@@ -895,17 +896,17 @@ function dimming():void {
 
 \begin{lstlisting}[caption={\ref{pcode6}の実装例1（ActionScript 3 + Funnel）},label=useless]
 var fio:Funnel = new Funnel(...);
-var dimmingOsc:Osc = new Osc(Wave.TRIANGLE, 0.5, 0); // 波形、周波数、回数（0は無限回）
+var dimmer:Osc = new Osc(Wave.TRIANGLE, 0.5, 0); // 波形、周波数、回数（0は無限回）
 
-fio.port(0).filters = [dimmingOsc];
-dimmingOsc.start();
+fio.analogOutput(0).filters = [dimmer];
+dimmer.start();
 \end{lstlisting}
 
 \begin{lstlisting}[caption={\ref{pcode6}の実装例2（ActionScript 3 + Funnel）},label=useless]
 var fio:Funnel = new Funnel(...);
 
-fio.port(0).filters = [new Osc(Wave.TRIANGLE, 0.5, 0)]; // 波形、周波数、回数（0は無限回）
-fio.port(0).filters[0].start();
+fio.analogOutput(0).filters = [new Osc(Wave.TRIANGLE, 0.5, 0)]; // 波形、周波数、回数（0は無限回）
+fio.analogOutput(0).filters[0].start();
 \end{lstlisting}
 
 \newpage
@@ -935,7 +936,7 @@ function finishTrigger():void {
 var fio:Funnel = new Funnel(...);
 var trigger:Osc = new Osc(Osc.IMPULSE, 1000/20, 1);	// 波形、周波数、回数
 
-fio.port(0).filters = [trigger];
+fio.digitalOutput(0).filters = [trigger];
 trigger.start();
 \end{lstlisting}
 
@@ -1265,6 +1266,7 @@ ActionScript 3をはじめとするJavaScriptを、Tamarin\footnote{http://www.mozilla-ja
 \newpage
 \section{更新履歴}
 \begin{description}
+\item[ 2007.10.31] AS3のサンプルで変数の型にfloatを指定していた部分をNumberに修正。XBeeに関する定義を追加。ビルド001で追加されたConfigurationを利用した形式にサンプルを修正。
 \item[ 2007.9.29] Configurationクラスを追加。FunnelクラスにanalogInput()などのメソッドを追加。
 \item[ 2007.9.22] FIOの構成をXBeeまたはXBee Proを想定したプランに変更。FunnelクラスとPortクラスの説明を分割。 その他細かな記述上の間違いを修正。
 \item[ 2007.9.13] Portのインスタンス変数にlastValueを追加。EventからvalueとlastValueを削除し、PortEventにtargetを追加。
