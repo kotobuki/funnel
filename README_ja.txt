@@ -25,6 +25,7 @@ Gainer I/OモジュールとArduino I/Oボードに対応し、それぞれの入出力ポート
 □ハードウェア
 ・Gainer I/Oモジュールv1.0
 ・Arduino USB/NG/Diecimila＋Firmata v1.0のファームウェア
+　Standard_Firmata_334
 　http://www.arduino.cc/playground/Interfacing/Firmata
 
 ■バグレポートや要望など
@@ -49,12 +50,26 @@ Keane Jarvi氏によるRXTXを使用しています。
 ・RXTX：http://www.rxtx.org/
 
 ■更新履歴
+Funnel 001（2007.10.31）
+・ConfigurationクラスとGainerおよびArduino用のショートカットを追加しま
+　した。
+・ProcesingライブラリにArduino用のサンプルコードを追加しました。
+・AS3ライブラリにGainer.MODE7のユーティリティークラスとサンプルを追加
+　しました。
+・実験的にXBeeのサポートを追加しました。XBeeモジュールの設定に関しては
+　次の設定ファイルを参照してください。
+　・sketchbook/configure_xbee_base.py
+　・sketchbook/configure_xbee_remote.py
+・RubyライブラリにXBee用のサンプルコードを追加しました。
+・Funnel ServerのOSCはTCPのみ対応しています（UDPのサポートはありません）。
+・パフォーマンスはまだ最適化されていません。
+
 Funnel 000（2007.09.24）
 ・最初の公開ビルドです。
 ・対象とするI/OモジュールはGainer I/OモジュールとArduino I/Oボードです。
 　ArduinoはFirmata 0.3.1ファームウェアを書き込んだArduino NGとArduino 
 　Diecimilaで動作確認を行いました。
-・Funnel ServerのOSCはTCPのみ対応しています。
+・Funnel ServerのOSCはTCPのみ対応しています（UDPのサポートはありません）。
 ・パフォーマンスはまだ最適化されていません。
 
 ■謝辞
