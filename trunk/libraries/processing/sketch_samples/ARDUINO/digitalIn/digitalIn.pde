@@ -23,7 +23,7 @@ void setup()
 void draw()
 {
   background(0);
-  text("digitalInput[13]: " + arduino.port(ARDUINO.digitalInput[13]).value,10,80); 
+  text("digitalInput[13]: " + arduino.digitalPin(13).value,10,80); 
 }
   
 

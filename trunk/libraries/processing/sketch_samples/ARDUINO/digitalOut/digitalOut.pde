@@ -26,9 +26,9 @@ void draw()
   background(170);
   
   if(mousePressed){
-    arduino.port(ARDUINO.digitalOutput[ledPin]).value = 1.0;
+    arduino.digitalPin(ledPin).value = 1.0;
   }else{
-    arduino.port(ARDUINO.digitalOutput[ledPin]).value = 0.0;
+    arduino.digitalPin(ledPin).value = 0.0;
   }
 
 }

@@ -23,13 +23,13 @@ void setup()
   border = new SetPoint(0.3,0.1);
 
   Filter filters[] = {border};
-  gainer.port(GAINER.analogInput[0]).filters = filters;
+  gainer.analogInput(0).filters = filters;
 }
 
 void draw()
 {
   background(backgroundcolor);
-  text("value:"+gainer.port(GAINER.analogInput[0]).value,30,80);
+  text("value:"+gainer.analogInput(0).value,30,80);
   
 }
 

@@ -21,7 +21,7 @@ void draw()
   background(170);
   
   float val = float(mouseX)/width;
-  gainer.port(GAINER.analogOutput[0]).value = val;
+  gainer.analogOutput(0).value = val;
 }
   
 

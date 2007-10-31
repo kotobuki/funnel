@@ -26,8 +26,7 @@ void draw()
   background(170);
   
   float val = float(mouseX)/width;
-  arduino.port(ARDUINO.pwm[0]).value = val;
-
+  arduino.digitalPin(pwmPin).value = val;
 
 }
 
