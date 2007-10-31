@@ -23,10 +23,10 @@ void setup()
 void draw()
 {
   background(0);
-  text("analogInput[0]: " + gainer.port(GAINER.analogInput[0]).value,10,80); 
-  text("analogInput[1]: " + gainer.port(GAINER.analogInput[1]).value,10,110);
-  text("analogInput[2]: " + gainer.port(GAINER.analogInput[2]).value,10,140);
-  text("analogInput[3]: " + gainer.port(GAINER.analogInput[3]).value,10,170);
+  text("analogInput[0]: " + gainer.analogInput(0).value,10,80);
+  text("analogInput[1]: " + gainer.analogInput(1).value,10,110);
+  text("analogInput[2]: " + gainer.analogInput(2).value,10,140);
+  text("analogInput[3]: " + gainer.analogInput(3).value,10,170);
 }
   
 

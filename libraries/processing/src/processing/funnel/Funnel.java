@@ -393,6 +393,34 @@ public final class Funnel implements Runnable{
 	}
 	
 
+	//Gainerショートカット
+	public Port analogOutput(int nPort){
+		return port(GAINER.analogOutput[nPort]);
+	}
+	
+	public Port analogInput(int nPort){
+		return port(GAINER.analogInput[nPort]);
+	}
+	
+	public Port digitalOutput(int nPort){
+		return port(GAINER.digitalOutput[nPort]);
+	}
+	
+	public Port digitalInput(int nPort){
+		return port(GAINER.digitalInput[nPort]);
+	}
+	
+	//Arduinoショートカット
+	public Port analogPin(int nPort){
+		return port(ARDUINO.analogInput[nPort]);
+	}
+	
+	public Port digitalPin(int nPort){
+		return port(ARDUINO.digitalPin[nPort]);
+	}
+	
+	
+	
 	//
 	// funnel Port
 	public class Port {
