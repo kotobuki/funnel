@@ -15,7 +15,7 @@ package {
 	{
 		public function ArduinoTest() {	
 			var config:Object = ARDUINO;
-			config.setDigitalPinMode(0, PWM);
+			config.setDigitalPinMode(11, PWM);
 
 			var aio:Funnel = new Funnel(config);
 			aio.addEventListener(READY, trace);
