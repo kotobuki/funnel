@@ -23,11 +23,6 @@ io:
   # Connect an I/O module
   # Double click on "server/funnel_server.jar" to launch Funnel Server
   # See examples at the following location
-    * !ActionScript 3 => libraries/actionscript3/src/!FunnelTestArduino.as (or !FunnelTest.as)
-    * Processing => libraries/processing/sketch_samples/
+    * !ActionScript 3 => libraries/actionscript3/src/!ArduinoTest.as (or !GainerTest.as)
+    * Processing => libraries/processing/sketch_samples/ARDUINO (or GAINER)
     * Ruby => libraries/ruby/arduino_test.rb (or gainer_test.rb)
-
- 
- 
- 
- 
