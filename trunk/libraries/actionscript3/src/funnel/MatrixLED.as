@@ -1,4 +1,4 @@
-package funnel.shortcuts 
+package funnel 
 {
 	import funnel.Funnel;
 	import flash.display.BitmapData;
@@ -11,35 +11,27 @@ package funnel.shortcuts
 			this.gio = gio;
 		}
 		
-		public function setPixel(x:uint, y:uint, color:Number):void {
-			if (0 <= x && x <= 7 && 0 <= y && y <= 7) {
-				gio.analogOutput(y * 8 + x).value = color;
-			} 
-		}
-		
 		public function scanMatrix(image:*):void {
-			if (image is BitmapData) {
+			if (image is BitmapData && image.width == 8 && image.height == 8) {
 				var i:uint;
 				var j:uint;
 				var data:BitmapData = image;
-				image = [];
-				var nx:uint = Math.min(data.width, 8);
-				var ny:uint = Math.min(data.height, 8);
+				var pixels:Array = [];
 				var r:uint;
 				var g:uint;
 				var b:uint;
 				var rgb:uint;
-				for (i = 0; i < ny; ++i) {
-					for (j = 0; j < nx; ++j) {
+				for (i = 0; i < 8; ++i) {
+					for (j = 0; j < 8; ++j) {
 						rgb = data.getPixel(j, i);
 						r = ((rgb & 0xff0000) >> 16);
 						g = ((rgb & 0xff00) >> 8);
 						b = ( rgb & 0xff);  
-						image.push((0.3*r + 0.59*g + 0.11*b) / 255);
+						pixels.push((0.3*r + 0.59*g + 0.11*b) / 255);
 					}
-				} 
-			}
-			if (image is Array && image.length <= 64) {
+				}
+				gio.exportValue(0, pixels);
+			} else if (image is Array && image.length == 64) {
 				gio.exportValue(0, image);
 			}
 		}
