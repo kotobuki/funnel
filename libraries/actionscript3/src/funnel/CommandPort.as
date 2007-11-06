@@ -25,6 +25,7 @@ package funnel
 			var task:Task = new Task();
 			waitEvent(_socket, ProgressEvent.SOCKET_DATA).completed = cmd(checkError, task);
 			_socket.writeBytes(command.toBytes());
+			_socket.flush();
 			return task;
 		}
 		

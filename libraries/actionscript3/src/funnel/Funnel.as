@@ -21,7 +21,6 @@ package funnel
 	import funnel.osc.OSCPacket;
 	import funnel.osc.OSCMessage;
 	import funnel.osc.OSCFloat;
-	
 
 	public class Funnel extends EventDispatcher
 	{
@@ -120,7 +119,7 @@ package funnel
 			}
 		}
 		
-		public function exportValue(portNum:uint, portValues:Array):void {
+		internal function exportValue(portNum:uint, portValues:Array):void {
 			var message:OSCMessage = new Out(portNum);
 			for (var i:uint = 0; i < portValues.length; ++i)
 				message.addValue(new OSCFloat(portValues[i]));
