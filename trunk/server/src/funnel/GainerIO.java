@@ -117,6 +117,8 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 			PORT_DOUT, PORT_DOUT, };
 
+	static private final String version = "?1.";
+
 	private int configuration = 0;
 	private float[] inputs;
 
@@ -134,26 +136,36 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		this.parent = server;
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 
+		rebootCommandQueue = new funnel.BlockingQueue();
+		endCommandQueue = new funnel.BlockingQueue();
+		versionCommandQueue = new funnel.BlockingQueue();
+		ledCommandQueue = new funnel.BlockingQueue();
+		configCommandQueue = new funnel.BlockingQueue();
+		aoutCommandQueue = new funnel.BlockingQueue();
+		doutCommandQueue = new funnel.BlockingQueue();
+		ainPortRange = new funnel.PortRange();
+		dinPortRange = new funnel.PortRange();
+		aoutPortRange = new funnel.PortRange();
+		doutPortRange = new funnel.PortRange();
+		buttonPortRange = new funnel.PortRange();
+
 		try {
 			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
 
 			while (portList.hasMoreElements()) {
 				CommPortIdentifier portId = (CommPortIdentifier) portList
 						.nextElement();
-
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-					if (portId.getName().equals(serialPortName)) {
-						port = (SerialPort) portId.open("serial gainer", 2000); //$NON-NLS-1$
-						input = port.getInputStream();
-						output = port.getOutputStream();
-						port.setSerialPortParams(rate, databits, stopbits,
-								parity);
-						port.addEventListener(this);
-						port.notifyOnDataAvailable(true);
-
-						parent.printMessage(Messages
-								.getString("IOModule.Started") //$NON-NLS-1$
-								+ serialPortName);
+					if (openSerialPort(portId)) {
+						if (isGainerIO(serialPortName)) {
+							parent.printMessage(Messages
+									.getString("IOModule.Started") //$NON-NLS-1$
+									+ portId.getName());
+							break;
+						} else {
+							parent.printMessage("tried: " + portId.getName());
+							closeSerialPort();
+						}
 					}
 				}
 			}
@@ -169,19 +181,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			printMessage(Messages.getString("IOModule.PortNotFoundError")); //$NON-NLS-1$
 			throw new IllegalArgumentException(""); //$NON-NLS-1$
 		}
-
-		rebootCommandQueue = new funnel.BlockingQueue();
-		endCommandQueue = new funnel.BlockingQueue();
-		versionCommandQueue = new funnel.BlockingQueue();
-		ledCommandQueue = new funnel.BlockingQueue();
-		configCommandQueue = new funnel.BlockingQueue();
-		aoutCommandQueue = new funnel.BlockingQueue();
-		doutCommandQueue = new funnel.BlockingQueue();
-		ainPortRange = new funnel.PortRange();
-		dinPortRange = new funnel.PortRange();
-		aoutPortRange = new funnel.PortRange();
-		doutPortRange = new funnel.PortRange();
-		buttonPortRange = new funnel.PortRange();
 	}
 
 	public void dispose() {
@@ -761,6 +760,71 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			output.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private boolean openSerialPort(CommPortIdentifier portId) {
+		try {
+			port = (SerialPort) portId.open("GainerSerialPort", 2000);
+			input = port.getInputStream();
+			output = port.getOutputStream();
+			port.setSerialPortParams(rate, databits, stopbits, parity);
+			port.addEventListener(this);
+			port.notifyOnDataAvailable(true);
+		} catch (gnu.io.PortInUseException e) {
+			printMessage(e.toString());
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	private void closeSerialPort() {
+		try {
+			if (input != null)
+				input.close();
+			if (output != null)
+				output.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		input = null;
+		output = null;
+
+		try {
+			if (port != null) {
+				port.notifyOnDataAvailable(false);
+				port.removeEventListener();
+				port.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		port = null;
+	}
+
+	private boolean isGainerIO(String specifiedName) {
+		String portName = port.getName();
+		if (specifiedName != null) {
+			return portName.equals(specifiedName);
+		} else {
+			try {
+				write("Q*"); //$NON-NLS-1$
+				rebootCommandQueue.pop(100);
+				rebootCommandQueue.sleep(100);
+				write("?*"); //$NON-NLS-1$
+				String versionString = (String) versionCommandQueue.pop(100);
+				if (versionString == null) {
+					return false;
+				} else {
+					return versionString.startsWith(version);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
 		}
 	}
 }

@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 001 (2007-10-30)";
+	private static final String buildName = "Funnel 002 (2007-11-07)";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
@@ -115,7 +115,14 @@ public class FunnelServer extends Frame {
 			if (modules.get("com") == null) { //$NON-NLS-1$
 				printMessage(Messages
 						.getString("FunnelServer.PortIsNotSpecified")); //$NON-NLS-1$
-				serialPort = IOModule.getSerialPortName();
+				if (!type.equalsIgnoreCase("Gainer")) {
+					serialPort = IOModule.getSerialPortName();
+					if (serialPort == null) {
+						printMessage(Messages
+								.getString("FunnelServer.NoSerialPorts")); //$NON-NLS-1$
+						return;
+					}
+				}
 			} else {
 				serialPort = modules.get("com").toString(); //$NON-NLS-1$
 			}
@@ -124,11 +131,6 @@ public class FunnelServer extends Frame {
 			commandPort = "9000"; //$NON-NLS-1$
 			notificationPort = "9001"; //$NON-NLS-1$
 			serialPort = IOModule.getSerialPortName();
-		}
-
-		if (serialPort == null) {
-			printMessage(Messages.getString("FunnelServer.NoSerialPorts")); //$NON-NLS-1$
-			return;
 		}
 
 		// Dump read setting from the settings file
