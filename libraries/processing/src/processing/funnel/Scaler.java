@@ -59,7 +59,7 @@ public class Scaler implements Filter{
 	public float processSample(float val, float[] buffer){
 		
 		float inRange = inMax - inMin;
-		float outRange = outMax = outMin;
+		float outRange = outMax - outMin;
 		float normVal = (val - inMin) / inRange;
 		if(limiter){
 			normVal = Math.max(0, Math.min(1,normVal));
