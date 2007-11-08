@@ -102,12 +102,13 @@ public final class Funnel implements Runnable{
 		while(isWorking){
 			long now = System.currentTimeMillis();
 
-			int updateInterval = (int)(1000.0f/parent.frameRate);
-			if(now - updateTickMillis > updateInterval && autoUpdate){
+			//int updateInterval = (int)(1000.0f/parent.frameRate);
+			int updateInterval = 30;
+			if((now - updateTickMillis > updateInterval) && autoUpdate){
 				//OUTPUT‚Ìƒ|[ƒg‚Ìˆ—
 				update();
 				
-				//System.out.println("update!!");
+				System.out.println("update!! " + updateInterval + " parent.framerate" + parent.frameRate);
 				updateTickMillis = System.currentTimeMillis();
 			}
 			
