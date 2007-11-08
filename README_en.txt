@@ -56,6 +56,11 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
+Funnel 002 (2007.11.08)
+* fixed bugs in Processing library (Scaler and Convolution)
+* fixed a bug in ActionScript 3 library
+  http://gainer.cc/forum/index.php?topic=205
+
 Funnel 001 (2007.10.31)
 * added Configuration class and shortcuts for Gainer and 
   Arduino
