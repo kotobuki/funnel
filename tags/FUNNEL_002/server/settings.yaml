@@ -1,0 +1,20 @@
+server:
+  command port: 9000
+  notification port: 9001
+
+io:
+  type: Gainer
+  com: 
+
+...
+# Just as a reference. The following lines after '...' will be ignored.
+server:
+  command port: 9000
+  notification port: 9001
+
+# type: {Funnel, Gainer, Arduino}
+# com: e.g. COM3 (on Windows XP)
+# com: e.g. /dev/cu.usbserial-******** (on Mac OS X)
+io:
+  type: Arduino
+  com: COM3
