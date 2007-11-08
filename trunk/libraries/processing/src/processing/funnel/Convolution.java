@@ -22,6 +22,7 @@ public class Convolution implements Filter{
 		for(int i=0;i<coef.length;i++){
 			v += coef[i] * buffer[buffer.length-1-i]; 
 		}
+
 		return v;
 	}
 }

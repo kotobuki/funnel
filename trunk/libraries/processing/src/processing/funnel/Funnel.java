@@ -467,6 +467,7 @@ public final class Funnel implements Runnable{
 			
 			filters = new Filter[0];
 			buffer = new LinkedList();
+			buffer.addLast(new Float(0));//dummy
 			
 			switch(config){
 			case GAINER.PORT_AIN:
@@ -509,33 +510,49 @@ public final class Funnel implements Runnable{
 			
 			history += value;
 			average = history / times;
-			
-			buffer.addLast(new Float(value));
-			if(buffer.size()>bufferSize){
-				buffer.removeFirst();
-			}
+
 			
 			//もしフィルターがセットされていたら
 			//Bufferに値がないうちは
 			//フィルターの処理をしてからvalueの値を決める
-			if(filters.length == 0 || buffer.size() < 8){
+			if(filters.length == 0 ){
 				updateValue(value);
+				
+				buffer.addLast(new Float(value));
+				if(buffer.size()>bufferSize){
+					buffer.removeFirst();
+				}
+				
 			}else{
 				float tempValue = value;
 				float fbuf[] = new float[buffer.size()];
-				for(int i=0;i<fbuf.length;i++){//LinkedListからfloat[]へ
-					Float f = (Float)buffer.get(i);					
+				int i;
+				for(i=0;i<fbuf.length-1;i++){//LinkedListからfloat[]へ
+					Float f = (Float)buffer.get(i+1);					
 					fbuf[i] = f.floatValue();
 				}
+
 				
 				boolean isSetPoint = false;
-				for(int i=0;i<filters.length;i++){
-					if(filters[i].getName()=="SetPoint"){
+				for(int n=0;n<filters.length;n++){
+					if(filters[n].getName()=="SetPoint"){
 						isSetPoint = true;
+					}else if(filters[n].getName()=="Convolution"){
+						fbuf[i] = tempValue;
+						buffer.addLast(new Float(tempValue));
+						if(buffer.size()>bufferSize){
+							buffer.removeFirst();
+						}else{
+							break;
+						}
 					}
-					tempValue = filters[i].processSample(tempValue, fbuf);
+					tempValue = filters[n].processSample(tempValue, fbuf);
 				}
-		
+				buffer.addLast(new Float(tempValue));
+				if(buffer.size()>bufferSize){
+					buffer.removeFirst();
+				}
+
 				if(isSetPoint ){
 					if(onRisingEdge != null  && this.value == 0 && tempValue != 0){
 						try{
@@ -569,6 +586,7 @@ public final class Funnel implements Runnable{
 					
 				}
 				updateValue(tempValue);
+
 			}
 	
 		}
