@@ -50,6 +50,11 @@ Keane Jarvi氏によるRXTXを使用しています。
 ・RXTX：http://www.rxtx.org/
 
 ■更新履歴
+Funnel 002 (2007.11.08)
+・Processing用ライブラリのバグを修正（ScalerとConvolution）
+・ActionScript 3ライブラリのバグを修正
+　http://gainer.cc/forum/index.php?topic=205
+
 Funnel 001（2007.10.31）
 ・ConfigurationクラスとGainerおよびArduino用のショートカットを追加しま
 　した。

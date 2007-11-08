@@ -4,7 +4,7 @@
 import serial
 import time
 
-sp = serial.Serial('/dev/tty.usbserial-0000101D', 9600, timeout = 2)
+sp = serial.Serial('/dev/tty.usbserial-A1001hqj', 9600, timeout = 2)
 print sp
 print ""
 
