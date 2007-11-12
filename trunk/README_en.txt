@@ -56,6 +56,9 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
+Funnel 003 (2007.11.12)
+* fixed a bug in Processing library (OutOfMemory error on Windows)
+
 Funnel 002 (2007.11.08)
 * fixed bugs in Processing library (Scaler and Convolution)
 * fixed a bug in ActionScript 3 library
