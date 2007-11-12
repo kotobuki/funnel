@@ -467,7 +467,9 @@ public final class Funnel implements Runnable{
 			
 			filters = new Filter[0];
 			buffer = new LinkedList();
-			buffer.addLast(new Float(0));//dummy
+			for(int i=0;i<bufferSize;i++){
+				buffer.addLast(new Float(0));//dummy
+			}
 			
 			switch(config){
 			case GAINER.PORT_AIN:
@@ -513,15 +515,13 @@ public final class Funnel implements Runnable{
 
 			
 			//もしフィルターがセットされていたら
-			//Bufferに値がないうちは
-			//フィルターの処理をしてからvalueの値を決める
+			//bufferが必要なのはConvolutionのみ
 			if(filters.length == 0 ){
-				updateValue(value);
-				
-				buffer.addLast(new Float(value));
-				if(buffer.size()>bufferSize){
-					buffer.removeFirst();
-				}
+				updateValue(value);				
+//				buffer.addLast(new Float(value));
+//				if(buffer.size()>bufferSize){
+//					buffer.removeFirst();
+//				}
 				
 			}else{
 				float tempValue = value;
@@ -542,15 +542,9 @@ public final class Funnel implements Runnable{
 						buffer.addLast(new Float(tempValue));
 						if(buffer.size()>bufferSize){
 							buffer.removeFirst();
-						}else{
-							break;
 						}
 					}
 					tempValue = filters[n].processSample(tempValue, fbuf);
-				}
-				buffer.addLast(new Float(tempValue));
-				if(buffer.size()>bufferSize){
-					buffer.removeFirst();
 				}
 
 				if(isSetPoint ){

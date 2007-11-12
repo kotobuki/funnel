@@ -54,7 +54,7 @@ public final class NotifyPort extends TcpOSCPort implements Runnable {
 		byte[] buffer = new byte[1536];
 		
 		int readBytes = in.read(buffer);
-		if(readBytes>0){
+		if(readBytes>0 && readBytes <109){
 			OSCPacket oscPacket = converter.convert(buffer, readBytes);
 			dispatcher.dispatchPacket(oscPacket);
 		}
