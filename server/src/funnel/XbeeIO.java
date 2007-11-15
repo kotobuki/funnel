@@ -29,6 +29,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private static final int IDX_IO_STATUS_START = 11;
 	private static final int RX_IO_STATUS_16BIT = 0x83;
 	private static final int AT_COMMAND_RESPONSE = 0x88;
+	private static final int TX_STATUS_MESSAGE = 0x89;
 
 	private static final int MAX_IO_PORT = 9;
 	private static final int MAX_CLIENTS = 32;
@@ -50,17 +51,22 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private InputStream input;
 	private OutputStream output;
 
-	private final int rate = 9600;
+	private final int rate = 115200;
 	private final int parity = SerialPort.PARITY_NONE;
 	private final int databits = 8;
 	private final int stopbits = SerialPort.STOPBITS_1;
 
-	// private funnel.PortRange dioPortRange;
-	// private funnel.PortRange pwmPortRange;
+	private funnel.PortRange dioPortRange;
+	private funnel.PortRange pwmPortRange;
 
 	public XbeeIO(FunnelServer server, String serialPortName) {
 		this.parent = server;
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
+		dioPortRange = new funnel.PortRange();
+		dioPortRange.setRange(0, 9); // 9 ports (series 1), 10 ports (series
+		// 2)
+		pwmPortRange = new funnel.PortRange();
+		pwmPortRange.setRange(10, 13); // 4 ports
 
 		try {
 			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
@@ -76,6 +82,10 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 						output = port.getOutputStream();
 						port.setSerialPortParams(rate, databits, stopbits,
 								parity);
+						port
+								.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN);
+						port
+								.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_OUT);
 						port.addEventListener(this);
 						port.notifyOnDataAvailable(true);
 
@@ -176,19 +186,20 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void setOutput(Object[] arguments) {
-		// int start = ((Integer) arguments[0]).intValue();
-		// for (int i = 0; i < (arguments.length - 1); i++) {
-		// int port = start + i;
-		// int index = 1 + i;
-		// if (arguments[index] != null && arguments[index] instanceof Float) {
-		// if (dioPortRange.contains(port)) {
-		// digitalWrite(port, FLOAT_ZERO.equals(arguments[index]) ? 0
-		// : 1);
-		// } else if (pwmPortRange.contains(port)) {
-		// analogWrite(port, ((Float) arguments[index]).floatValue());
-		// }
-		// }
-		// }
+		int start = ((Integer) arguments[0]).intValue();
+		for (int i = 0; i < (arguments.length - 1); i++) {
+			int port = start + i;
+			int index = 1 + i;
+			if (arguments[index] != null && arguments[index] instanceof Float) {
+				if (dioPortRange.contains(port)) {
+					// digitalWrite(port, FLOAT_ZERO.equals(arguments[index]) ?
+					// 0 : 1);
+					printMessage("NOT SUPPORTED: DO");
+				} else if (pwmPortRange.contains(port)) {
+					analogWrite(port, ((Float) arguments[index]).floatValue());
+				}
+			}
+		}
 		// NOTE: Output side control is not supported in XBee series 1
 		// TODO: Implement output control support for XBee series 2
 		return;
@@ -339,6 +350,22 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 				parent.printMessage(info);
 			}
 			break;
+		case TX_STATUS_MESSAGE:
+			// {0x7E}+{0x00+0x03}+{0x89}+{0x01}+{status}+{sum}
+			switch (data[5]) {
+			case 0x01:
+				parent.printMessage("TX Status: No ACK");
+				break;
+			case 0x02:
+				parent.printMessage("TX Status: CCA failure");
+				break;
+			case 0x03:
+				parent.printMessage("TX Status: Purged");
+				break;
+			default:
+				break;
+			}
+			break;
 		default:
 			String s = "UNSUPPORTED API: ";
 			s += Integer.toHexString(data[IDX_API_IDENTIFIER]);
@@ -348,6 +375,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	}
 
 	// private void digitalWrite(int pin, int mode) {
+	// // parent.printMessage("digitalWrite(" + pin + ", " + mode + ")");
 	// int bitMask = 1 << pin;
 	// int outData = 0;
 	//
@@ -376,31 +404,41 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	// rfData[13] = (byte) (0xFF - (sum & 0xFF));
 	// }
 
-	// private void analogWrite(int pin, float value) {
-	// int intValue = Math.round(value * 1023.0f);
-	// intValue = (intValue < 0) ? 0 : intValue;
-	// intValue = (intValue > 1023) ? 1023 : intValue;
-	//
-	// byte[] rfData = new byte[12];
-	// rfData[0] = 0x7E; // Frame Delimiter
-	// rfData[1] = 0x00; // Length MSB
-	// rfData[2] = 0x08; // Length LSB
-	// rfData[3] = (byte) 0x08; // API ID
-	// rfData[4] = 0x01; // Frame ID
-	// rfData[5] = 'M'; // Source Address LSB
-	// rfData[6] = '0'; // RSSI
-	// rfData[7] = '0'; // Options
-	// rfData[8] = '3'; // Options
-	// rfData[9] = 'F'; // Samples
-	// rfData[10] = 'F'; // I/O Enable MSB
-	// int sum = 0;
-	// for (int i = 3; i < 11; i++) {
-	// sum += rfData[i];
-	// }
-	// rfData[11] = (byte) (0xFF - (sum & 0xFF));
-	//
-	// sendTransmitRequest(DEFAULT_REMOTE_ADDRESS, rfData);
-	// }
+	private void analogWrite(int pin, float value) {
+		// parent.printMessage("analogWrite(" + pin + ", " + value + ")");
+		// int intValue = Math.round(value * 1023.0f);
+		// intValue = (intValue < 0) ? 0 : intValue;
+		// intValue = (intValue > 1023) ? 1023 : intValue;
+
+		// byte[] rfData = new byte[12];
+		// rfData[0] = 0x7E; // Frame Delimiter
+		// rfData[1] = 0x00; // Length MSB
+		// rfData[2] = 0x08; // Length LSB
+		// rfData[3] = (byte) 0x08; // API ID
+		// rfData[4] = 0x01; // Frame ID
+		// rfData[5] = 'M'; // Source Address LSB
+		// rfData[6] = '0'; // RSSI
+		// rfData[7] = '0'; // Options
+		// rfData[8] = '3'; // Options
+		// rfData[9] = 'F'; // Samples
+		// rfData[10] = 'F'; // I/O Enable MSB
+		// int sum = 0;
+		// for (int i = 3; i < 11; i++) {
+		// sum += rfData[i];
+		// }
+		// rfData[11] = (byte) (0xFF - (sum & 0xFF));
+
+		int intValue = Math.round(value * 255.0f);
+		intValue = (intValue < 0) ? 0 : intValue;
+		intValue = (intValue > 255) ? 255 : intValue;
+
+		byte[] rfData = new byte[3];
+		rfData[0] = (byte) (0xE0 + pin);
+		rfData[1] = (byte) (intValue % 128);
+		rfData[2] = (byte) (intValue >> 7);
+
+		sendTransmitRequest(DEFAULT_REMOTE_ADDRESS, rfData);
+	}
 
 	private void sendATCommand(String command) {
 		byte[] outData = new byte[2 + command.length()];
@@ -412,32 +450,46 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		sendCommand(outData);
 	}
 
-	// private void sendTransmitRequest(int destAddress, byte[] rfData) {
-	// byte[] outData = new byte[5 + rfData.length];
-	// outData[0] = 0x01; // Transmit Request
-	// outData[1] = 0x01; // Frame ID
-	// outData[2] = (byte) (destAddress >> 8);
-	// outData[3] = (byte) (destAddress & 0xFF);
-	// outData[4] = 0x00; // Options
-	// for (int i = 0; i < rfData.length; i++) {
-	// outData[5 + i] = rfData[i];
-	// }
-	// sendCommand(outData);
-	// }
+	private void sendTransmitRequest(int destAddress, byte[] rfData) {
+		byte[] outData = new byte[5 + rfData.length];
+		outData[0] = 0x01; // Transmit Request
+		outData[1] = 0x01; // Frame ID
+		outData[2] = (byte) (destAddress >> 8);
+		outData[3] = (byte) (destAddress & 0xFF);
+		outData[4] = 0x00; // Options (with ACK)
+		for (int i = 0; i < rfData.length; i++) {
+			outData[5 + i] = rfData[i];
+		}
+		sendCommand(outData);
+	}
 
 	private void sendCommand(byte[] frameData) {
-		byte[] outData = new byte[4 + frameData.length];
+		byte[] outData = new byte[128];
 		int sum = 0;
+		int length = 0;
+		int escaped = 0;
 
-		outData[0] = 0x7E;
-		outData[1] = 0x00;
-		outData[2] = (byte) (outData.length - 4);
-		for (int i = 3, idx = 0; i < (outData.length - 1); i++, idx++) {
-			outData[i] = frameData[idx];
+		for (int idx = 0; idx < frameData.length; idx++) {
+			switch (frameData[idx]) {
+			case FRAME_DELIMITER:
+			case ESCAPE:
+				outData[3 + length] = ESCAPE;
+				length++;
+				outData[3 + length] = (byte) (frameData[idx] ^ 0x20);
+				length++;
+				escaped++;
+				break;
+			default:
+				outData[3 + length] = frameData[idx];
+				length++;
+				break;
+			}
 			sum += frameData[idx];
 		}
-		outData[outData.length - 1] = (byte) (0xFF - (sum & 0xFF));
-
+		outData[0] = 0x7E; // FRAME_DELIMITER
+		outData[1] = 0x00; // Length (MSB)
+		outData[2] = (byte) (length - escaped); // Length (LSB)
+		outData[3 + length] = (byte) (0xFF - (sum & 0xFF)); // Checksum
 		try {
 			output.write(outData);
 		} catch (IOException e) {
