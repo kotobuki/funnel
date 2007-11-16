@@ -16,8 +16,8 @@ import gnu.io.SerialPortEventListener;
 public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private static final int FRAME_DELIMITER = 0x7E;
 	private static final int ESCAPE = 0x7D;
-	// private static final int XON = 0x11;
-	// private static final int XOFF = 0x13;
+	private static final int XON = 0x11;
+	private static final int XOFF = 0x13;
 	private static final int IDX_LENGTH_LSB = 2;
 	private static final int IDX_API_IDENTIFIER = 3;
 	private static final int IDX_SOURCE_ADDRESS_MSB = 4;
@@ -30,6 +30,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private static final int RX_IO_STATUS_16BIT = 0x83;
 	private static final int AT_COMMAND_RESPONSE = 0x88;
 	private static final int TX_STATUS_MESSAGE = 0x89;
+	private static final int MODEM_STATUS = 0x8A;
 
 	private static final int MAX_IO_PORT = 9;
 	private static final int MAX_CLIENTS = 32;
@@ -46,6 +47,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private int rxSum = 0;
 	private float[][] inputData = new float[MAX_CLIENTS][MAX_IO_PORT];
 	private int[] rssi = new int[MAX_CLIENTS];
+
+	// private funnel.BlockingQueue aoutCommandQueue;
 
 	private SerialPort port;
 	private InputStream input;
@@ -67,6 +70,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		// 2)
 		pwmPortRange = new funnel.PortRange();
 		pwmPortRange.setRange(10, 13); // 4 ports
+
+		// aoutCommandQueue = new funnel.BlockingQueue();
 
 		try {
 			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
@@ -94,6 +99,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 								+ serialPortName);
 
 						sendATCommand("VR");
+						sendATCommand("MY");
+						sendATCommand("ID");
 						sendATCommand("ND");
 					}
 				}
@@ -348,11 +355,24 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 				info += Integer.toHexString(data[8]);
 				info += Integer.toHexString(data[9]);
 				parent.printMessage(info);
+			} else if (data[5] == 'M' && data[6] == 'Y') {
+				String info = "SOURCE ADDRESS: ";
+				info += Integer.toHexString(data[8]);
+				info += Integer.toHexString(data[9]);
+				parent.printMessage(info);
+			} else if (data[5] == 'I' && data[6] == 'D') {
+				String info = "PAN ID: ";
+				info += Integer.toHexString(data[8]);
+				info += Integer.toHexString(data[9]);
+				parent.printMessage(info);
 			}
 			break;
 		case TX_STATUS_MESSAGE:
-			// {0x7E}+{0x00+0x03}+{0x89}+{0x01}+{status}+{sum}
-			switch (data[5]) {
+			// {0x7E}+{0x00+0x03}+{0x89}+{Frame ID}+{Status}+{Checksum}
+			switch (data[IDX_API_IDENTIFIER + 2]) {
+			// case 0x00:
+			// parent.printMessage("TX Status: ACK");
+			// break;
 			case 0x01:
 				parent.printMessage("TX Status: No ACK");
 				break;
@@ -361,6 +381,35 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 				break;
 			case 0x03:
 				parent.printMessage("TX Status: Purged");
+				break;
+			default:
+				break;
+			}
+			// aoutCommandQueue.push(new Integer(data[IDX_API_IDENTIFIER + 2]));
+			break;
+		case MODEM_STATUS:
+			// {0x7E}+{0x00+0x02}+{0x8A}+{cmdData}+{sum}
+			switch (data[IDX_API_IDENTIFIER + 1]) {
+			case 0x00:
+				parent.printMessage("Modem Status: Hardware reset");
+				break;
+			case 0x01:
+				parent.printMessage("Modem Status: Watchdog timer reset");
+				break;
+			case 0x02:
+				parent.printMessage("Modem Status: Associated");
+				break;
+			case 0x03:
+				parent.printMessage("Modem Status: Disassociated");
+				break;
+			case 0x04:
+				parent.printMessage("Modem Status: Synchronization Lost");
+				break;
+			case 0x05:
+				parent.printMessage("Modem Status: Coordinator realignment");
+				break;
+			case 0x06:
+				parent.printMessage("Modem Status: Coordinator started");
 				break;
 			default:
 				break;
@@ -461,6 +510,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 			outData[5 + i] = rfData[i];
 		}
 		sendCommand(outData);
+		// aoutCommandQueue.pop(50);
 	}
 
 	private void sendCommand(byte[] frameData) {
@@ -473,6 +523,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 			switch (frameData[idx]) {
 			case FRAME_DELIMITER:
 			case ESCAPE:
+			case XON:
+			case XOFF:
 				outData[3 + length] = ESCAPE;
 				length++;
 				outData[3 + length] = (byte) (frameData[idx] ^ 0x20);
