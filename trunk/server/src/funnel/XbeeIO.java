@@ -54,7 +54,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private InputStream input;
 	private OutputStream output;
 
-	private final int rate = 115200;
+	private final int rate = 57600;
 	private final int parity = SerialPort.PARITY_NONE;
 	private final int databits = 8;
 	private final int stopbits = SerialPort.STOPBITS_1;
@@ -66,8 +66,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		this.parent = server;
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 		dioPortRange = new funnel.PortRange();
-		dioPortRange.setRange(0, 9); // 9 ports (series 1), 10 ports (series
-		// 2)
+		dioPortRange.setRange(0, 9); // 8 ports (XBS1), 10 ports (XBS2)
 		pwmPortRange = new funnel.PortRange();
 		pwmPortRange.setRange(10, 13); // 4 ports
 
@@ -143,10 +142,11 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	public OSCBundle getAllInputsAsBundle() {
 		OSCBundle bundle = new OSCBundle();
 
-		Object arguments[] = new Object[1 + MAX_IO_PORT];
-		arguments[0] = new Integer(0);
+		Object arguments[] = new Object[2 + MAX_IO_PORT];
+		arguments[0] = new Integer(0); // TODO: set a proper module ID
+		arguments[1] = new Integer(0);
 		for (int i = 0; i < MAX_IO_PORT; i++) {
-			arguments[1 + i] = new Float(inputData[DEFAULT_REMOTE_ADDRESS][i]);
+			arguments[2 + i] = new Float(inputData[DEFAULT_REMOTE_ADDRESS][i]);
 		}
 		bundle.addPacket(new OSCMessage("/in", arguments)); //$NON-NLS-1$
 
@@ -154,14 +154,17 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public Object[] getInputs(String address, Object[] arguments) {
+		int moduleId = 0;
 		int from = 0;
 		int counts = 0;
 		int totalPortCounts = MAX_IO_PORT;
 
 		if (address.equals("/in")) { //$NON-NLS-1$
-			from = ((Integer) arguments[0]).intValue();
-			counts = ((Integer) arguments[1]).intValue();
+			moduleId = ((Integer) arguments[0]).intValue();
+			from = ((Integer) arguments[1]).intValue();
+			counts = ((Integer) arguments[2]).intValue();
 		} else if (address.equals("/in/*")) { //$NON-NLS-1$
+			moduleId = ((Integer) arguments[0]).intValue();
 			from = 0;
 			counts = totalPortCounts;
 		}
@@ -174,12 +177,13 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 			throw new IllegalArgumentException(""); //$NON-NLS-1$
 		}
 
-		Object[] results = new Object[1 + counts];
-		results[0] = new Integer(from);
+		Object[] results = new Object[2 + counts];
+		results[0] = new Integer(moduleId);
+		results[1] = new Integer(from);
 		for (int i = 0; i < counts; i++) {
 			// TODO
 			// modify to handle address request
-			results[1 + i] = new Float(inputData[DEFAULT_REMOTE_ADDRESS][i]);
+			results[2 + i] = new Float(inputData[DEFAULT_REMOTE_ADDRESS][i]);
 		}
 		return results;
 	}
@@ -193,15 +197,16 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void setOutput(Object[] arguments) {
-		int start = ((Integer) arguments[0]).intValue();
-		for (int i = 0; i < (arguments.length - 1); i++) {
+		// int moduleId = ((Integer) arguments[0]).intValue();
+		int start = ((Integer) arguments[1]).intValue();
+		for (int i = 0; i < (arguments.length - 2); i++) {
 			int port = start + i;
-			int index = 1 + i;
+			int index = 2 + i;
 			if (arguments[index] != null && arguments[index] instanceof Float) {
 				if (dioPortRange.contains(port)) {
 					// digitalWrite(port, FLOAT_ZERO.equals(arguments[index]) ?
 					// 0 : 1);
-					printMessage("NOT SUPPORTED: DO");
+					printMessage("NOT SUPPORTED: DO for " + port);
 				} else if (pwmPortRange.contains(port)) {
 					analogWrite(port, ((Float) arguments[index]).floatValue());
 				}

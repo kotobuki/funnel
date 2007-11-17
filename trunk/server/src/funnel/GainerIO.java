@@ -208,21 +208,18 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 	public Object[] getInputs(String address, Object[] arguments)
 			throws IllegalArgumentException {
+		int moduleId = 0;
 		int from = 0;
 		int counts = inputs.length;
 
 		if (address.equals("/in")) { //$NON-NLS-1$
-			from = ((Integer) arguments[0]).intValue();
-			counts = ((Integer) arguments[1]).intValue();
+			moduleId = ((Integer) arguments[0]).intValue();
+			from = ((Integer) arguments[1]).intValue();
+			counts = ((Integer) arguments[2]).intValue();
 		} else if (address.equals("/in/*")) { //$NON-NLS-1$
+			moduleId = ((Integer) arguments[0]).intValue();
 			from = 0;
 			counts = inputs.length;
-		} else if (address.startsWith("/in/[")) { //$NON-NLS-1$
-			from = Integer
-					.parseInt(address.substring(5, address.indexOf(".."))); //$NON-NLS-1$
-			counts = Integer.parseInt(address.substring(
-					address.indexOf("..") + 2, address.length() - 1)) //$NON-NLS-1$
-					- from;
 		}
 
 		if ((from + counts) > inputs.length) {
@@ -233,10 +230,11 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			throw new IllegalArgumentException(""); //$NON-NLS-1$
 		}
 
-		Object[] results = new Object[1 + counts];
-		results[0] = new Integer(from);
+		Object[] results = new Object[2 + counts];
+		results[0] = new Integer(moduleId); // TODO: Support multiple modules
+		results[1] = new Integer(from);
 		for (int i = 0; i < counts; i++) {
-			results[1 + i] = new Float(inputs[from + i]);
+			results[2 + i] = new Float(inputs[from + i]);
 		}
 		return results;
 	}
@@ -248,10 +246,12 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			OSCBundle bundle = new OSCBundle();
 
 			if (ainPortRange.getCounts() > 0) {
-				Object[] ainArguments = new Object[1 + ainPortRange.getCounts()];
-				ainArguments[0] = new Integer(ainPortRange.getMin());
+				Object[] ainArguments = new Object[2 + ainPortRange.getCounts()];
+				ainArguments[0] = new Integer(0); // TODO: Support multiple
+				// modules
+				ainArguments[1] = new Integer(ainPortRange.getMin());
 				for (int i = 0; i < ainPortRange.getCounts(); i++) {
-					ainArguments[1 + i] = new Float(inputs[ainPortRange
+					ainArguments[2 + i] = new Float(inputs[ainPortRange
 							.getMin()
 							+ i]);
 				}
@@ -259,10 +259,11 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			}
 
 			if (dinPortRange.getCounts() > 0) {
-				Object[] dinArguments = new Object[1 + dinPortRange.getCounts()];
-				dinArguments[0] = new Integer(dinPortRange.getMin());
+				Object[] dinArguments = new Object[2 + dinPortRange.getCounts()];
+				dinArguments[0] = new Integer(0);
+				dinArguments[1] = new Integer(dinPortRange.getMin());
 				for (int i = 0; i < dinPortRange.getCounts(); i++) {
-					dinArguments[1 + i] = new Float(inputs[dinPortRange
+					dinArguments[2 + i] = new Float(inputs[dinPortRange
 							.getMin()
 							+ i]);
 				}
@@ -270,9 +271,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			}
 
 			if (buttonPortRange.getCounts() > 0) {
-				Object[] buttonArguments = new Object[2];
-				buttonArguments[0] = new Integer(buttonPortRange.getMin());
-				buttonArguments[1] = new Float(inputs[buttonPortRange.getMin()]);
+				Object[] buttonArguments = new Object[3];
+				buttonArguments[0] = new Integer(0);
+				buttonArguments[1] = new Integer(buttonPortRange.getMin());
+				buttonArguments[2] = new Float(inputs[buttonPortRange.getMin()]);
 				bundle.addPacket(new OSCMessage("/in", buttonArguments)); //$NON-NLS-1$
 			}
 
@@ -412,9 +414,9 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void setOutput(Object[] arguments) {
-		int start = ((Integer) arguments[0]).intValue();
+		int start = ((Integer) arguments[1]).intValue();
 		float depth = (configuration == 7) ? 15.0f : 255.0f;
-		for (int i = 1; i < arguments.length; i++) {
+		for (int i = 2; i < arguments.length; i++) {
 			if (arguments[i] == null) {
 				throw new IllegalArgumentException("argument " + i + " is null");
 			} else if (!(arguments[i] instanceof Float)) {
@@ -422,10 +424,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 						+ " is not Float");
 			}
 		}
-		if (arguments.length == 2) {
-			for (int i = 0; i < (arguments.length - 1); i++) {
+		if (arguments.length == 3) {
+			for (int i = 0; i < (arguments.length - 2); i++) {
 				int port = start + i;
-				int index = 1 + i;
+				int index = 2 + i;
 				if ((configuration == 7) && aoutPortRange.contains(port)) {
 					inputs[port] = ((Float) arguments[index]).floatValue();
 					scanMatrix(port / 8);
@@ -462,9 +464,9 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			}
 			boolean hasAnalogValues = false;
 			boolean hasDigitalValues = false;
-			for (int i = 0; i < (arguments.length - 1); i++) {
+			for (int i = 0; i < (arguments.length - 2); i++) {
 				int port = start + i;
-				int index = 1 + i;
+				int index = 2 + i;
 				if (doutPortRange.contains(port)) {
 					int bitsToShift = port - doutPortRange.getMin();
 					if (((Float) arguments[index]).intValue() == 0) {
@@ -494,7 +496,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			if (hasAnalogValues) {
 				if (configuration == 7) {
 					int from = start / 8;
-					int to = (start + arguments.length - 2) / 8;
+					int to = (start + arguments.length - 3) / 8;
 					for (int line = from; line <= to; line++) {
 						scanMatrix(line);
 					}
