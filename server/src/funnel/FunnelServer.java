@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 004 (2007-11-15)";
+	private static final String buildName = "Funnel 004 (2007-11-17)";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
@@ -157,7 +157,7 @@ public class FunnelServer extends Frame {
 						.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
 				return;
 			}
-		} else if (type.equalsIgnoreCase("XBee")) { //$NON-NLS-1$
+		} else if (type.equalsIgnoreCase("XBee") || type.equalsIgnoreCase("Fio")) { //$NON-NLS-1$
 			try {
 				ioModule = new XbeeIO(this, serialPort);
 			} catch (RuntimeException e) {

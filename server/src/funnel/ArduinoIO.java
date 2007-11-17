@@ -168,15 +168,18 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	 */
 	public Object[] getInputs(String address, Object[] arguments)
 			throws IllegalArgumentException {
+		int moduleId = 0;
 		int from = 0;
 		int counts = 0;
 		int totalPortCounts = analogPortRange.getCounts()
 				+ digitalPortRange.getCounts();
 
 		if (address.equals("/in")) { //$NON-NLS-1$
-			from = ((Integer) arguments[0]).intValue();
-			counts = ((Integer) arguments[1]).intValue();
+			moduleId = ((Integer) arguments[0]).intValue();
+			from = ((Integer) arguments[1]).intValue();
+			counts = ((Integer) arguments[2]).intValue();
 		} else if (address.equals("/in/*")) { //$NON-NLS-1$
+			moduleId = ((Integer) arguments[0]).intValue();
 			from = 0;
 			counts = totalPortCounts;
 		}
@@ -189,15 +192,16 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 			throw new IllegalArgumentException(""); //$NON-NLS-1$
 		}
 
-		Object[] results = new Object[1 + counts];
-		results[0] = new Integer(from);
+		Object[] results = new Object[2 + counts];
+		results[0] = new Integer(moduleId);
+		results[1] = new Integer(from);
 		for (int i = 0; i < counts; i++) {
 			int port = from + i;
 			if (digitalPortRange.contains(port)) {
-				results[1 + i] = new Float(digitalData[port
+				results[2 + i] = new Float(digitalData[port
 						- digitalPortRange.getMin()]);
 			} else if (analogPortRange.contains(port)) {
-				results[1 + i] = new Float(analogData[port
+				results[2 + i] = new Float(analogData[port
 						- analogPortRange.getMin()]);
 			}
 		}
@@ -211,20 +215,22 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 
 		OSCBundle bundle = new OSCBundle();
 
-		Object ainArguments[] = new Object[1 + analogPortRange.getCounts()];
-		ainArguments[0] = new Integer(analogPortRange.getMin());
+		Object ainArguments[] = new Object[2 + analogPortRange.getCounts()];
+		ainArguments[0] = new Integer(0);
+		ainArguments[1] = new Integer(analogPortRange.getMin());
 		for (int i = 0; i < analogPortRange.getCounts(); i++) {
-			ainArguments[1 + i] = new Float(analogData[i]);
+			ainArguments[2 + i] = new Float(analogData[i]);
 		}
 		bundle.addPacket(new OSCMessage("/in", ainArguments)); //$NON-NLS-1$
 
 		for (int j = 0; j < dinPortChunks.size(); j++) {
 			PortRange range = (PortRange) dinPortChunks.get(j);
-			Object dinArguments[] = new Object[1 + range.getCounts()];
-			dinArguments[0] = new Integer(range.getMin());
+			Object dinArguments[] = new Object[2 + range.getCounts()];
+			dinArguments[0] = new Integer(0);
+			dinArguments[1] = new Integer(range.getMin());
 			int offset = range.getMin() - digitalPortRange.getMin();
 			for (int i = 0; i < range.getCounts(); i++) {
-				dinArguments[1 + i] = new Float(digitalData[offset + i]);
+				dinArguments[2 + i] = new Float(digitalData[offset + i]);
 			}
 			bundle.addPacket(new OSCMessage("/in", dinArguments)); //$NON-NLS-1$
 		}
@@ -438,10 +444,10 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 	public void setOutput(Object[] arguments) {
 		// printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
 		// //$NON-NLS-1$ //$NON-NLS-2$
-		int start = ((Integer) arguments[0]).intValue();
-		for (int i = 0; i < (arguments.length - 1); i++) {
+		int start = ((Integer) arguments[1]).intValue();
+		for (int i = 0; i < (arguments.length - 2); i++) {
 			int port = start + i;
-			int index = 1 + i;
+			int index = 2 + i;
 			if (digitalPortRange.contains(port)) {
 				// converts from global pin number to local pin number
 				// e.g. global pin number 6 means local pin number 0
