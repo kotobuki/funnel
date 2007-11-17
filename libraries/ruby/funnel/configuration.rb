@@ -4,9 +4,10 @@ require 'funnel/port'
 
 module Funnel
   class Configuration
-    (GAINER, ARDUINO, XBEE, FUNNEL) = Array(0..3)
+    (GAINER, ARDUINO, XBEE, FIO) = Array(0..3)
     (IN, OUT, PWM) = Array(0..2)
     (MODE1, MODE2, MODE3, MODE4, MODE5, MODE6, MODE7, MODE8) = Array(1..8)
+    (XBS1, XBS2) = Array(0..1)
 
     attr_reader :ain_ports
     attr_reader :din_ports
@@ -18,7 +19,7 @@ module Funnel
     attr_reader :led
 
     def initialize(model, mode = 0)
-      raise ArgumentError, "model #{model} is not available" unless (GAINER..FUNNEL).include?(model)
+      raise ArgumentError, "model #{model} is not available" unless (GAINER..FIO).include?(model)
 
       case model
       when GAINER
@@ -167,10 +168,20 @@ module Funnel
         @button = nil
         @led = nil
       when XBEE
-        @config = [
-          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-          Port::DIN, Port::DIN, Port::DIN
-        ]
+        case mode
+        when XBS1 # XBee Series 1
+          # 8 digital I/O (including 6 ADC inputs)
+          @config = [
+            Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
+            Port::DIN, Port::DIN
+          ]
+        when XBS2 # XBee Series 2
+          # 10 digital I/O (including 4 ADC inputs)
+          @config = [
+            Port::AIN, Port::AIN, Port::AIN, Port::AIN, 
+            Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN
+          ]
+        end
         @ain_ports = nil
         @din_ports = nil
         @aout_ports = nil
@@ -179,8 +190,21 @@ module Funnel
         @digital_pins = nil
         @button = nil
         @led = nil
-      when FUNNEL
-        raise ArgumentError, "Funnel I/O module is not yet supported"
+      when FIO
+        # 4 ADC inputs, 4 PWM outputs
+        @config = [
+          Port::AIN, Port::AIN, Port::AIN, Port::AIN,
+          Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN,
+          Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT
+        ]
+        @ain_ports = [0, 1, 2, 3]
+        @din_ports = nil
+        @aout_ports = [10, 11, 12, 13]
+        @dout_ports = nil
+        @analog_pins = nil
+        @digital_pins = nil
+        @button = nil
+        @led = nil
       end
     end
     
@@ -220,9 +244,13 @@ module Funnel
   end
   
   module Xbee
-    DEFAULT = Configuration.new(Configuration::XBEE)
+    XBS1 = Configuration.new(Configuration::XBEE, Configuration::XBS1)
+    XBS2 = Configuration.new(Configuration::XBEE, Configuration::XBS2)
   end
 
+  module Fio
+    FIO = Configuration.new(Configuration::FIO)
+  end
 end
 
 

@@ -10,7 +10,7 @@ require 'funnel/port'
 require 'funnel/filter'
 
 module Funnel
-  (GAINER, ARDUINO, XBEE, FUNNEL) = Array(Configuration::GAINER..Configuration::FUNNEL)
+  (GAINER, ARDUINO, XBEE, FIO) = Array(Configuration::GAINER..Configuration::FIO)
   (IN, OUT, PWM) = Array(Configuration::IN..Configuration::PWM)
 
   class Funnel
@@ -75,10 +75,11 @@ module Funnel
           packet = @notification_port.recv(8192)
           begin
             OSC::Packet.decode(packet).each do |time, message|
-              from = message.to_a[0]
-              counts = message.to_a.length - 1
+              id = message.to_a[0]
+              from = message.to_a[1]
+              counts = message.to_a.length - 2
               counts.times do |i|
-                port(from + i).value = message.to_a[1 + i]
+                port(from + i).value = message.to_a[2 + i]
               end
             end
           rescue EOFError
@@ -192,7 +193,7 @@ module Funnel
     end
 
     def send_output_command(start, values)
-      command = OSC::Message.new('/out', 'if', start, *values)
+      command = OSC::Message.new('/out', 'iif', 0, start, *values)
       send_command(command)
     end
 

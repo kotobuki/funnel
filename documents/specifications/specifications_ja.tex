@@ -55,7 +55,7 @@ Funnel v1.0は以下のI/Oモジュール（一部はマイコンモジュール）への対応を予定してい
 \item Funnel I/Oモジュール（USB接続、基本モジュール＋拡張モジュール）
 \item Gainer I/Oモジュール（USB接続）
 \item Arduino（USB接続）
-\item Arduino Bluetooth（Bluetooth接続、無線）
+%\item Arduino Bluetooth（Bluetooth接続、無線）
 \end{itemize}
 
 %\footnote{クワクボリョウタ氏のI/O Toolkitに関しても、プロジェクトが正式にスタートした時点でコンタクトする予定です。}
@@ -108,8 +108,8 @@ function handler() {
 そこで、疑似コードに近い形で記述できる新しい言語拡張ライブラリを提案します。例えば、次のように記述することができれば、短い行数で簡潔に記述することができますし、何をしようとしているのかも明確です。
 
 \begin{lstlisting}[caption={コード例\ref{pseudo_code}の実装例（ActionScript 3 + Funnel）},label=useless]
-var fio:Funnel = new Funnel(...);
-fio.button.addEventListener(RISING_EDGE, buttonPressed);
+var gio:Gainer = new Gainer(...);
+gio.button.addEventListener(RISING_EDGE, buttonPressed);
 
 function buttonPressed():void {
 	...
@@ -150,16 +150,16 @@ Funnel用に開発するI/Oモジュール（FIO：フィオ）は、以下のパートから構成されます。
 \begin{itemize}
 \item 基本モジュール
 	\begin{itemize}
-	\item USB機能内蔵PSoC（CY8C24894）
+	\item USB-to-UART変換ブリッジ（FT232RL）
 	\item ワイヤレス通信モジュール（XBeeまたはXBee Pro）
 	\end{itemize}
-\item 追加モジュール（有線）
+%\item 追加モジュール（有線）
+%	\begin{itemize}
+%	\item PSoCなどのマイコン（CY8C29x66シリーズ？）
+%	\end{itemize}
+\item 追加モジュール
 	\begin{itemize}
-	\item PSoCなどのマイコン（CY8C29x66シリーズ？）
-	\end{itemize}
-\item 追加モジュール（無線）
-	\begin{itemize}
-	\item PSoCなどのマイコン（CY8C21x34シリーズ？）
+	\item PSoCなどのマイコン（例：CY8C27143）
 	\item ワイヤレス通信モジュール（XBeeまたはXBee Pro）
 	\end{itemize}
 \end{itemize}
@@ -190,20 +190,43 @@ Funnel用に開発するI/Oモジュール（FIO：フィオ）は、以下のパートから構成されます。
 \subsection{データの表現について}
 入出力ポートのデータは、0から1までの実数（AS3ではNumber、Processingではfloat）で表現します。これにより、I/OモジュールごとにA/DやD/A（またはPWM）の分解能が異なる場合でも同様に扱えます。
 
-\subsection{Funnelクラス}
-FunnelクラスはFunnelの基本となるクラスです。FunnelオブジェクトはPCに接続されたI/Oモジュールを抽象化して、共通の方法でアクセスできるようにします。
+\subsection{Systemクラス}
+Systemクラスは複数のI/Oモジュールから構成されるシステムを表現するためのクラスです。Gainer I/OモジュールやArduino I/Oボードを利用する際には、Systemオブジェクトをラップするユーティリティークラス（GainerまたはArduino）を利用してアクセスすることにより、内部構造を意識することなくアクセスできます。
+
+\subsubsection{コンストラクタ}
+\texttt{System(hostName:String, portNumber:int, modules:int, samplingInterval:int)}
+
+\subsubsection{インスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+%\texttt{autoUpdate} & boolean & 出力ポートの値を自動で更新するか否か \\
+\texttt{samplingInterval} & int & 現在設定されているサンプリング間隔 \\
+\texttt{samplingInterval = } & int & サンプリング間隔を設定 \\
+%\texttt{portCount} & int & ポート数 \\
+\end{tabular}
+
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+%\texttt{port(number:int)} & Port & numberで指定したポートを返す \\
+%\texttt{update()} & void & 全ての出力ポートの状態を手動で更新する \\
+\texttt{module(id:int)} & IOModule & 指定したIDのI/Oモジュールを返す \\
+\end{tabular}
+
+\subsection{IOModuleクラス}
+IOModuleクラスはFunnelの基本となるクラスです。IOModuleオブジェクトはPCに接続されたI/Oモジュールを抽象化して、共通の方法でアクセスできるようにします。
 
 %複数のモジュールが接続されている場合には、Funnelオブジェクトから連続したポートとして表現されます。
 
 \subsubsection{コンストラクタ}
-\texttt{Funnel(hostname:String, portNumber:int, config:Configuration, samplingInterval:int)}
+\texttt{IOModule(hostName:String, portNumber:int, config:Configuration, samplingInterval:int)}
 
 \subsubsection{インスタンス変数}
 \begin{tabular}{lll}
 変数名 & 型 & 説明 \\\hline
 \texttt{autoUpdate} & boolean & 出力ポートの値を自動で更新するか否か \\
-\texttt{samplingInterval} & int & 現在設定されているサンプリング間隔 \\
-\texttt{samplingInterval = } & int & サンプリング間隔を設定 \\
+%\texttt{samplingInterval} & int & 現在設定されているサンプリング間隔 \\
+%\texttt{samplingInterval = } & int & サンプリング間隔を設定 \\
 \texttt{portCount} & int & ポート数 \\
 \end{tabular}
 
@@ -211,12 +234,6 @@ FunnelクラスはFunnelの基本となるクラスです。FunnelオブジェクトはPCに接続されたI/
 \begin{tabular}{lll}
 メソッド名 & 戻り値 & 説明 \\\hline
 \texttt{port(number:int)} & Port & numberで指定したポートを返す \\
-\texttt{analogInput(number:int)} & Port & numberで指定したポートを返す（Gainer用） \\
-\texttt{digitalInput(number:int)} & Port & numberで指定したポートを返す（Gainer用） \\
-\texttt{analogOutput(number:int)} & Port & numberで指定したポートを返す（Gainer用） \\
-\texttt{digitalOutput(number:int)} & Port & numberで指定したポートを返す（Gainer用） \\
-\texttt{analogPin(number:int)} & Port & numberで指定したポートを返す（Arduino用） \\
-\texttt{digitalPin(number:int)} & Port & numberで指定したポートを返す（Arduino用） \\
 \texttt{update()} & void & 全ての出力ポートの状態を手動で更新する \\
 \end{tabular}
 
@@ -228,6 +245,30 @@ FunnelクラスはFunnelの基本となるクラスです。FunnelオブジェクトはPCに接続されたI/
 \texttt{change(PortEvent event)} & void & \texttt{PortEvent.CHANGE}のハンドラ \\
 \end{tabular}
 
+\subsection{Gainerクラス}
+GainerクラスはGainer I/Oモジュールを扱うためのユーティリティークラスです。
+
+\subsubsection{コンストラクタ}
+\begin{tabular}{l}
+\texttt{Gainer(hostName:String, portNumber:int, mode:int)} \\
+\end{tabular}
+
+\subsubsection{インスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{button} & Port & I/Oモジュール上のボタンを示すポート \\
+\texttt{led} & Port & I/Oモジュール上のLEDを示すポート \\
+\end{tabular}
+
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+\texttt{analogInput(number:int)} & Port & numberで指定したポートを返す \\
+\texttt{digitalInput(number:int)} & Port & numberで指定したポートを返す \\
+\texttt{analogOutput(number:int)} & Port & numberで指定したポートを返す \\
+\texttt{digitalOutput(number:int)} & Port & numberで指定したポートを返す \\
+\end{tabular}
+
 \subsubsection{定数}
 \begin{tabular}{ll}
 名前 & 説明 \\\hline
@@ -237,8 +278,32 @@ FunnelクラスはFunnelの基本となるクラスです。FunnelオブジェクトはPCに接続されたI/
 \texttt{DOUT} & デジタル出力 \\
 \end{tabular}
 
+\subsection{Arduinoクラス}
+ArduinoクラスはファームウェアとしてFirmataを搭載したArduinoをI/Oモジュールとして扱うためのユーティリティークラスです。
+
+\subsubsection{コンストラクタ}
+\begin{tabular}{l}
+\texttt{Arduino(hostName:String, portNumber:int)} \\
+\end{tabular}
+
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+\texttt{setDigitalPinMode(pin:int, mode:int)} & void & デジタルピンのモードを設定 \\
+\texttt{analogPin(number:int)} & Port & numberで指定したポートを返す \\
+\texttt{digitalPin(number:int)} & Port & numberで指定したポートを返す \\
+\end{tabular}
+
+\subsubsection{定数}
+\begin{tabular}{lll}
+名前 & 説明 \\\hline
+\texttt{IN} & デジタル入力 \\
+\texttt{OUT} & デジタル出力 \\
+\texttt{PWM} & 疑似アナログ（PWM）出力 \\
+\end{tabular}
+
 \subsection{Configurationクラス}
-ConfigurationクラスはI/Oモジュールのコンフィギュレーションを設定するためのクラスです。
+ConfigurationクラスはI/Oモジュールのコンフィギュレーションを設定するためのクラスです。通常はGainerクラスやArduinoクラスなどのユーティリティークラスを経由してアクセスされ、ユーザが意識することはありません。
 
 \subsubsection{コンストラクタ}
 \begin{tabular}{l}
@@ -266,7 +331,7 @@ ConfigurationクラスはI/Oモジュールのコンフィギュレーションを設定するためのクラス
 \end{tabular}
 
 \subsection{Portクラス}
-Portクラスは、I/Oモジュールの入出力ポートを表現するためのクラスです。ユーザからはFunnelオブジェクトのport()メソッド経由でアクセスします。
+Portクラスは、I/Oモジュールの入出力ポートを表現するためのクラスです。ユーザからはIOModuleオブジェクトのport()メソッド経由でアクセスします。
 
 \subsubsection{インスタンス変数}
 \begin{tabular}{lll}
@@ -808,12 +873,12 @@ function handler():void {
 \end{lstlisting}
 
 \begin{lstlisting}[caption={\ref{pcode2}の実装例（ActionScript 3 + Funnel）},label=useless]
-var fio:Funnel = new Funnel(...);
+var gio:Gainer = new Gainer(...);
 var threshold:Number = 0.3;
 var hysteresis:Number = 0.1;
 
-fio.analogInput(0).filters = [new SetPoint(threshold, hysteresis)];
-fio.analogInput(0).addEventListener(FALLING_EDGE, handler);
+gio.analogInput(0).filters = [new SetPoint(threshold, hysteresis)];
+gio.analogInput(0).addEventListener(FALLING_EDGE, handler);
 
 function handler():void {
 	...
@@ -849,18 +914,18 @@ function blink():void {
 \end{lstlisting}
 
 \begin{lstlisting}[caption={\ref{pcode4}の実装例1（ActionScript 3 + Funnel）},label=useless]
-var fio:Funnel = new Funnel(...);
+var gio:Gainer = new Gainer(...);
 var blinkOsc:Osc = new Osc(Osc.SQUARE, 2, 0); // 波形、周波数、回数（0は無限回）
 
-fio.digitalOutput(0).filters = [blinkOsc];
+gio.digitalOutput(0).filters = [blinkOsc];
 blinkOsc.start();
 \end{lstlisting}
 
 \begin{lstlisting}[caption={\ref{pcode4}の実装例2（ActionScript 3 + Funnel）},label=useless]
-var fio:Funnel = new Funnel(...);
+var gio:Gainer = new Gainer(...);
 
-fio.digitalOutput(0).filters = [new Osc(Osc.SQUARE, 2, 0)]; // 波形、周波数、回数（0は無限回）
-fio.digitalOutput(0).filters[0].start();
+gio.digitalOutput(0).filters = [new Osc(Osc.SQUARE, 2, 0)]; // 波形、周波数、回数（0は無限回）
+gio.digitalOutput(0).filters[0].start();
 \end{lstlisting}
 
 \newpage
@@ -895,18 +960,18 @@ function dimming():void {
 \end{lstlisting}
 
 \begin{lstlisting}[caption={\ref{pcode6}の実装例1（ActionScript 3 + Funnel）},label=useless]
-var fio:Funnel = new Funnel(...);
+var gio:Gainer = new Gainer(...);
 var dimmer:Osc = new Osc(Wave.TRIANGLE, 0.5, 0); // 波形、周波数、回数（0は無限回）
 
-fio.analogOutput(0).filters = [dimmer];
+gio.analogOutput(0).filters = [dimmer];
 dimmer.start();
 \end{lstlisting}
 
 \begin{lstlisting}[caption={\ref{pcode6}の実装例2（ActionScript 3 + Funnel）},label=useless]
-var fio:Funnel = new Funnel(...);
+var gio:Gainer = new Gainer(...);
 
-fio.analogOutput(0).filters = [new Osc(Wave.TRIANGLE, 0.5, 0)]; // 波形、周波数、回数（0は無限回）
-fio.analogOutput(0).filters[0].start();
+gio.analogOutput(0).filters = [new Osc(Wave.TRIANGLE, 0.5, 0)]; // 波形、周波数、回数（0は無限回）
+gio.analogOutput(0).filters[0].start();
 \end{lstlisting}
 
 \newpage
@@ -933,10 +998,10 @@ function finishTrigger():void {
 \end{lstlisting}
 
 \begin{lstlisting}[caption={\ref{pcode3}の実装例（ActionScript 3 + Funnel）},label=useless]
-var fio:Funnel = new Funnel(...);
+var gio:Gainer = new Gainer(...);
 var trigger:Osc = new Osc(Osc.IMPULSE, 1000/20, 1);	// 波形、周波数、回数
 
-fio.digitalOutput(0).filters = [trigger];
+gio.digitalOutput(0).filters = [trigger];
 trigger.start();
 \end{lstlisting}
 
@@ -1183,7 +1248,7 @@ trigger.start();
 \texttt{/samplingInterval} & int & I/Oモジュールのサンプリング間隔をミリ秒単位で設定する \\
 %\texttt{/query/portDirection} & int & 指定した番号の入出力方向を問い合わせる \\
 %\texttt{/query/portType} & int & 指定した番号のタイプを問い合わせる \\
-\texttt{/out} & int, float, ... & 最初の引数で指定したポートから続くポート数分の値を指定する \\
+\texttt{/out} & int, int, float, ... & モジュールID、最初のポート番号、値1、値2… \\
 \texttt{/in} & int, int & 指定したポートから指定したポート数分の値を取得する \\
 \end{tabular}
 
@@ -1218,7 +1283,7 @@ trigger.start();
 コマンド & 引数 & 説明 \\\hline
 %%\texttt{/ready} & none & モジュールとの通信が確立して準備が完了した \\
 %\texttt{/error} & int & エラーが発生した \\
-\texttt{/in} & int, float, ... & 入力イベントが発生した通知（ポート番号、値1、値2…）
+\texttt{/in} & int, int, float, ... & モジュール番号、ポート番号、値1、値2…
 \end{tabular}
 
 %\begin{lstlisting}[caption={/inメッセージの形式},label=useless]
@@ -1266,6 +1331,7 @@ ActionScript 3をはじめとするJavaScriptを、Tamarin\footnote{http://www.mozilla-ja
 \newpage
 \section{更新履歴}
 \begin{description}
+\item[ 2007.11.16] ユーティリティークラスとしてGainerおよびArduinoを追加し、複数モジュールに対応するためのSystemクラスを追加した。
 \item[ 2007.10.31] AS3のサンプルで変数の型にfloatを指定していた部分をNumberに修正。XBeeに関する定義を追加。ビルド001で追加されたConfigurationを利用した形式にサンプルを修正。
 \item[ 2007.9.29] Configurationクラスを追加。FunnelクラスにanalogInput()などのメソッドを追加。
 \item[ 2007.9.22] FIOの構成をXBeeまたはXBee Proを想定したプランに変更。FunnelクラスとPortクラスの説明を分割。 その他細かな記述上の間違いを修正。

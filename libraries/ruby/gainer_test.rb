@@ -5,7 +5,7 @@ require 'funnel'
 module Funnel
   gio = Funnel.new('localhost', 9000, Gainer::MODE1, 33)
 
-  gio.analog_input(0).filters = [SetPoint.new(0.5, 0.1)]
+  gio.analog_input(0).filters = [SetPoint.new(0.2, 0.05)]
   gio.analog_input(0).add_event_listener(PortEvent::CHANGE) do |event|
     puts "ain 0: #{event.target.last_value} => #{event.target.value}"
   end
