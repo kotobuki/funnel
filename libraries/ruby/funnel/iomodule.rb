@@ -10,6 +10,8 @@ module Funnel
     
     attr_accessor :updated_port_indices
     attr_accessor :auto_update
+    attr_reader :id
+    attr_reader :name
     
     def port_def_to_str(type)
       case type
@@ -24,11 +26,12 @@ module Funnel
       end
     end
     
-    def initialize(parent, id, config)
+    def initialize(parent, id, config, name = "")
       @parent = parent
       @id = id
       @port = []
       @port_count = 0
+      @name = name
 
       init_ports(config.to_a)
       @updated_port_indices = Array.new(@port_count, false)

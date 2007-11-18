@@ -19,7 +19,7 @@ module Funnel
 
     attr_accessor :auto_update
 
-    def initialize(host, port, interval, config = nil)
+    def initialize(host, port, interval = 33, config = nil)
       begin
         @command_port = TCPSocket.open(host, port)
         puts "command port: #{@command_port.addr.at(2)}, #{@command_port.addr.at(1)}"
@@ -51,12 +51,19 @@ module Funnel
           packet = @notification_port.recv(8192)
           begin
             OSC::Packet.decode(packet).each do |time, message|
-              id = message.to_a[0]
-              next if @modules[id] == nil
-              from = message.to_a[1]
-              counts = message.to_a.length - 2
-              counts.times do |i|
-                @modules[id].port(from + i).value = message.to_a[2 + i]
+              case message.address
+              when '/in':
+                id = message.to_a[0]
+                next if @modules[id] == nil
+                from = message.to_a[1]
+                counts = message.to_a.length - 2
+                counts.times do |i|
+                  @modules[id].port(from + i).value = message.to_a[2 + i]
+                end
+              when '/node':
+                id = message.to_a[0]
+                ni = message.to_a[1]
+                register_node(id, ni)
               end
             end
           rescue EOFError
@@ -68,12 +75,18 @@ module Funnel
       send_command(OSC::Message.new('/polling', 'i', 1))
     end
 
-    def add_module(id, config)
+    def add_module(id, config, name ="")
       @modules.delete(id) if @modules.has_key?(id)
-      iomodule = IOModule.new(self, id, config)
+      iomodule = IOModule.new(self, id, config, name)
       @modules[id] = iomodule
-      #      send_command(OSC::Message.new('/configure', 'i' * config.to_a.size, *config.to_a))
-      # TODO send config message to the server
+    end
+
+    def all_iomodules()
+      @modules.values
+    end
+
+    def register_node(id, ni)
+      # should be implemented in a derived class
     end
 
     def send_command(command, seconds_to_wait = 1)
