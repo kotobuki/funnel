@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 004 (2007-11-17)";
+	private static final String buildName = "Funnel 004 (2007-11-18)";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
@@ -177,6 +177,14 @@ public class FunnelServer extends Frame {
 
 	public IOModule getIOModule() {
 		return ioModule;
+	}
+
+	public CommandPortServer getCommandPortServer() {
+		return commandPortServer;
+	}
+
+	public NotificationPortServer getNotificationPortServer() {
+		return notificationPortServer;
 	}
 
 	// Print a message on the logging console
