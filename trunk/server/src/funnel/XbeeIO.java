@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
@@ -32,11 +33,11 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private static final int TX_STATUS_MESSAGE = 0x89;
 	private static final int MODEM_STATUS = 0x8A;
 
+	// TODO: update this portion to support XBS2
 	private static final int MAX_IO_PORT = 9;
-	private static final int MAX_CLIENTS = 32;
-	private static final int MAX_FRAME_SIZE = 100;
 
-	private static final int DEFAULT_REMOTE_ADDRESS = 2;
+	private static final int MAX_NODES = 65536;
+	private static final int MAX_FRAME_SIZE = 100;
 
 	// private final Float FLOAT_ZERO = new Float(0.0f);
 
@@ -45,8 +46,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private int[] rxData = new int[MAX_FRAME_SIZE];
 	private int rxBytesToReceive = 0;
 	private int rxSum = 0;
-	private float[][] inputData = new float[MAX_CLIENTS][MAX_IO_PORT];
-	private int[] rssi = new int[MAX_CLIENTS];
+	private float[][] inputData = new float[MAX_NODES][MAX_IO_PORT];
+	private int[] rssi = new int[MAX_NODES];
 
 	// private funnel.BlockingQueue aoutCommandQueue;
 
@@ -62,6 +63,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private funnel.PortRange dioPortRange;
 	private funnel.PortRange pwmPortRange;
 
+	private Hashtable nodes;
+
 	public XbeeIO(FunnelServer server, String serialPortName) {
 		this.parent = server;
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
@@ -69,6 +72,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		dioPortRange.setRange(0, 9); // 8 ports (XBS1), 10 ports (XBS2)
 		pwmPortRange = new funnel.PortRange();
 		pwmPortRange.setRange(10, 13); // 4 ports
+		nodes = new Hashtable();
 
 		// aoutCommandQueue = new funnel.BlockingQueue();
 
@@ -140,15 +144,23 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public OSCBundle getAllInputsAsBundle() {
-		OSCBundle bundle = new OSCBundle();
-
-		Object arguments[] = new Object[2 + MAX_IO_PORT];
-		arguments[0] = new Integer(0); // TODO: set a proper module ID
-		arguments[1] = new Integer(0);
-		for (int i = 0; i < MAX_IO_PORT; i++) {
-			arguments[2 + i] = new Float(inputData[DEFAULT_REMOTE_ADDRESS][i]);
+		if (nodes.isEmpty()) {
+			return null;
 		}
-		bundle.addPacket(new OSCMessage("/in", arguments)); //$NON-NLS-1$
+
+		OSCBundle bundle = new OSCBundle();
+		Enumeration e = nodes.keys();
+
+		while (e.hasMoreElements()) {
+			Integer id = (Integer) e.nextElement();
+			Object arguments[] = new Object[2 + MAX_IO_PORT];
+			arguments[0] = id;
+			arguments[1] = new Integer(0);
+			for (int i = 0; i < MAX_IO_PORT; i++) {
+				arguments[2 + i] = new Float(inputData[id.intValue()][i]);
+			}
+			bundle.addPacket(new OSCMessage("/in", arguments)); //$NON-NLS-1$
+		}
 
 		return bundle;
 	}
@@ -183,12 +195,14 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		for (int i = 0; i < counts; i++) {
 			// TODO
 			// modify to handle address request
-			results[2 + i] = new Float(inputData[DEFAULT_REMOTE_ADDRESS][i]);
+			results[2 + i] = new Float(inputData[moduleId][i]);
 		}
 		return results;
 	}
 
 	public void reboot() {
+		nodes.clear();
+		sendATCommand("ND");
 		return;
 	}
 
@@ -197,7 +211,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void setOutput(Object[] arguments) {
-		// int moduleId = ((Integer) arguments[0]).intValue();
+		int moduleId = ((Integer) arguments[0]).intValue();
 		int start = ((Integer) arguments[1]).intValue();
 		for (int i = 0; i < (arguments.length - 2); i++) {
 			int port = start + i;
@@ -208,7 +222,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 					// 0 : 1);
 					printMessage("NOT SUPPORTED: DO for " + port);
 				} else if (pwmPortRange.contains(port)) {
-					analogWrite(port, ((Float) arguments[index]).floatValue());
+					analogWrite(moduleId, port, ((Float) arguments[index])
+							.floatValue());
 				}
 			}
 		}
@@ -306,7 +321,9 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 				}
 				if (hasAnalogData) {
 					for (int i = 0; i < 6; i++) {
+						// TODO: update here to support XBS2
 						int bitMask = 1 << (i + MAX_IO_PORT);
+
 						if ((ioEnable & bitMask) != 0) {
 							int ainData = data[idx] << 8;
 							idx++;
@@ -354,6 +371,15 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 							+ Integer.toHexString(sl) + ", dB=" + db
 							+ ", NI=\'" + ni + "\'";
 					parent.printMessage(info);
+					OSCMessage message = new OSCMessage("/node");
+					message.addArgument(new Integer(my));
+					message.addArgument(new String(ni));
+					parent.getNotificationPortServer().sendMessageToClients(
+							message);
+					if (nodes.containsKey(new Integer(my))) {
+						nodes.remove(new Integer(my));
+					}
+					nodes.put(new Integer(my), ni);
 				}
 			} else if (data[5] == 'V' && data[6] == 'R') {
 				String info = "FIRMWARE VERSION: ";
@@ -458,7 +484,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	// rfData[13] = (byte) (0xFF - (sum & 0xFF));
 	// }
 
-	private void analogWrite(int pin, float value) {
+	private void analogWrite(int address, int pin, float value) {
 		// parent.printMessage("analogWrite(" + pin + ", " + value + ")");
 		// int intValue = Math.round(value * 1023.0f);
 		// intValue = (intValue < 0) ? 0 : intValue;
@@ -491,7 +517,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		rfData[1] = (byte) (intValue % 128);
 		rfData[2] = (byte) (intValue >> 7);
 
-		sendTransmitRequest(DEFAULT_REMOTE_ADDRESS, rfData);
+		sendTransmitRequest(address, rfData);
 	}
 
 	private void sendATCommand(String command) {
@@ -507,10 +533,10 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private void sendTransmitRequest(int destAddress, byte[] rfData) {
 		byte[] outData = new byte[5 + rfData.length];
 		outData[0] = 0x01; // Transmit Request
-		outData[1] = 0x01; // Frame ID
+		outData[1] = 0x00; // Frame ID (0x00 means no ACK)
 		outData[2] = (byte) (destAddress >> 8);
 		outData[3] = (byte) (destAddress & 0xFF);
-		outData[4] = 0x00; // Options (with ACK)
+		outData[4] = 0x01; // Options (0x00: with ACK, 0x01: without ACK)
 		for (int i = 0; i < rfData.length; i++) {
 			outData[5 + i] = rfData[i];
 		}
