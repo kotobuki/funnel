@@ -1,21 +1,20 @@
 #!/usr/bin/env ruby
 
-require 'funnel'
+require 'funnel/arduino'
 
 module Funnel
   config = Configuration.new(ARDUINO)
   config.set_digital_pin_mode(11, PWM)
-  config.set_digital_pin_mode(12, OUT)
   config.set_digital_pin_mode(13, OUT)
-  aio = Funnel.new('localhost', 9000, config, 33)
+  aio = Arduino.new('localhost', 9000, config, 33)
 
   aio.analog_pin(0).filters = [SetPoint.new(0.5, 0.1)]
-  aio.analog_pin(0).add_event_listener(PortEvent::CHANGE) do |event|
-    puts "Analog 0: #{event.target.last_value} => #{event.target.value}"
+  aio.analog_pin(0).on PortEvent::CHANGE do |event|
+    puts "A0: #{event.target.last_value} > #{event.target.value}"
   end
 
-  aio.digital_pin(2).add_event_listener(PortEvent::CHANGE) do |event|
-    puts "Digital 0: #{event.target.last_value} => #{event.target.value}"
+  aio.digital_pin(2).on PortEvent::CHANGE do |event|
+    puts "D2: #{event.target.last_value} > #{event.target.value}"
   end
 
   Osc.service_interval = 20

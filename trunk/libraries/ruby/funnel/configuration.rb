@@ -228,29 +228,29 @@ module Funnel
     end
   end
 
-  module Gainer
-    MODE1 = Configuration.new(Configuration::GAINER, Configuration::MODE1)
-    MODE2 = Configuration.new(Configuration::GAINER, Configuration::MODE2)
-    MODE3 = Configuration.new(Configuration::GAINER, Configuration::MODE3)
-    MODE4 = Configuration.new(Configuration::GAINER, Configuration::MODE4)
-    MODE5 = Configuration.new(Configuration::GAINER, Configuration::MODE5)
-    MODE6 = Configuration.new(Configuration::GAINER, Configuration::MODE6)
-    MODE7 = Configuration.new(Configuration::GAINER, Configuration::MODE7)
-    MODE8 = Configuration.new(Configuration::GAINER, Configuration::MODE8)
-  end
+#  module Gainer
+#    MODE1 = Configuration.new(Configuration::GAINER, Configuration::MODE1)
+#    MODE2 = Configuration.new(Configuration::GAINER, Configuration::MODE2)
+#    MODE3 = Configuration.new(Configuration::GAINER, Configuration::MODE3)
+#    MODE4 = Configuration.new(Configuration::GAINER, Configuration::MODE4)
+#    MODE5 = Configuration.new(Configuration::GAINER, Configuration::MODE5)
+#    MODE6 = Configuration.new(Configuration::GAINER, Configuration::MODE6)
+#    MODE7 = Configuration.new(Configuration::GAINER, Configuration::MODE7)
+#    MODE8 = Configuration.new(Configuration::GAINER, Configuration::MODE8)
+#  end
 
-  module Arduino
-    FIRMATA = Configuration.new(Configuration::ARDUINO)
-  end
+#  module Arduino
+#    FIRMATA = Configuration.new(Configuration::ARDUINO)
+#  end
   
-  module Xbee
-    XBS1 = Configuration.new(Configuration::XBEE, Configuration::XBS1)
-    XBS2 = Configuration.new(Configuration::XBEE, Configuration::XBS2)
-  end
+#  module Xbee
+#    XBS1 = Configuration.new(Configuration::XBEE, Configuration::XBS1)
+#    XBS2 = Configuration.new(Configuration::XBEE, Configuration::XBS2)
+#  end
 
-  module Fio
-    FIO = Configuration.new(Configuration::FIO)
-  end
+#  module Fio
+#    FIO = Configuration.new(Configuration::FIO)
+#  end
 end
 
 
