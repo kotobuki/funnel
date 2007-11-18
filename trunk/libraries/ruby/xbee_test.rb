@@ -1,13 +1,16 @@
 #!/usr/bin/env ruby
 
-require 'funnel'
+require 'funnel/xbee'
 
 module Funnel
-  xbee = Funnel.new('localhost', 9000, Xbee::XBS1, 33)
+  xbee = XBee.new('localhost', 9000, XBee::XBS1)
 
-  xbee.port(0).filters = [SetPoint.new(0.2, 0.05)]
-  xbee.port(0).on PortEvent::CHANGE do |event|
-    puts "AD0: #{event.target.last_value} => #{event.target.value}"
+  xbee.all_iomodules.each do |io|
+    puts "xbee: id: #{io.id}, name: #{io.name}"
+
+    io.port(0).add_event_listener(PortEvent::CHANGE) do |event|
+      puts "AD0: #{event.target.value}"
+    end
   end
 
   sleep(10)
