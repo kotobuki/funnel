@@ -49,14 +49,14 @@
 			<key>Head</key>
 			<dict>
 				<key>ID</key>
-				<integer>49</integer>
+				<integer>53</integer>
 			</dict>
 			<key>ID</key>
-			<integer>50</integer>
+			<integer>54</integer>
 			<key>Points</key>
 			<array>
-				<string>{411.024, 283.465}</string>
-				<string>{411.024, 325.484}</string>
+				<string>{425.474, 283.881}</string>
+				<string>{453.266, 325.568}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -97,10 +97,15 @@
 					<string>FilledArrow</string>
 				</dict>
 			</dict>
+			<key>Tail</key>
+			<dict>
+				<key>ID</key>
+				<integer>29</integer>
+			</dict>
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{368.504, 325.984}, {85.0394, 42.5197}}</string>
+			<string>{{425.197, 325.984}, {85.0394, 42.5197}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FontInfo</key>
@@ -111,7 +116,7 @@
 				<real>9</real>
 			</dict>
 			<key>ID</key>
-			<integer>49</integer>
+			<integer>53</integer>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Style</key>
@@ -125,13 +130,13 @@
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs18 \cf0 Arduino\
-Bluetooth}</string>
+\f0\fs18 \cf0 MaxStream\
+XBee}</string>
 			</dict>
 		</dict>
 		<dict>
@@ -146,17 +151,12 @@ Bluetooth}</string>
 				<key>Size</key>
 				<real>9</real>
 			</dict>
-			<key>Head</key>
-			<dict>
-				<key>ID</key>
-				<integer>47</integer>
-			</dict>
 			<key>ID</key>
-			<integer>48</integer>
+			<integer>52</integer>
 			<key>Points</key>
 			<array>
-				<string>{113.386, 283.965}</string>
-				<string>{113.386, 325.484}</string>
+				<string>{128.027, 283.879}</string>
+				<string>{155.906, 325.152}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -205,7 +205,230 @@ Bluetooth}</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{70.8661, 325.984}, {85.0394, 42.5197}}</string>
+			<string>{{127.559, 325.984}, {85.0394, 42.5197}}</string>
+			<key>Class</key>
+			<string>ShapedGraphic</string>
+			<key>FontInfo</key>
+			<dict>
+				<key>Font</key>
+				<string>HiraKakuPro-W3</string>
+				<key>Size</key>
+				<real>9</real>
+			</dict>
+			<key>ID</key>
+			<integer>51</integer>
+			<key>Shape</key>
+			<string>Rectangle</string>
+			<key>Style</key>
+			<dict>
+				<key>fill</key>
+				<dict>
+					<key>Color</key>
+					<dict>
+						<key>b</key>
+						<string>0.901961</string>
+						<key>g</key>
+						<string>0.901961</string>
+						<key>r</key>
+						<string>0.901961</string>
+					</dict>
+				</dict>
+				<key>stroke</key>
+				<dict>
+					<key>CornerRadius</key>
+					<real>5</real>
+				</dict>
+			</dict>
+			<key>Text</key>
+			<dict>
+				<key>Text</key>
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
+{\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
+
+\f0\fs18 \cf0 Funnel I/O}</string>
+			</dict>
+			<key>Wrap</key>
+			<string>NO</string>
+		</dict>
+		<dict>
+			<key>AllowLabelDrop</key>
+			<false/>
+			<key>Class</key>
+			<string>LineGraphic</string>
+			<key>FontInfo</key>
+			<dict>
+				<key>Font</key>
+				<string>HiraKakuPro-W3</string>
+				<key>Size</key>
+				<real>9</real>
+			</dict>
+			<key>Head</key>
+			<dict>
+				<key>ID</key>
+				<integer>49</integer>
+			</dict>
+			<key>ID</key>
+			<integer>50</integer>
+			<key>Points</key>
+			<array>
+				<string>{396.573, 283.881}</string>
+				<string>{368.781, 325.568}</string>
+			</array>
+			<key>Style</key>
+			<dict>
+				<key>shadow</key>
+				<dict>
+					<key>Color</key>
+					<dict>
+						<key>a</key>
+						<string>0.5</string>
+						<key>b</key>
+						<string>0.333333</string>
+						<key>g</key>
+						<string>0.333333</string>
+						<key>r</key>
+						<string>0.333333</string>
+					</dict>
+				</dict>
+				<key>stroke</key>
+				<dict>
+					<key>Cap</key>
+					<integer>0</integer>
+					<key>Color</key>
+					<dict>
+						<key>b</key>
+						<string>0.190476</string>
+						<key>g</key>
+						<string>0.0729272</string>
+						<key>r</key>
+						<string>0.00453517</string>
+					</dict>
+					<key>HeadArrow</key>
+					<string>FilledArrow</string>
+					<key>Join</key>
+					<integer>0</integer>
+					<key>Pattern</key>
+					<integer>1</integer>
+					<key>TailArrow</key>
+					<string>FilledArrow</string>
+				</dict>
+			</dict>
+			<key>Tail</key>
+			<dict>
+				<key>ID</key>
+				<integer>29</integer>
+			</dict>
+		</dict>
+		<dict>
+			<key>Bounds</key>
+			<string>{{311.811, 325.984}, {85.0394, 42.5197}}</string>
+			<key>Class</key>
+			<string>ShapedGraphic</string>
+			<key>FontInfo</key>
+			<dict>
+				<key>Font</key>
+				<string>HiraKakuPro-W3</string>
+				<key>Size</key>
+				<real>9</real>
+			</dict>
+			<key>ID</key>
+			<integer>49</integer>
+			<key>Shape</key>
+			<string>Rectangle</string>
+			<key>Style</key>
+			<dict>
+				<key>stroke</key>
+				<dict>
+					<key>CornerRadius</key>
+					<real>5</real>
+				</dict>
+			</dict>
+			<key>Text</key>
+			<dict>
+				<key>Text</key>
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
+{\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
+
+\f0\fs18 \cf0 MaxStream\
+XBee}</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>AllowLabelDrop</key>
+			<false/>
+			<key>Class</key>
+			<string>LineGraphic</string>
+			<key>FontInfo</key>
+			<dict>
+				<key>Font</key>
+				<string>HiraKakuPro-W3</string>
+				<key>Size</key>
+				<real>9</real>
+			</dict>
+			<key>Head</key>
+			<dict>
+				<key>ID</key>
+				<integer>47</integer>
+			</dict>
+			<key>ID</key>
+			<integer>48</integer>
+			<key>Points</key>
+			<array>
+				<string>{98.9352, 283.881}</string>
+				<string>{71.1436, 325.568}</string>
+			</array>
+			<key>Style</key>
+			<dict>
+				<key>shadow</key>
+				<dict>
+					<key>Color</key>
+					<dict>
+						<key>a</key>
+						<string>0.5</string>
+						<key>b</key>
+						<string>0.333333</string>
+						<key>g</key>
+						<string>0.333333</string>
+						<key>r</key>
+						<string>0.333333</string>
+					</dict>
+				</dict>
+				<key>stroke</key>
+				<dict>
+					<key>Cap</key>
+					<integer>0</integer>
+					<key>Color</key>
+					<dict>
+						<key>b</key>
+						<string>0.190476</string>
+						<key>g</key>
+						<string>0.0729272</string>
+						<key>r</key>
+						<string>0.00453517</string>
+					</dict>
+					<key>HeadArrow</key>
+					<string>FilledArrow</string>
+					<key>Join</key>
+					<integer>0</integer>
+					<key>Pattern</key>
+					<integer>1</integer>
+					<key>TailArrow</key>
+					<string>FilledArrow</string>
+				</dict>
+			</dict>
+			<key>Tail</key>
+			<dict>
+				<key>ID</key>
+				<integer>26</integer>
+			</dict>
+		</dict>
+		<dict>
+			<key>Bounds</key>
+			<string>{{14.1732, 325.984}, {85.0394, 42.5197}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FontInfo</key>
@@ -242,13 +465,12 @@ Bluetooth}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs18 \cf0 Funnel\
-Extension Module}</string>
+\f0\fs18 \cf0 Funnel I/O}</string>
 			</dict>
 			<key>Wrap</key>
 			<string>NO</string>
@@ -520,7 +742,7 @@ Extension Module}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
@@ -547,12 +769,12 @@ Extension Module}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs16 \cf0 An OSC Library}</string>
+\f0\fs16 \cf0 OSC Libraries}</string>
 			</dict>
 		</dict>
 		<dict>
@@ -589,7 +811,7 @@ Extension Module}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
@@ -889,7 +1111,7 @@ Extension Module}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
@@ -924,7 +1146,7 @@ Extension Module}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
@@ -959,7 +1181,7 @@ Extension Module}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
@@ -995,7 +1217,7 @@ etc.}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
@@ -1030,7 +1252,7 @@ etc.}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
@@ -1079,7 +1301,7 @@ etc.}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
@@ -1114,12 +1336,13 @@ etc.}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs18 \cf0 Bluetooth I/F}</string>
+\f0\fs18 \cf0 USB XBee\
+Dongle}</string>
 			</dict>
 		</dict>
 		<dict>
@@ -1149,12 +1372,13 @@ etc.}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs18 \cf0 Arduino}</string>
+\f0\fs18 \cf0 Arduino\
+(with Firmata)}</string>
 			</dict>
 		</dict>
 		<dict>
@@ -1184,7 +1408,7 @@ etc.}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
@@ -1211,18 +1435,6 @@ I/O Module}</string>
 			<string>Rectangle</string>
 			<key>Style</key>
 			<dict>
-				<key>fill</key>
-				<dict>
-					<key>Color</key>
-					<dict>
-						<key>b</key>
-						<string>0.901961</string>
-						<key>g</key>
-						<string>0.901961</string>
-						<key>r</key>
-						<string>0.901961</string>
-					</dict>
-				</dict>
 				<key>stroke</key>
 				<dict>
 					<key>CornerRadius</key>
@@ -1232,13 +1444,13 @@ I/O Module}</string>
 			<key>Text</key>
 			<dict>
 				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf420
+				<string>{\rtf1\mac\ansicpg10001\cocoartf824\cocoasubrtf440
 {\fonttbl\f0\fnil\fcharset78 HiraKakuPro-W3;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural
 
-\f0\fs18 \cf0 Funnel\
-I/O Module}</string>
+\f0\fs18 \cf0 USB XBee\
+Dongle}</string>
 			</dict>
 			<key>Wrap</key>
 			<string>NO</string>
@@ -1365,7 +1577,7 @@ I/O Module}</string>
 		</dict>
 	</array>
 	<key>ModificationDate</key>
-	<string>2007-09-01 04:38:34 +0900</string>
+	<string>2007-11-19 22:15:35 +0900</string>
 	<key>Modifier</key>
 	<string>小林 茂</string>
 	<key>NotesVisible</key>
@@ -1401,7 +1613,7 @@ I/O Module}</string>
 		<key>NSPaperSize</key>
 		<array>
 			<string>size</string>
-			<string>{595, 842}</string>
+			<string>{594.99, 841.98}</string>
 		</array>
 		<key>NSPrintAllPages</key>
 		<array>
@@ -1453,7 +1665,7 @@ I/O Module}</string>
 		<key>Frame</key>
 		<string>{{271, -27}, {732, 741}}</string>
 		<key>VisibleRegion</key>
-		<string>{{-79, 0}, {717, 651}}</string>
+		<string>{{-70, 0}, {717, 651}}</string>
 		<key>Zoom</key>
 		<real>1</real>
 	</dict>
