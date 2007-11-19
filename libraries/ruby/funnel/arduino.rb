@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby -wKU
 
-require "funnel/system"
+require "funnel/iosystem"
 
 module Funnel
   class Arduino
     def initialize(host, port, config, interval = 33)
-      @system = System.new(host, port, interval, config)
+      @system = IOSystem.new(host, port, interval, config)
 
       @analog_pins = config.analog_pins
       @digital_pins = config.digital_pins

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby -wKU
 
-require "funnel/system"
+require "funnel/iosystem"
 
 module Funnel
   class Gainer
@@ -8,7 +8,7 @@ module Funnel
 
     def initialize(host, port, mode = MODE1, interval = 33)
       config = Configuration.new(Configuration::GAINER, mode)
-      @system = System.new(host, port, interval, config)
+      @system = IOSystem.new(host, port, interval, config)
 
       @ain_ports = config.ain_ports
       @din_ports = config.din_ports

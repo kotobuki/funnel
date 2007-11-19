@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby -wKU
 
-require "funnel/system"
+require "funnel/iosystem"
 
 module Funnel
-  class Fio < System
+  class Fio < IOSystem
     def initialize(host, port, interval = 33)
       super(host, port, interval)
       sleep(5)  # TODO: replace with proper implementation
