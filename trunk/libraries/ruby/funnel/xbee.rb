@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby -wKU
 
-require "funnel/system"
+require "funnel/iosystem"
 
 module Funnel
-  class XBee < System
+  class XBee < IOSystem
     (XBS1, XBS2) = Array(0..1)
     
     def initialize(host, port, type = XBS1, interval = 33)

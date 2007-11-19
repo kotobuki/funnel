@@ -14,7 +14,7 @@ module Funnel
   (GAINER, ARDUINO, XBEE, FIO) = Array(Configuration::GAINER..Configuration::FIO)
   (IN, OUT, PWM) = Array(Configuration::IN..Configuration::PWM)
 
-  class System
+  class IOSystem
     MINIMUM_SAMPLING_INTERVAL = 10
 
     attr_accessor :auto_update
@@ -151,7 +151,7 @@ end
 
 if __FILE__ == $0
   module Funnel
-    gio = System.new('localhost', 9000, 33, Gainer::MODE1)
+    gio = IOSystem.new('localhost', 9000, 33, Gainer::MODE1)
 
     gio.iomodule(0).port(0).filters = [SetPoint.new(0.5, 0.1)]
     gio.iomodule(0).port(0).add_event_listener(PortEvent::CHANGE) do |event|

@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby -wKU
 
-require "funnel/system"
+require "funnel/iosystem"
 
 module Funnel
   config = config = Configuration.new(FIO)
-  gio = System.new('localhost', 9000, 33, config)
+  gio = IOSystem.new('localhost', 9000, 33, config)
 
   gio.iomodule(0).port(0).filters = [SetPoint.new(0.5, 0.1)]
   gio.iomodule(0).port(0).add_event_listener(PortEvent::CHANGE) do |event|
