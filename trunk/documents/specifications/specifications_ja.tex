@@ -50,17 +50,16 @@ Funnelのターゲットは、Flash CS3/Flex 2やProcessingをある程度扱ったことがあり、PC
 \section{特徴}
 
 \subsection{マルチプラットホームへの対応}
-Funnel v1.0は以下のI/Oモジュール（一部はマイコンモジュール）への対応を予定しています。新規に開発するFunnel I/Oモジュール以外に、既に普及しているGainer\footnote{2007年5月の時点で500台以上。http://gainer.cc/}およびArduinoシリーズ\footnote{2007年5月の時点でシリーズ合計で10000台以上。http://arduino.cc/}に対応します。これにより、Funnelはv1.0のリリース時点で1万台以上のハードウェア環境で動作できることになります。
+Funnel v1.0は以下のI/Oモジュール（一部はマイコンモジュール）への対応を予定しています。新規に開発するFunnel I/Oモジュール以外に、既に普及しているGainer\footnote{2007年5月の時点で500台以上。http://gainer.cc/}およびArduinoシリーズ\footnote{2007年5月の時点でシリーズ合計で10000台以上。ファームウェアはFirmataを使用。http://arduino.cc/}、およびMaxStream社のXBeeシリーズに対応します。これにより、Funnelはv1.0のリリース時点で1万数千台以上のハードウェア環境で動作できることになります。
 \begin{itemize}
-\item Funnel I/Oモジュール（USB接続、基本モジュール＋拡張モジュール）
+\item Funnel I/Oモジュール（USB接続のドングル＋無線モジュール）
 \item Gainer I/Oモジュール（USB接続）
 \item Arduino（USB接続）
+\item MaxStream XBeeシリーズ1/2（USB接続のドングル＋無線モジュール）
 %\item Arduino Bluetooth（Bluetooth接続、無線）
 \end{itemize}
 
 %\footnote{クワクボリョウタ氏のI/O Toolkitに関しても、プロジェクトが正式にスタートした時点でコンタクトする予定です。}
-
-それぞれのI/OモジュールはFunnel Serverに接続され、Funnel Serverは仮想シリアルポートドライバ経由でそれぞれのI/Oモジュールと通信します。
 
 \begin{figure}[h]
 \begin{center}
@@ -71,7 +70,7 @@ Funnel v1.0は以下のI/Oモジュール（一部はマイコンモジュール）への対応を予定してい
 \end{center}
 \end{figure}
 
-Funnel Serverとアプリケーション側との通信は、音楽系のプログラミング環境を中心に広く用いられているプロトコルOpen Sound Control\footnote{http://www.cnmat.berkeley.edu/OpenSoundControl/}で行います。ActionScript 3とProcessingに対しては言語拡張を行うためのFunnelライブラリ（詳細は後述）で利用できますが、これに加えてOpen Sound Controlに対応する全てのプログラミング環境\footnote{音楽系ではMax/MSPやSuperCollider 3など、スクリプト系ではPHP、Perlなど多数。}からも利用できます。
+Funnel Serverは仮想シリアルポートドライバ経由でそれぞれのI/Oモジュールと通信します。Funnel Serverとアプリケーション側との通信は、音楽系のプログラミング環境を中心に広く用いられているプロトコルOpen Sound Control\footnote{http://www.cnmat.berkeley.edu/OpenSoundControl/}で行います。ActionScript 3とProcessingに対しては言語拡張を行うためのFunnelライブラリ（詳細は後述）で利用できますが、これに加えてOpen Sound Controlに対応する全てのプログラミング環境\footnote{音楽系ではMax/MSPやSuperCollider 3など、スクリプト言語系ではPerl、PHP、Pythonなど多数。}からも利用できます。
 
 Funnel Serverにより、物理的なI/Oモジュールは抽象化されるため、販売期間終了後の故障などにより特定のI/Oモジュールが利用できなくなってしまった場合でも、その時点で対応するものに交換することが可能です。このように抽象化するレイヤーを用意することにより、Funnelは長期間に渡って利用と開発を継続することが可能になります。
 
@@ -109,11 +108,18 @@ function handler() {
 
 \begin{lstlisting}[caption={コード例\ref{pseudo_code}の実装例（ActionScript 3 + Funnel）},label=useless]
 var gio:Gainer = new Gainer(...);
-gio.button.addEventListener(RISING_EDGE, buttonPressed);
+gio.digitalInput(0).addEventListener(PortEvent.RISING_EDGE, buttonPressed);
 
-function buttonPressed():void {
+function buttonPressed(e:PortEvent):void {
 	...
 }
+\end{lstlisting}
+
+\begin{lstlisting}[caption={コード例\ref{pseudo_code}の実装例（Ruby + Funnel）},label=useless]
+gio = Gainer.new(...)
+gio.digital_input(0).on PortEvent::RISING_EDGE do
+  ...
+end
 \end{lstlisting}
 
 %以上の例はかなりシンプルなものでしたので、「これだけではメリットが実感できない」と思うかもしれません。しかし、ステートマシンのようなものは、経験者が実装する場合でもC言語では難易度が高く、その結果も可読性に優れたものにはならないのが実情です\footnote{高価なCASEツールを熟練者が用いる場合にはこの限りではありません。しかし、デザイナーやアーティストがCASEツールを導入することは、価格面だけでなくツールを使用するスキルを習得するまでの人的コストの面でも事実上不可能です。}。また、センサの出力から不必要な成分を除去するフィルタ処理は、デジタル信号処理のスキルが必要になり、エンジニアといえどもそれなりの経験がないと難易度が高い分野です。
@@ -144,23 +150,23 @@ Funnelは、これらのライブラリをバイナリで提供するのではなく、ソースコードの状態で
 
 なお、「センサからの入力を一定回数サンプリングして加算平均することで自動的にベースラインを求める」といったレベルでライブラリを用意してしまうと、確かに特定の処理は簡単に行えるようになります。しかし、それぞれ用途が限定されているために応用範囲が狭く、ライブラリが肥大化してしまう危険性が大いにあります。また、内部処理がブラックボックス化されてしまうため、ユーザのスキルアップにつながりません。この観点から、あくまで必要最小限のレベルにとどめます。
 
-
+\newpage
 \subsection{専用ハードウェア「FIO」について}
 Funnel用に開発するI/Oモジュール（FIO：フィオ）は、以下のパートから構成されます。
 \begin{itemize}
-\item 基本モジュール
+\item USB⇔XBeeドングル（New Micros製USB XBee Dongleなど）
 	\begin{itemize}
-	\item USB-to-UART変換ブリッジ（FT232RL）
-	\item ワイヤレス通信モジュール（XBeeまたはXBee Pro）
+	\item USB-to-UART変換ブリッジ（FTDI製FT232RL）
+	\item ワイヤレス通信モジュール（MaxStream製XBee）
 	\end{itemize}
 %\item 追加モジュール（有線）
 %	\begin{itemize}
 %	\item PSoCなどのマイコン（CY8C29x66シリーズ？）
 %	\end{itemize}
-\item 追加モジュール
+\item 無線モジュール
 	\begin{itemize}
-	\item PSoCなどのマイコン（例：CY8C27143）
-	\item ワイヤレス通信モジュール（XBeeまたはXBee Pro）
+	\item PSoCマイコン（Cypress Semiconductor製CY8C27143）
+	\item ワイヤレス通信モジュール（MaxStream製XBee）
 	\end{itemize}
 \end{itemize}
 
@@ -168,20 +174,12 @@ Funnel用に開発するI/Oモジュール（FIO：フィオ）は、以下のパートから構成されます。
 \begin{center}
 \includegraphics[mediaboxonly, height=9.5cm, clip]{funnel_io.pdf}
 \vskip -\lastskip \vskip -3pt
-\caption{Funnel I/O moduleの構成図}
+\caption{Funnel I/Oモジュールの構成図}
 \label{fio}
 \end{center}
 \end{figure}
 
-基本モジュールの機能は以下のようになっています。基本モジュールは、USBケーブルでPCと接続され、必要最小限の入出力に加えて、拡張モジュールに対するハブの役割も担当します。
-\begin{itemize}
-\item アナログ入力：8ポート（8ビット）
-\item アナログ出力：8ポート（8ビットソフトウェアPWM）
-\item I$^2{}$C：1ポート
-\item UART：1ポート（無線モジュール用）
-\end{itemize}
-
-追加モジュールの機能は、モジュールごとに異なります。基本モジュールと追加モジュールの通信はI$^2{}$C（有線の場合）またはIEEE 802.15.4（無線の場合）で行われます。追加モジュールのファームウェアは基本パターンを目的ごとに用意しますが、PSoC Express\footnote{Cやアセンブラでコードを書くことなくマイコンのファームウェアを開発できるツール。}やPSoC Designer\footnote{PSoCマイコンの全ての機能を利用できる開発ツール。利用できる言語はCまたはアセンブラ。}により、ユーザ自身がデザインして簡単に追加することも可能です。
+USB⇔XBeeドングルはUSBとIEEE 802.15.4の間の変換を行います。無線モジュールのハードウェアとファームウェアは基本となるものを開発し、リファレンスデザインとして公開しますが、PSoC Express\footnote{Cやアセンブラでコードを書くことなくマイコンのファームウェアを開発できるツール。}やPSoC Designer\footnote{PSoCマイコンの全ての機能を利用できる開発ツール。利用できる言語はCまたはアセンブラ。}により、ユーザ自身がデザインして簡単に追加することも可能です。
 また、全てオープンソースで公開することにより、基本デザインをベースとしてPSoC以外のマイコン（AVR、MSP430、Propeller\footnote{BASIC Stampシリーズで知られるParallax社が開発したマルチコアのマイコン。http://www.parallax.com/propeller/}など）を用いたバリエーションを作成することも可能です。
 
 
@@ -190,11 +188,11 @@ Funnel用に開発するI/Oモジュール（FIO：フィオ）は、以下のパートから構成されます。
 \subsection{データの表現について}
 入出力ポートのデータは、0から1までの実数（AS3ではNumber、Processingではfloat）で表現します。これにより、I/OモジュールごとにA/DやD/A（またはPWM）の分解能が異なる場合でも同様に扱えます。
 
-\subsection{Systemクラス}
-Systemクラスは複数のI/Oモジュールから構成されるシステムを表現するためのクラスです。Gainer I/OモジュールやArduino I/Oボードを利用する際には、Systemオブジェクトをラップするユーティリティークラス（GainerまたはArduino）を利用してアクセスすることにより、内部構造を意識することなくアクセスできます。
+\subsection{IOSystemクラス}
+IOSystemクラスは複数のI/Oモジュールから構成されるシステムを表現するためのクラスです。Gainer I/OモジュールやArduino I/Oボードを利用する際には、IOSystemオブジェクトをラップするユーティリティークラス（GainerまたはArduino）を利用してアクセスすることにより、内部構造を意識することなくアクセスできます。
 
 \subsubsection{コンストラクタ}
-\texttt{System(hostName:String, portNumber:int, modules:int, samplingInterval:int)}
+\texttt{IOSystem(hostName:String, portNumber:int, modules:int, samplingInterval:int)}
 
 \subsubsection{インスタンス変数}
 \begin{tabular}{lll}
@@ -1249,7 +1247,7 @@ trigger.start();
 %\texttt{/query/portDirection} & int & 指定した番号の入出力方向を問い合わせる \\
 %\texttt{/query/portType} & int & 指定した番号のタイプを問い合わせる \\
 \texttt{/out} & int, int, float, ... & モジュールID、最初のポート番号、値1、値2… \\
-\texttt{/in} & int, int & 指定したポートから指定したポート数分の値を取得する \\
+\texttt{/in} & int, int, int & モジュールID、最初のポート番号、ポート数 \\
 \end{tabular}
 
 \subsection{サーバからのリプライ（コマンド用ポート）}
@@ -1283,7 +1281,7 @@ trigger.start();
 コマンド & 引数 & 説明 \\\hline
 %%\texttt{/ready} & none & モジュールとの通信が確立して準備が完了した \\
 %\texttt{/error} & int & エラーが発生した \\
-\texttt{/in} & int, int, float, ... & モジュール番号、ポート番号、値1、値2…
+\texttt{/in} & int, int, float, ... & モジュールID、ポート番号、値1、値2…
 \end{tabular}
 
 %\begin{lstlisting}[caption={/inメッセージの形式},label=useless]
@@ -1331,6 +1329,7 @@ ActionScript 3をはじめとするJavaScriptを、Tamarin\footnote{http://www.mozilla-ja
 \newpage
 \section{更新履歴}
 \begin{description}
+\item[ 2007.11.19] Systemクラスの名称をIOSystemに変更した。システム全体及びFunnel I/Oモジュールの説明図を更新した。
 \item[ 2007.11.16] ユーティリティークラスとしてGainerおよびArduinoを追加し、複数モジュールに対応するためのSystemクラスを追加した。
 \item[ 2007.10.31] AS3のサンプルで変数の型にfloatを指定していた部分をNumberに修正。XBeeに関する定義を追加。ビルド001で追加されたConfigurationを利用した形式にサンプルを修正。
 \item[ 2007.9.29] Configurationクラスを追加。FunnelクラスにanalogInput()などのメソッドを追加。
