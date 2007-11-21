@@ -356,32 +356,37 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 			sleep(100);
 		}
 
+		int moduleId = ((Integer) arguments[0]).intValue();
+		printMessage("Module ID: " + moduleId);
+		Object[] config = new Object[arguments.length - 1];
+		System.arraycopy(arguments, 1, config, 0, arguments.length - 1);
+
 		// TODO
 		// Should synchronize with the notification thread
 		dinPortChunks.clear();
 
-		if (arguments.length != (ARD_TOTAL_ANALOG_PINS + ARD_TOTAL_DIGITAL_PINS)) {
+		if (config.length != (ARD_TOTAL_ANALOG_PINS + ARD_TOTAL_DIGITAL_PINS)) {
 			throw new IllegalArgumentException(
 					"The number of pins does not match to that of the Arduino I/O module"); //$NON-NLS-1$
 		}
-		for (int i = 0; i < arguments.length; i++) {
-			if (arguments[i] == null) {
+		for (int i = 0; i < config.length; i++) {
+			if (config[i] == null) {
 				throw new IllegalArgumentException(
 						"Argument of the following port is null: " + i);
 			}
-			if (!(arguments[i] instanceof Integer)) {
+			if (!(config[i] instanceof Integer)) {
 				throw new IllegalArgumentException(
 						"Argument of the following port is not an integer value: "
 								+ i);
 			}
 			if (analogPortRange.contains(i)) {
-				if (!PORT_AIN.equals(arguments[i])) {
+				if (!PORT_AIN.equals(config[i])) {
 					throw new IllegalArgumentException(
 							"Only AIN is available on the following port: " + i);
 				}
 				pinMode[i] = ARD_PIN_MODE_AIN;
 			} else if (digitalPortRange.contains(i)) {
-				if (PORT_AOUT.equals(arguments[i])) {
+				if (PORT_AOUT.equals(config[i])) {
 					if (Arrays.binarySearch(aoutAvailablePorts, i) < 0) {
 						throw new IllegalArgumentException(
 								"AOUT is not available on the following port: "
@@ -389,10 +394,10 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 					}
 					setPinMode(i - digitalPortRange.getMin(), ARD_PIN_MODE_PWM);
 					pinMode[i] = ARD_PIN_MODE_PWM;
-				} else if (PORT_DIN.equals(arguments[i])) {
+				} else if (PORT_DIN.equals(config[i])) {
 					setPinMode(i - digitalPortRange.getMin(), ARD_PIN_MODE_IN);
 					pinMode[i] = ARD_PIN_MODE_IN;
-				} else if (PORT_DOUT.equals(arguments[i])) {
+				} else if (PORT_DOUT.equals(config[i])) {
 					setPinMode(i - digitalPortRange.getMin(), ARD_PIN_MODE_OUT);
 					pinMode[i] = ARD_PIN_MODE_OUT;
 				} else {

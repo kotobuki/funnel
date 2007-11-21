@@ -327,7 +327,11 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 	public void setConfiguration(Object[] arguments) {
 		inputs = null;
-		if (java.util.Arrays.equals(CONFIGURATION_1, arguments)) {
+		int moduleId = ((Integer) arguments[0]).intValue();
+		printMessage("Module ID: " + moduleId);
+		Object[] config = new Object[arguments.length - 1];
+		System.arraycopy(arguments, 1, config, 0, arguments.length - 1);
+		if (java.util.Arrays.equals(CONFIGURATION_1, config)) {
 			configuration = 1;
 			ainPortRange.setRange(0, 3);
 			dinPortRange.setRange(4, 7);
@@ -337,7 +341,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			inputs = new float[18];
 			inputPortCounts = ainPortRange.getCounts()
 					+ dinPortRange.getCounts() + buttonPortRange.getCounts();
-		} else if (java.util.Arrays.equals(CONFIGURATION_2, arguments)) {
+		} else if (java.util.Arrays.equals(CONFIGURATION_2, config)) {
 			configuration = 2;
 			ainPortRange.setRange(0, 7);
 			dinPortRange.setRange(-1, -1);
@@ -347,7 +351,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			inputs = new float[18];
 			inputPortCounts = ainPortRange.getCounts()
 					+ dinPortRange.getCounts() + buttonPortRange.getCounts();
-		} else if (java.util.Arrays.equals(CONFIGURATION_3, arguments)) {
+		} else if (java.util.Arrays.equals(CONFIGURATION_3, config)) {
 			configuration = 3;
 			ainPortRange.setRange(0, 3);
 			dinPortRange.setRange(4, 7);
@@ -357,7 +361,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			inputs = new float[18];
 			inputPortCounts = ainPortRange.getCounts()
 					+ dinPortRange.getCounts() + buttonPortRange.getCounts();
-		} else if (java.util.Arrays.equals(CONFIGURATION_4, arguments)) {
+		} else if (java.util.Arrays.equals(CONFIGURATION_4, config)) {
 			configuration = 4;
 			ainPortRange.setRange(0, 7);
 			dinPortRange.setRange(-1, -1);
@@ -367,7 +371,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			inputs = new float[18];
 			inputPortCounts = ainPortRange.getCounts()
 					+ dinPortRange.getCounts() + buttonPortRange.getCounts();
-		} else if (java.util.Arrays.equals(CONFIGURATION_5, arguments)) {
+		} else if (java.util.Arrays.equals(CONFIGURATION_5, config)) {
 			configuration = 5;
 			ainPortRange.setRange(-1, -1);
 			dinPortRange.setRange(0, 15);
@@ -376,7 +380,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			buttonPortRange.setRange(-1, -1);
 			inputs = new float[16];
 			inputPortCounts = dinPortRange.getCounts();
-		} else if (java.util.Arrays.equals(CONFIGURATION_6, arguments)) {
+		} else if (java.util.Arrays.equals(CONFIGURATION_6, config)) {
 			configuration = 6;
 			ainPortRange.setRange(-1, -1);
 			dinPortRange.setRange(-1, -1);
@@ -385,7 +389,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			buttonPortRange.setRange(-1, -1);
 			inputs = new float[16];
 			inputPortCounts = 0;
-		} else if (java.util.Arrays.equals(CONFIGURATION_7, arguments)) {
+		} else if (java.util.Arrays.equals(CONFIGURATION_7, config)) {
 			configuration = 7;
 			ainPortRange.setRange(-1, -1);
 			dinPortRange.setRange(-1, -1);
@@ -394,7 +398,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			buttonPortRange.setRange(-1, -1);
 			inputs = new float[64];
 			inputPortCounts = 0;
-		} else if (java.util.Arrays.equals(CONFIGURATION_8, arguments)) {
+		} else if (java.util.Arrays.equals(CONFIGURATION_8, config)) {
 			configuration = 8;
 			ainPortRange.setRange(-1, -1);
 			dinPortRange.setRange(0, 7);
