@@ -1,14 +1,11 @@
 package funnel 
 {
-	import funnel.Funnel;
 	import flash.display.BitmapData;
 	
-	public class MatrixLED 
+	public class MatrixLED extends IOSystem
 	{
-		private var gio:Funnel;
-		
-		public function MatrixLED(gio:Funnel) {
-			this.gio = gio;
+		public function MatrixLED(host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
+			super([Configuration.GAINER_MODE7], host, portNum, samplingInterval);
 		}
 		
 		public function scanMatrix(image:*):void {
@@ -30,10 +27,11 @@ package funnel
 						pixels.push((0.3*r + 0.59*g + 0.11*b) / 255);
 					}
 				}
-				gio.exportValue(0, pixels);
+				sendOut(0, 0, pixels);
 			} else if (image is Array && image.length == 64) {
-				gio.exportValue(0, image);
+				sendOut(0, 0, image);
 			}
 		}
+		
 	}
 }
