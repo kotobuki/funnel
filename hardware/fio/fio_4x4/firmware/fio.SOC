@@ -13,32 +13,6 @@
 				<SOURCE_FILE NAME="psocapi.h" TYPE="LibraryIncludeFile" LANGUAGE="C" OVERLAY_NAME="" FILEMODTIME="1242080" LIBTIME="2088812006"/>
 				<SOURCE_FILE NAME="psocapi.inc" TYPE="LibraryIncludeFile" LANGUAGE="ASM" OVERLAY_NAME="" FILEMODTIME="1242116" LIBTIME="2088812006"/>
 				<SOURCE_FILE NAME="memory.inc" TYPE="UserIncludeFile" LANGUAGE="ASM" OVERLAY_NAME=""/>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 				<SOURCE_FILE NAME="pwm8_0int.asm" TYPE="LibrarySource" LANGUAGE="ASM" OVERLAY_NAME="" FILEMODTIME="0" LIBTIME="7702394"/>
 				<SOURCE_FILE NAME="pwm8_0.inc" TYPE="LibraryIncludeFile" LANGUAGE="ASM" OVERLAY_NAME="" FILEMODTIME="2090141040" LIBTIME="-1"/>
 				<SOURCE_FILE NAME="pwm8_0.asm" TYPE="LibrarySource" LANGUAGE="ASM" OVERLAY_NAME="" FILEMODTIME="2090141040" LIBTIME="-1"/>
