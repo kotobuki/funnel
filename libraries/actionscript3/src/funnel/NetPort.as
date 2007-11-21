@@ -5,9 +5,6 @@ package funnel
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
-	import funnel.event.FunnelErrorEvent;
-	import funnel.async.Task;
-	import funnel.async.waitEvent;
 
 	public class NetPort extends EventDispatcher
 	{
@@ -18,7 +15,7 @@ package funnel
 		}
 		
 		public function connect(host:String, port:Number):Task {
-			var task:Task = waitEvent(
+			var task:Task = Task.waitEvent(
 				_socket,
 				Event.CONNECT,
 				IOErrorEvent.IO_ERROR,

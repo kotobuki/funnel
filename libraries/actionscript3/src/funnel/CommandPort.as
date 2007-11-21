@@ -5,8 +5,6 @@ package funnel
 	import flash.events.*;
 	import flash.utils.Timer;
 	import funnel.osc.*;
-	import funnel.event.FunnelErrorEvent;
-	import funnel.async.*;
 	
 	public class CommandPort extends NetPort
 	{
@@ -23,7 +21,7 @@ package funnel
 
 		public function writeCommand(command:OSCMessage):Task {
 			var task:Task = new Task();
-			waitEvent(_socket, ProgressEvent.SOCKET_DATA).completed = cmd(checkError, task);
+			Task.waitEvent(_socket, ProgressEvent.SOCKET_DATA).addCallback(checkError, task);
 			_socket.writeBytes(command.toBytes());
 			_socket.flush();
 			return task;

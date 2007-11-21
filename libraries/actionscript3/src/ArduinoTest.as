@@ -1,10 +1,7 @@
 package {
 	import flash.display.Sprite;	
 	import flash.events.Event;
-	import funnel.Funnel;
-	import funnel.ioport.Port;
-	import funnel.filter.Osc;
-	import funnel.shortcuts.*;
+	import funnel.*;
 
 	/*
 	 * Preparation
@@ -14,23 +11,23 @@ package {
 	public class ArduinoTest extends Sprite
 	{
 		public function ArduinoTest() {	
-			var config:Object = ARDUINO;
+			var config:Configuration = Configuration.ARDUINO;
 			config.setDigitalPinMode(11, PWM);
 
-			var aio:Funnel = new Funnel(config);
-			aio.addEventListener(READY, trace);
-			aio.addEventListener(REBOOT_ERROR, trace);
-			aio.addEventListener(CONFIGURATION_ERROR, trace);
-			aio.addEventListener(FATAL_ERROR, trace);
+			var aio:Arduino = new Arduino(config);
+			aio.addEventListener(FunnelEvent.READY, trace);
+			aio.addEventListener(FunnelErrorEvent.REBOOT_ERROR, trace);
+			aio.addEventListener(FunnelErrorEvent.CONFIGURATION_ERROR, trace);
+			aio.addEventListener(FunnelErrorEvent.FATAL_ERROR, trace);
 
 			var button:Port = aio.digitalPin(2);
 			var led:Port = aio.digitalPin(11);
 
 			led.filters = [new Osc(Osc.SIN, 1, 1, 0, 0)];
-			button.addEventListener(RISING_EDGE, function(e:Event):void {
+			button.addEventListener(PortEvent.RISING_EDGE, function(e:Event):void {
 				led.filters[0].start();
 			});
-			button.addEventListener(FALLING_EDGE, function(e:Event):void {
+			button.addEventListener(PortEvent.FALLING_EDGE, function(e:Event):void {
 				led.filters[0].stop();
 			});
 		}
