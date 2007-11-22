@@ -16,6 +16,7 @@ module Funnel
 
   class IOSystem
     MINIMUM_SAMPLING_INTERVAL = 10
+    ALL = 0xFFFF
 
     attr_accessor :auto_update
 
@@ -45,6 +46,8 @@ module Funnel
 
       @modules = Hash::new
       add_module(0, config) unless config == nil  # add the first I/O module if specified
+      @broadcast = nil
+      @autoregister = false
 
       Thread.new do
         loop do
@@ -61,6 +64,7 @@ module Funnel
                   @modules[id].port(from + i).value = message.to_a[2 + i]
                 end
               when '/node':
+                next unless @autoregister
                 id = message.to_a[0]
                 ni = message.to_a[1]
                 register_node(id, ni)
@@ -141,8 +145,13 @@ module Funnel
     end
 
     def iomodule(id)
-      raise ArgumentError, "I/O module is not available at #{id}" if @modules[id] == nil
-      @modules[id]
+      if id == ALL then
+        raise ArgumentError, "broadcast is not available for this type" if @broadcast == nil
+        @broadcast
+      else
+        raise ArgumentError, "I/O module is not available at #{id}" if @modules[id] == nil
+        @modules[id]
+      end
     end
 
   end

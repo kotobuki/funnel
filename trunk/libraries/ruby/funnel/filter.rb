@@ -114,7 +114,7 @@ module Funnel
     }
 
     MINIMUM_SERVICE_INTERVAL = 5  # i.e. 5ms
-    @@interval = 0.033 # i.e. 30fps
+    @@interval = 0.02 # i.e. 50fps
     @@service_thread = nil
     @@listeners = []
 

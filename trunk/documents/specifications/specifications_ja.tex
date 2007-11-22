@@ -1242,7 +1242,7 @@ trigger.start();
 %\texttt{/unsubscribe} & none & サーバからの通知を登録解除する \\
 \texttt{/polling} & int & 入力のポーリングを開始（1）または停止（0）する \\
 %\texttt{/query} & none & I/Oモジュールのポート設定を問い合わせる \\
-\texttt{/configure} & int, int, ... & I/Oモジュールのポート設定を行う \\
+\texttt{/configure} & int, int, int, ... & モジュールID、ポート設定1、ポート設定2… \\
 \texttt{/samplingInterval} & int & I/Oモジュールのサンプリング間隔をミリ秒単位で設定する \\
 %\texttt{/query/portDirection} & int & 指定した番号の入出力方向を問い合わせる \\
 %\texttt{/query/portType} & int & 指定した番号のタイプを問い合わせる \\
@@ -1329,6 +1329,7 @@ ActionScript 3をはじめとするJavaScriptを、Tamarin\footnote{http://www.mozilla-ja
 \newpage
 \section{更新履歴}
 \begin{description}
+\item[ 2007.11.22] /configureコマンドの第1引数にモジュールIDを追加。
 \item[ 2007.11.19] Systemクラスの名称をIOSystemに変更した。システム全体及びFunnel I/Oモジュールの説明図を更新した。
 \item[ 2007.11.16] ユーティリティークラスとしてGainerおよびArduinoを追加し、複数モジュールに対応するためのSystemクラスを追加した。
 \item[ 2007.10.31] AS3のサンプルで変数の型にfloatを指定していた部分をNumberに修正。XBeeに関する定義を追加。ビルド001で追加されたConfigurationを利用した形式にサンプルを修正。

@@ -83,7 +83,7 @@ module Funnel
     end
 
     def detect_edge(last_value, current_value)
-      return if last_value == current_value
+      return if ((type == AIN) or (type == DIN)) and last_value == current_value
 
       @last_value = last_value
       @on_change_listeners.each do |proc|

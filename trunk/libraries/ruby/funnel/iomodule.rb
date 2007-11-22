@@ -37,14 +37,13 @@ module Funnel
       @updated_port_indices = Array.new(@port_count, false)
       @auto_update = true
 
-      # TODO: add module id for each configuration method
-      parent.send_command(OSC::Message.new('/configure', 'i' * config.to_a.size, *config.to_a))
+      parent.send_command(OSC::Message.new('/configure', 'i' * (config.to_a.size + 1), id, *config.to_a))
     end
       
     def init_ports(config)
       @port.clear
       config.each do |type|
-        puts "port(#{@port_count}): #{port_def_to_str(type)}"
+#        puts "port(#{@port_count}): #{port_def_to_str(type)}"
         port = Port.new(@port_count, type)
         @port.push(port)
         if port.type == Port::AOUT or port.type == Port::DOUT then
