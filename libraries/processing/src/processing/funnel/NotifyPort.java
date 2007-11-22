@@ -43,7 +43,7 @@ public final class NotifyPort extends TcpOSCPort implements Runnable {
 				readPort();
 			}catch(IOException e){ 
 				e.printStackTrace();
-			}
+			} 
 		}
 		System.out.println("notify thread out");
 	}
@@ -53,10 +53,30 @@ public final class NotifyPort extends TcpOSCPort implements Runnable {
 		// increased to 1536, as this is a common MTU
 		byte[] buffer = new byte[1536];
 		
-		int readBytes = in.read(buffer);
-		if(readBytes>0 && readBytes <109){
-			OSCPacket oscPacket = converter.convert(buffer, readBytes);
-			dispatcher.dispatchPacket(oscPacket);
+		int readBytes = in.read(buffer,0,1536);
+
+		
+		if(readBytes>0){
+			String c = new String(buffer);
+			int nPackets = 0;
+			for(int i=0;i<c.length();i++){
+				if(c.startsWith("#bundle",i)){
+					nPackets++;
+				}
+			}
+			//System.out.println(" n " + nPackets);
+			if(nPackets ==0){
+				return;
+			}
+			int packetSize = readBytes/nPackets;
+			
+			//System.out.println(" read bytes " + readBytes);
+			for(int i=0;i<nPackets;i++){
+				byte[] b = new byte[packetSize];
+				System.arraycopy(buffer, packetSize*i, b, 0, packetSize);
+				OSCPacket oscPacket = converter.convert(b, packetSize);
+				dispatcher.dispatchPacket(oscPacket);
+			}
 		}
 		
 	}
