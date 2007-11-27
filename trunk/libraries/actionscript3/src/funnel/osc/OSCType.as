@@ -2,6 +2,11 @@ package funnel.osc
 {
 	import flash.utils.ByteArray;
 	
+	/**
+	 * 
+	 * @private
+	 * 
+	 */	
 	public class OSCType
 	{
 		public static const FLOAT:String = "f";

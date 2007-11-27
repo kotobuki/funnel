@@ -2,6 +2,11 @@ package funnel.osc
 {
 	import flash.utils.ByteArray;
 	
+	/**
+	 * 
+	 * @private
+	 * 
+	 */	
 	public class OSCString extends OSCType
 	{
 		private static const ENCODING:String = "ascii";

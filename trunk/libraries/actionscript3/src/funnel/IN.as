@@ -1,3 +1,6 @@
 package funnel {
-	public var IN:uint = Port.IN;
+	/**
+	* @see Port#DIN
+	*/
+	public var IN:uint = Port.DIN;
 }

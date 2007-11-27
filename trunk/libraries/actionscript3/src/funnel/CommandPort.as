@@ -6,6 +6,10 @@ package funnel
 	import flash.utils.Timer;
 	import funnel.osc.*;
 	
+	/**
+	 * FunnelServerのコマンドポートと通信を行うクラスです。
+	 * @private
+	 */	
 	public class CommandPort extends NetPort
 	{
 		private static const NO_ERROR:uint = 0;

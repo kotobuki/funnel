@@ -3,6 +3,10 @@ package {
 	import flash.events.Event;
 	import funnel.*;
 	
+	/**
+	 * GAINER I/Oモジュール上のボタンを押している間、LEDが点灯するサンプルです。
+	 * 
+	 */	
 	public class ButtonAndLED extends Sprite
 	{
 		public function ButtonAndLED() {

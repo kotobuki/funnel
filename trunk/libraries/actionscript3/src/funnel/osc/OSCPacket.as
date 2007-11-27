@@ -3,6 +3,11 @@ package funnel.osc
 	import flash.utils.*;
 	import funnel.osc.*;
 	
+	/**
+	 * 
+	 * @private
+	 * 
+	 */	
 	public class OSCPacket
 	{		
 		private static const NUMBERSIGN:int = 35;

@@ -6,6 +6,11 @@ package funnel
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
 
+	/**
+	 * Socketのラッパーです。ソケットの接続処理をTaskとして管理します。
+	 * @private
+	 * 
+	 */	
 	public class NetPort extends EventDispatcher
 	{
 		protected var _socket:Socket;

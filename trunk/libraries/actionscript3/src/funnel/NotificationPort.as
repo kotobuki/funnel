@@ -7,6 +7,10 @@ package funnel
 	import funnel.osc.OSCBundle;
 	import funnel.osc.OSCPacket;
 	
+	/**
+	 * FunnelServerの通知ポートからのメッセージをパースするクラスです。
+	 * @private
+	 */	
 	public class NotificationPort extends NetPort
 	{
 		private var _inputPacket:OSCPacket;

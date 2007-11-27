@@ -2,6 +2,11 @@ package funnel.osc
 {
 	import flash.utils.ByteArray;
 	
+	/**
+	 * 
+	 * @private
+	 * 
+	 */	
 	public class OSCInt extends OSCType
 	{
 		public function OSCInt(value:*) {

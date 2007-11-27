@@ -5,6 +5,10 @@ package
 	import flash.geom.Point;
 	import funnel.*;
 
+	/**
+	 * GAINERを使用してマトリクスLEDをコントロールするサンプルです。
+	 * 
+	 */	
 	public class Mode7 extends Sprite
 	{
 		public function Mode7() {
