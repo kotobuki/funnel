@@ -3,6 +3,10 @@ package funnel
 	import flash.events.Event;
 	import funnel.osc.*;
 
+	/**
+	 * PCに接続されたI/Oモジュールを抽象化して共通の方法でアクセスするためのクラスです。
+	 * 
+	 */	
 	public class IOModule
 	{
 		private var _system:IOSystem;
@@ -12,6 +16,13 @@ package funnel
 		private var _portCount:uint;
 		private var _config:Configuration;
 
+		/**
+		 * 
+		 * @param system FunnelServerと通信をするIOSystemオブジェクト
+		 * @param id IOModuleオブジェクトのID
+		 * @param configuration コンフィギュレーション
+		 * 
+		 */		
 		public function IOModule(system:IOSystem, id:uint, configuration:Configuration) {
 			_system = system;
 			_id = id;
@@ -31,10 +42,20 @@ package funnel
 			}
 		}
 		
+		/**
+		 * portNumで指定したPortオブジェクトを取得します。
+		 * @param portNum ポート番号
+		 * @return Portオブジェクト
+		 * @see Port
+		 */		
 		public function port(portNum:uint):Port {
 			return _ioPorts[portNum];
 		}
 		
+		/**
+		 * @return ポート数
+		 * 
+		 */		
 		public function get portCount():uint {
 			return _portCount;
 		}
@@ -49,6 +70,10 @@ package funnel
 			}
 		}
 		
+		/**
+		 * @private
+		 * 
+		 */		
 		internal function update():void {
 			var value:Number;
 			var adjoiningValues:Array;

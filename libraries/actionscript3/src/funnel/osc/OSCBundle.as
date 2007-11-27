@@ -2,6 +2,11 @@ package funnel.osc
 {
 	import flash.utils.ByteArray;
 	
+	/**
+	 * 
+	 * @private
+	 * 
+	 */	
 	public class OSCBundle extends OSCPacket
 	{
 		private static const BUNDLE:String = "#bundle";

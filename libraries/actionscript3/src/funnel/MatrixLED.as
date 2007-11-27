@@ -2,12 +2,24 @@ package funnel
 {
 	import flash.display.BitmapData;
 	
+	/**
+	 * GAINER専用のマトリクスLEDをコントロールするクラスです。
+	 */	
 	public class MatrixLED extends IOSystem
 	{
-		public function MatrixLED(host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
-			super([Configuration.GAINER_MODE7], host, portNum, samplingInterval);
+		/**
+		 * @param host ホスト名
+		 * @param portNum ポート番号
+		 */		
+		public function MatrixLED(host:String = "localhost", portNum:Number = 9000) {
+			super([Configuration.GAINER_MODE7], host, portNum);
 		}
 		
+		/**
+		 * 8x8画素のBitmapDataか、64要素のNumber配列からマトリクスLEDの表示内容を更新します。
+		 * @param image 8x8画素のBitmapData or 64要素のNumber配列
+		 * @see flash.display.BitmapData
+		 */		
 		public function scanMatrix(image:*):void {
 			if (image is BitmapData && image.width == 8 && image.height == 8) {
 				var i:uint;

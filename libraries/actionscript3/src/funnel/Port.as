@@ -3,11 +3,44 @@ package funnel
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
+	/**
+	 * @copy PortEvent#CHANGE
+	 */
+	[Event(name="change",type="PortEvent")]
+	
+	/**
+	 * @copy PortEvent#RISING_EDGE
+	 */
+	[Event(name="risingEdge",type="PortEvent")]
+	
+	/**
+	 * @copy PortEvent#FALLING_EDGE
+	 */
+	[Event(name="fallingEdge",type="PortEvent")]
+	
+	/**
+	 * I/Oモジュールの入出力ポートを表すクラスです。
+	 */	
 	public class Port extends EventDispatcher
 	{
+		/**
+		* アナログ入力
+		*/		
 		public static const AIN:uint = 0;
+		
+		/**
+		* デジタル入力
+		*/		
 		public static const DIN:uint = 1;
+		
+		/**
+		* アナログ出力
+		*/		
 		public static const AOUT:uint = 2;
+		
+		/**
+		* デジタル出力
+		*/		
 		public static const DOUT:uint = 3;
 		
 		private var _value:Number;
@@ -23,6 +56,12 @@ package funnel
 		private var _numSamples:Number;
 		private static const MAX_SAMPLES:Number = Number.MAX_VALUE;
 		
+		/**
+		 * 
+		 * @param number ポート番号
+		 * @param type ポートのタイプ(AIN、DIN、AOUT、DOUT)
+		 * 
+		 */		
 		public function Port(number:uint, type:uint) {
 			_number = number;
 			_type = type;
@@ -35,14 +74,26 @@ package funnel
 			_numSamples = 0;
 		}
 		
+		/**
+		 * ポート番号
+		 * 
+		 */		
 		public function get number():uint {
 			return _number;
 		}
 		
+		/**
+		 * ポートのタイプ(AIN、DIN、AOUT、DOUT)
+		 * 
+		 */		
 		public function get type():uint {
 			return _type;
 		}
 		
+		/**
+		 * センサからの入力値、またはアクチュエータへの出力値
+		 * 
+		 */		
 		public function get value():Number {
 			return _value;
 		}
@@ -54,22 +105,45 @@ package funnel
 			detectEdge(_lastValue, _value);
 		}
 		
+		/**
+		 * ポートの変化する前の値
+		 * 
+		 */		
 		public function get lastValue():Number {
 			return _lastValue;
 		}
 		
+		/**
+		 * 
+		 * 平均値
+		 * 
+		 */		
 		public function get average():Number {
 			return _average;
 		}
 		
+		/**
+		 * 
+		 * 最小値
+		 * 
+		 */		
 		public function get minimum():Number {
 			return _minimum;
 		}
 		
+		/**
+		 * 
+		 * 最大値
+		 * 
+		 */		
 		public function get maximum():Number {
 			return _maximum;
 		}
 		
+		/**
+		 * ポートに適応するフィルタ配列
+		 * 
+		 */		
 		public function get filters():Array {
 			return _filters;
 		}
@@ -104,6 +178,10 @@ package funnel
 			value = _generator.value;
 		}
 		
+		/**
+		 * ヒストリをリセットします。
+		 * 
+		 */		
 		public function clear():void {
 			_minimum = _maximum = _average = _lastValue = _value;
 			clearWeight();

@@ -2,6 +2,11 @@ package funnel.osc
 {
 	import flash.utils.*;
 	
+	/**
+	 * 
+	 * @private
+	 * 
+	 */	
 	public class OSCMessage extends OSCPacket
 	{	
 		public function OSCMessage(address:String, ...args) {

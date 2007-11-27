@@ -2,6 +2,11 @@ package funnel.osc
 {
 	import flash.utils.ByteArray;
 	
+	/**
+	 * 
+	 * @private
+	 * 
+	 */	
 	public class OSCFloat extends OSCType
 	{
 		public function OSCFloat(value:*) {

@@ -8,6 +8,11 @@ package funnel
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
+	/**
+	 * 非同期処理を同期化するためのクラスです。
+	 * @private
+	 * 
+	 */	
 	public class Task {
 		
 		private var chain:Array;
