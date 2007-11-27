@@ -1,3 +1,5 @@
+
+/*
 package processing.funnel;
 
 
@@ -10,7 +12,7 @@ import processing.core.*;
 import com.illposed.osc.*;
 
 
-public final class Funnel implements Runnable{
+public public class IO implements Runnable{
 	PApplet parent;
 	
 //	Method onFatalError;
@@ -74,24 +76,7 @@ public final class Funnel implements Runnable{
 		
 	}
 	
-	public Funnel(PApplet parent,Configuration config){
-		
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
-				33,config);
-	}
 
-	public Funnel(PApplet parent, int samplingInterval, Configuration config ){
-		
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
-				samplingInterval,config);
-	}
-
-	public Funnel(PApplet parent,
-			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config ){
-		
-		this(parent,"localhost",commandPortNumber,notifyPortNumber,
-				samplingInterval,config);
-	}
 	
 	
 	
@@ -620,3 +605,5 @@ public final class Funnel implements Runnable{
 	
 	
 }
+
+*/

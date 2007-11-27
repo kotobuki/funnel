@@ -1,45 +1,40 @@
 package processing.funnel;
 
+import java.util.Vector;
+
 public final class Configuration{
 
 	int[] portStatus;
 	final int moduleID;
+	final String moduleName;
 	
-	IoModule module;
+	public Vector outputPorts = new Vector();
 	
-	public Configuration(int moduleID, int[] config){
+	public Configuration(int moduleID, int[] config,String moduleName){
 		this.moduleID = moduleID;
+		this.moduleName = moduleName;
 		portStatus = config;
-		
-		//TODO モジュールを追加したとき、ここに加える
-		if(moduleID == GAINER.moduleID){
-			module = new GAINER();
-		}else if(moduleID == ARDUINO.moduleID){
-			module = new ARDUINO();
-		}
 	}
 
-	
-	public void initialize(){
-		portStatus = module.initialize(portStatus);
-	}
+
 	
 	public int[] getPortStatus(){
 		return portStatus;
 	}
 	
-	//output [outstart1,outnum1,outstart2,outnum2.....]
-	
-	public int[] getOutputPortNumber(){
-		return module.getOutputPortNumber();
+	public int getModuleID(){
+		return moduleID;
 	}
 	
-	//再設定はできません
+	public String getModuleName(){
+		return moduleName;
+	}
+	
+	//new の後　再設定はできません
 	public boolean setDigitalPinMode(int n,int digitalType){
-		if(moduleID == ARDUINO.moduleID){
-			portStatus[n] = digitalType;
-			ARDUINO arduino = (ARDUINO)module;
-			return arduino.setDigitalPinMode(n, digitalType);
+		if(moduleName.equalsIgnoreCase(ARDUINO.moduleName)){
+			portStatus[ARDUINO._digitalPin[n]] = digitalType;
+			return true;
 		}
 		return false;
 		
