@@ -6,8 +6,8 @@ module Funnel
   class Fio < IOSystem
     ALL = IOSystem::ALL
 
-    def initialize(host, port, autoregister = false, interval = 100)
-      super(host, port, interval)
+    def initialize(host = 'localhost', port = 9000, autoregister = false, interval = 100)
+      super(nil, host, port, interval)
       @autoregister = autoregister
       @broadcast = IOModule.new(self, ALL, Configuration.new(Configuration::FIO), "broadcast")
     end

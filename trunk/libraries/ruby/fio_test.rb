@@ -3,7 +3,7 @@
 require "funnel/fio"
 
 module Funnel
-  fio = Fio.new('localhost', 9000, 100)
+  fio = Fio.new
 
   fio.all_iomodules.each do |io|
     puts "fio: id: #{io.id}, name: #{io.name}"

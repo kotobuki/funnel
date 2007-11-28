@@ -3,7 +3,7 @@
 require 'funnel/gainer'
 
 module Funnel
-  gio = Gainer.new('localhost', 9000, Gainer::MODE1, 33)
+  gio = Gainer.new(Gainer::MODE1)
 
   gio.ain(0).filters = [SetPoint.new(0.2, 0.05)]
   gio.ain(0).on PortEvent::CHANGE do |event|
