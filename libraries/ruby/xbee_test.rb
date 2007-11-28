@@ -3,7 +3,7 @@
 require 'funnel/xbee'
 
 module Funnel
-  xbee = XBee.new('localhost', 9000, XBee::XBS1)
+  xbee = XBee.new(XBee::XBS1)
 
   xbee.all_iomodules.each do |io|
     puts "xbee: id: #{io.id}, name: #{io.name}"

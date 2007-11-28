@@ -6,9 +6,9 @@ module Funnel
   class Gainer
     (MODE1, MODE2, MODE3, MODE4, MODE5, MODE6, MODE7, MODE8) = Array(1..8)
 
-    def initialize(host, port, mode = MODE1, interval = 33)
+    def initialize(mode = MODE1, host = 'localhost', port = 9000, interval = 33)
       config = Configuration.new(Configuration::GAINER, mode)
-      @system = IOSystem.new(host, port, interval, config)
+      @system = IOSystem.new(config, host, port, interval)
 
       @ain_ports = config.ain_ports
       @din_ports = config.din_ports

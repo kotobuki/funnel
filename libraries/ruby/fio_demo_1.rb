@@ -4,7 +4,7 @@ require "funnel/fio"
 
 # communicate with a specific node to get sensor values
 module Funnel
-  fio = Fio.new('localhost', 9000)
+  fio = Fio.new
   fio.register_node(2)
 
   fio.iomodule(2).port(0).on PortEvent::CHANGE do |event|

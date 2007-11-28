@@ -6,7 +6,7 @@ module Funnel
     end
   end
 
-  module Generator
+  class Generator < Filter
     def update(*args)
     end
   end
@@ -81,45 +81,66 @@ module Funnel
     end
   end
 
-  class Osc < Filter
-    include Generator
-    
-    SIN = lambda { |val|
-      0.5 * (1 + Math.sin(2 * Math::PI * val))
+  class Scaler < Filter
+    LINEAR = lambda { |val|
+      return val
+    }
+
+    LOG = lambda { |val|
+      return Math.log(val * (Math.E - 1) + 1)
+    }
+
+    EXP = lambda { |val|
+      return (Math.exp(val) - 1) / (Math.E - 1)
     }
 
     SQUARE = lambda { |val|
-      return (val % 1 <= 0.5) ? 1.0 : 0.0
+      return val * val
     }
 
-    TRIANGLE = lambda { |val|
-      val %= 1;
-      if (val <= 0.25) then return 2 * val + 0.5
-      elsif (val <= 0.75) then return -2 * val + 1.5
-      else return 2 * val - 1.5
-      end
+    SQUARE_ROOT = lambda { |val|
+      return val ** (1.0 / 2)
     }
 
-    SAW = lambda { |val|
-      val %= 1;
-      if (val <= 0.5) then return val + 0.5
-      else return val - 0.5
-      end
+    CUBE = lambda { |val|
+      return val * val * val * val
     }
 
-    IMPULSE = lambda { |val|
-      if (val <= 1) then return 1
-      else return 0
-      end
+    CUBE_ROOT = lambda { |val|
+      return val ** (1.0 / 4)
     }
+
+    def initialize(in_min, in_max, out_min, out_max, curve_func, limiter = true)
+      @in_min = in_min
+      @in_max = in_max
+      @out_min = out_min
+      @out_max = out_max
+      @curve_func = curve_func
+      @limiter = limiter
+    end
+    
+    def process_sample(value)
+      if @limiter then
+        value = in_min if value < in_min
+        value = in_max if value > in_max
+      end
+
+      in_range = @in_max - @in_min
+      out_range = @out_max - @out_min
+      normalized_val = (value - @in_min) / in_range
+
+      return out_range * @curve_func.call(normalized_val) + @out_min
+    end
+  end
+
+  class Osc < Generator
+    attr_reader :value
+    attr_reader :auto_update
 
     MINIMUM_SERVICE_INTERVAL = 5  # i.e. 5ms
     @@interval = 0.02 # i.e. 50fps
     @@service_thread = nil
     @@listeners = []
-
-    attr_reader :value
-    attr_reader :auto_update
 
     def self.service_interval
       return (@@interval * 1000.0).to_i
@@ -208,59 +229,37 @@ module Funnel
       @value = @amplitude * @wave_func.call(@frequency * (@time + @phase)) + @offset
       @listener.call(@value) if @listener
     end
-  end
 
-  class Scaler < Filter
-    LINEAR = lambda { |val|
-      return val
-    }
-
-    LOG = lambda { |val|
-      return Math.log(val * (Math.E - 1) + 1)
-    }
-
-    EXP = lambda { |val|
-      return (Math.exp(val) - 1) / (Math.E - 1)
+    SIN = lambda { |val|
+      0.5 * (1 + Math.sin(2 * Math::PI * val))
     }
 
     SQUARE = lambda { |val|
-      return val * val
+      return (val % 1 <= 0.5) ? 1.0 : 0.0
     }
 
-    SQUARE_ROOT = lambda { |val|
-      return val ** (1.0 / 2)
-    }
-
-    CUBE = lambda { |val|
-      return val * val * val * val
-    }
-
-    CUBE_ROOT = lambda { |val|
-      return val ** (1.0 / 4)
-    }
-
-    def initialize(in_min, in_max, out_min, out_max, curve_func, limiter = false)
-      @in_min = in_min
-      @in_max = in_max
-      @out_min = out_min
-      @out_max = out_max
-      @curve_func = curve_func
-      @limiter = limiter
-    end
-    
-    def process_sample(value)
-      if @limiter then
-        value = in_min if value < in_min
-        value = in_max if value > in_max
+    TRIANGLE = lambda { |val|
+      val %= 1;
+      if (val <= 0.25) then return 2 * val + 0.5
+      elsif (val <= 0.75) then return -2 * val + 1.5
+      else return 2 * val - 1.5
       end
+    }
 
-      in_range = @in_max - @in_min
-      out_range = @out_max - @out_min
-      normalized_val = (value - @in_min) / in_range
+    SAW = lambda { |val|
+      val %= 1;
+      if (val <= 0.5) then return val + 0.5
+      else return val - 0.5
+      end
+    }
 
-      return out_range * @curve_func.call(normalized_val) + @out_min
-    end
+    IMPULSE = lambda { |val|
+      if (val <= 1) then return 1
+      else return 0
+      end
+    }
   end
+
 end
 
 if __FILE__ == $0

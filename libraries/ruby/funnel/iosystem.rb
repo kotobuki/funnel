@@ -20,7 +20,7 @@ module Funnel
 
     attr_accessor :auto_update
 
-    def initialize(host, port, interval = 33, config = nil)
+    def initialize(config = nil, host = 'localhost', port = 9000, interval = 33)
       begin
         @command_port = TCPSocket.open(host, port)
         puts "command port: #{@command_port.addr.at(2)}, #{@command_port.addr.at(1)}"
@@ -160,7 +160,7 @@ end
 
 if __FILE__ == $0
   module Funnel
-    gio = IOSystem.new('localhost', 9000, 33, Gainer::MODE1)
+    gio = IOSystem.new(Gainer::MODE1, 'localhost', 9000, 33)
 
     gio.iomodule(0).port(0).filters = [SetPoint.new(0.5, 0.1)]
     gio.iomodule(0).port(0).add_event_listener(PortEvent::CHANGE) do |event|

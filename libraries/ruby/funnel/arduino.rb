@@ -4,8 +4,8 @@ require "funnel/iosystem"
 
 module Funnel
   class Arduino
-    def initialize(host, port, config, interval = 33)
-      @system = IOSystem.new(host, port, interval, config)
+    def initialize(config, host = 'localhost', port = 9000, interval = 33)
+      @system = IOSystem.new(config, host, port, interval)
 
       @analog_pins = config.analog_pins
       @digital_pins = config.digital_pins
