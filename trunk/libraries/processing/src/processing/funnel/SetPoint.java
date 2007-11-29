@@ -5,6 +5,11 @@ import java.util.Comparator;
 import java.util.ListIterator;
 import java.util.Vector;
 
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public class SetPoint implements Filter{
 
 	public Vector point;
@@ -17,7 +22,9 @@ public class SetPoint implements Filter{
 		
 		addPoint(threshold,hysteresis);
 	}
-	
+	/**
+	 *  return "SetPoint"
+	 */
 	public String getName(){
 		return "SetPoint";
 	}

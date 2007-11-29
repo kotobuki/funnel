@@ -1,7 +1,11 @@
 package processing.funnel;
 
 
-
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public class Scaler implements Filter{
 
 	public float inMin;
@@ -52,6 +56,9 @@ public class Scaler implements Filter{
 		
 	}
 	
+	/**
+	 * return "Scaler"
+	 */
 	public String getName(){
 		return "Scaler";
 	}

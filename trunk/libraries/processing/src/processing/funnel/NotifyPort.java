@@ -1,7 +1,5 @@
 package processing.funnel;
 
-
-
 import java.net.*;
 import java.io.InputStream;
 import java.io.IOException;
@@ -9,9 +7,15 @@ import java.io.IOException;
 import com.illposed.osc.*;
 import com.illposed.osc.utility.*;
 
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public final class NotifyPort extends TcpOSCPort implements Runnable {
 
-	// state for listening
+	
+	//state for listening
 	private boolean isListening = false;
 
 	private OSCByteArrayToJavaConverter converter = new OSCByteArrayToJavaConverter();
@@ -20,10 +24,12 @@ public final class NotifyPort extends TcpOSCPort implements Runnable {
 	private InputStream in;
 	private Thread thread;
 	
+	/**
+	 * default port number 9001
+	 */
 	static public int defaultPort = 9001;
 	
-	/**
-	 */
+
 	public NotifyPort(InetAddress newAddress, int newPort) throws IOException {
 
 		address = newAddress;
@@ -34,9 +40,7 @@ public final class NotifyPort extends TcpOSCPort implements Runnable {
 		
 	}
 
-	/**
 
-	 */
 	public void run() {
 		while(isListening){
 			try{
@@ -80,9 +84,8 @@ public final class NotifyPort extends TcpOSCPort implements Runnable {
 		}
 		
 	}
-	/**
 
-	 */
+	
 	public synchronized void close(){
 		try{
 //			in.close();
@@ -92,9 +95,7 @@ public final class NotifyPort extends TcpOSCPort implements Runnable {
 		}
 	}
 	
-	/**
 
-	 */
 	public void startListening() {
 		isListening = true;
 		thread = new Thread(this,"NotifyThread");

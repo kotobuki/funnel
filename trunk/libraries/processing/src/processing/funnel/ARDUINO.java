@@ -1,14 +1,18 @@
-
-
 package processing.funnel;
-
-
 
 import processing.core.PApplet;
 
-public class ARDUINO extends IOSystem{
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
+public class Arduino extends IOSystem{
 	
-	public static final String moduleName = "ARDUINO";
+	public static final String moduleName = "Arduino";
+	/**
+	 * always 0
+	 */
 	public static final int moduleID = 0;//
 
 	public static final int IN = PORT_DIN;
@@ -25,10 +29,12 @@ public class ARDUINO extends IOSystem{
 
 	
 	//ポートの機能(参照する名前)
-	public static int analogPin[];
-	public static int digitalPin[];
+	private int analogPin[];
+	private int digitalPin[];
 	
-	//arduinoのデジタルポート番号からfunnelのポート番号への変換
+	/**
+	 * arduinoのデジタルポート番号からfunnelのポート番号への変換
+	 */
 	public static final int[] _digitalPin = {6,7,8,9,10,11,12,13,14,15,16,17,18,19};
 
 	static int[] _ain = {0,1,2,3,4,5};
@@ -37,24 +43,26 @@ public class ARDUINO extends IOSystem{
 	static int[] _pwm = {};
 	
 
-	public ARDUINO(PApplet parent, String hostName,
+	public Arduino(PApplet parent, String hostName,
 			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config){
 		super(parent,hostName,commandPortNumber,notifyPortNumber,samplingInterval,config);
+		
+		initPorts(config.portStatus);
 	}
 	
-	public ARDUINO(PApplet parent,Configuration config){
+	public Arduino(PApplet parent,Configuration config){
 		
 		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
 				33,config);
 	}
 
-	public ARDUINO(PApplet parent, int samplingInterval, Configuration config ){
+	public Arduino(PApplet parent, int samplingInterval, Configuration config ){
 		
 		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
 				samplingInterval,config);
 	}
 
-	public ARDUINO(PApplet parent,
+	public Arduino(PApplet parent,
 			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config ){
 		
 		this(parent,"localhost",commandPortNumber,notifyPortNumber,
@@ -63,10 +71,8 @@ public class ARDUINO extends IOSystem{
 	
 	
 //ポートの機能(参照する名前)を割り当てる
-	public void initPorts(int[] conf){
+	private void initPorts(int[] conf){
 		
-
-
 		analogPin = _ain;
 		digitalPin = _digitalPin;
 
@@ -75,11 +81,11 @@ public class ARDUINO extends IOSystem{
  
 	//Arduinoショートカット
 	public IOModule.Port analogPin(int nPort){
-		return iomodule(0).port(ARDUINO.analogPin[nPort]);
+		return iomodule(0).port(analogPin[nPort]);
 	}
 	
 	public IOModule.Port digitalPin(int nPort){
-		return iomodule(0).port(ARDUINO.digitalPin[nPort]);
+		return iomodule(0).port(digitalPin[nPort]);
 	} 
 }
 

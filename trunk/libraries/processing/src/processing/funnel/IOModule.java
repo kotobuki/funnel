@@ -7,7 +7,11 @@ import java.util.Vector;
 
 import processing.core.PApplet;
 
-
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public class IOModule{
 
 	PApplet parent;

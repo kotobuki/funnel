@@ -1,6 +1,5 @@
 package processing.funnel;
 
-
 import java.net.*;
 import java.io.*;
 
@@ -8,12 +7,18 @@ import java.io.*;
 import com.illposed.osc.*;
 import com.illposed.osc.utility.OSCByteArrayToJavaConverter;
 
-
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public final class CommandPort extends TcpOSCPort {
 
 	private OutputStream out;
 	private InputStream in;
-	
+	/**
+	 * default port number 9000
+	 */
 	static public int defaultPort = 9000; 
 
 	public CommandPort(InetAddress newAddress, int newPort)
@@ -33,14 +38,12 @@ public final class CommandPort extends TcpOSCPort {
 		this(newAddress, defaultPort);
 	}
 
-	/**
-	 */
+
 	public CommandPort() throws UnknownHostException, IOException {
 		this(InetAddress.getLocalHost(), defaultPort);
 	}
 	
-	/**
-	 */
+
 	public void send(OSCPacket aPacket) throws IOException {
 	
 		byte[] byteArray = aPacket.getByteArray();
