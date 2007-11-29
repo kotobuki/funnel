@@ -6,6 +6,38 @@ module Funnel
   class Gainer
     (MODE1, MODE2, MODE3, MODE4, MODE5, MODE6, MODE7, MODE8) = Array(1..8)
 
+    def self.MODE1
+      return MODE1
+    end
+
+    def self.MODE2
+      return MODE2
+    end
+
+    def self.MODE3
+      return MODE3
+    end
+
+    def self.MODE4
+      return MODE4
+    end
+
+    def self.MODE5
+      return MODE5
+    end
+
+    def self.MODE6
+      return MODE6
+    end
+
+    def self.MODE7
+      return MODE7
+    end
+
+    def self.MODE8
+      return MODE8
+    end
+
     def initialize(mode = MODE1, host = 'localhost', port = 9000, interval = 33)
       config = Configuration.new(Configuration::GAINER, mode)
       @system = IOSystem.new(config, host, port, interval)

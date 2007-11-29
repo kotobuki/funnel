@@ -4,7 +4,7 @@ $: << '..'
 require 'funnel'
 
 module Funnel
-  config = Configuration.new(ARDUINO)
+  config = Arduino.FIRMATA
   config.set_digital_pin_mode(11, PWM)
   config.set_digital_pin_mode(13, OUT)
   aio = Arduino.new(config)
