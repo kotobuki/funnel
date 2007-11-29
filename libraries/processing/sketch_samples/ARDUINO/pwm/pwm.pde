@@ -1,11 +1,11 @@
 /*
-ARDUINO 
+Arduino 
 pwm (9pin)
 */
 
 import processing.funnel.*;
 
-Funnel arduino;
+Arduino arduino;
 
 int pwmPin = 9;
 
@@ -14,9 +14,9 @@ void setup()
   size(200,200);
   frameRate(25);
   
-  Configuration config = ARDUINO.FIRMATA;
-  config.setDigitalPinMode(pwmPin,ARDUINO.PWM);
-  arduino = new Funnel(this,config);
+  Configuration config = Arduino.FIRMATA;
+  config.setDigitalPinMode(pwmPin,Arduino.PWM);
+  arduino = new Arduino(this,config);
   arduino.autoUpdate = true;
 
 }

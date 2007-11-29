@@ -1,11 +1,11 @@
 /*
-ARDUINO 
+Arduino 
 digital out (13pin)
 */
 
 import processing.funnel.*;
 
-Funnel arduino;
+Arduino arduino;
 
 int ledPin = 13;
 
@@ -14,9 +14,9 @@ void setup()
   size(200,200);
   frameRate(25);
   
-  Configuration config = ARDUINO.FIRMATA;
-  config.setDigitalPinMode(ledPin,ARDUINO.OUT);
-  arduino = new Funnel(this,config);
+  Configuration config = Arduino.FIRMATA;
+  config.setDigitalPinMode(ledPin,Arduino.OUT);
+  arduino = new Arduino(this,config);
   arduino.autoUpdate = true;
 
 }
