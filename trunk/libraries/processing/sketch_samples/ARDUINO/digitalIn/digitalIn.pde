@@ -1,11 +1,11 @@
 /*
-ARDUINO 
+Arduino 
 digital in (13pin)
 */
 
 import processing.funnel.*;
 
-Funnel arduino;
+Arduino arduino;
 PFont myFont;
 
 void setup()
@@ -16,7 +16,7 @@ void setup()
   myFont = loadFont("CourierNewPSMT-24.vlw");
   textFont(myFont, 24);
   
-  arduino = new Funnel(this,ARDUINO.FIRMATA);
+  arduino = new Arduino(this,Arduino.FIRMATA);
  
 }
 

@@ -4,7 +4,7 @@ filter test (SetPoint) 1point
 */
 import processing.funnel.*;
 
-Funnel gainer;
+Gainer gainer;
 SetPoint border;
 
 int backgroundcolor = 100;
@@ -12,14 +12,14 @@ PFont myFont;
 
 void setup()
 { 
-  size(400,200);
+  size(200,200);
   background(0);
   myFont = loadFont("CourierNewPSMT-24.vlw");
   textFont(myFont, 24);
   
   frameRate(25);
  
-  gainer = new Funnel(this,GAINER.CONFIGURATION_1);
+  gainer = new Gainer(this,Gainer.MODE1);
   border = new SetPoint(0.3,0.1);
 
   Filter filters[] = {border};

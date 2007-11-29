@@ -5,7 +5,7 @@ analog in
 
 import processing.funnel.*;
 
-Funnel gainer;
+Gainer gainer;
 PFont myFont;
 
 void setup()
@@ -16,7 +16,7 @@ void setup()
   myFont = loadFont("CourierNewPSMT-24.vlw");
   textFont(myFont, 24);
   
-  gainer = new Funnel(this,GAINER.CONFIGURATION_1);
+  gainer = new Gainer(this,Gainer.MODE1);
  
 }
 

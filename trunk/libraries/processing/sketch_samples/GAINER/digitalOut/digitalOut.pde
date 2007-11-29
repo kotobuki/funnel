@@ -5,14 +5,14 @@ digital out (dout0)
 
 import processing.funnel.*;
 
-GAINER gainer;
+Gainer gainer;
 
 void setup()
 {
   size(200,200);
   frameRate(25);
   
-  gainer = new GAINER(this,GAINER.CONFIGURATION_1);
+  gainer = new Gainer(this,Gainer.MODE1);
   gainer.autoUpdate = true;
 }
 
