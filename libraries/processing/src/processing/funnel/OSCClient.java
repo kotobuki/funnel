@@ -6,11 +6,12 @@ import java.net.UnknownHostException;
 
 import com.illposed.osc.*;
 
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public final class OSCClient {
-
-	
-//	private int commandPortNumber;
-//	private int notifyPortNumber;
 	
 	public NotifyPort notifyPort;
 	public CommandPort commandPort;
@@ -37,9 +38,6 @@ public final class OSCClient {
 	
 	public boolean openFunnel(String hostName, int commandPortNumber,int notifyPortNumber){
 		
-//		this.commandPortNumber = commandPortNumber;
-//		this.notifyPortNumber = notifyPortNumber;
-		
 		InetAddress host;
 		try {
 			host = InetAddress.getByName(hostName);
@@ -54,8 +52,6 @@ public final class OSCClient {
 			//e.printStackTrace();
 			return false;
 		}
-			
-
 			
 		return true;
 	}
@@ -80,8 +76,6 @@ public final class OSCClient {
 	public OSCMessage readFunnel(String adress,int timeout) throws IOException, TimeoutException{
 		
 			return commandPort.receive(adress, timeout);
-
-		
 	}
 	
 

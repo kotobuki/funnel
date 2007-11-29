@@ -5,6 +5,11 @@ import java.util.*;
 
 import processing.core.*;
 
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public class Osc{
 
 	PApplet parent;
@@ -19,7 +24,7 @@ public class Osc{
 	
 	public static final int UPDATE = 600;
 	
-	private int wave;//タイプ
+	int wave;//タイプ
 	private OscFunction wavefunc;
 	
 	public float value;

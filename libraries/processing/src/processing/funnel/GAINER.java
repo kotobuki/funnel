@@ -4,10 +4,17 @@ import java.util.Arrays;
 
 import processing.core.PApplet;
 
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
+public final class Gainer extends IOSystem{
 
-public final class GAINER extends IOSystem{
-
-	public static final String moduleName = "GAINER";
+	public static final String moduleName = "Gainer";
+	/**
+	 * always 0
+	 */
 	public static final int moduleID = 0;//
 	
 	
@@ -18,7 +25,7 @@ public final class GAINER extends IOSystem{
 		PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 		PORT_DOUT, PORT_DIN,  // LED, BUTTON
 	};
-	public static final Configuration CONFIGURATION_1 = new Configuration(moduleID,conf1,moduleName);
+	public static final Configuration MODE1 = new Configuration(moduleID,conf1,moduleName);
 
 	
 	private static final int[] conf2 = {
@@ -28,48 +35,48 @@ public final class GAINER extends IOSystem{
     PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
     PORT_DOUT, PORT_DIN,  // LED, BUTTON
 	};
-	public static final Configuration CONFIGURATION_2 = new Configuration(moduleID,conf2,moduleName);
+	public static final Configuration MODE2 = new Configuration(moduleID,conf2,moduleName);
 	
 	
-	public static final int[] conf3 = {
+	private static final int[] conf3 = {
 		PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
 		PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
     PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
     PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
     PORT_DOUT, PORT_DIN,  // LED, BUTTON		
 	};
-	public static final Configuration CONFIGURATION_3 = new Configuration(moduleID,conf3,moduleName);
+	public static final Configuration MODE3 = new Configuration(moduleID,conf3,moduleName);
 	
 		
-	public static final int[] conf4 = {
+	private static final int[] conf4 = {
 		 PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
 		 PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
 		 PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
 		 PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
 		 PORT_DOUT, PORT_DIN,  // LED, BUTTON	
 	};
-	public static final Configuration CONFIGURATION_4 = new Configuration(moduleID,conf4,moduleName);
+	public static final Configuration MODE4 = new Configuration(moduleID,conf4,moduleName);
 	
 	
-	public static final int[] conf5 = {
+	private static final int[] conf5 = {
 		 PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
 		 PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
 		 PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
 		 PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,	
 	};
-	public static final Configuration CONFIGURATION_5 = new Configuration(moduleID,conf5,moduleName);
+	public static final Configuration MODE5 = new Configuration(moduleID,conf5,moduleName);
 	
 
-	public static final int[] conf6 = {
+	private static final int[] conf6 = {
 		 PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 		 PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 		 PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 		 PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,		
 	};
-	public static final Configuration CONFIGURATION_6 = new Configuration(moduleID,conf6,moduleName);
+	public static final Configuration MODE6 = new Configuration(moduleID,conf6,moduleName);
 	
 	
-	public static final int[] conf7 = {
+	private static final int[] conf7 = {
 		 PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
 		 PORT_AOUT, PORT_AOUT, PORT_AOUT, // [0..7, 0]
 		  PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT, PORT_AOUT,
@@ -88,47 +95,47 @@ public final class GAINER extends IOSystem{
 		 PORT_AOUT, PORT_AOUT, PORT_AOUT, // [0..7, 7]
 		
 	};
-	public static final Configuration CONFIGURATION_7 = new Configuration(moduleID,conf7,moduleName);
+	public static final Configuration MODE7 = new Configuration(moduleID,conf7,moduleName);
 	
 	
-	public static final int[] conf8 = {
+	private static final int[] conf8 = {
 		 PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
 		 PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
 		 PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
 		 PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,	
 	};
-	public static final Configuration CONFIGURATION_8 = new Configuration(moduleID,conf8,moduleName);
+	public static final Configuration MODE8 = new Configuration(moduleID,conf8,moduleName);
 	
 	
 	//ポートの名前
 	public static int LED;
 	public static int button;
-	public static int analogInput[];
-	public static int digitalInput[];
-	public static int analogOutput[];
-	public static int digitalOutput[];
+	private int analogInput[];
+	private int digitalInput[];
+	private int analogOutput[];
+	private int digitalOutput[];
 	
 
-	public GAINER(PApplet parent, String hostName,
+	public Gainer(PApplet parent, String hostName,
 			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config){
 		super(parent,hostName,commandPortNumber,notifyPortNumber,samplingInterval,config);
 		
 		initPorts(config.portStatus);
 	}
 	
-	public GAINER(PApplet parent,Configuration config){
+	public Gainer(PApplet parent,Configuration config){
 		
 		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
 				33,config);
 	}
 
-	public GAINER(PApplet parent, int samplingInterval, Configuration config ){
+	public Gainer(PApplet parent, int samplingInterval, Configuration config ){
 		
 		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
 				samplingInterval,config);
 	}
 
-	public GAINER(PApplet parent,
+	public Gainer(PApplet parent,
 			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config ){
 		
 		this(parent,"localhost",commandPortNumber,notifyPortNumber,
@@ -137,7 +144,7 @@ public final class GAINER extends IOSystem{
 	
 	
 	//出力ポート番号などを決める
-	public void initPorts(int[] conf){
+	private void initPorts(int[] conf){
 		if(Arrays.equals(conf,conf1)){
 
 			int[] ain = {0,1,2,3};
@@ -256,18 +263,18 @@ public final class GAINER extends IOSystem{
 
 	//Gainerショートカット
 	public IOModule.Port analogOutput(int nPort){
-		return iomodule(0).port(GAINER.analogOutput[nPort]);
+		return iomodule(0).port(analogOutput[nPort]);
 	}
 	
 	public IOModule.Port analogInput(int nPort){
-		return iomodule(0).port(GAINER.analogInput[nPort]);
+		return iomodule(0).port(analogInput[nPort]);
 	}
 	
 	public IOModule.Port digitalOutput(int nPort){
-		return iomodule(0).port(GAINER.digitalOutput[nPort]);
+		return iomodule(0).port(digitalOutput[nPort]);
 	}
 	
 	public IOModule.Port digitalInput(int nPort){
-		return iomodule(0).port(GAINER.digitalInput[nPort]);
+		return iomodule(0).port(digitalInput[nPort]);
 	}
 }

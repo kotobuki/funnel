@@ -2,13 +2,18 @@ package processing.funnel;
 
 import java.util.Vector;
 
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public final class Configuration{
 
 	int[] portStatus;
 	final int moduleID;
 	final String moduleName;
 	
-	public Vector outputPorts = new Vector();
+	Vector outputPorts = new Vector();
 	
 	public Configuration(int moduleID, int[] config,String moduleName){
 		this.moduleID = moduleID;
@@ -30,10 +35,13 @@ public final class Configuration{
 		return moduleName;
 	}
 	
-	//new ‚ÌŒã@Äİ’è‚Í‚Å‚«‚Ü‚¹‚ñ
+	/**
+	 * ARDUINO‚ÌDigitalPin‚ğİ’è‚·‚é
+	 * iIOSystemì¬ŒãÄİ’è‚Í‚Å‚«‚Ü‚¹‚ñj
+	 */
 	public boolean setDigitalPinMode(int n,int digitalType){
-		if(moduleName.equalsIgnoreCase(ARDUINO.moduleName)){
-			portStatus[ARDUINO._digitalPin[n]] = digitalType;
+		if(moduleName.equalsIgnoreCase(Arduino.moduleName)){
+			portStatus[Arduino._digitalPin[n]] = digitalType;
 			return true;
 		}
 		return false;

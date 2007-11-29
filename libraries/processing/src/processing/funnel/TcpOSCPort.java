@@ -3,18 +3,17 @@ package processing.funnel;
 import java.net.*;
 
 /**
+ * @author endo
  * @version 1.0
+ * 
  */
 public abstract class TcpOSCPort {
 
-	
 	protected InetAddress address;
 	protected Socket socket;
 	protected int port;
 
-	
-	/**
-	 */
+
 	protected void finalize() throws Throwable {
 		super.finalize();
 		

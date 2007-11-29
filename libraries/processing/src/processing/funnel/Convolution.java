@@ -1,5 +1,10 @@
 package processing.funnel;
 
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public class Convolution implements Filter{
 
 	public float[] coef;
