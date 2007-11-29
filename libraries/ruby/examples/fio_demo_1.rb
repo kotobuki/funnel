@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
+$: << '..'
 
-require "funnel/fio"
+require 'funnel'
 
 # communicate with a specific node to get sensor values
 module Funnel

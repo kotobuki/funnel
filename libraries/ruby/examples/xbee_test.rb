@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
+$: << '..'
 
-require 'funnel/xbee'
+require 'funnel'
 
 module Funnel
   xbee = XBee.new(XBee::XBS1)
@@ -8,7 +9,7 @@ module Funnel
   xbee.all_iomodules.each do |io|
     puts "xbee: id: #{io.id}, name: #{io.name}"
 
-    io.port(0).add_event_listener(PortEvent::CHANGE) do |event|
+    io.port(0).on PortEvent::CHANGE do |event|
       puts "AD0: #{event.target.value}"
     end
   end
