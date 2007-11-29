@@ -5,6 +5,14 @@ require "funnel/iosystem"
 module Funnel
   class XBee < IOSystem
     (XBS1, XBS2) = Array(0..1)
+
+    def self.XBS1
+      return XBS1
+    end
+
+    def self.XBS2
+      return XBS2
+    end
     
     def initialize(type = XBS1, host = 'localhost', port = 9000, interval = 33)
       super(nil, host, port, interval)

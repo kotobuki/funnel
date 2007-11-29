@@ -4,6 +4,12 @@ require "funnel/iosystem"
 
 module Funnel
   class Arduino
+    @@FIRMATA = Configuration.new(Configuration::ARDUINO)
+    
+    def self.FIRMATA
+      return @@FIRMATA
+    end
+
     def initialize(config, host = 'localhost', port = 9000, interval = 33)
       @system = IOSystem.new(config, host, port, interval)
 

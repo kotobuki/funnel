@@ -12,7 +12,7 @@ require 'funnel/iomodule'
 
 module Funnel
   (GAINER, ARDUINO, XBEE, FIO) = Array(Configuration::GAINER..Configuration::FIO)
-  (IN, OUT, PWM) = Array(Configuration::IN..Configuration::PWM)
+#  (IN, OUT, PWM) = Array(Configuration::IN..Configuration::PWM)
 
   class IOSystem
     MINIMUM_SAMPLING_INTERVAL = 10
@@ -100,13 +100,13 @@ module Funnel
         timeout(seconds_to_wait) {packet = @command_port.recv(4096)}
         OSC::Packet.decode(packet).each do |time, message|
           # puts "received: #{message.address}, #{message.to_a}"
-          if message.to_a[0] < ErrorEvent::NO_ERROR then
+          if message.to_a[0] < FunnelErrorEvent::NO_ERROR then
             case message.to_a[0]
-            when ErrorEvent::ERROR:
+            when FunnelErrorEvent::ERROR:
               puts "ERROR: #{message.to_a[1]}"
-            when ErrorEvent::REBOOT_ERROR:
+            when FunnelErrorEvent::REBOOT_ERROR:
               raise REBOOT_ERROR, "REBOOT_ERROR: #{message.to_a[1]}"
-            when ErrorEvent::CONFIGURATION_ERROR:
+            when FunnelErrorEvent::CONFIGURATION_ERROR:
               raise RuntimeError, "CONFIGURATION_ERROR: #{message.to_a[1]}"
             end
           end
