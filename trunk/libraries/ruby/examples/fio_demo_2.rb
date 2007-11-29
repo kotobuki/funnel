@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
+$: << '..'
 
-require "funnel/fio"
+require 'funnel'
 
 # broadcast to all found nodes
 module Funnel

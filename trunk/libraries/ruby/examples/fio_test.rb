@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
+$: << '..'
 
-require "funnel/fio"
+require 'funnel'
 
 module Funnel
   fio = Fio.new
@@ -9,7 +10,7 @@ module Funnel
     puts "fio: id: #{io.id}, name: #{io.name}"
 
 #    io.port(0).filters = [SetPoint.new(0.5, 0.1)]
-    io.port(0).add_event_listener(PortEvent::CHANGE) do |event|
+    io.port(0).on PortEvent::CHANGE do |event|
       puts "node #{io.id} (#{io.name}): ain 0: #{event.target.value}"
     end
 

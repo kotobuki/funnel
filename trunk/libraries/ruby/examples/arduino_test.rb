@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
+$: << '..'
 
-require 'funnel/arduino'
+require 'funnel'
 
 module Funnel
   config = Configuration.new(ARDUINO)

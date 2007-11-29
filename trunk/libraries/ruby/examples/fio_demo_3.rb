@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
-require "funnel/fio"
+$: << '..'
+
+require 'funnel'
 
 # wait for two nodes to get sensor values and control outputs
 module Funnel

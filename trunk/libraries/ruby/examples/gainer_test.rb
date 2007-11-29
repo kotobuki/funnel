@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby -wKU
+$: << '..'
 
-require 'funnel/gainer'
+require 'funnel'
 
 module Funnel
   gio = Gainer.new(Gainer::MODE1)
