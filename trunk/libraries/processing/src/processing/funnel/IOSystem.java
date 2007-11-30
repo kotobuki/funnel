@@ -47,8 +47,6 @@ public class IOSystem implements Runnable{
 	private int ERROR = -1;
 	private int REBOOT_ERROR = -2;
 	private int CONFIGURATION_ERROR = -3;
-	
-	private long updateTickMillis;
 
 	
 	//ŠO•”‚ÉŒöŠJ‚·‚é
@@ -103,6 +101,8 @@ public class IOSystem implements Runnable{
 	
 	//funnel‚Ìautupdate==true‚ÉˆË‘¶
 	public void run(){
+		long updateTickMillis = 0;
+		long noupdateTickMillis = 0;
 		System.out.println("funnelServiceThread start");
 
 		while(isWorking){
@@ -117,8 +117,9 @@ public class IOSystem implements Runnable{
 			}
 			
 			try {
-				processMillis = System.currentTimeMillis() - updateTickMillis;
+				processMillis = System.currentTimeMillis() - noupdateTickMillis;
 				long sleepMillis = updateInterval - processMillis;
+				//System.out.println("sleepMillis " + sleepMillis + "processMillis " + processMillis);
 				if(sleepMillis > 10){
 					Thread.sleep(sleepMillis);
 					//System.out.println("sleep " + sleepMillis);
@@ -126,6 +127,7 @@ public class IOSystem implements Runnable{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			noupdateTickMillis = System.currentTimeMillis();
 		}
 		
 		System.out.println("funnelServiceThread out");
