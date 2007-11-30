@@ -24,6 +24,7 @@ public final class NotifyPort extends TcpOSCPort implements Runnable {
 	private InputStream in;
 	private Thread thread;
 	
+	private int packetSize = 1536;
 	/**
 	 * default port number 9001
 	 */
@@ -57,9 +58,8 @@ public final class NotifyPort extends TcpOSCPort implements Runnable {
 		// increased to 1536, as this is a common MTU
 		byte[] buffer = new byte[1536];
 		
-		int readBytes = in.read(buffer,0,1536);
+		int readBytes = in.read(buffer,0,packetSize);
 
-		
 		if(readBytes>0){
 			String c = new String(buffer);
 			int nPackets = 0;
@@ -69,18 +69,20 @@ public final class NotifyPort extends TcpOSCPort implements Runnable {
 				}
 			}
 			//System.out.println(" n " + nPackets);
-			if(nPackets ==0){
-				return;
+			if(nPackets !=0){
+				if(nPackets == 1 && packetSize == 1536){
+					packetSize = readBytes;
+				}
+				//System.out.println(" read bytes " + readBytes);
+				for(int i=0;i<nPackets;i++){
+					byte[] b = new byte[packetSize];
+					System.arraycopy(buffer, packetSize*i, b, 0, packetSize);
+					OSCPacket oscPacket = converter.convert(b, packetSize);
+					dispatcher.dispatchPacket(oscPacket);
+				}
+				
 			}
-			int packetSize = readBytes/nPackets;
 			
-			//System.out.println(" read bytes " + readBytes);
-			for(int i=0;i<nPackets;i++){
-				byte[] b = new byte[packetSize];
-				System.arraycopy(buffer, packetSize*i, b, 0, packetSize);
-				OSCPacket oscPacket = converter.convert(b, packetSize);
-				dispatcher.dispatchPacket(oscPacket);
-			}
 		}
 		
 	}
