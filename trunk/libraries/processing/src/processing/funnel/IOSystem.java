@@ -29,6 +29,10 @@ public class IOSystem implements Runnable{
 	
 	private final int TIMEOUT = 1000; 
 	private OSCClient client;
+	/**
+	 * autoUpdate=trueの送信時の更新間隔
+	 */
+	private int updateInterval = 30;
 
 	private boolean quitServer = false;//終了時サーバーを終了するか
 	
@@ -102,20 +106,28 @@ public class IOSystem implements Runnable{
 		System.out.println("funnelServiceThread start");
 
 		while(isWorking){
-			long now = System.currentTimeMillis();
+			long processMillis = System.currentTimeMillis() - updateTickMillis;
 
-			//int updateInterval = (int)(1000.0f/parent.frameRate);
-			int updateInterval = 30;
-			if((now - updateTickMillis > updateInterval) && autoUpdate){
+			if((processMillis > updateInterval) && autoUpdate){
 				//OUTPUTのポートの処理
-				//System.out.println("update " + (now - updateTickMillis));
+				//System.out.println("update " + processMillis);
 				update();
 				
 				updateTickMillis = System.currentTimeMillis();
 			}
 			
-		
+			try {
+				processMillis = System.currentTimeMillis() - updateTickMillis;
+				long sleepMillis = updateInterval - processMillis;
+				if(sleepMillis > 10){
+					Thread.sleep(sleepMillis);
+					//System.out.println("sleep " + sleepMillis);
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
+		
 		System.out.println("funnelServiceThread out");
 	}
 	
