@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="Arduino,funnel.Arduino,analogPin,digitalPin" name="keywords">
+<meta content="Arduino,funnel.Arduino,FIRMATA,analogPin,digitalPin" name="keywords">
 <title>funnel.Arduino</title>
 </head>
 <body>
@@ -59,7 +59,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
 </div>
 </div>
-<table id="summaryTableProperty" class="summaryTable hideInheritedProperty" cellpadding="3" cellspacing="0">
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
@@ -68,6 +68,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
   出力ポートを手動で更新する場合はfalseにします。
   </div>
 </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#FIRMATA">FIRMATA</a> : <a href="funnel/Configuration.html">Configuration</a>
+<div class="summaryTableDescription">[static][read-only]
+   Arduino用のデフォルトのコンフィギュレーションを取得します。戻り値のコンフィギュレーションを変更するにはsetDigitalPinModeを利用します。
+   </div>
+</td><td class="summaryTableOwnerCol">Arduino</td>
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#samplingInterval">samplingInterval</a> : int<div class="summaryTableDescription">
@@ -161,7 +168,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:configurationError">configurationError</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+  指定したコンフィギュレーションの設定に失敗したとき送出されます。
+  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="hideInheritedEvent">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -175,14 +184,18 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:ready">ready</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+  I/Oモジュールの初期化が完了したとき送出されます。
+  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="hideInheritedEvent">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:rebootError">rebootError</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+  I/Oモジュールの再起動に失敗したとき送出されます。
+  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 </table>
 </div>
@@ -191,6 +204,30 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 showHideInherited();
 --></script>
 <div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="FIRMATA"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">FIRMATA</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>FIRMATA:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
+   Arduino用のデフォルトのコンフィギュレーションを取得します。戻り値のコンフィギュレーションを変更するにはsetDigitalPinModeを利用します。
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get FIRMATA():<a href="funnel/Configuration.html">Configuration</a></code>
+<br>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Arduino.html#Arduino()" target="">Arduino.Arduino()</a>
+<br>
+<a href="Configuration.html#setDigitalPinMode()" target="">Configuration.setDigitalPinMode()</a>
+</div>
+</div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="Arduino()"></a>
@@ -204,7 +241,7 @@ showHideInherited();
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">config</span>:<a href="Configuration.html">Configuration</a></code> (default = <code>null</code>)<code></code> &mdash; Configurationオブジェクト
+<td width="20px"></td><td><code><span class="label">config</span>:<a href="Configuration.html">Configuration</a></code> (default = <code>null</code>)<code></code> &mdash; コンフィギュレーション。指定しない場合はArduino.FIRMATA
    </td>
 </tr>
 <tr>

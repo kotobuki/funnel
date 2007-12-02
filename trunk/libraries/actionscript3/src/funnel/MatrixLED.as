@@ -12,7 +12,7 @@ package funnel
 		 * @param portNum ポート番号
 		 */		
 		public function MatrixLED(host:String = "localhost", portNum:Number = 9000) {
-			super([Configuration.GAINER_MODE7], host, portNum);
+			super([Gainer.MODE7], host, portNum);
 		}
 		
 		/**

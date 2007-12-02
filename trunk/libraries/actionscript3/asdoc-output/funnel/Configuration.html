@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="Configuration,funnel.Configuration,ainPorts,dinPorts,aoutPorts,doutPorts,button,led,analogPins,digitalPins,config,GAINER_MODE1,GAINER_MODE2,GAINER_MODE3,GAINER_MODE4,GAINER_MODE5,GAINER_MODE6,GAINER_MODE7,GAINER_MODE8,ARDUINO,setDigitalPinMode" name="keywords">
+<meta content="Configuration,funnel.Configuration,ainPorts,dinPorts,aoutPorts,doutPorts,button,led,analogPins,digitalPins,config,setDigitalPinMode" name="keywords">
 <title>funnel.Configuration</title>
 </head>
 <body>
@@ -76,13 +76,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Configuration</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#ARDUINO">ARDUINO</a> : <a href="funnel/Configuration.html">Configuration</a>
-<div class="summaryTableDescription">[static][read-only]
-   Arduino用のコンフィギュレーションの雛形を取得します。戻り値のコンフィギュレーションを変更するにはsetDigitalPinModeを利用します。
-   </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#button">button</a> : uint<div class="summaryTableDescription">
   Gainer.buttonを実際のポート番号に対応させるテーブル
   </div>
@@ -110,62 +103,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#doutPorts">doutPorts</a> : Array<div class="summaryTableDescription">
   Gainer.digitalOutputを実際のポート番号に対応させるテーブル
   </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#GAINER_MODE1">GAINER_MODE1</a> : <a href="funnel/Configuration.html">Configuration</a>
-<div class="summaryTableDescription">[static][read-only]
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#GAINER_MODE2">GAINER_MODE2</a> : <a href="funnel/Configuration.html">Configuration</a>
-<div class="summaryTableDescription">[static][read-only]
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#GAINER_MODE3">GAINER_MODE3</a> : <a href="funnel/Configuration.html">Configuration</a>
-<div class="summaryTableDescription">[static][read-only]
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#GAINER_MODE4">GAINER_MODE4</a> : <a href="funnel/Configuration.html">Configuration</a>
-<div class="summaryTableDescription">[static][read-only]
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#GAINER_MODE5">GAINER_MODE5</a> : <a href="funnel/Configuration.html">Configuration</a>
-<div class="summaryTableDescription">[static][read-only]
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#GAINER_MODE6">GAINER_MODE6</a> : <a href="funnel/Configuration.html">Configuration</a>
-<div class="summaryTableDescription">[static][read-only]
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#GAINER_MODE7">GAINER_MODE7</a> : <a href="funnel/Configuration.html">Configuration</a>
-<div class="summaryTableDescription">[static][read-only]
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#GAINER_MODE8">GAINER_MODE8</a> : <a href="funnel/Configuration.html">Configuration</a>
-<div class="summaryTableDescription">[static][read-only]
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </div>
 </td><td class="summaryTableOwnerCol">Configuration</td>
 </tr>
 <tr class="">
@@ -247,28 +184,6 @@ showHideInherited();
 </p>
 <div class="seeAlso">
 <a href="Gainer.html#analogOutput" target="">Gainer.analogOutput</a>
-</div>
-</div>
-<a name="ARDUINO"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">ARDUINO</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>ARDUINO:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   Arduino用のコンフィギュレーションの雛形を取得します。戻り値のコンフィギュレーションを変更するにはsetDigitalPinModeを利用します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get ARDUINO():<a href="funnel/Configuration.html">Configuration</a></code>
-<br>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Arduino.html#Arduino()" target="">Arduino.Arduino()</a>
-<br>
-<a href="Configuration.html#setDigitalPinMode()" target="">Configuration.setDigitalPinMode()</a>
 </div>
 </div>
 <a name="button"></a>
@@ -355,182 +270,6 @@ showHideInherited();
 </p>
 <div class="seeAlso">
 <a href="Gainer.html#digitalOutput" target="">Gainer.digitalOutput</a>
-</div>
-</div>
-<a name="GAINER_MODE1"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">GAINER_MODE1</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>GAINER_MODE1:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get GAINER_MODE1():<a href="funnel/Configuration.html">Configuration</a></code>
-<br>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="http://gainer.cc/Cookbook/ChangeConfiguration?p=2" target="mm_external">http://gainer.cc/Cookbook/ChangeConfiguration?p=2</a>
-<br>
-<a href="Gainer.html#Gainer()" target="">Gainer.Gainer()</a>
-</div>
-</div>
-<a name="GAINER_MODE2"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">GAINER_MODE2</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>GAINER_MODE2:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get GAINER_MODE2():<a href="funnel/Configuration.html">Configuration</a></code>
-<br>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="http://gainer.cc/Cookbook/ChangeConfiguration?p=2" target="mm_external">http://gainer.cc/Cookbook/ChangeConfiguration?p=2</a>
-<br>
-<a href="Gainer.html#Gainer()" target="">Gainer.Gainer()</a>
-</div>
-</div>
-<a name="GAINER_MODE3"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">GAINER_MODE3</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>GAINER_MODE3:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get GAINER_MODE3():<a href="funnel/Configuration.html">Configuration</a></code>
-<br>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="http://gainer.cc/Cookbook/ChangeConfiguration?p=2" target="mm_external">http://gainer.cc/Cookbook/ChangeConfiguration?p=2</a>
-<br>
-<a href="Gainer.html#Gainer()" target="">Gainer.Gainer()</a>
-</div>
-</div>
-<a name="GAINER_MODE4"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">GAINER_MODE4</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>GAINER_MODE4:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get GAINER_MODE4():<a href="funnel/Configuration.html">Configuration</a></code>
-<br>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="http://gainer.cc/Cookbook/ChangeConfiguration?p=2" target="mm_external">http://gainer.cc/Cookbook/ChangeConfiguration?p=2</a>
-<br>
-<a href="Gainer.html#Gainer()" target="">Gainer.Gainer()</a>
-</div>
-</div>
-<a name="GAINER_MODE5"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">GAINER_MODE5</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>GAINER_MODE5:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get GAINER_MODE5():<a href="funnel/Configuration.html">Configuration</a></code>
-<br>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="http://gainer.cc/Cookbook/ChangeConfiguration?p=2" target="mm_external">http://gainer.cc/Cookbook/ChangeConfiguration?p=2</a>
-<br>
-<a href="Gainer.html#Gainer()" target="">Gainer.Gainer()</a>
-</div>
-</div>
-<a name="GAINER_MODE6"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">GAINER_MODE6</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>GAINER_MODE6:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get GAINER_MODE6():<a href="funnel/Configuration.html">Configuration</a></code>
-<br>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="http://gainer.cc/Cookbook/ChangeConfiguration?p=2" target="mm_external">http://gainer.cc/Cookbook/ChangeConfiguration?p=2</a>
-<br>
-<a href="Gainer.html#Gainer()" target="">Gainer.Gainer()</a>
-</div>
-</div>
-<a name="GAINER_MODE7"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">GAINER_MODE7</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>GAINER_MODE7:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get GAINER_MODE7():<a href="funnel/Configuration.html">Configuration</a></code>
-<br>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="http://gainer.cc/Cookbook/ChangeConfiguration?p=2" target="mm_external">http://gainer.cc/Cookbook/ChangeConfiguration?p=2</a>
-<br>
-<a href="Gainer.html#Gainer()" target="">Gainer.Gainer()</a>
-</div>
-</div>
-<a name="GAINER_MODE8"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">GAINER_MODE8</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>GAINER_MODE8:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get GAINER_MODE8():<a href="funnel/Configuration.html">Configuration</a></code>
-<br>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="http://gainer.cc/Cookbook/ChangeConfiguration?p=2" target="mm_external">http://gainer.cc/Cookbook/ChangeConfiguration?p=2</a>
-<br>
-<a href="Gainer.html#Gainer()" target="">Gainer.Gainer()</a>
 </div>
 </div>
 <a name="led"></a>

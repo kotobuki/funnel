@@ -3,7 +3,6 @@ package funnel
 	import flash.net.Socket;
 	import flash.utils.ByteArray;
 	import flash.events.*;
-	import flash.utils.Timer;
 	import funnel.osc.*;
 	
 	/**
@@ -12,10 +11,9 @@ package funnel
 	 */	
 	public class CommandPort extends NetPort
 	{
-		private static const NO_ERROR:uint = 0;
 		private static const ERROR_EVENTS:Array = [
-			,
-			FunnelErrorEvent.FATAL_ERROR,
+			null,
+			FunnelErrorEvent.ERROR,
 			FunnelErrorEvent.REBOOT_ERROR,
 			FunnelErrorEvent.CONFIGURATION_ERROR];
 
