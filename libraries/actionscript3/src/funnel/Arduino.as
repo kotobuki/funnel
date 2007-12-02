@@ -11,13 +11,31 @@ package funnel
 		private var _digitalPins:Array;
 		
 		/**
-		 * @param configs Configurationオブジェクト
+		 * Arduino用のデフォルトのコンフィギュレーションを取得します。戻り値のコンフィギュレーションを変更するにはsetDigitalPinModeを利用します。
+		 * @return Configurationオブジェクト
+		 * @see Arduino#Arduino()
+		 * @see Configuration#setDigitalPinMode()
+		 */		
+		public static function get FIRMATA():Configuration {
+			var k:Configuration = new Configuration();
+			k.config = [
+				AIN, AIN, AIN, AIN, AIN, AIN,
+				DIN, DIN, DIN, DIN, DIN, DIN, DIN,
+				DIN, DIN, DIN, DIN, DIN, DIN, DIN
+			];
+			k.analogPins = [0, 1, 2, 3, 4, 5];
+			k.digitalPins = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+			return k;
+		}
+		
+		/**
+		 * @param configs コンフィギュレーション。指定しない場合はArduino.FIRMATA
 		 * @param host ホスト名
 		 * @param portNum ポート番号
 		 * @param samplingInterval サンプリング間隔(ms)
 		 */			
 		public function Arduino(config:Configuration = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
-			if (config == null) config = Configuration.ARDUINO;
+			if (config == null) config = FIRMATA;
 			super([config], host, portNum, samplingInterval);
 			
 			_port = module(0).port;

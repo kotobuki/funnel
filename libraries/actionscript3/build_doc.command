@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /works/funnel/as3/funnel_flex
-/Applications/FLEX2SDK/bin/asdoc -doc-sources . -templates-path /Applications/FLEX2SDK/asdoc/templates
+cd /works/funnel/libraries/actionscript3/
+asdoc -doc-sources . -templates-path /flex_sdk_2_hf1/asdoc/templates

@@ -11,14 +11,14 @@ package {
 	public class ArduinoTest extends Sprite
 	{
 		public function ArduinoTest() {	
-			var config:Configuration = Configuration.ARDUINO;
+			var config:Configuration = Arduino.FIRMATA;
 			config.setDigitalPinMode(11, PWM);
 
 			var aio:Arduino = new Arduino(config);
 			aio.addEventListener(FunnelEvent.READY, trace);
 			aio.addEventListener(FunnelErrorEvent.REBOOT_ERROR, trace);
 			aio.addEventListener(FunnelErrorEvent.CONFIGURATION_ERROR, trace);
-			aio.addEventListener(FunnelErrorEvent.FATAL_ERROR, trace);
+			aio.addEventListener(FunnelErrorEvent.ERROR, trace);
 
 			var button:Port = aio.digitalPin(2);
 			var led:Port = aio.digitalPin(11);

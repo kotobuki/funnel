@@ -10,7 +10,7 @@ package funnel
 		/**
 		* エラーが起きたとき送出されます。
 		*/		
-		public static const FATAL_ERROR:String = "fatalError";
+		public static const ERROR:String = "error";
 		
 		/**
 		* 指定したコンフィギュレーションの設定に失敗したとき送出されます。
