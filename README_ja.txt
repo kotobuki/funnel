@@ -50,6 +50,12 @@ Keane Jarvi氏によるRXTXを使用しています。
 ・RXTX：http://www.rxtx.org/
 
 ■更新履歴
+Funnel 004 (2007.12.06)
+・ソフトウェアライブラリの内部構造を変更
+・ソフトウェアライブラリ間で定数やメソッドなどを統一
+・RubyライブラリにFunnel I/OモジュールおよびXBeeのサポートを追加
+・Funnel I/Oモジュールのハードウェアおよびファームウェアを追加
+
 Funnel 003 (2007.11.12)
 ・Processing用ライブラリのバグを修正（WindowsでのOutOfMemoryエラー）
 
