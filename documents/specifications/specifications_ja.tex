@@ -16,7 +16,7 @@ lineskip={-2pt}
 
 \begin{document}
 
-\title{Funnel v1.0Fd—l‘i‘ej}
+\title{Funneld—l‘iƒrƒ‹ƒh004j}
 \author{ŠJ”­ÒF¬—Ñ–Î\\‹¤“¯ŠJ”­ÒF‰““¡F‘¥{‘“cˆê‘¾˜Y}
 
 \maketitle
@@ -293,12 +293,20 @@ GainerƒNƒ‰ƒX‚ÍGainer I/Oƒ‚ƒWƒ…[ƒ‹‚ğˆµ‚¤‚½‚ß‚Ìƒ†[ƒeƒBƒŠƒeƒB[ƒNƒ‰ƒX‚Å‚·B
 \end{tabular}
 
 \subsubsection{’è”}
-\begin{tabular}{ll}
-–¼‘O & à–¾ \\\hline
-\texttt{AIN} & ƒAƒiƒƒO“ü—Í \\
-\texttt{DIN} & ƒfƒWƒ^ƒ‹“ü—Í \\
-\texttt{AOUT} & ƒAƒiƒƒOi‚Ü‚½‚ÍPWMjo—Í \\
-\texttt{DOUT} & ƒfƒWƒ^ƒ‹o—Í \\
+\begin{tabular}{lll}
+–¼‘O & Œ^ & à–¾ \\\hline
+\texttt{AIN} & int & ƒAƒiƒƒO“ü—Í \\
+\texttt{DIN} & int & ƒfƒWƒ^ƒ‹“ü—Í \\
+\texttt{AOUT} & int & ƒAƒiƒƒOi‚Ü‚½‚ÍPWMjo—Í \\
+\texttt{DOUT} & int & ƒfƒWƒ^ƒ‹o—Í \\\hline
+\texttt{MODE1} & int & Gainer I/Oƒ‚ƒWƒ…[ƒ‹‚ÌMODE 1 \\
+\texttt{MODE2} & int & Gainer I/Oƒ‚ƒWƒ…[ƒ‹‚ÌMODE 2 \\
+\texttt{MODE3} & int & Gainer I/Oƒ‚ƒWƒ…[ƒ‹‚ÌMODE 3 \\
+\texttt{MODE4} & int & Gainer I/Oƒ‚ƒWƒ…[ƒ‹‚ÌMODE 4 \\
+\texttt{MODE5} & int & Gainer I/Oƒ‚ƒWƒ…[ƒ‹‚ÌMODE 5 \\
+\texttt{MODE6} & int & Gainer I/Oƒ‚ƒWƒ…[ƒ‹‚ÌMODE 6 \\
+\texttt{MODE7} & int & Gainer I/Oƒ‚ƒWƒ…[ƒ‹‚ÌMODE 7 \\
+\texttt{MODE8} & int & Gainer I/Oƒ‚ƒWƒ…[ƒ‹‚ÌMODE 8 \\
 \end{tabular}
 
 \subsection{ArduinoƒNƒ‰ƒX}
@@ -321,17 +329,17 @@ ArduinoƒNƒ‰ƒX‚Íƒtƒ@[ƒ€ƒEƒFƒA‚Æ‚µ‚ÄFirmata‚ğ“‹Ú‚µ‚½Arduino‚ğI/Oƒ‚ƒWƒ…[ƒ‹‚Æ‚µ‚Ä
 \subsubsection{ƒƒ\ƒbƒh}
 \begin{tabular}{lll}
 ƒƒ\ƒbƒh–¼ & –ß‚è’l & à–¾ \\\hline
-\texttt{setDigitalPinMode(pin:int, mode:int)} & void & ƒfƒWƒ^ƒ‹ƒsƒ“‚Ìƒ‚[ƒh‚ğİ’è \\
 \texttt{analogPin(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚· \\
 \texttt{digitalPin(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚· \\
 \end{tabular}
 
 \subsubsection{’è”}
 \begin{tabular}{lll}
-–¼‘O & à–¾ \\\hline
-\texttt{IN} & ƒfƒWƒ^ƒ‹“ü—Í \\
-\texttt{OUT} & ƒfƒWƒ^ƒ‹o—Í \\
-\texttt{PWM} & ‹^—ƒAƒiƒƒOiPWMjo—Í \\
+–¼‘O & Œ^ & à–¾ \\\hline
+\texttt{IN} & int & ƒfƒWƒ^ƒ‹“ü—Í \\
+\texttt{OUT} & int & ƒfƒWƒ^ƒ‹o—Í \\
+\texttt{PWM} & int & ‹^—ƒAƒiƒƒOiPWMjo—Í \\\hline
+\texttt{FIRMATA} & Configuration & Firmataƒtƒ@[ƒ€ƒEƒFƒA‚ğ‘‚«‚ñ‚¾Arduino I/Oƒ{[ƒh \\
 \end{tabular}
 
 \subsection{ConfigurationƒNƒ‰ƒX}
@@ -423,7 +431,7 @@ PortEventƒNƒ‰ƒX‚ÍA‚»‚ê‚¼‚ê‚Ì“üo—Íƒ|[ƒg‚Å”­¶‚·‚éƒCƒxƒ“ƒg‚ğ•\Œ»‚·‚é‚½‚ß‚ÌƒNƒ‰ƒ
 %\texttt{onReady()} & I/Oƒ‚ƒWƒ…[ƒ‹‚Æ‚Ì’ÊM‚ªŠm”F‚Å‚«‚Ä€”õ‚ªŠ®—¹‚µ‚½ \\
 \texttt{PortEvent.RISING\_EDGE} & Šeƒ|[ƒg & SetPointg—p‚É“ü—Í‚ª•Ï‰»i0¨0ˆÈŠOj \\
 \texttt{PortEvent.FALLING\_EDGE} & Šeƒ|[ƒg & SetPointg—p‚É“ü—Í‚ª•Ï‰»i0ˆÈŠO¨0j \\
-\texttt{PortEvent.CANGE} & Šeƒ|[ƒg & SetPointg—p‚É“ü—Í‚ª•Ï‰» \\
+\texttt{PortEvent.CHANGE} & Šeƒ|[ƒg & SetPointg—p‚É“ü—Í‚ª•Ï‰» \\
 %\texttt{onChange(float current, float last)} & “ü—Í‚ª•Ï‰»‚µ‚½iƒfƒWƒ^ƒ‹•ƒAƒiƒƒOj
 \end{tabular}
 
@@ -761,6 +769,25 @@ OscƒNƒ‰ƒX‚Íå‚Éo—Í‚É—p‚¢ALED‚ğ‚Ó‚í‚Ó‚í“_–Å‚³‚¹‚½‚è‚·‚é‚È‚Ç‚Ég‚¢‚Ü‚·B‚Ü‚½A
 \texttt{Osc.IMPULSE} & ƒCƒ“ƒpƒ‹ƒXi1‹æŠÔ‚Ì‚İ1‚É‚È‚è‚»‚ÌŒã‚Í0j
 \end{tabular}
 
+\subsection{ƒVƒ‡[ƒgƒJƒbƒgˆê——iAS3‚ÆRuby‚Ì‚İÀ‘•j}
+\begin{tabular}{ll}
+–¼‘O & à–¾ \\\hline
+\texttt{AIN} & \texttt{Port.AIN} \\
+\texttt{AOUT} & \texttt{Port.AOUT} \\
+\texttt{CHANGE} & \texttt{PortEvent.CHANGE} \\
+\texttt{CONFIGURATION\_ERROR} & \texttt{FunnelErrorEvent.CONFIGURATION\_ERROR} \\
+\texttt{DIN} & \texttt{Port.DIN} \\
+\texttt{DOUT} & \texttt{Port.DOUT} \\
+\texttt{ERROR} & \texttt{FunnelErrorEvent.ERROR} \\
+\texttt{FALLING\_EDGE} & \texttt{PortEvent.FALLING\_EDGE} \\
+\texttt{IN} & \texttt{Port.DIN} \\
+\texttt{OUT} & \texttt{Port.DOUT} \\
+\texttt{PWM} & \texttt{Port.AIN} \\
+\texttt{READY} & \texttt{FunnelEvent.READY} \\
+\texttt{REBOOT\_ERROR} & \texttt{FunnelErrorEvent.REBOOT\_ERROR} \\
+\texttt{RISING\_EDGE} & \texttt{PortEvent.RISING\_EDGE} \\
+\texttt{UPDATE} & \texttt{GeneratorEvent.UPDATE} \\
+\end{tabular}
 
 %\newpage
 %\subsection{StateMachineƒNƒ‰ƒX}
@@ -1397,6 +1424,7 @@ ActionScript 3‚ğ‚Í‚¶‚ß‚Æ‚·‚éJavaScript‚ğATamarin\footnote{http://www.mozilla-ja
 \newpage
 \section{XV—š—ğ}
 \begin{description}
+\item[ 2007.12.05] ’è”‚ğŠeƒ‰ƒCƒuƒ‰ƒŠŠÔ‚Å‚Ì“ˆê‚ğ’²®‚µ‚½‚à‚Ì‚É‡‚í‚¹‚ÄXVBƒVƒ‡[ƒgƒJƒbƒg‚É‚Â‚¢‚Ä‚Ìà–¾‚ğ’Ç‰ÁB
 \item[ 2007.11.23] /nodeƒRƒ}ƒ“ƒh‚Ìà–¾‚ğ’Ç‰ÁBIOSystem‚ÆIOModule‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ì‡˜‚ğ•ÏXB‘å•”•ª‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Éˆø”‚Ìà–¾‚ğ’Ç‰ÁB
 \item[ 2007.11.22] /configureƒRƒ}ƒ“ƒh‚Ì‘æ1ˆø”‚Éƒ‚ƒWƒ…[ƒ‹ID‚ğ’Ç‰ÁB
 \item[ 2007.11.19] SystemƒNƒ‰ƒX‚Ì–¼Ì‚ğIOSystem‚É•ÏX‚µ‚½BƒVƒXƒeƒ€‘S‘Ì‹y‚ÑFunnel I/Oƒ‚ƒWƒ…[ƒ‹‚Ìà–¾}‚ğXV‚µ‚½B
