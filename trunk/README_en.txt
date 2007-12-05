@@ -56,6 +56,12 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
+Funnel 004 (2007.12.06)
+* re-structured software libraries to support multiple I/O modules
+* Unified constants and methods between software libraries
+* added Funnel I/O module and XBee support to the Ruby library
+* added hardware and firmware data of the Funnel I/O module
+
 Funnel 003 (2007.11.12)
 * fixed a bug in Processing library (OutOfMemory error on Windows)
 
