@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../print.css" type="text/css" media="print">
+<meta content="Configuration,funnel.Configuration,ainPorts,dinPorts,aoutPorts,doutPorts,button,led,analogPins,digitalPins,config,setDigitalPinMode" name="keywords">
+<title>funnel.Configuration</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../asdoc.js"></script><script type="text/javascript" language="javascript" src="../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'Configuration - API Documentation';
+				var baseRef = '../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?funnel/Configuration.html&amp;funnel/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Configuration</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Configuration"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">funnel</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Configuration</td>
+</tr>
+</table>
+<p></p>
+  I/Oモジュールのコンフィギュレーションを設定するためのクラスです。コンフィギュレーションはI/Oモジュールとの通信を開始する段階で決定する必要があるため、IOSystemのコンストラクタの引数で指定します。
+  <p></p>
+<p>
+<span class="classHeaderTableLabel">See also</span>
+</p>
+<div class="seeAlso">
+<a href="IOSystem.html#IOSystem()" target="">IOSystem.IOSystem()</a>
+</div>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#ainPorts">ainPorts</a> : Array<div class="summaryTableDescription">
+  Gainer.analogInputを実際のポート番号に対応させるテーブル
+  </div>
+</td><td class="summaryTableOwnerCol">Configuration</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#analogPins">analogPins</a> : Array<div class="summaryTableDescription">
+  Arduino.analogPinを実際のポート番号に対応させるテーブル
+  </div>
+</td><td class="summaryTableOwnerCol">Configuration</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#aoutPorts">aoutPorts</a> : Array<div class="summaryTableDescription">
+  Gainer.analogOutputを実際のポート番号に対応させるテーブル
+  </div>
+</td><td class="summaryTableOwnerCol">Configuration</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#button">button</a> : uint<div class="summaryTableDescription">
+  Gainer.buttonを実際のポート番号に対応させるテーブル
+  </div>
+</td><td class="summaryTableOwnerCol">Configuration</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#config">config</a> : Array<div class="summaryTableDescription">
+  ポートのタイプ(AIN、DIN、AOUT、DOUT)の配列
+  </div>
+</td><td class="summaryTableOwnerCol">Configuration</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#digitalPins">digitalPins</a> : Array<div class="summaryTableDescription">
+  Arduino.digitsalPinを実際のポート番号に対応させるテーブル
+  </div>
+</td><td class="summaryTableOwnerCol">Configuration</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#dinPorts">dinPorts</a> : Array<div class="summaryTableDescription">
+  Gainer.digitalInputを実際のポート番号に対応させるテーブル
+  </div>
+</td><td class="summaryTableOwnerCol">Configuration</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#doutPorts">doutPorts</a> : Array<div class="summaryTableDescription">
+  Gainer.digitalOutputを実際のポート番号に対応させるテーブル
+  </div>
+</td><td class="summaryTableOwnerCol">Configuration</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#led">led</a> : uint<div class="summaryTableDescription">
+  Gainer.ledを実際のポート番号に対応させるテーブル
+  </div>
+</td><td class="summaryTableOwnerCol">Configuration</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setDigitalPinMode()">setDigitalPinMode</a>(portNum:uint, mode:uint):void</div>
+<div class="summaryTableDescription">
+   デジタルピンのモードを設定します。通常、Arduino使用時に利用します。
+   </div>
+</td><td class="summaryTableOwnerCol">Configuration</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="ainPorts"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">ainPorts</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var ainPorts:Array</code><p>
+  Gainer.analogInputを実際のポート番号に対応させるテーブル
+  </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Gainer.html#analogInput" target="">Gainer.analogInput</a>
+</div>
+</div>
+<a name="analogPins"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">analogPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var analogPins:Array</code><p>
+  Arduino.analogPinを実際のポート番号に対応させるテーブル
+  </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Arduino.html#analogPin" target="">Arduino.analogPin</a>
+</div>
+</div>
+<a name="aoutPorts"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">aoutPorts</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var aoutPorts:Array</code><p>
+  Gainer.analogOutputを実際のポート番号に対応させるテーブル
+  </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Gainer.html#analogOutput" target="">Gainer.analogOutput</a>
+</div>
+</div>
+<a name="button"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">button</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var button:uint</code><p>
+  Gainer.buttonを実際のポート番号に対応させるテーブル
+  </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Gainer.html#button" target="">Gainer.button</a>
+</div>
+</div>
+<a name="config"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">config</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var config:Array</code><p>
+  ポートのタイプ(AIN、DIN、AOUT、DOUT)の配列
+  </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Port.html#AIN" target="">Port.AIN</a>
+<br>
+<a href="Port.html#DIN" target="">Port.DIN</a>
+<br>
+<a href="Port.html#AOUT" target="">Port.AOUT</a>
+<br>
+<a href="Port.html#DOUT" target="">Port.DOUT</a>
+</div>
+</div>
+<a name="digitalPins"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">digitalPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var digitalPins:Array</code><p>
+  Arduino.digitsalPinを実際のポート番号に対応させるテーブル
+  </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Arduino.html#digitsalPin" target="">Arduino.digitsalPin</a>
+</div>
+</div>
+<a name="dinPorts"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">dinPorts</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var dinPorts:Array</code><p>
+  Gainer.digitalInputを実際のポート番号に対応させるテーブル
+  </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Gainer.html#digitalInput" target="">Gainer.digitalInput</a>
+</div>
+</div>
+<a name="doutPorts"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">doutPorts</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var doutPorts:Array</code><p>
+  Gainer.digitalOutputを実際のポート番号に対応させるテーブル
+  </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Gainer.html#digitalOutput" target="">Gainer.digitalOutput</a>
+</div>
+</div>
+<a name="led"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">led</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var led:uint</code><p>
+  Gainer.ledを実際のポート番号に対応させるテーブル
+  </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Gainer.html#led" target="">Gainer.led</a>
+</div>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="setDigitalPinMode()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setDigitalPinMode</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setDigitalPinMode(portNum:uint, mode:uint):void</code><p>
+   デジタルピンのモードを設定します。通常、Arduino使用時に利用します。
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">portNum</span>:uint</code> &mdash; ピン番号
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">mode</span>:uint</code> &mdash; デジタル入力(IN)、デジタル出力(OUT)、PWM(疑似アナログ出力)のいずれかを指定
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

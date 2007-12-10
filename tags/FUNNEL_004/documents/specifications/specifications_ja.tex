@@ -1,0 +1,1444 @@
+%http://tex.dante.jp/typo/index.php?Listings
+\documentclass{jsarticle}
+\usepackage{listings, jlisting, color}
+\usepackage[dvipdfm]{graphicx}
+\usepackage{mediabb}
+
+\lstset{
+basicstyle={\small\ttfamily},
+columns=[l]{fullflexible},
+frame={single},
+tabsize={4},
+lineskip={-2pt}
+}
+
+\def\lstlistingname{リスト}
+
+\begin{document}
+
+\title{Funnel仕様書（ビルド004）}
+\author{開発者：小林茂\\共同開発者：遠藤孝則＋増田一太郎}
+
+\maketitle
+
+
+\section{はじめに}
+Funnelは、ソフトウェアとハードウェアからなるフィジカルコンピューティングのためのツールキットです。Funnelは2007年度第I期未踏ソフトウェア創造事業の支援を得て開発されています。
+
+\subsection{概要}
+\begin{itemize}
+\item センサやアクチュエータを、GUIパーツと同様の感覚で扱えるようにするための言語拡張をライブラリ形式で提供します。対象とする言語はActionScript 3、ProcessingとRubyです。
+\item 機能がシンプルであるため、短いドキュメントを読めばすぐに理解して利用できるようになっています。また、ライブラリが提供する機能で対応できない場合でも、ユーザによって拡張できるような柔軟性を持たせています。
+\item Funnel用に開発したI/Oモジュール（FIO）以外に、既に広く普及しているI/Oモジュール（Gainer、Arduino、XBee）を利用できます。
+\end{itemize}
+
+\subsection{ターゲット}
+Funnelのターゲットは、ActionScript 3（Flash CS3・Flex 2/3）やProcessingをある程度扱ったことがあり、PC標準の入出力デバイス以外の世界を扱ってみたいと考えているデザイナー、アーティスト、エンジニアおよび関連した教育分野（フィジカルコンピューティングなど）です。
+
+\subsection{マイルストーン}
+\begin{itemize}
+\item 2007年6月：Sketching in Hardware 2\footnote{Mike Kuniavsky氏が主催するフィジカルコンピューティングの教育と実践に関わるメンバーのための会議。2006年に第1回を開催。http://www.sketching07.com/}にてプレゼンテーションとディスカッション
+%\item 2007年7月：非公開レビュー（IAMASにて）→その後も必要に応じて随時
+%\item 2007年9月：公開ワークショップ（名古屋？）
+\item 2007年9月：最初の公開ビルドをリリース
+\item 2007年11月：公開ワークショップ（東京）
+\item 2007年12月：v1.0リリース
+\end{itemize}
+
+\section{特徴}
+
+\subsection{マルチプラットホームへの対応}
+Funnel v1.0は以下のI/Oモジュール（一部はマイコンモジュール）への対応を予定しています。新規に開発するFunnel I/Oモジュール以外に、既に普及しているGainer\footnote{2007年5月の時点で500台以上。http://gainer.cc/}およびArduinoシリーズ\footnote{2007年5月の時点でシリーズ合計で10000台以上。ファームウェアはFirmataを使用。http://arduino.cc/}、およびMaxStream社のXBeeシリーズに対応します。これにより、Funnelはv1.0のリリース時点で1万数千台以上のハードウェア環境で動作できることになります。
+\begin{itemize}
+\item Funnel I/Oモジュール（USB接続のドングル＋無線モジュール）
+\item Gainer I/Oモジュール（USB接続）
+\item Arduino（USB接続）
+\item MaxStream XBeeシリーズ1/2（USB接続のドングル＋無線モジュール）
+%\item Arduino Bluetooth（Bluetooth接続、無線）
+\end{itemize}
+
+%\footnote{クワクボリョウタ氏のI/O Toolkitに関しても、プロジェクトが正式にスタートした時点でコンタクトする予定です。}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[mediaboxonly, height=8.0cm, clip]{funnel_system.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{ツールキットFunnelのシステム全体図（今回開発する部分はグレーの部分）}
+\label{schedule}
+\end{center}
+\end{figure}
+
+Funnel Serverは仮想シリアルポートドライバ経由でそれぞれのI/Oモジュールと通信します。Funnel Serverとアプリケーション側との通信は、音楽系のプログラミング環境を中心に広く用いられているプロトコルOpen Sound Control\footnote{http://www.cnmat.berkeley.edu/OpenSoundControl/}で行います。ActionScript 3とProcessingに対しては言語拡張を行うためのFunnelライブラリ（詳細は後述）で利用できますが、これに加えてOpen Sound Controlに対応する全てのプログラミング環境\footnote{音楽系ではMax/MSPやSuperCollider 3など、スクリプト言語系ではPerl、PHP、Pythonなど多数。}からも利用できます。
+
+Funnel Serverにより、物理的なI/Oモジュールは抽象化されるため、販売期間終了後の故障などにより特定のI/Oモジュールが利用できなくなってしまった場合でも、その時点で対応するものに交換することが可能です。このように抽象化するレイヤーを用意することにより、Funnelは長期間に渡って利用と開発を継続することが可能になります。
+
+
+\subsection{疑似コードベースによるロジック重視のプログラミング}
+\subsubsection{疑似コードベースのプログラミングとは}
+初心者に最初にプログラミングの概念を教える際、「疑似コード」と呼ばれるものを使うことが多くあります。ここでの疑似コードとは、次のように自然言語でプログラムのロジックを記述するものです。
+
+\begin{lstlisting}[caption={疑似コードの例},label=pseudo_code]
+デジタル入力0に接続したスイッチが押されたらハンドラを呼ぶ
+\end{lstlisting}
+
+自然言語で記述することから、親しみやすく、可読性に優れているのが特長ですが、そのままでは実行できません。そこで、CやActionScriptといった言語を用いて実装していくことになります。こうした言語は「高級」言語と呼ばれますが、実際にはローレベルの記述しかできず、ロジックを「そのまま」記述することはできません。ロジックをローレベルの記述に変換する作業は、初心者にとってはかなり敷居の高いものになってしまいます。例えば、この場合には次のようなコードを実装することになります。
+
+\begin{lstlisting}[caption={コード例\ref{pseudo_code}の実装例（ActionScript 2 + Gainer）},label=useless]
+var io:Gainer = new Gainer(...);
+var wasActivated:Boolean = false;
+
+function loop() {
+	var isActivated:Boolean = io.digitalInput[0];
+	if (!wasActivated && isActivated) {
+		handler();
+	}
+	wasActivated = isActivated;
+}
+
+function handler() {
+	...
+}
+\end{lstlisting}
+
+経験者にとっては何でもないこうしたコードですが、初心者にとってはかなり敷居が高いものになります。また、経験者はテンプレート的にこうした実装を行うことができますが、たかだかこれだけのことをするために毎回同じようなコードを書かなければならないというのはかなり無駄です。
+
+そこで、疑似コードに近い形で記述できる新しい言語拡張ライブラリを提案します。例えば、次のように記述することができれば、短い行数で簡潔に記述することができますし、何をしようとしているのかも明確です。
+
+\begin{lstlisting}[caption={コード例\ref{pseudo_code}の実装例（ActionScript 3 + Funnel）},label=useless]
+var gio:Gainer = new Gainer(...);
+gio.digitalInput(0).addEventListener(PortEvent.RISING_EDGE, buttonPressed);
+
+function buttonPressed(e:PortEvent):void {
+	...
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={コード例\ref{pseudo_code}の実装例（Ruby + Funnel）},label=useless]
+gio = Gainer.new(...)
+gio.digital_input(0).on PortEvent::RISING_EDGE do
+  ...
+end
+\end{lstlisting}
+
+%以上の例はかなりシンプルなものでしたので、「これだけではメリットが実感できない」と思うかもしれません。しかし、ステートマシンのようなものは、経験者が実装する場合でもC言語では難易度が高く、その結果も可読性に優れたものにはならないのが実情です\footnote{高価なCASEツールを熟練者が用いる場合にはこの限りではありません。しかし、デザイナーやアーティストがCASEツールを導入することは、価格面だけでなくツールを使用するスキルを習得するまでの人的コストの面でも事実上不可能です。}。また、センサの出力から不必要な成分を除去するフィルタ処理は、デジタル信号処理のスキルが必要になり、エンジニアといえどもそれなりの経験がないと難易度が高い分野です。
+
+\subsubsection{疑似コードベースのプログラミングの実現方法}
+今回の提案は、全く新しい言語の提案ではなく、新しいパラダイムの提案です。もちろん、新しい言語をデザインするというアプローチもありますが、今回の主なターゲットとしているユーザ（デザイナー、アーティスト、プログラミング初心者）には、以下の理由により適さないと考えます。
+\begin{itemize}
+\item 初心者が同時に複数の言語を学習しようとすると混乱が生じる
+\item 新しい言語に対して十分なドキュメントを提供するのは容易ではない
+\item 新しい言語が十分に普及すれば獲得したスキルは無駄にならないが、そうでない場合にはスキルが無駄になってしまう
+\end{itemize}
+
+Funnelは、ActionScriptとProcessingという、世界的に既に広く用いられていて、かつ学習用の教材も十分に整っている言語をベースにして、I/Oモジュールに関連した処理を行うための必要最小限の拡張を行います。拡張の内容は以下の通りです。
+\begin{itemize}
+\item 入力の変化を検出する（例：閾値付き変化検出）
+\item アナログ入力に対する代表的なフィルタ処理（例：ローパス、ハイパス）
+\item 時間とともに変化する出力（例：ワンショット、点滅）
+\item 異なる単位間にも対応するスケーリング（例：加速度センサの電圧出力→角度）
+%\item ルックアップテーブルによる状態遷移管理
+%\item ステートマシンによる状態遷移管理
+\end{itemize}
+
+拡張は必要最小限であるため、ユーザがベースになる言語を習得していれば、いくつかのサンプルを眺めるだけですぐに使い始めることができます。また、これらのライブラリを使用して記述されたコードは、何を目的としているのかが明確になり、ロジックそのものの記述ミスによるバグの発生を防ぎます。また、目的が明確になることで、教育分野で初心者が書いたコードを添削する場合にも有効です。
+
+Funnelは、これらのライブラリをバイナリで提供するのではなく、ソースコードの状態で提供します。これにより、スキルがアップした段階でローレベルではどのように記述されているのか知りたくなった時や、自分なりに機能拡張したくなった時に手軽に調べることが可能になります。
+
+%ルックアップテーブルとステートマシンは、シンプルな文法で記述することができます。また、GUIエディタも用意します。このエディタは、ステートチャートの作成時だけでなく、実行時のモニタにも利用できるようにします。これにより、ユーザの書いたプログラムの実行状態を、通常のデバッガによるローレベルだけでなく、ハイレベルでもモニタできるようになります。
+
+なお、「センサからの入力を一定回数サンプリングして加算平均することで自動的にベースラインを求める」といったレベルでライブラリを用意してしまうと、確かに特定の処理は簡単に行えるようになります。しかし、それぞれ用途が限定されているために応用範囲が狭く、ライブラリが肥大化してしまう危険性が大いにあります。また、内部処理がブラックボックス化されてしまうため、ユーザのスキルアップにつながりません。この観点から、あくまで必要最小限のレベルにとどめます。
+
+\newpage
+\subsection{専用ハードウェア「FIO」について}
+Funnel用に開発するI/Oモジュール（FIO：フィオ）は、以下のパートから構成されます。
+\begin{itemize}
+\item USB⇔XBeeドングル（New Micros製USB XBee Dongleなど）
+	\begin{itemize}
+	\item USB-to-UART変換ブリッジ（FTDI製FT232RL）
+	\item ワイヤレス通信モジュール（MaxStream製XBee）
+	\end{itemize}
+%\item 追加モジュール（有線）
+%	\begin{itemize}
+%	\item PSoCなどのマイコン（CY8C29x66シリーズ？）
+%	\end{itemize}
+\item 無線モジュール
+	\begin{itemize}
+	\item PSoCマイコン（Cypress Semiconductor製CY8C27143）
+	\item ワイヤレス通信モジュール（MaxStream製XBee）
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[mediaboxonly, height=9.5cm, clip]{funnel_io.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{Funnel I/Oモジュールの構成図}
+\label{fio}
+\end{center}
+\end{figure}
+
+USB⇔XBeeドングルはUSBとIEEE 802.15.4の間の変換を行います。無線モジュールのハードウェアとファームウェアは基本となるものを開発し、リファレンスデザインとして公開しますが、PSoC Express\footnote{Cやアセンブラでコードを書くことなくマイコンのファームウェアを開発できるツール。}やPSoC Designer\footnote{PSoCマイコンの全ての機能を利用できる開発ツール。利用できる言語はCまたはアセンブラ。}により、ユーザ自身がデザインして簡単に追加することも可能です。
+また、全てオープンソースで公開することにより、基本デザインをベースとしてPSoC以外のマイコン（AVR、MSP430、Propeller\footnote{BASIC Stampシリーズで知られるParallax社が開発したマルチコアのマイコン。http://www.parallax.com/propeller/}など）を用いたバリエーションを作成することも可能です。
+
+
+\section{APIリファレンス}
+
+\subsection{データの表現について}
+入出力ポートのデータは、0から1までの実数（AS3ではNumber、Processingではfloat）で表現します。これにより、I/OモジュールごとにA/DやD/A（またはPWM）の分解能が異なる場合でも同様に扱えます。
+
+\subsection{IOSystemクラス}
+IOSystemクラスは複数のI/Oモジュールから構成されるシステムを表現するためのクラスです。Gainer I/OモジュールやArduino I/Oボードを利用する際には、IOSystemオブジェクトをラップするユーティリティークラス（Gainer、Arduino、Fio、XBee）を利用してアクセスすることにより、内部構造を意識することなくアクセスできます。
+
+\subsubsection{コンストラクタ}
+\texttt{IOSystem(config:Array, hostName:String, portNumber:int, samplingInterval:int)}
+
+\vspace{8pt}
+\begin{tabular}{llll}
+引数 & 型 & デフォルト値 & 説明 \\\hline
+\texttt{config} & Array &  & コンフィギュレーションの配列 \\
+\texttt{hostName} & String & localhost & ホスト名 \\
+\texttt{portNumber} & int & 9000 & ポート番号 \\
+\texttt{samplingInterval} & int & 33 & サンプリング間隔（ms） \\
+\end{tabular}
+
+\subsubsection{インスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+%\texttt{autoUpdate} & boolean & 出力ポートの値を自動で更新するか否か \\
+\texttt{samplingInterval} & int & 現在設定されているサンプリング間隔 \\
+\texttt{samplingInterval = } & int & サンプリング間隔を設定 \\
+%\texttt{portCount} & int & ポート数 \\
+\end{tabular}
+
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+%\texttt{port(number:int)} & Port & numberで指定したポートを返す \\
+%\texttt{update()} & void & 全ての出力ポートの状態を手動で更新する \\
+\texttt{iomodule(id:int)} & IOModule & 指定したIDのI/Oモジュールを返す \\
+\end{tabular}
+
+\subsection{IOModuleクラス}
+IOModuleクラスはFunnelの基本となるクラスです。IOModuleオブジェクトはPCに接続されたI/Oモジュールを抽象化して、共通の方法でアクセスできるようにします。
+
+%複数のモジュールが接続されている場合には、Funnelオブジェクトから連続したポートとして表現されます。
+
+\subsubsection{コンストラクタ}
+\texttt{IOModule(config:Configuration, hostName:String, portNumber:int, samplingInterval:int)}
+
+\vspace{8pt}
+\begin{tabular}{llll}
+引数 & 型 & デフォルト値 & 説明 \\\hline
+\texttt{config} & Configuration &  & コンフィギュレーション \\
+\texttt{hostName} & String & localhost & ホスト名 \\
+\texttt{portNumber} & int & 9000 & ポート番号 \\
+\texttt{samplingInterval} & int & 33 & サンプリング間隔（ms） \\
+\end{tabular}
+
+\subsubsection{インスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{autoUpdate} & boolean & 出力ポートの値を自動で更新するか否か \\
+%\texttt{samplingInterval} & int & 現在設定されているサンプリング間隔 \\
+%\texttt{samplingInterval = } & int & サンプリング間隔を設定 \\
+\texttt{portCount} & int & ポート数 \\
+\end{tabular}
+
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+\texttt{port(number:int)} & Port & numberで指定したポートを返す \\
+\texttt{update()} & void & 全ての出力ポートの状態を手動で更新する \\
+\end{tabular}
+
+\subsubsection{イベントハンドラ（Processingのみで実装）}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+\texttt{risingEdge(PortEvent event)} & void & \texttt{PortEvent.RISING\_EDGE}のハンドラ \\
+\texttt{fallingEdge(PortEvent event)} & void & \texttt{PortEvent.FALLING\_EDGE}のハンドラ \\
+\texttt{change(PortEvent event)} & void & \texttt{PortEvent.CHANGE}のハンドラ \\
+\end{tabular}
+
+\subsection{Gainerクラス}
+GainerクラスはGainer I/Oモジュールを扱うためのユーティリティークラスです。
+
+\subsubsection{コンストラクタ}
+\begin{tabular}{l}
+\texttt{Gainer(mode:int, hostName:String, portNumber:int, samplingInterval:int)} \\
+\end{tabular}
+
+\vspace{8pt}
+\begin{tabular}{llll}
+引数 & 型 & デフォルト値 & 説明 \\\hline
+\texttt{mode} & i & 1 & モード番号 \\
+\texttt{hostName} & String & localhost & ホスト名 \\
+\texttt{portNumber} & int & 9000 & ポート番号 \\
+\texttt{samplingInterval} & int & 33 & サンプリング間隔（ms） \\
+\end{tabular}
+
+\subsubsection{インスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{button} & Port & I/Oモジュール上のボタンを示すポート \\
+\texttt{led} & Port & I/Oモジュール上のLEDを示すポート \\
+\end{tabular}
+
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+\texttt{analogInput(number:int)} & Port & numberで指定したポートを返す \\
+\texttt{digitalInput(number:int)} & Port & numberで指定したポートを返す \\
+\texttt{analogOutput(number:int)} & Port & numberで指定したポートを返す \\
+\texttt{digitalOutput(number:int)} & Port & numberで指定したポートを返す \\
+\end{tabular}
+
+\subsubsection{定数}
+\begin{tabular}{lll}
+名前 & 型 & 説明 \\\hline
+\texttt{AIN} & int & アナログ入力 \\
+\texttt{DIN} & int & デジタル入力 \\
+\texttt{AOUT} & int & アナログ（またはPWM）出力 \\
+\texttt{DOUT} & int & デジタル出力 \\\hline
+\texttt{MODE1} & int & Gainer I/OモジュールのMODE 1 \\
+\texttt{MODE2} & int & Gainer I/OモジュールのMODE 2 \\
+\texttt{MODE3} & int & Gainer I/OモジュールのMODE 3 \\
+\texttt{MODE4} & int & Gainer I/OモジュールのMODE 4 \\
+\texttt{MODE5} & int & Gainer I/OモジュールのMODE 5 \\
+\texttt{MODE6} & int & Gainer I/OモジュールのMODE 6 \\
+\texttt{MODE7} & int & Gainer I/OモジュールのMODE 7 \\
+\texttt{MODE8} & int & Gainer I/OモジュールのMODE 8 \\
+\end{tabular}
+
+\subsection{Arduinoクラス}
+ArduinoクラスはファームウェアとしてFirmataを搭載したArduinoをI/Oモジュールとして扱うためのユーティリティークラスです。
+
+\subsubsection{コンストラクタ}
+\begin{tabular}{l}
+\texttt{Arduino(config:Array, hostName:String, portNumber:int, samplingInterval:int)} \\
+\end{tabular}
+
+\vspace{8pt}
+\begin{tabular}{llll}
+引数 & 型 & デフォルト値 & 説明 \\\hline
+\texttt{config} & Array &  & コンフィギュレーションの配列 \\
+\texttt{hostName} & String & localhost & ホスト名 \\
+\texttt{portNumber} & int & 9000 & ポート番号 \\
+\texttt{samplingInterval} & int & 33 & サンプリング間隔（ms） \\
+\end{tabular}
+
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+\texttt{analogPin(number:int)} & Port & numberで指定したポートを返す \\
+\texttt{digitalPin(number:int)} & Port & numberで指定したポートを返す \\
+\end{tabular}
+
+\subsubsection{定数}
+\begin{tabular}{lll}
+名前 & 型 & 説明 \\\hline
+\texttt{IN} & int & デジタル入力 \\
+\texttt{OUT} & int & デジタル出力 \\
+\texttt{PWM} & int & 疑似アナログ（PWM）出力 \\\hline
+\texttt{FIRMATA} & Configuration & Firmataファームウェアを書き込んだArduino I/Oボード \\
+\end{tabular}
+
+\subsection{Configurationクラス}
+ConfigurationクラスはI/Oモジュールのコンフィギュレーションを設定するためのクラスです。通常はGainerクラスやArduinoクラスなどのユーティリティークラスを経由してアクセスされ、ユーザが意識することはありません。
+
+\subsubsection{コンストラクタ}
+\begin{tabular}{l}
+\texttt{Configuration(model:int, mode:int)} \\
+\end{tabular}
+
+\vspace{8pt}
+\begin{tabular}{llll}
+引数 & 型 & デフォルト値 & 説明 \\\hline
+\texttt{model} & int &  & モデル \\
+\texttt{mode} & int & 1 & モード \\
+\end{tabular}
+
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+\texttt{setDigitalPinMode(pin:int, mode:int)} & void & デジタルピンのモードを設定（Adruino） \\
+\end{tabular}
+
+\subsubsection{定数}
+\begin{tabular}{lll}
+名前 & 説明 \\\hline
+\texttt{GAINER} & Gainer I/Oモジュール \\
+\texttt{ARDUINO} & Arduino I/Oボード \\
+\texttt{XBEE} & XBeeモジュール \\
+\texttt{FUNNEL} & Funnel I/Oモジュール \\
+\texttt{IN} & デジタル入力 \\
+\texttt{OUT} & デジタル出力 \\
+\texttt{PWM} & 疑似アナログ（PWM）出力 \\
+%\texttt{onChange(float current, float last)} & 入力が変化した（デジタル＆アナログ）
+\end{tabular}
+
+\subsection{Portクラス}
+Portクラスは、I/Oモジュールの入出力ポートを表現するためのクラスです。ユーザからはIOModuleオブジェクトのport()メソッド経由でアクセスします。
+
+\subsubsection{インスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{number} & int & ポートの番号 \\
+\texttt{type} & int & ポートのタイプ（\texttt{AIN}、\texttt{DIN}、\texttt{AOUT}、\texttt{DOUT}のいずれか） \\\hline
+\texttt{value} & float & ポートnの現在の値 \\
+\texttt{value = } & float & ポートnの値を設定（ポートのtypeが\texttt{AOUT}または\texttt{DOUT}の場合） \\
+\texttt{lastValue} & float & ポートnの変化する前の値 \\\hline
+\texttt{average} & float & 平均値 \\
+\texttt{minimum} & float & 最小値 \\
+\texttt{maximum} & float & 最大値 \\
+\texttt{filters} & Array & 現在設定されているフィルタ \\
+\texttt{filters =} & Array & フィルタを設定 \\
+\end{tabular}
+
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+\texttt{clear()} & void & ヒストリをリセット \\
+\texttt{addEventListener(e:Event, f:function)} & void & イベントリスナを設定 \\
+\texttt{on(event, \&proc)} & void & addEventListenerの別名（Rubyのみ） \\
+\end{tabular}
+
+
+\subsection{Eventクラス}
+Eventクラスは全てのイベントの基本となる抽象クラスです。
+
+\subsubsection{Eventのインスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{text} & String & エラーメッセージなど \\
+\end{tabular}
+
+\subsection{PortEventクラス}
+PortEventクラスは、それぞれの入出力ポートで発生するイベントを表現するためのクラスです。
+
+\subsubsection{コンストラクタ}
+\texttt{PortEvent(type:int, text:String, port:Port)}
+
+\subsubsection{PortEventのインスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{target} & Port & イベントが発生したPortへの参照 \\
+\end{tabular}
+
+\subsubsection{定数}
+\begin{tabular}{lll}
+イベント名 & 設定先 & 説明 \\\hline
+%\texttt{port.onChange()} & 入力のいずれかが変化した \\
+%\texttt{onReady()} & I/Oモジュールとの通信が確認できて準備が完了した \\
+\texttt{PortEvent.RISING\_EDGE} & 各ポート & SetPoint使用時に入力が変化（0→0以外） \\
+\texttt{PortEvent.FALLING\_EDGE} & 各ポート & SetPoint使用時に入力が変化（0以外→0） \\
+\texttt{PortEvent.CHANGE} & 各ポート & SetPoint使用時に入力が変化 \\
+%\texttt{onChange(float current, float last)} & 入力が変化した（デジタル＆アナログ）
+\end{tabular}
+
+\subsection{ErrorEventクラス}
+ErrorEventクラスは、動作中に発生する様々なエラーを表現するためのクラスです。
+
+\subsubsection{コンストラクタ}
+\texttt{ErrorEvent(type:int, text:String)}
+
+\subsubsection{エラー}
+\begin{tabular}{ll}
+名前 & 説明 \\\hline
+%\texttt{ErrorEvent.FATAL\_ERROR} & Funnelオブジェクト & I/Oモジュールとの間で致命的なエラーが発生した \\\hline
+%\texttt{CommunicationError} & I/Oモジュールとの通信で一般的なエラーが発生した \\
+\texttt{ErrorEvent.SERVER\_NOT\_FOUND\_ERROR} & Funnel Serverが見つからなかった \\
+\texttt{ErrorEvent.REBOOT\_ERROR} & I/Oモジュールの再起動に失敗した \\
+\texttt{ErrorEvent.CONFIGURATION\_ERROR} & コンフィギュレーションに失敗した \\
+\end{tabular}
+
+
+\newpage
+\subsection{Filterについて}
+Funnelでは、任意のポート（入力または出力）にフィルタをセットすることができます。フィルタは次の関数を実装しているクラスのインスタンスです。
+
+\begin{lstlisting}[caption={フィルタが実装するインタフェース},label=useless]
+interface Filter {
+	public function processSample(in:Number, buffer:Array):Number;
+}
+\end{lstlisting}
+
+具体的には、以下のクラスがFunnel v1.0でのフィルタとなるクラスです。
+
+\begin{itemize}
+\item Convolution
+\item Scaler
+\item SetPoint
+\item Osc
+\end{itemize}
+
+次のようにフィルタをセットすると、filter1、filter2、filter3の順で実行されます。これにより、入力をスムージングした後にスケーリングし、その変化を検出する、というような処理が可能になります。
+
+\begin{tabular}{l}
+\texttt{funnel.port(0).filters = [filter1, filter2, filter3];
+}\end{tabular}
+
+それぞれのフィルタはFunnelの入力ポート（Oscのみ出力ポート）に対して利用することを想定したものですが、processSample()メソッドを手動で呼んで更新することにより、画面表示などの他の部分でも利用することができます。
+
+\subsection{Convolutionクラス}
+Convolutionクラスは入力に対していわゆるデジタル信号処理的なフィルタ処理を行うためのクラスです。細かいノイズを取り除くためのローパスフィルタや、ドリフトを取り除くためのハイパスフィルタがあります。あらかじめ良く使われる種類の処理に対する係数は用意されていますが、ユーザが独自に定義した係数も利用できます。なお、動作中に係数を変更することもできますが、係数の数を変更した場合にはそれまでの履歴がクリアされます。
+
+%バッファは引数として与えられるため、\texttt{buffer[0]}、\texttt{buffer[-1]}のようにしてユーザ定義の関数からもアクセスできます。
+
+%\begin{lstlisting}[caption={ユーザ定義関数の実装例},label=useless]
+%function myFilterFunc(in:float, buffer:Array):float {
+%	buffer.shift();
+%	buffer[0] = in;
+%	return ((buffer[0] + buffer[-1]) / 2);
+%}
+%\end{lstlisting}
+
+\subsubsection{コンストラクタ}
+\begin{tabular}{l}
+\texttt{Convolution(coef:Array)} \\
+\end{tabular}
+
+\subsubsection{インスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{coef} & Array & 現在設定されているフィルタの係数 \\
+\texttt{coef = []} & Array & フィルタの係数を設定
+%\texttt{type = function(float in):float} & function & ユーザ定義の関数でフィルタを設定 \\
+\end{tabular}
+
+%\subsubsection{イベントハンドラ}
+%\begin{tabular}{ll}
+%イベントハンドラ名 & 説明 \\\hline
+%\texttt{onUpdate(float value)} & オシレータが更新された
+%\end{tabular}
+
+%\subsubsection{メソッド}
+%\begin{tabular}{lll}
+%メソッド名 & 戻り値 & 説明 \\\hline
+%%\texttt{setParameter(String name, float value)} & boolean & nameで指定したパラメータを設定 \\
+%\texttt{setCoef(Array coef)} & void & フィルタの係数を設定
+%\end{tabular}
+
+\subsubsection{定数（型：const Array）}
+\begin{tabular}{ll}
+名前 & 説明 \\\hline
+\texttt{Convolution.LPF} & ローパスフィルタ \\
+\texttt{Convolution.HPF} & ハイパスフィルタ \\
+\texttt{Convolution.MOVING\_AVERAGE} & 移動平均フィルタ
+\end{tabular}
+
+
+\subsection{Scalerクラス}
+Scalerはある範囲の入力をある範囲にスケーリングするためのクラスです。その際、直線でのスケーリング以外に、よく使われるカーブも用意されています。また、ユーザが独自に定義した関数も利用できます。
+
+\begin{lstlisting}[caption={ユーザ定義関数の実装例},label=useless]
+function myFilterFunc(in:float, buffer:Array):float {
+	return Math.abs(in);
+}
+\end{lstlisting}
+
+指定した入力の範囲外（inMinからinMax）の値が入力された場合、デフォルトではリミッタがかかりません。このため、結果として出力は指定した範囲（outMinからoutMax）を超えてしまいます。入力の範囲を制限したい場合には、最後の引数をtrueに設定します。
+
+%Funnelオブジェクトのport(n)のインスタンス変数\texttt{filters}にセットすることもできますし、独立して別のオブジェクトに対して利用することもできます。
+
+\subsubsection{コンストラクタ}
+\begin{tabular}{l}
+\texttt{Scaler(inMin:float, inMax:float, outMin:float, outMax:float,} \\
+\texttt{	type:function, limiter:boolean)} \\
+%\texttt{Scaler(float inMin, float inMax, float outMin, float outMax, function(float in):float)}
+\end{tabular}
+
+\vspace{8pt}
+\begin{tabular}{llll}
+引数 & 型 & デフォルト値 & 説明 \\\hline
+\texttt{inMin} & float &  & 入力の最小値 \\
+\texttt{inMax} & float &  & 入力の最大値 \\
+\texttt{outMin} & float &  & 出力の最小値 \\
+\texttt{outMax} & float &  & 出力の最大値 \\
+\texttt{type} & function &  & タイプ \\
+\texttt{limiter} & boolean & true & 範囲にリミットをかけるか否か \\
+\end{tabular}
+
+\subsubsection{インスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{type} & function & 現在設定されているタイプ \\
+\texttt{type = } & function & タイプを設定する \\
+\texttt{inMin} & float & 現在設定されている入力範囲の最小値 \\
+\texttt{inMin = } & float & 入力範囲の最小値を設定する \\
+\texttt{inMax} & float & 現在設定されている入力範囲の最大値 \\
+\texttt{inMax = } & float & 入力範囲の最大値を設定する \\
+\texttt{outMin} & float & 現在設定されている出力範囲の最小値 \\
+\texttt{outMin = } & float & 出力範囲の最小値を設定する \\
+\texttt{outMax} & float & 現在設定されている出力範囲の最大値 \\
+\texttt{outMax = } & float & 出力範囲の最大値を設定する \\
+\texttt{limiter} & boolean & 現在設定されているリミッタの状態 \\
+\texttt{limiter = } & void & リミッタの状態を設定する \\
+\end{tabular}
+
+%\subsubsection{メソッド}
+%\begin{tabular}{lll}
+%メソッド名 & 戻り値 & 説明 \\\hline
+%\texttt{scale(float in)} & float & 入力値\texttt{in}をスケーリングした値を返す
+%\end{tabular}
+
+%※Funnelオブジェクトにセットした場合、port(n)などで値を取得する際、オーバーライドする形で\texttt{scale()}が呼ばれるため、ユーザがこのメソッドを呼ぶ必要はありません。
+
+\subsubsection{定数（型：function）}
+\begin{tabular}{ll}
+名前 & 説明 \\\hline
+\texttt{Scaler.LINEAR} & 直線（$y = x$） \\
+%\texttt{Scaler.LOG} & 対数カーブ \\
+%\texttt{Scaler.EXP} & 指数カーブ \\
+\texttt{Scaler.SQUARE} & 平方カーブ（$y = x^{2}$） \\
+\texttt{Scaler.SQUARE\_ROOT} & 平方根カーブ（$y = \sqrt{x}$） \\
+\texttt{Scaler.CUBE} & 立方カーブ（$y = x^{4}$） \\
+\texttt{Scaler.CUBE\_ROOT} & 立方根カーブ（$y = \sqrt[4]{x}$）
+\end{tabular}
+
+
+%\subsection{EdgeDetectorクラス}
+%EdgeDetectorオブジェクトは、通常はFunnelオブジェクトでポートのdirectionプロパティが\texttt{INPUT}になっているポートの\texttt{filters}プロパティにセットして利用します。しかし、ユーザが明示的にインスタンスを生成することによりFunnel以外でも利用できます。
+
+%発生するイベントは\texttt{RISING\_EDGE}、\texttt{FALLING\_EDGE}、\texttt{CHANGED}の3種類で、それぞれ\texttt{onRisingEdge}、\texttt{onFallingEdge}、\texttt{onChange}の3つのイベントハンドラが対応します。
+
+%\subsubsection{コンストラクタ}
+%\begin{tabular}{l}
+%\texttt{EdgeDetector()} \\
+%\end{tabular}
+
+%\subsubsection{プロパティ}
+%\begin{tabular}{lll}
+%プロパティ名 & 型 & 説明 \\\hline
+%\texttt{type} & function & 現在設定されているタイプ \\
+%\texttt{type = [type:function, params:Array]} & function, Array & タイプとパラメータを設定
+%\texttt{threshold} & Array & 現在設定されている閾値 \\
+%\texttt{threshold = \{threshold, hysteresis\}} & Array & 閾値とヒステリシスを設定する \\
+%\texttt{threshold = [\{threshold, hysteresis\}, ...]} & Array & 複数の閾値とヒステリシスを設定する \\
+%\texttt{handler} & function & 現在設定されているイベントハンドラ \\
+%\texttt{handler = function(float current, float last):void} & function & イベントハンドラを設定する
+%\end{tabular}
+
+%\subsubsection{イベントハンドラ}
+%\begin{tabular}{ll}
+%イベントハンドラ名 & 説明 \\\hline
+%\texttt{onRisingEdge()} & デジタル入力の変化（0→0以外） \\
+%\texttt{onFallingEdge()} & デジタル入力の変化（0以外→0） \\
+%\texttt{onChange(float current, float last)} & 入力が変化した（デジタル＆アナログ）
+%\end{tabular}
+
+%\subsubsection{メソッド}
+%\begin{tabular}{lll}
+%メソッド名 & 戻り値 & 説明 \\\hline
+%\texttt{setType(function type, Array params)} & boolean & タイプとパラメータを設定する
+%\end{tabular}
+
+%※Funnelオブジェクトにセットした場合、Funnelオブジェクトのサービスタスクで\texttt{update()}が呼ばれるため、ユーザがこのメソッドを呼ぶ必要はありません。
+
+%\subsubsection{定数（型：function）}
+%\begin{tabular}{ll}
+%名前 & 説明 \\\hline
+%\texttt{EdgeDetector.DIGITAL} & デジタル入力の変化（パラメータ：なし） \\
+%\texttt{EdgeDetector.ANALOG} & アナログ入力の変化（パラメータ：最小変化量） \\
+%\end{tabular}
+
+
+\subsection{SetPointクラス}
+SetPointオブジェクトは、アナログの値に対して閾値とヒステリシスを持つポイントをセットし、processSample()を実行する度に現在の状態を判定して返します。ポイントが1つの場合の返り値は0または1の2種類、ポイントが2つの場合は0または1または2の3種類、ポイントがn個の場合は0からnまでのn種類になります。
+
+\subsubsection{コンストラクタ}
+\begin{tabular}{l}
+\texttt{SetPoint(threshold:float, hysteresis:float)} \\
+\texttt{SetPoint([[t0:float, h0:float], [t1:float, h1:float], ...])} \\
+\end{tabular}
+
+\subsubsection{インスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{point[n]} & Array & 現在設定されているn番目のポイント（閾値とヒステリシス） \\
+%\texttt{threshold[n] =} & float & n番目の閾値を設定 \\
+%\texttt{hysteresis[n]} & float & 現在設定されているn番目のヒステリシス \\
+%\texttt{hysteresis[n] =} & float & n番目のヒステリシスを設定 \\
+%\texttt{point[n] = [threshold, histeresis]} & Array & ポイントを設定 \\
+%\texttt{point = [[threshold, histeresis], ...]} & Array & 複数のポイントを設定
+%\texttt{threshold} & Array & 現在設定されている閾値 \\
+%\texttt{threshold = \{threshold, hysteresis\}} & Array & 閾値とヒステリシスを設定する \\
+%\texttt{threshold = [\{threshold, hysteresis\}, ...]} & Array & 複数の閾値とヒステリシスを設定する \\
+%\texttt{handler} & function & 現在設定されているイベントハンドラ \\
+%\texttt{handler = function(float current, float last):void} & function & イベントハンドラを設定する
+\end{tabular}
+
+%\subsubsection{イベントハンドラ}
+%\begin{tabular}{ll}
+%イベントハンドラ名 & 説明 \\\hline
+%\texttt{port(n).onRisingEdge()} & デジタル入力の変化（low→high） \\
+%\texttt{port(n).onFallingEdge()} & デジタル入力の変化（high→low） \\
+%\texttt{port(n).onChange(float current, float last)} & 入力が変化した
+%\end{tabular}
+
+%複数のポイントを設定しない限りこれは不要？？？
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+\texttt{addPoint(threshold:float, hysteresis:float)} & void & 新しいポイントを追加する \\
+\texttt{removePoint(threshold:float)} & void & 指定したポイントを削除する
+%\texttt{setThreshold(float threshold, float hysteresis)} & boolean & ポイントを設定する \\
+%%\texttt{setThreshold([[threshold, hysteresis], ...])} & boolean & 複数のポイントを設定する \\
+%%\texttt{update()} & float & 最新の状態に更新する
+\end{tabular}
+
+%※Funnelオブジェクトにセットした場合、Funnelオブジェクトのサービスタスクで\texttt{update()}が呼ばれるため、ユーザがこのメソッドを呼ぶ必要はありません。
+
+%\subsubsection{定数（型：function）}
+%\begin{tabular}{ll}
+%名前 & 説明 \\\hline
+%\texttt{EdgeDetector.DIGITAL} & デジタル入力の変化 \\
+%\end{tabular}
+
+
+\subsection{Oscクラス}
+Oscクラスは主に出力に用い、LEDをふわふわ点滅させたりする時などに使います。また、回数を1回に設定すると、ワンショットの制御にも使えます。あらかじめ良く使われる種類の波形は用意されていますが、ユーザが独自に定義した関数も利用できます。サービス間隔はOscオブジェクトのクラス変数serviceIntervalの設定に従います。手動で利用する場合には、update()メソッドを利用します。
+
+\subsubsection{コンストラクタ}
+\begin{tabular}{l}
+\texttt{Osc(wave:function, freq:float, times:int)} \\
+\texttt{Osc(wave:function, freq:float, amp:float, offset:float, phase:float, times:int)}
+\end{tabular}
+
+\vspace{8pt}
+\begin{tabular}{llll}
+引数 & 型 & デフォルト値 & 説明 \\\hline
+\texttt{wave} & function &  & タイプ \\
+\texttt{freq} & float & 1.0 & 周波数 \\
+\texttt{amp} & float & 1.0 & 振幅 \\
+\texttt{offset} & float & 0.0 & オフセット \\
+\texttt{phase} & float & 1.0 & 位相 \\
+\texttt{times} & int & 0 & 繰り返しの最大値（0は無限回） \\
+\end{tabular}
+
+\subsubsection{クラス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{serviceInterval} & int & サービス間隔 \\
+\end{tabular}
+
+\subsubsection{インスタンス変数}
+\begin{tabular}{lll}
+変数名 & 型 & 説明 \\\hline
+\texttt{wave} & function & 現在設定されている波形 \\
+\texttt{wave = } & function & 波形を設定 \\
+%\texttt{wave = function(float in):float} & function & 波形を設定（ユーザが用意した関数） \\
+\texttt{freq} & float & 現在設定されている周波数 \\
+\texttt{freq =} & void & 周波数を設定 \\
+\texttt{amplitude} & float & 現在設定されている振幅 \\
+\texttt{amplitude =} & void & 振幅を設定 \\
+\texttt{offset} & float & 現在設定されているオフセット \\
+\texttt{offset =} & void & オフセットを設定 \\
+\texttt{phase} & float & 現在設定されている位相（degree） \\
+\texttt{phase =} & void & 位相を設定（degree） \\
+\texttt{times} & int & 現在設定されている回数（times） \\
+\texttt{times =} & void & 回数を設定（times）
+\end{tabular}
+
+\subsubsection{イベント}
+\begin{tabular}{lll}
+イベントハンドラ名 & 変数 & 説明 \\\hline
+\texttt{Event.UPDATE} & value & オシレータが更新された
+\end{tabular}
+
+\subsubsection{メソッド}
+\begin{tabular}{lll}
+メソッド名 & 戻り値 & 説明 \\\hline
+%\texttt{setWave(function wave)} & boolean & 波形を設定 \\
+\texttt{start()} & void & Oscオブジェクトの動作をスタートする \\
+\texttt{stop()} & void & Oscオブジェクトの動作をストップする \\
+\texttt{reset()} & void & Oscオブジェクトの動作をリセットする \\
+\texttt{update(interval:int)} & void & 指定したインターバルだけ時間を進める \\
+\texttt{update()} & void & serviceIntervalだけ時間を進める \\
+\texttt{addEventListener(e:Event, f:function)} & void & イベントリスナを設定する
+\end{tabular}
+
+%※Funnelオブジェクトにセットした場合、Funnelオブジェクトのサービスタスク中でセットしたOscオブジェクトの\texttt{update()}を自動的に呼ぶため、ユーザがこのメソッドを呼ぶ必要はありません。
+
+\subsubsection{定数（型：function）}
+\begin{tabular}{ll}
+名前 & 説明 \\\hline
+\texttt{Osc.SIN} & サイン波 \\
+\texttt{Osc.SQUARE}	& 矩形波 \\
+\texttt{Osc.SAW} & ノコギリ波 \\
+\texttt{Osc.TRIANGLE} & 三角波 \\
+\texttt{Osc.IMPULSE} & インパルス（1区間のみ1になりその後は0）
+\end{tabular}
+
+\subsection{ショートカット一覧（AS3とRubyのみ実装）}
+\begin{tabular}{ll}
+名前 & 説明 \\\hline
+\texttt{AIN} & \texttt{Port.AIN} \\
+\texttt{AOUT} & \texttt{Port.AOUT} \\
+\texttt{CHANGE} & \texttt{PortEvent.CHANGE} \\
+\texttt{CONFIGURATION\_ERROR} & \texttt{FunnelErrorEvent.CONFIGURATION\_ERROR} \\
+\texttt{DIN} & \texttt{Port.DIN} \\
+\texttt{DOUT} & \texttt{Port.DOUT} \\
+\texttt{ERROR} & \texttt{FunnelErrorEvent.ERROR} \\
+\texttt{FALLING\_EDGE} & \texttt{PortEvent.FALLING\_EDGE} \\
+\texttt{IN} & \texttt{Port.DIN} \\
+\texttt{OUT} & \texttt{Port.DOUT} \\
+\texttt{PWM} & \texttt{Port.AIN} \\
+\texttt{READY} & \texttt{FunnelEvent.READY} \\
+\texttt{REBOOT\_ERROR} & \texttt{FunnelErrorEvent.REBOOT\_ERROR} \\
+\texttt{RISING\_EDGE} & \texttt{PortEvent.RISING\_EDGE} \\
+\texttt{UPDATE} & \texttt{GeneratorEvent.UPDATE} \\
+\end{tabular}
+
+%\newpage
+%\subsection{StateMachineクラス}
+%StateMachineクラスは、他のクラスと異なり、ステートマシンを表現するための上位レベルのクラスです。
+
+%\subsubsection{コンストラクタ}
+%\texttt{StateMachine(var stateMachineData)}
+
+%\begin{lstlisting}[caption={StateMachineの実装例},label=useless]
+%// データの記述例（記述方法はJSON準拠）
+%var stateMachine = {
+%	_map: {
+%		STATE_0: {
+%			events: {
+%				{
+%					event: "buttonPressed", function:"function_0", next: "STATE_1",
+%				},
+%				...
+%			},
+%		},
+
+%		...
+
+%		STATE_N: {
+%			events: {
+%				{
+%					event: "buttonPressed", function:"function_N", next: "STATE_0",
+%				},
+%				...
+%			},
+%		},
+%	},
+
+%	_state = "STATE_0",
+%}
+%\end{lstlisting}
+
+%\subsubsection{プロパティ}
+%\begin{tabular}{lll}
+%プロパティ名 & 型 & 説明 \\\hline
+%\texttt{currentState} & String & 現在のステート \\
+%%\texttt{currentState =} & String & ステートを設定
+%\end{tabular}
+
+%\subsubsection{メソッド}
+%\begin{tabular}{lll}
+%メソッド名 & 戻り値 & 説明 \\\hline
+%\texttt{handleEvent(String event)} & boolean & イベントを処理する
+%\end{tabular}
+
+%\subsubsection{定数}
+
+
+%\subsection{StateMachineクラス}
+%StateMachineクラスは、ステートマシンを表現するためのクラスです。
+
+%\subsubsection{コンストラクタ}
+%\texttt{StateMachine()}
+
+%\subsubsection{プロパティ}
+%\begin{tabular}{lll}
+%プロパティ名 & 型 & 説明 \\\hline
+%\texttt{currentState} & State & 現在のステート \\
+%\end{tabular}
+
+%\subsubsection{イベントハンドラ}
+
+%\subsubsection{メソッド}
+%\begin{tabular}{lll}
+%メソッド名 & 戻り値 & 説明 \\\hline
+%\texttt{addState(State state)} & boolean & ステートを追加する
+%\end{tabular}
+
+%\subsubsection{定数}
+
+%
+%\subsection{Stateクラス}
+%Stateクラスは、ステートマシンのステートを表現するためのクラスです。
+
+%\subsubsection{コンストラクタ}
+%\texttt{State(String name, [{Event event, function handler}, ...])}
+
+%\subsubsection{プロパティ}
+
+%\subsubsection{イベントハンドラ}
+%\begin{tabular}{ll}
+%イベントハンドラ名 & 説明 \\\hline
+%\texttt{enterState()} & ステートに移行した
+%\texttt{exitState()} & ステートが終了する
+%\end{tabular}
+
+%\subsubsection{メソッド}
+
+%\subsubsection{定数}
+
+
+%\subsection{言語デザインの評価方法}
+%Funnelは、デザイナーやアーティスト、およびデザインやアートの教育分野での利用を想定しています。このため、そうした分野で実際に利用できるよう、開発途中の適切な段階で言語デザインをレビューし、ブラッシュアップしていく必要があります。この点に関しては、次のように予定しています。
+
+%\begin{itemize}
+%\item 最初のデザイン段階でのレビュー（2007年4月後半）：\\言語仕様の資料と、想定される用途についてコード例を作成し、デザインやアートの教育分野で実際に教育に携わっている方5名程度に対してレビューを行います。この結果に基づいて、最初のデザインを決定します。
+%\item 最初の実装が終わった段階でのレビュー（2007年7月）：\\最初のデザインに基づいて実装し、実際にコードを書いて動かすことができるようになった段階でIAMASの学生などを対象としてワークショップを行います。ここでは、実際に課題を与えて短時間でプログラムを書いてもらいます。
+%\item 公開ワークショップでのレビュー（2007年10月）：\\Funnelの開発計画で予定している公開ワークショップで、参加者に前回同様に実際にプログラムを書いてもらいます。この結果を元に、v1.0の最終仕様を決定します。
+%\end{itemize}
+
+\newpage
+\section{コード例}
+Funnelのライブラリを使用することにより、どの程度コードがシンプルかつ可読性の高いものになるか、いくつか具体的な例を示します。
+
+%\subsubsection{変化した瞬間にハンドラを呼ぶ}
+
+%\begin{lstlisting}[caption={コード例\ref{pseudo_code}の実装例（ActionScript 3）},label=useless]
+%var io:IOModule = new IOModule(...);
+%var wasActivated:Boolean = false;
+
+%function loop() {
+%	var isActivated:Boolean = io.digitalInput[0];
+%	if (!wasActivated && isActivated) {
+%		handler();
+%	}
+%	wasActivated = isActivated;
+%}
+
+%function handler() {
+%	...
+%}
+%\end{lstlisting}
+
+%
+%\begin{lstlisting}[caption={コード例\ref{pseudo_code}の実装例（ActionScript 3 + Funnel）},label=useless]
+%var io:IOModule = new IOModule(...);
+
+%io.digitalInput[0].onActivated = function() {
+%	...
+%}
+%\end{lstlisting}
+
+%\newpage
+\subsection{アナログ入力に対する閾値付き変化検出}
+
+\begin{lstlisting}[caption={疑似コード},label=pcode2]
+光センサの値があらかじめ設定した閾値を下回ったらハンドラを呼ぶ
+例：レーザー光源と光センサの間を通行者が遮ったことを検出
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\ref{pcode2}の実装例（ActionScript 2 + Gainer）},label=useless]
+var io:Gainer = new Gainer(...);
+var lastStatus:Number = -1;	// -1: unknown, 0: low, 1:high
+var threshold = 80;
+var hysteresis = 20;
+
+loop() {
+	if (io.analogInput[0] < (threshold - hysteresis)) {
+		status = 0;
+	} else if (io.analogInput[0] > (threshold + hysteresis)) {
+		status = 1;
+	} else {
+		status = lastStatus;
+	}
+
+	if ((lastStatus == 0) && (status == 1)) {
+		handler();
+	}
+
+	lastStatus = status;
+}
+
+function handler():void {
+	...
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\ref{pcode2}の実装例（ActionScript 3 + Funnel）},label=useless]
+var gio:Gainer = new Gainer(...);
+var threshold:Number = 0.3;
+var hysteresis:Number = 0.1;
+
+gio.analogInput(0).filters = [new SetPoint(threshold, hysteresis)];
+gio.analogInput(0).addEventListener(FALLING_EDGE, handler);
+
+function handler():void {
+	...
+}
+\end{lstlisting}
+
+
+\newpage
+\subsection{デジタル出力の状態を時間とともに変化させる}
+
+\begin{lstlisting}[caption={疑似コード},label=pcode4]
+デジタル出力0の状態を2Hzで交互に切り替える
+例：LEDを点滅させる
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\ref{pcode4}の実装例（ActionScript 2 + Gainer）},label=useless]
+var io:Gainer = new Gainer(...);
+var value:Boolean = false;
+
+var blinkTimer:Timer = new Timer(250, 0);	// 間隔、回数（0は無限回）
+blinkTimer.addEventListener(TimerEvent.TIMER, blink);
+blinkTimer.start();
+
+function blink():void {
+	if (value == false) {
+		value = true;
+	} else {
+		value = false;
+	}
+
+	io.digitalOutput(0, value);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\ref{pcode4}の実装例1（ActionScript 3 + Funnel）},label=useless]
+var gio:Gainer = new Gainer(...);
+var blinkOsc:Osc = new Osc(Osc.SQUARE, 2, 0); // 波形、周波数、回数（0は無限回）
+
+gio.digitalOutput(0).filters = [blinkOsc];
+blinkOsc.start();
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\ref{pcode4}の実装例2（ActionScript 3 + Funnel）},label=useless]
+var gio:Gainer = new Gainer(...);
+
+gio.digitalOutput(0).filters = [new Osc(Osc.SQUARE, 2, 0)]; // 波形、周波数、回数（0は無限回）
+gio.digitalOutput(0).filters[0].start();
+\end{lstlisting}
+
+\newpage
+\subsection{アナログ出力の状態を時間とともに変化させる}
+
+\begin{lstlisting}[caption={疑似コード},label=pcode6]
+アナログ出力の値を三角波で連続的に変化させる
+例：LEDをふわふわ点滅させる
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\ref{pcode6}の実装例（ActionScript 2 + Gainer）},label=useless]
+var io:Gainer = new Gainer(...);
+var value:Number = 0;
+var i:Number = 0;
+
+var blinkTimer:Timer = new Timer(20, 0);		// 20ms, forever
+blinkTimer.addEventListener(TimerEvent.TIMER, dimming);
+blinkTimer.start();
+
+function dimming():void {
+	i += 1;
+	if (i < 255) {
+		value += 1;
+	} else if (i < 509) {
+		value -= 1;
+	} else {
+		i = 1;
+	}
+
+	io.analogOutput(0, value);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\ref{pcode6}の実装例1（ActionScript 3 + Funnel）},label=useless]
+var gio:Gainer = new Gainer(...);
+var dimmer:Osc = new Osc(Wave.TRIANGLE, 0.5, 0); // 波形、周波数、回数（0は無限回）
+
+gio.analogOutput(0).filters = [dimmer];
+dimmer.start();
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\ref{pcode6}の実装例2（ActionScript 3 + Funnel）},label=useless]
+var gio:Gainer = new Gainer(...);
+
+gio.analogOutput(0).filters = [new Osc(Wave.TRIANGLE, 0.5, 0)]; // 波形、周波数、回数（0は無限回）
+gio.analogOutput(0).filters[0].start();
+\end{lstlisting}
+
+\newpage
+\subsection{デジタル出力0を一定時間だけhighにする}
+
+\begin{lstlisting}[caption={疑似コード},label=pcode3]
+デジタル出力0を20msだけhighにする
+例：ソレノイドを駆動して対象物を叩く（電流を流したままだとコイルが焼き切れるため時間を制限する）
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\ref{pcode3}の実装例（ActionScript 2 + Gainer）},label=useless]
+var io:Gainer = new Gainer(...);
+
+function startTrigger():void {
+	io.digitalOutput(0, true);
+	var tTimer:Timer = new Timer(20, 1);	// 間隔、回数
+	tTimer.addEventListener(TimerEvent.TIMER, finishTrigger);
+	tTimer.start();
+}
+
+function finishTrigger():void {
+	io.digitalOutput(0, false);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\ref{pcode3}の実装例（ActionScript 3 + Funnel）},label=useless]
+var gio:Gainer = new Gainer(...);
+var trigger:Osc = new Osc(Osc.IMPULSE, 1000/20, 1);	// 波形、周波数、回数
+
+gio.digitalOutput(0).filters = [trigger];
+trigger.start();
+\end{lstlisting}
+
+%\newpage
+%\subsection{ステートマシン}
+
+%\begin{lstlisting}[caption={疑似コード},label=pcode5]
+%デジタル入力0がlowからhighになる度にステータスを切り替える
+%例：ボタンを押す度に接続／非接続が切り替わる
+%\end{lstlisting}
+
+%\begin{lstlisting}[caption={\ref{pcode5}の実装例1（ActionScript 2 + Gainer）},label=useless]
+%var io:Gainer = new Gainer(...);
+%var wasActivated:Boolean = false;
+%var currentState:Number = DISCONNECTED;
+
+%function loop():void {
+%	var isActivated:Boolean = io.digitalInput[0];
+%	if (!wasActivated & isActivated) {
+%		buttonPressed();
+%	}
+%	wasActivated = isActivated;
+%}
+
+%function buttonPressed():void {
+%	switch (currentState) {
+%		case CONNECTED:
+%			disconnect();
+%			break;
+%		case DISCONNECTED:
+%			connect();
+%			break;
+%		default:
+%			break;
+%	}
+%}
+
+%function connect():void {
+%	...	// 実際の接続処理をここに
+%	currrentState = CONNECTED;
+%}
+
+%function disconnect():void {
+%	...	// 実際の切断処理をここに
+%	currrentState = DISCONNECTED;
+%}
+%\end{lstlisting}
+
+%\newpage
+%\begin{lstlisting}[caption={\ref{pcode5}の実装例2（ActionScript 2 + Gainer）},label=useless]
+%var io:Gainer = new Gainer(...);
+%var wasActivated:Boolean = false;
+
+%// すべてのステートを列挙して初期状態のステートを決定する
+%var DISCONNECTED:Number = 0;
+%var CONNECTED:Number = 1;
+%var currentState:Number = DISCONNECTED;
+
+%vat stateMap:Object = new Object();
+%// それぞれのステートでボタンが押されたときに処理を担当する関数を設定
+%stateMap[DISCONNECTED] = connect;
+%stateMap[CONNECTED] = disconnect;
+
+%function loop():void {
+%	var isActivated:Boolean = io.digitalInput[0];
+%	if (!wasActivated & isActivated) {
+%		var processFunc:Function = stateMap[currentState];
+%		processFunc();
+%	}
+%	wasActivated = isActivated;
+%}
+
+%function connect():void {
+%	...	// 実際の接続処理をここに
+%	currrentState = CONNECTED;
+%}
+
+%function disconnect():void {
+%	...	// 実際の切断処理をここに
+%	currrentState = DISCONNECTED;
+%}
+%\end{lstlisting}
+
+%\newpage
+%\begin{lstlisting}[caption={\ref{pcode5}の実装例（ActionScript 3 + Funnel）},label=useless]
+%var fio:Funnel = new Funnel(...);
+
+%// 状態ごとに入力とその時呼び出すハンドラ、および次のステートを記述。
+%var buttonStateMachine = {
+%	CONNECTED:{
+%		fio.port[0].onActivated:	disconnect, DISCONNECTED
+%	},
+%	DISCONNECTED:{
+%		fio.port[0].onActivated:	connect, CONNECTED
+%	}
+%}
+
+%var sm:StateMachine = new StateMachine(buttonStateMachine);
+
+%sm.connect = function() {
+%	...	// 実際の接続処理をここに
+%}
+
+%sm.disconnect = function() {
+%	...	// 実際の切断処理をここに
+%}
+%\end{lstlisting}
+
+%\begin{lstlisting}[caption={\ref{pcode5}の実装例1（ActionScript 3 + Funnel）},label=useless]
+%var fio:Funnel = new Funnel(...);
+
+%var buttonStateMachine = {
+%	CONNECTED:{
+%		events:{
+%			event:"port[0].onActivated", function:"disconnect"
+%		}
+%	},
+%	DISCONNECTED:{
+%		events:{
+%			event:"port[0].onActivated", function:"connect"
+%		}
+%	}
+%}
+
+%var sm:StateMachine = new StateMachine(buttonStateMachine);
+%sm.currentState = "DISCONNECTED";
+
+%function connect():void {
+%	...	// 実際の接続処理をここに
+%	sm.currensStatus = "CONNECTED";
+%}
+
+%function disconnect():void {
+%	...	// 実際の切断処理をここに
+%	sm.currensStatus = "DISCONNECTED";
+%}
+%\end{lstlisting}
+
+%\begin{lstlisting}[caption={\ref{pcode5}の実装例2（ActionScript 3 + Funnel）},label=useless]
+%var fio:Funnel = new Funnel(...);
+
+%var buttonStateMap = {
+%	state: "CONNECTED",
+%	state: "DISCONNECTED"
+%}
+
+%var sm:StateMachine = new StateMachine(buttonStateMachine);
+%sm.currentState = "DISCONNECTED";
+
+%fio.port[0].onActivated when DISCONNECTED = function() {
+%	...	// 実際の接続処理をここに
+%	sm.currensStatus = "CONNECTED";
+%}
+
+%fio.port[0].onActivated when CONNECTED = function() {
+%	...	// 実際の切断処理をここに
+%	sm.currensStatus = "DISCONNECTED";
+%}
+%\end{lstlisting}
+
+%// イベント発生を判定する関数の関数名は「イベント名＋Func」
+%function buttonPressedFunc():boolean {
+%	return (fio.port[0] != 0);
+%}
+
+%\begin{lstlisting}[caption={\ref{pcode5}の実装例（ActionScript 3 + Funnel）},label=useless]
+%var fio:Funnel = new Funnel(...);
+%fio.port[0].filters = [EdgeDetector.DIGITAL];
+
+%var buttonStateMachine = {
+%	_map: {
+%		CONNECTED: {
+%			events: {
+%				event: {
+%					event: "buttonPressed", function: "disconnecting", next: "DISCONNECTED",
+%				},
+%			},
+%		},
+%		DISCONNECTED: {
+%			events: {
+%				event: {
+%					event: "buttonPressed", function: "connecting", next: "CONNECTED",
+%				},
+%			},
+%		},
+%	},
+
+%	_state: "DISCONNECTED",
+%}
+
+%var sm:StateMachine = new StateMachine(buttonStateMachine);
+
+%fio.port[0].onRisingEdge = function() {
+%	sm.handleEvent("buttonPressed");
+%}
+
+%function connecting():boolean {
+%	...	// 実際の接続処理をここに
+%	return true;	// 成功したらtrueを返す
+%}
+
+%function disconnecting():boolean {
+%	...	// 実際の切断処理をここに
+%	return true;	// 成功したらtrueを返す
+%}
+%\end{lstlisting}
+
+
+%\newpage
+%\subsection{その他}
+%\subsubsection{複数のOscによる合計（AMとFM）}
+%\begin{lstlisting}[caption={複数のOscによる合成（ActionScript 3 + Funnel）},label=useless]
+%var fio:Funnel = new Funnel(...);
+%var osc1:Osc = new Osc(Osc.SIN, 1);
+%var osc2:Osc = new Osc(Osc.SIN, 5);
+
+%// amplitude modulation
+%// OscオブジェクトのonUpdate()が呼ばれる順序はインスタンスが生成された順序の逆順
+%// この場合にはosc2.onUpdate()が呼ばれた後にosc1.onUpdate()が呼ばれる
+%osc2.onUpdate = function(float value) {
+%	osc1.amplitude = value;
+%}
+
+%// frequency modulation
+%osc2.onUpdate = function(float value) {
+%	osc1.freq = value;
+%}
+%\end{lstlisting}
+
+\newpage
+\section{コマンドプロトコルについて}
+サーバとクライアント間の通信はOSCに準拠した形で行われます。サーバにはコマンド用、通知用の2つのポートが連番で用意されています（例：9000番と9001番）。コマンド用のポートでのやりとりは全て同期型ですが、通知用のポートからの通知はサーバ側でイベントが発生した時点で任意に通知されます。
+
+\subsection{サーバに対するコントロール（コマンド用ポート）}
+\begin{tabular}{lll}
+コマンド & 引数 & 説明 \\\hline
+\texttt{/quit} & none & サーバを終了する \\
+\texttt{/reset} & none & I/Oモジュールをリセットする \\
+%\texttt{/subscribe} & none & サーバからの通知を登録する \\
+%\texttt{/unsubscribe} & none & サーバからの通知を登録解除する \\
+\texttt{/polling} & int & 入力のポーリングを開始（1）または停止（0）する \\
+%\texttt{/query} & none & I/Oモジュールのポート設定を問い合わせる \\
+\texttt{/configure} & int, int, int, ... & モジュールID、ポート設定1、ポート設定2… \\
+\texttt{/samplingInterval} & int & I/Oモジュールのサンプリング間隔をミリ秒単位で設定する \\
+%\texttt{/query/portDirection} & int & 指定した番号の入出力方向を問い合わせる \\
+%\texttt{/query/portType} & int & 指定した番号のタイプを問い合わせる \\
+\texttt{/out} & int, int, float, ... & モジュールID、最初のポート番号、値1、値2… \\
+\texttt{/in} & int, int, int & モジュールID、最初のポート番号、ポート数 \\
+\end{tabular}
+
+\subsection{サーバからのリプライ（コマンド用ポート）}
+\begin{tabular}{lll}
+アドレス & 引数 & 説明 \\\hline
+\texttt{/コマンドと同じアドレス} & int, string & 第1引数はエラーコード、第2引数はエラーメッセージ \\
+%\texttt{/configure} & int, string & 第1引数はエラーコード、第2引数はエラーメッセージ \\
+\end{tabular}
+
+%\begin{lstlisting}[caption={/queryコマンドに対するリプライ（バンドル）},label=useless]
+%\begin{lstlisting}[caption={/configureコマンドでの指定（バンドル）},label=useless]
+%[
+%	[
+%		direction:int
+%		type:int
+%	] * N
+%]
+%\end{lstlisting}
+
+%\begin{lstlisting}[caption={/outメッセージの形式},label=useless]
+%[
+%	[
+%		portNumber:int
+%		value:float
+%	] * N
+%]
+%\end{lstlisting}
+
+\subsection{サーバからの通知（通知用ポート）}
+\begin{tabular}{lll}
+コマンド & 引数 & 説明 \\\hline
+%%\texttt{/ready} & none & モジュールとの通信が確立して準備が完了した \\
+%\texttt{/error} & int & エラーが発生した \\
+\texttt{/in} & int, int, float, ... & モジュールID、ポート番号、値1、値2… \\
+\texttt{/node/added} & int, String & モジュールID、モジュール識別用文字列 \\
+\texttt{/node/removed} & int, String & モジュールID、モジュール識別用文字列 \\
+\end{tabular}
+
+\vspace{8pt}
+※/node/*はFioのみで利用されます。
+
+%\begin{lstlisting}[caption={/inメッセージの形式},label=useless]
+%[
+%	[
+%		portNumber:int
+%		val:float
+%	] * N
+%]
+%\end{lstlisting}
+
+\subsection{定数（型：int）}
+\begin{tabular}{lll}
+名前 & 値 & 説明 \\\hline
+%\texttt{PORT\_DIRECTION\_I} & 0 & 入力 \\
+%\texttt{PORT\_DIRECTION\_O} & 1 & 出力 \\
+%\texttt{PORT\_TYPE\_A} & 0 & アナログ（値は0～1.0） \\
+%\texttt{PORT\_TYPE\_D} & 1 & デジタル（値は0または1.0） \\
+\texttt{PORT\_AIN} & 0 & アナログ入力（値は0～1.0） \\
+\texttt{PORT\_DIN} & 1 & デジタル入力（値は0または1.0） \\
+\texttt{PORT\_AOUT} & 2 & アナログ出力（値は0～1.0） \\
+\texttt{PORT\_DOUT} & 3 & デジタル出力（値は0または1.0） \\
+\texttt{NO\_ERROR} & 0 & エラーなし \\
+\texttt{ERROR} & -1 & エラーあり \\
+\texttt{REBOOT\_ERROR} & -2 & I/Oモジュールの再起動に失敗した \\
+\texttt{CONFIGURATION\_ERROR} & -3 & 指定したコンフィグレーションに間違いがある \\
+\end{tabular}
+
+
+\newpage
+\section{補足}
+\subsection{ソフトウェアの動作環境について}
+\subsubsection{PC}
+ActionScript 3とProcessingは、PC上で動作することを想定しています。PC側の処理能力を活用することにより、動画や音声などのリッチなメディアを自由に利用できます。
+
+また、カメラを使った画像認識とのハイブリッド処理も考えられます。画像認識とセンサーによる検出は、それぞれ得意とする分野が異なります。これら2つを組み合わせることにより、プロセッサの負荷を軽減したり、精度を向上させたりすることが期待できると考えます。
+
+\subsubsection{組込み系デバイス}
+ここでの組込み系デバイスとは、Gumstix\footnote{http://www.gumstix.com/}などのLinuxが動作する小型デバイスを想定しています。組込み系デバイスの場合には、Rubyによるコントロールを想定しています。Rubyはインタプリタであり、リアルタイム性は保証されていません。確かに、1/1000秒オーダーの処理は難しいかもしれませんが、「ネットワーク経由でRSSを取得し、その内容を解析してLEDなどのアクチュエータをコントロールする」という場合には十分なパフォーマンスが期待できます。
+
+%デバイス側でFTPサーバが動作していれば、PC側のエディタでデバイス側のファイルを仮想的に編集することにより、実際の環境で動作させながら効率よくアイデアを形にしていくことができると期待しています。
+
+ActionScript 3をはじめとするJavaScriptを、Tamarin\footnote{http://www.mozilla-japan.org/projects/tamarin/}などの仮想マシンを組込み系デバイスに実装することで動作させることも考えられますが、Funnel v1.0の正式リリース後の状況により検討したいと考えています。
+
+\newpage
+\section{更新履歴}
+\begin{description}
+\item[ 2007.12.05] 定数を各ライブラリ間での統一を調整したものに合わせて更新。ショートカットについての説明を追加。
+\item[ 2007.11.23] /nodeコマンドの説明を追加。IOSystemとIOModuleのコンストラクタの順序を変更。大部分のコンストラクタに引数の説明を追加。
+\item[ 2007.11.22] /configureコマンドの第1引数にモジュールIDを追加。
+\item[ 2007.11.19] Systemクラスの名称をIOSystemに変更した。システム全体及びFunnel I/Oモジュールの説明図を更新した。
+\item[ 2007.11.16] ユーティリティークラスとしてGainerおよびArduinoを追加し、複数モジュールに対応するためのSystemクラスを追加した。
+\item[ 2007.10.31] AS3のサンプルで変数の型にfloatを指定していた部分をNumberに修正。XBeeに関する定義を追加。ビルド001で追加されたConfigurationを利用した形式にサンプルを修正。
+\item[ 2007.9.29] Configurationクラスを追加。FunnelクラスにanalogInput()などのメソッドを追加。
+\item[ 2007.9.22] FIOの構成をXBeeまたはXBee Proを想定したプランに変更。FunnelクラスとPortクラスの説明を分割。 その他細かな記述上の間違いを修正。
+\item[ 2007.9.13] Portのインスタンス変数にlastValueを追加。EventからvalueとlastValueを削除し、PortEventにtargetを追加。
+\item[ 2007.9.9] Osc.update()に引数ありのバージョンを追加。Oscにreset()メソッドを追加。Scaler.LOGとScaler.EXPを削除。Eventの説明を追加。
+\item[ 2007.9.4] setFilters()メソッドを削除。SetPointの引数の形式を変更。
+\item[ 2007.9.2] ThresholdをSetPointに改名し、複数のポイントをセットできるように変更。Scalerにリミッタを追加。
+\item[ 2007.9.1] 致命的なエラーを個別のイベントに変更。Oscのサービス間隔をクラス変更に変更し、startメソッドを追加。Oscにインスタンス変数timesと、インスタンスメソッドstop()を追加。
+\item[ 2007.8.17] イベントハンドラを廃止してイベントリスナに変更。
+\item[ 2007.7.3] ポートのプロパティhysteresis、およびOSCコマンドの定数PORT\_DINの説明に誤りがあったのを修正。
+\end{description}
+
+\end{document}
