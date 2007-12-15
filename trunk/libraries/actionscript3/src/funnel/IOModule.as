@@ -23,10 +23,10 @@ package funnel
 		 * @param configuration コンフィギュレーション
 		 * 
 		 */		
-		public function IOModule(system:IOSystem, id:uint, configuration:Configuration) {
+		public function IOModule(system:IOSystem, configuration:Configuration) {
 			_system = system;
-			_id = id;
 			_config = configuration;
+			_id = configuration.moduleID;
 			
 			var portTypes:Array = _config.config;
 			_portCount = portTypes.length;
