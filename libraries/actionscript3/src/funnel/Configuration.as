@@ -64,6 +64,11 @@ package funnel
 		public var config:Array;
 		
 		/**
+		* モジュールのID
+		*/
+		public var moduleID:uint;
+		
+		/**
 		 * デジタルピンのモードを設定します。通常、Arduino使用時に利用します。
 		 * @param portNum ピン番号
 		 * @param mode デジタル入力(IN)、デジタル出力(OUT)、PWM(疑似アナログ出力)のいずれかを指定

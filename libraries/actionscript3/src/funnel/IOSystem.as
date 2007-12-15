@@ -10,9 +10,9 @@ package funnel
 	[Event(name="ready",type="FunnelEvent")]
 	
 	/**
-	 * @copy FunnelErrorEvent#FATAL_ERROR
+	 * @copy FunnelErrorEvent#ERROR
 	 */
-	[Event(name="fatalError",type="FunnelErrorEvent")]
+	[Event(name="error",type="FunnelErrorEvent")]
 	
 	/**
 	 * @copy FunnelErrorEvent#CONFIGURATION_ERROR
@@ -34,7 +34,7 @@ package funnel
 		* @default true
 		*/		
 		public var autoUpdate:Boolean;
-		private var _modules:Array;
+		private var _modules:Object;
 		private var _commandPort:CommandPort;
 		private var _notificationPort:NotificationPort;
 		private var _samplingInterval:int;
@@ -48,7 +48,7 @@ package funnel
 		 */		
 		public function IOSystem(configs:Array, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
 			autoUpdate = true;
-			_modules = [];
+			_modules = {};
 			_commandPort = new CommandPort();
 			_notificationPort = new NotificationPort();
 			_notificationPort.addEventListener(Event.CHANGE, onReceiveBundle);
@@ -57,10 +57,10 @@ package funnel
 			_task.addCallback(_commandPort.connect, host, portNum);
 			_task.addCallback(_notificationPort.connect, host, portNum+1);
 			sendReset();
-			for (var i:uint = 0; i < configs.length; ++i) {
-				var config:Configuration = configs[i];
-				_modules.push(new IOModule(this, i, config));
-				sendConfiguration(i, config.config);
+			for each (var config:Configuration in configs) {
+				var id:uint = config.moduleID;
+				_modules[id] = new IOModule(this, config);
+				sendConfiguration(id, config.config);
 			}
 			this.samplingInterval = samplingInterval;
 			sendPolling(true);
@@ -70,9 +70,10 @@ package funnel
 		
 		/**
 		 * moduleNumで指定した番号のI/Oモジュールを取得します。
-		 * @param moduleNum I/Oモジュールの番号。このIDは、コンストラクタで指定したコンフィギュレーション配列の要素番号と同じものを指定します。
+		 * @param moduleNum I/Oモジュールの番号。このIDは、Configuration#moduleIDと同じものを指定します。
 		 * @return moduleNumで指定したIOModuleオブジェクト
 		 * @see IOModule
+		 * @see Configuration#moduleID
 		 */		
 		public function module(moduleNum:uint):IOModule {
 			return _modules[moduleNum];
@@ -102,9 +103,13 @@ package funnel
 		}
 		
 		private function onReceiveBundle(event:Event):void {
-			var messages:Array = _notificationPort.inputPacket.value;
+			var packet:OSCPacket = _notificationPort.inputPacket;
+			if (packet.address == '/node') return;
+			
+			var messages:Array = packet.value;
 			for (var i:uint = 0; i < messages.length; ++i) {
-				var portValues:Array = messages[i].value;
+				var message:OSCMessage = messages[i];
+				var portValues:Array = message.value;
 				var module:IOModule = _modules[portValues[0].value];
 				var startPortNum:uint = portValues[1].value;
 				for (var j:uint = 0; j < portValues.length - 2; ++j) {
@@ -145,7 +150,6 @@ package funnel
 			for (var i:uint = 0; i < portValues.length; ++i) {
 				message.addValue(new OSCFloat(portValues[i]));
 			}
-			
 			_task.addCallback(_commandPort.writeCommand, message);
 		}
 	}
