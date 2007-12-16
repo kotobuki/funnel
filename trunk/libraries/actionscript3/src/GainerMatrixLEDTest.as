@@ -9,9 +9,9 @@ package
 	 * GAINERを使用してマトリクスLEDをコントロールするサンプルです。
 	 * 
 	 */	
-	public class Mode7 extends Sprite
+	public class GainerMatrixLEDTest extends Sprite
 	{
-		public function Mode7() {
+		public function GainerMatrixLEDTest() {
 			var mat:MatrixLED = new MatrixLED();
 			var data:BitmapData = new BitmapData(8, 8);
 			addChild(new Bitmap(data));

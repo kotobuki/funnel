@@ -12,8 +12,8 @@
 </sourceAttachmentPath>
 </compiler>
 <applications>
+<application path="src/GainerMatrixLEDTest.as"/>
 <application path="FioTest.as"/>
-<application path="Mode7.as"/>
 <application path="ButtonAndLED.as"/>
 <application path="src/ButtonAndLED.as"/>
 </applications>
