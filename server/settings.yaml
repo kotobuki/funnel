@@ -12,7 +12,7 @@ server:
   command port: 9000
   notification port: 9001
 
-# type: {Funnel, Gainer, Arduino}
+# type: {Fio, Gainer, Arduino, XBee}
 # com: e.g. COM3 (on Windows XP)
 # com: e.g. /dev/cu.usbserial-******** (on Mac OS X)
 io:
