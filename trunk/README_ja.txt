@@ -50,6 +50,9 @@ Keane Jarvi氏によるRXTXを使用しています。
 ・RXTX：http://www.rxtx.org/
 
 ■更新履歴
+Funnel 005 (2007.12.17)
+・ActionScript 3とProcessingライブラリにFunnel I/OモジュールおよびXBeeのサポートを追加
+
 Funnel 004 (2007.12.06)
 ・ソフトウェアライブラリの内部構造を変更
 ・ソフトウェアライブラリ間で定数やメソッドなどを統一
