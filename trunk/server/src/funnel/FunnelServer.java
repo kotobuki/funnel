@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 004 (2007-11-21)";
+	private static final String buildName = "Funnel 005 (2007-12-17)";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
@@ -147,6 +147,8 @@ public class FunnelServer extends Frame {
 				printMessage(Messages
 						.getString("FunnelServer.CannotOpenGainer")); //$NON-NLS-1$
 				return;
+			} finally {
+				setTitle("Funnel Server: Gainer");
 			}
 		} else if (type.equalsIgnoreCase("Arduino")) { //$NON-NLS-1$
 			try {
@@ -156,6 +158,8 @@ public class FunnelServer extends Frame {
 				printMessage(Messages
 						.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
 				return;
+			} finally {
+				setTitle("Funnel Server: Arduino");
 			}
 		} else if (type.equalsIgnoreCase("XBee") || type.equalsIgnoreCase("Fio")) { //$NON-NLS-1$
 			try {
@@ -163,6 +167,12 @@ public class FunnelServer extends Frame {
 			} catch (RuntimeException e) {
 				printMessage(Messages.getString("FunnelServer.CannotOpenXbee")); //$NON-NLS-1$
 				return;
+			} finally {
+				if (type.equalsIgnoreCase("XBee")) {
+					setTitle("Funnel Server: XBee");
+				} else {
+					setTitle("Funnel Server: Funnel I/O");
+				}
 			}
 		}
 
