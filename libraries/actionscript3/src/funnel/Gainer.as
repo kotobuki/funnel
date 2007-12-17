@@ -180,7 +180,7 @@ package funnel
 			if (config == null) config = MODE1;
 			super([config], host, portNum, samplingInterval);
 			
-			_port = module(config.moduleID).port;
+			_port = ioModule(config.moduleID).port;
 			_ainPorts = config.ainPorts;
 			_dinPorts = config.dinPorts;
 			_aoutPorts = config.aoutPorts;
