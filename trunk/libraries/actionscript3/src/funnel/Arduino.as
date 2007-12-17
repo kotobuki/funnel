@@ -38,7 +38,7 @@ package funnel
 			if (config == null) config = FIRMATA;
 			super([config], host, portNum, samplingInterval);
 			
-			_port = module(0).port;
+			_port = ioModule(0).port;
 			_analogPins = config.analogPins;
 			_digitalPins = config.digitalPins;
 		}

@@ -75,7 +75,7 @@ package funnel
 		 * @see IOModule
 		 * @see Configuration#moduleID
 		 */		
-		public function module(moduleNum:uint):IOModule {
+		public function ioModule(moduleNum:uint):IOModule {
 			return _modules[moduleNum];
 		}
 		

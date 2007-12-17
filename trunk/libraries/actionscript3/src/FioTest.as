@@ -10,7 +10,7 @@ package
 			var fio:Fio = new Fio([4, 5]);
 			var osc:Osc = new Osc();
 			osc.start();
-			fio.module(ALL).port(10).filters = [osc];
+			fio.ioModule(ALL).port(10).filters = [osc];
 		}
 	}
 }
