@@ -16,14 +16,14 @@ lineskip={-2pt}
 
 \begin{document}
 
-\title{Funneld—l‘iƒrƒ‹ƒh004j}
+\title{Funneld—l‘iƒrƒ‹ƒh005j}
 \author{ŠJ”­ÒF¬—Ñ–Î\\‹¤“¯ŠJ”­ÒF‰““¡F‘¥{‘“cˆê‘¾˜Y}
 
 \maketitle
 
 
 \section{‚Í‚¶‚ß‚É}
-Funnel‚ÍAƒ\ƒtƒgƒEƒFƒA‚Æƒn[ƒhƒEƒFƒA‚©‚ç‚È‚éƒtƒBƒWƒJƒ‹ƒRƒ“ƒsƒ…[ƒeƒBƒ“ƒO‚Ì‚½‚ß‚Ìƒc[ƒ‹ƒLƒbƒg‚Å‚·BFunnel‚Í2007”N“x‘æIŠú–¢“¥ƒ\ƒtƒgƒEƒFƒA‘n‘¢–‹Æ‚Ìx‰‡‚ğ“¾‚ÄŠJ”­‚³‚ê‚Ä‚¢‚Ü‚·B
+Funnel‚ÍAƒ\ƒtƒgƒEƒFƒA‚Æƒn[ƒhƒEƒFƒA‚©‚ç‚È‚éƒtƒBƒWƒJƒ‹ƒRƒ“ƒsƒ…[ƒeƒBƒ“ƒO‚Ì‚½‚ß‚Ìƒc[ƒ‹ƒLƒbƒg‚Å‚·BFunnel‚Í2007”N4Œ‚©‚ç12Œ‚Ü‚ÅA2007”N“x‘æIŠú–¢“¥ƒ\ƒtƒgƒEƒFƒA‘n‘¢–‹Æ‚Ìx‰‡‚ğ“¾‚ÄŠJ”­‚³‚ê‚Ü‚µ‚½B
 
 \subsection{ŠT—v}
 \begin{itemize}
@@ -215,7 +215,7 @@ IOSystemƒNƒ‰ƒX‚Í•¡”‚ÌI/Oƒ‚ƒWƒ…[ƒ‹‚©‚ç\¬‚³‚ê‚éƒVƒXƒeƒ€‚ğ•\Œ»‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX‚
 ƒƒ\ƒbƒh–¼ & –ß‚è’l & à–¾ \\\hline
 %\texttt{port(number:int)} & Port & number‚Åw’è‚µ‚½ƒ|[ƒg‚ğ•Ô‚· \\
 %\texttt{update()} & void & ‘S‚Ä‚Ìo—Íƒ|[ƒg‚Ìó‘Ô‚ğè“®‚ÅXV‚·‚é \\
-\texttt{iomodule(id:int)} & IOModule & w’è‚µ‚½ID‚ÌI/Oƒ‚ƒWƒ…[ƒ‹‚ğ•Ô‚· \\
+\texttt{ioModule(id:int)} & IOModule & w’è‚µ‚½ID‚ÌI/Oƒ‚ƒWƒ…[ƒ‹‚ğ•Ô‚· \\
 \end{tabular}
 
 \subsection{IOModuleƒNƒ‰ƒX}
@@ -340,6 +340,52 @@ ArduinoƒNƒ‰ƒX‚Íƒtƒ@[ƒ€ƒEƒFƒA‚Æ‚µ‚ÄFirmata‚ğ“‹Ú‚µ‚½Arduino‚ğI/Oƒ‚ƒWƒ…[ƒ‹‚Æ‚µ‚Ä
 \texttt{OUT} & int & ƒfƒWƒ^ƒ‹o—Í \\
 \texttt{PWM} & int & ‹^—ƒAƒiƒƒOiPWMjo—Í \\\hline
 \texttt{FIRMATA} & Configuration & Firmataƒtƒ@[ƒ€ƒEƒFƒA‚ğ‘‚«‚ñ‚¾Arduino I/Oƒ{[ƒh \\
+\end{tabular}
+
+\subsection{FioƒNƒ‰ƒX}
+FioƒNƒ‰ƒX‚ÍFunnel I/Oƒ‚ƒWƒ…[ƒ‹iFiojƒ‚ƒWƒ…[ƒ‹‚ğˆµ‚¤‚½‚ß‚Ìƒ†[ƒeƒBƒŠƒeƒB[ƒNƒ‰ƒX‚Å‚·B
+
+\subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
+\begin{tabular}{l}
+\texttt{Fio(nodes:Array, hostName:String, portNumber:int, samplingInterval:int)} \\
+\end{tabular}
+
+\vspace{8pt}
+\begin{tabular}{llll}
+ˆø” & Œ^ & ƒfƒtƒHƒ‹ƒg’l & à–¾ \\\hline
+\texttt{nodes} & Array &  & g—p‚·‚é–³üƒ‚ƒWƒ…[ƒ‹ID‚Ìˆê——‚ğû‚ß‚½”z—ñ \\
+\texttt{hostName} & String & localhost & ƒzƒXƒg–¼ \\
+\texttt{portNumber} & int & 9000 & ƒ|[ƒg”Ô† \\
+\texttt{samplingInterval} & int & 33 & ƒTƒ“ƒvƒŠƒ“ƒOŠÔŠuimsj \\
+\end{tabular}
+
+\subsubsection{’è”}
+\begin{tabular}{lll}
+–¼‘O & Œ^ & à–¾ \\\hline
+\texttt{FIO} & Configuration & Funnel I/Oƒ‚ƒWƒ…[ƒ‹i4“ü—Í$\times$4o—Íj \\
+\end{tabular}
+
+\subsection{XBeeƒNƒ‰ƒX}
+XBeeƒNƒ‰ƒX‚ÍXBee‚ğˆµ‚¤‚½‚ß‚Ìƒ†[ƒeƒBƒŠƒeƒB[ƒNƒ‰ƒX‚Å‚·B
+
+\subsubsection{ƒRƒ“ƒXƒgƒ‰ƒNƒ^}
+\begin{tabular}{l}
+\texttt{XBee(nodes:Array, hostName:String, portNumber:int, samplingInterval:int)} \\
+\end{tabular}
+
+\vspace{8pt}
+\begin{tabular}{llll}
+ˆø” & Œ^ & ƒfƒtƒHƒ‹ƒg’l & à–¾ \\\hline
+\texttt{nodes} & Array &  & g—p‚·‚é–³üƒ‚ƒWƒ…[ƒ‹ID‚Ìˆê——‚ğû‚ß‚½”z—ñ \\
+\texttt{hostName} & String & localhost & ƒzƒXƒg–¼ \\
+\texttt{portNumber} & int & 9000 & ƒ|[ƒg”Ô† \\
+\texttt{samplingInterval} & int & 33 & ƒTƒ“ƒvƒŠƒ“ƒOŠÔŠuimsj \\
+\end{tabular}
+
+\subsubsection{’è”}
+\begin{tabular}{lll}
+–¼‘O & Œ^ & à–¾ \\\hline
+\texttt{XBS1} & Configuration & XBee Series 1 \\
 \end{tabular}
 
 \subsection{ConfigurationƒNƒ‰ƒX}
@@ -1424,6 +1470,7 @@ ActionScript 3‚ğ‚Í‚¶‚ß‚Æ‚·‚éJavaScript‚ğATamarin\footnote{http://www.mozilla-ja
 \newpage
 \section{XV—š—ğ}
 \begin{description}
+\item[ 2007.12.17] Fio‚¨‚æ‚ÑXBeeƒNƒ‰ƒX‚ÉŠÖ‚·‚éà–¾‚ğ’Ç‰Á‚µ‚Ü‚µ‚½B
 \item[ 2007.12.05] ’è”‚ğŠeƒ‰ƒCƒuƒ‰ƒŠŠÔ‚Å‚Ì“ˆê‚ğ’²®‚µ‚½‚à‚Ì‚É‡‚í‚¹‚ÄXVBƒVƒ‡[ƒgƒJƒbƒg‚É‚Â‚¢‚Ä‚Ìà–¾‚ğ’Ç‰ÁB
 \item[ 2007.11.23] /nodeƒRƒ}ƒ“ƒh‚Ìà–¾‚ğ’Ç‰ÁBIOSystem‚ÆIOModule‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ì‡˜‚ğ•ÏXB‘å•”•ª‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Éˆø”‚Ìà–¾‚ğ’Ç‰ÁB
 \item[ 2007.11.22] /configureƒRƒ}ƒ“ƒh‚Ì‘æ1ˆø”‚Éƒ‚ƒWƒ…[ƒ‹ID‚ğ’Ç‰ÁB
