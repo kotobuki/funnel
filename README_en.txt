@@ -56,6 +56,10 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
+Funnel 005 (2007.12.17)
+* added Funnel I/O module and XBee support to ActionScript 3 
+  and Processing library
+
 Funnel 004 (2007.12.06)
 * re-structured software libraries to support multiple I/O modules
 * Unified constants and methods between software libraries
