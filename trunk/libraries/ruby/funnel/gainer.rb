@@ -53,37 +53,37 @@ module Funnel
     def analog_input(number)
       return if @ain_ports == nil
       raise ArguentError, "analog input is not availabe at #{number}" if @ain_ports.at(number) == nil
-      @system.iomodule(0).port(@ain_ports.at(number))
+      @system.io_module(0).port(@ain_ports.at(number))
     end
 
     def digital_input(number)
       return if @din_ports == nil
       raise ArguentError, "digital input is not availabe at #{number}" if @din_ports.at(number) == nil
-      @system.iomodule(0).port(@din_ports.at(number))
+      @system.io_module(0).port(@din_ports.at(number))
     end
 
     def analog_output(number)
       return if @aout_ports == nil
       raise ArguentError, "analog output is not availabe at #{number}" if @aout_ports.at(number) == nil
-      @system.iomodule(0).port(@aout_ports.at(number))
+      @system.io_module(0).port(@aout_ports.at(number))
     end
 
     def digital_output(number)
       return if @dout_ports == nil
       raise ArguentError, "digital output is not availabe at #{number}" if @dout_ports.at(number) == nil
-      @system.iomodule(0).port(@dout_ports.at(number))
+      @system.io_module(0).port(@dout_ports.at(number))
     end
 
     def button(number = 0)
       return if @button == nil
       raise ArguentError, "button is not availabe at #{number}" if @button.at(number) == nil
-      @system.iomodule(0).port(@button.at(number))
+      @system.io_module(0).port(@button.at(number))
     end
 
     def led(number = 0)
       return if @led == nil
       raise ArguentError, "LED is not availabe at #{number}" if @led.at(number) == nil
-      @system.iomodule(0).port(@led.at(number))
+      @system.io_module(0).port(@led.at(number))
     end
 
     alias :ain :analog_input

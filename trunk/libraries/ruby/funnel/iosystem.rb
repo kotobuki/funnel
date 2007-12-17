@@ -45,7 +45,7 @@ module Funnel
       @auto_update = true
 
       @modules = Hash::new
-      add_module(0, config) unless config == nil  # add the first I/O module if specified
+      add_io_module(0, config) unless config == nil  # add the first I/O module if specified
       @broadcast = nil
       @autoregister = false
 
@@ -79,13 +79,13 @@ module Funnel
       send_command(OSC::Message.new('/polling', 'i', 1))
     end
 
-    def add_module(id, config, name ="")
+    def add_io_module(id, config, name ="")
       @modules.delete(id) if @modules.has_key?(id)
-      iomodule = IOModule.new(self, id, config, name)
-      @modules[id] = iomodule
+      io_module = IOModule.new(self, id, config, name)
+      @modules[id] = io_module
     end
 
-    def all_iomodules()
+    def all_io_modules()
       @modules.values
     end
 
@@ -128,11 +128,11 @@ module Funnel
       output_values = []
       was_updated = false
 
-      @modules.each_pair do |id, iomodule|
-        iomodule.updated_port_indices.each_with_index do |updated, index|
+      @modules.each_pair do |id, io_module|
+        io_module.updated_port_indices.each_with_index do |updated, index|
           if updated then
-            output_values.push(iomodule.port[index].value)
-            iomodule.updated_port_indices[index] = false
+            output_values.push(io_module.port[index].value)
+            io_module.updated_port_indices[index] = false
             start = index unless was_updated
           elsif was_updated then
             send_output_command(start, output_values) unless index == 0
@@ -144,7 +144,7 @@ module Funnel
       end
     end
 
-    def iomodule(id)
+    def io_module(id)
       if id == ALL then
         raise ArgumentError, "broadcast is not available for this type" if @broadcast == nil
         @broadcast
@@ -162,22 +162,22 @@ if __FILE__ == $0
   module Funnel
     gio = IOSystem.new(Gainer::MODE1, 'localhost', 9000, 33)
 
-    gio.iomodule(0).port(0).filters = [SetPoint.new(0.5, 0.1)]
-    gio.iomodule(0).port(0).add_event_listener(PortEvent::CHANGE) do |event|
+    gio.io_module(0).port(0).filters = [SetPoint.new(0.5, 0.1)]
+    gio.io_module(0).port(0).add_event_listener(PortEvent::CHANGE) do |event|
       puts "ain 0: #{event.target.value}"
     end
 
-    gio.iomodule(0).port(17).on(PortEvent::RISING_EDGE) do
+    gio.io_module(0).port(17).on(PortEvent::RISING_EDGE) do
       puts "button: pressed"
     end
 
-    gio.iomodule(0).port(17).on PortEvent::FALLING_EDGE do
+    gio.io_module(0).port(17).on PortEvent::FALLING_EDGE do
       puts "button: released"
     end
 
     Osc.service_interval = 33
     osc = Osc.new(Osc::SQUARE, 2.0, 0)
-    gio.iomodule(0).port(16).filters = [osc]
+    gio.io_module(0).port(16).filters = [osc]
     osc.reset
     osc.start
 

@@ -5,7 +5,6 @@ require 'funnel/port'
 module Funnel
   class Configuration
     (GAINER, ARDUINO, XBEE, FIO) = Array(0..3)
-    (IN, OUT, PWM) = Array(0..2)
     (MODE1, MODE2, MODE3, MODE4, MODE5, MODE6, MODE7, MODE8) = Array(1..8)
     (XBS1, XBS2) = Array(0..1)
 
@@ -212,11 +211,11 @@ module Funnel
       raise ArgumentError, "digital pins are not available" if @digital_pins == nil
       raise ArgumentError, "digital pin is not available at #{pin}" if @digital_pins.at(pin) == nil
       case mode
-      when IN
+      when Port::DIN
         @config[@digital_pins.at(pin)] = Port::DIN
-      when OUT
+      when Port::DOUT
         @config[@digital_pins.at(pin)] = Port::DOUT
-      when PWM
+      when Port::AOUT
         @config[@digital_pins.at(pin)] = Port::AOUT
       else
         raise ArgumentError, "mode #{mode} is not available"
