@@ -69,9 +69,7 @@ public class IOSystem implements Runnable{
 			
 			new Tokenizer(this,client.notifyPort);
 			
-			if(!initialize(config)){
-				errorMessage("Funnel configuration error!");
-			}
+
 		}else{
 			errorMessage("Funnel server could not open !");
 		}
@@ -156,7 +154,7 @@ public class IOSystem implements Runnable{
 		System.out.println("dispose funnel");
 	}
 	
-	private void errorMessage(String message){
+	protected void errorMessage(String message){
 		System.out.println(message);
 		System.exit(-1);	
 	}
@@ -184,7 +182,6 @@ public class IOSystem implements Runnable{
 	
 			}
 		
-
 		
 	}
 
@@ -217,13 +214,13 @@ public class IOSystem implements Runnable{
 		return new OSCMessage("nil");
 	}
 	
-	private boolean initialize(Configuration config){
+	public boolean initialize(int moduleID,Configuration config){
 
 		parent.registerDispose(this);
 
 		reboot();
 
-		if(!addModule(0,config,config.getModuleName())){
+		if(!addModule(moduleID,config,config.getModuleName())){
 			return false;
 		}
 		setSamplingInterval(samplingInterval);
