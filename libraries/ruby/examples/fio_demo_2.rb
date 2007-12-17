@@ -3,13 +3,13 @@ $: << '..'
 
 require 'funnel'
 
-# broadcast to all found nodes
+# broadcast to all nodes within the same PAN ID
 module Funnel
-  fio = Fio.new('localhost', 9000, true)
-  fio.wait_for_nodes(2)
+  nodes = [2]
+  fio = Fio.new(nodes)
 
   dimmer = Osc.new(Osc::SIN, 1.0, 0)
-  fio.iomodule(Fio::ALL).port(10).filters = [dimmer]
+  fio.io_module(Fio::ALL).port(10).filters = [dimmer]
   dimmer.reset
   dimmer.start
 

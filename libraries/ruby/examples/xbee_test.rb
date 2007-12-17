@@ -4,7 +4,8 @@ $: << '..'
 require 'funnel'
 
 module Funnel
-  xbee = XBee.new(XBee::XBS1)
+  nodes = [2]
+  xbee = XBee.new(nodes)
 
   xbee.all_iomodules.each do |io|
     puts "xbee: id: #{io.id}, name: #{io.name}"

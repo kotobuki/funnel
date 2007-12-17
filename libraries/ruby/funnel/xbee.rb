@@ -14,11 +14,13 @@ module Funnel
       return XBS2
     end
     
-    def initialize(type = XBS1, host = 'localhost', port = 9000, interval = 33)
+    def initialize(nodes, host = 'localhost', port = 9000, interval = 33)
       super(nil, host, port, interval)
-      raise ArgumentError, "type #{type} is not available for XBee" if (type != XBS1) and (type != XBS2)
-      @config = Configuration.new(Configuration::XBEE, type)
-      sleep(5)  # TODO: replace with proper implementation
+      @config = Configuration.new(Configuration::XBEE, XBS1)
+      nodes = [] if nodes == nil
+      nodes.each do |id|
+        register_node(id, "")
+      end
     end
     
     def register_node(id, ni)

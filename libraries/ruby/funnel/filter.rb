@@ -121,8 +121,8 @@ module Funnel
     
     def process_sample(value)
       if @limiter then
-        value = in_min if value < in_min
-        value = in_max if value > in_max
+        value = @in_min if value < @in_min
+        value = @in_max if value > @in_max
       end
 
       in_range = @in_max - @in_min
