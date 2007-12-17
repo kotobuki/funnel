@@ -375,7 +375,7 @@ Alias for <a href="Gainer.html#M000010">analog_input</a>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">analog_input</span>(<span class="ruby-identifier">number</span>)
       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@ain_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArguentError</span>, <span class="ruby-node">&quot;analog input is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@ain_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">iomodule</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@ain_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
+      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">io_module</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@ain_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -400,7 +400,7 @@ Alias for <a href="Gainer.html#M000010">analog_input</a>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">analog_output</span>(<span class="ruby-identifier">number</span>)
       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@aout_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArguentError</span>, <span class="ruby-node">&quot;analog output is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@aout_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">iomodule</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@aout_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
+      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">io_module</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@aout_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -439,7 +439,7 @@ Alias for <a href="Gainer.html#M000012">analog_output</a>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">button</span>(<span class="ruby-identifier">number</span> = <span class="ruby-value">0</span>)
       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@button</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArguentError</span>, <span class="ruby-node">&quot;button is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@button</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">iomodule</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@button</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
+      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">io_module</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@button</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -464,7 +464,7 @@ Alias for <a href="Gainer.html#M000012">analog_output</a>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digital_input</span>(<span class="ruby-identifier">number</span>)
       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@din_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArguentError</span>, <span class="ruby-node">&quot;digital input is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@din_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">iomodule</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@din_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
+      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">io_module</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@din_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -489,7 +489,7 @@ Alias for <a href="Gainer.html#M000012">analog_output</a>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digital_output</span>(<span class="ruby-identifier">number</span>)
       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@dout_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArguentError</span>, <span class="ruby-node">&quot;digital output is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@dout_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">iomodule</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@dout_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
+      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">io_module</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@dout_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -542,7 +542,7 @@ Alias for <a href="Gainer.html#M000013">digital_output</a>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">led</span>(<span class="ruby-identifier">number</span> = <span class="ruby-value">0</span>)
       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@led</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArguentError</span>, <span class="ruby-node">&quot;LED is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@led</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">iomodule</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@led</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
+      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">io_module</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@led</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>

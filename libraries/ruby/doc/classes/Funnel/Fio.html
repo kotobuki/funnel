@@ -130,7 +130,7 @@
 
         <div class="method-heading">
           <a href="#M000020" class="method-signature">
-          <span class="method-name">new</span><span class="method-args">(host = 'localhost', port = 9000, autoregister = false, interval = 100)</span>
+          <span class="method-name">new</span><span class="method-args">(nodes, host = 'localhost', port = 9000, interval = 100, autoregister = false)</span>
           </a>
         </div>
       
@@ -140,10 +140,14 @@
           <div class="method-source-code" id="M000020-source">
 <pre>
 <span class="ruby-comment cmt"># File funnel/fio.rb, line 9</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">host</span> = <span class="ruby-value str">'localhost'</span>, <span class="ruby-identifier">port</span> = <span class="ruby-value">9000</span>, <span class="ruby-identifier">autoregister</span> = <span class="ruby-keyword kw">false</span>, <span class="ruby-identifier">interval</span> = <span class="ruby-value">100</span>)
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">nodes</span>, <span class="ruby-identifier">host</span> = <span class="ruby-value str">'localhost'</span>, <span class="ruby-identifier">port</span> = <span class="ruby-value">9000</span>, <span class="ruby-identifier">interval</span> = <span class="ruby-value">100</span>, <span class="ruby-identifier">autoregister</span> = <span class="ruby-keyword kw">false</span>)
       <span class="ruby-keyword kw">super</span>(<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">interval</span>)
       <span class="ruby-ivar">@autoregister</span> = <span class="ruby-identifier">autoregister</span>
       <span class="ruby-ivar">@broadcast</span> = <span class="ruby-constant">IOModule</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-constant">ALL</span>, <span class="ruby-constant">Configuration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Configuration</span><span class="ruby-operator">::</span><span class="ruby-constant">FIO</span>), <span class="ruby-value str">&quot;broadcast&quot;</span>)
+      <span class="ruby-identifier">nodes</span> = [] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">nodes</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">nodes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">register_node</span>(<span class="ruby-identifier">id</span>, <span class="ruby-value str">&quot;&quot;</span>)
+      <span class="ruby-keyword kw">end</span>
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -166,9 +170,9 @@
             onclick="toggleCode('M000021-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000021-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/fio.rb, line 15</span>
+<span class="ruby-comment cmt"># File funnel/fio.rb, line 19</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">register_node</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">ni</span> = <span class="ruby-value str">&quot;&quot;</span>)
-      <span class="ruby-identifier">add_module</span>(<span class="ruby-identifier">id</span>, <span class="ruby-constant">Configuration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Configuration</span><span class="ruby-operator">::</span><span class="ruby-constant">FIO</span>), <span class="ruby-identifier">ni</span>)
+      <span class="ruby-identifier">add_io_module</span>(<span class="ruby-identifier">id</span>, <span class="ruby-constant">Configuration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Configuration</span><span class="ruby-operator">::</span><span class="ruby-constant">FIO</span>), <span class="ruby-identifier">ni</span>)
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -189,14 +193,14 @@
             onclick="toggleCode('M000022-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000022-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/fio.rb, line 19</span>
+<span class="ruby-comment cmt"># File funnel/fio.rb, line 23</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">wait_for_nodes</span>(<span class="ruby-identifier">number</span>)
       <span class="ruby-value">50</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword kw">do</span>
         <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@modules</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">number</span>
         <span class="ruby-identifier">sleep</span>(<span class="ruby-value">0</span><span class="ruby-value">.1</span>)
       <span class="ruby-keyword kw">end</span>
 
-      <span class="ruby-identifier">all_iomodules</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">all_io_modules</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">io</span><span class="ruby-operator">|</span>
         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;fio: id: #{io.id}, name: #{io.name}&quot;</span>
       <span class="ruby-keyword kw">end</span>
     <span class="ruby-keyword kw">end</span>
