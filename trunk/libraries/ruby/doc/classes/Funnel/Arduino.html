@@ -180,7 +180,7 @@
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">analog_pin</span>(<span class="ruby-identifier">number</span>)
       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@analog_pins</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArguentError</span>, <span class="ruby-node">&quot;analog pin is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@analog_pins</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">iomodule</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@analog_pins</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
+      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">io_module</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@analog_pins</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -205,7 +205,7 @@
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digital_pin</span>(<span class="ruby-identifier">number</span>)
       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@digital_pins</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArguentError</span>, <span class="ruby-node">&quot;digital pin is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@digital_pins</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">iomodule</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@digital_pins</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
+      <span class="ruby-ivar">@system</span>.<span class="ruby-identifier">io_module</span>(<span class="ruby-value">0</span>).<span class="ruby-identifier">port</span>(<span class="ruby-ivar">@digital_pins</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>))
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
