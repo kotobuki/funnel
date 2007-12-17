@@ -13,8 +13,8 @@ void setup()
   frameRate(25);
   
   int[] moduleIDs = {2};
-  fio = new Gainer(this,moduleIDs);
-  gainer.autoUpdate = true;
+  fio = new Fio(this,moduleIDs);
+  fio.autoUpdate = true;
 }
 
 void draw()
