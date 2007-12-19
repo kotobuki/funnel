@@ -1,5 +1,6 @@
 package processing.funnel;
 
+//import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import processing.core.PApplet;
@@ -108,12 +109,14 @@ public final class Gainer extends IOSystem{
 	
 	
 	//ポートの名前
-	public static int LED;
-	public static int button;
-	private int analogInput[];
-	private int digitalInput[];
-	private int analogOutput[];
-	private int digitalOutput[];
+	static public int led;
+	static public int button;
+	static public int analogInput[];
+	static public int digitalInput[];
+	static public int analogOutput[];
+	static public int digitalOutput[];
+
+//	Method gainerButtonEventMethod;
 	
 
 	public Gainer(PApplet parent, String hostName,
@@ -124,6 +127,14 @@ public final class Gainer extends IOSystem{
 			errorMessage("Funnel configuration error!");
 		}
 		initPorts(config.portStatus);
+		
+//		try {
+//			gainerButtonEventMethod = 
+//				parent.getClass().getMethod("gainerButtonEvent",new Class[] { Boolean.TYPE });
+//
+//		} catch (Exception e) {
+//      // no such method, or an error.. which is fine, just ignore
+//		}	
 	}
 	
 	public Gainer(PApplet parent,Configuration config){
@@ -160,7 +171,7 @@ public final class Gainer extends IOSystem{
 			analogOutput = aout;
 			digitalOutput = dout;
 			
-			LED = 16;
+			led = 16;
 			button = 17;
 			
 		}else if(Arrays.equals(conf,conf2)){
@@ -175,7 +186,7 @@ public final class Gainer extends IOSystem{
 			analogOutput = aout;
 			digitalOutput = dout;
 			
-			LED = 16;
+			led = 16;
 			button = 17;
 		}else if(Arrays.equals(conf,conf3)){
 			
@@ -189,7 +200,7 @@ public final class Gainer extends IOSystem{
 			analogOutput = aout;
 			digitalOutput = dout;
 			
-			LED = 16;
+			led = 16;
 			button = 17;	
 		}else if(Arrays.equals(conf,conf4)){
 			
@@ -203,7 +214,7 @@ public final class Gainer extends IOSystem{
 			analogOutput = aout;
 			digitalOutput = dout;
 			
-			LED = 16;
+			led = 16;
 			button = 17;			
 		}else if(Arrays.equals(conf,conf5)){
 			
@@ -279,5 +290,13 @@ public final class Gainer extends IOSystem{
 	
 	public IOModule.Port digitalInput(int nPort){
 		return iomodule(0).port(digitalInput[nPort]);
+	}
+	
+	public IOModule.Port led(){
+		return iomodule(0).port(led);
+	}
+	
+	public IOModule.Port button(){
+		return iomodule(0).port(button);
 	}
 }
