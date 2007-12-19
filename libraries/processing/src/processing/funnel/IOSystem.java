@@ -225,13 +225,13 @@ public class IOSystem implements Runnable{
 		}
 		setSamplingInterval(samplingInterval);
 	
-
+		beginPolling();
 		
 		thread = new Thread(this,"funnelServiceThread");
 		isWorking = true;
 		thread.start();
 		
-		beginPolling();
+
 		return true;
 	}
 	
