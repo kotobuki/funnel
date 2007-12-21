@@ -15,7 +15,7 @@ REQUIREMENTS
 * Runtime environments for software libraries
   * Various programming environments for ActionScript 3 (e.g. 
     Flash CS3, Flex Builder 2, Flex SDK 2)
-  * Processing 0133
+  * Processing 0135
   * Ruby 1.8.2 with OSC library by Tadayoshi Funaba
     http://raa.ruby-lang.org/project/osc/
 * Runtime environments for the Funnel Server
@@ -56,6 +56,13 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
+Funnel 006 (2007.12.21)
+* fixed bugs and added new features in the Processing library
+  * modified to return proper value in "change()"
+  * added new event handler "gainerButtonEvent()"
+  * added new methods "led()" and "button()"
+  * added new properties "analogInput[0]" and so on...
+
 Funnel 005 (2007.12.17)
 * added Funnel I/O module and XBee support to ActionScript 3 
   and Processing library

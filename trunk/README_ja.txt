@@ -15,7 +15,7 @@ Gainer I/OモジュールとArduino I/Oボードに対応し、それぞれの入出力ポート
 □ライブラリの動作環境
 ・Flash CS3、Flex Builder 2、Flex 2 SDKなどActionScript 3でプログラミング
 　できる環境
-・Processing 0125
+・Processing 0135
 ・Ruby 1.8.2（1.9では未確認）＋ふなばただよしさんのOSCライブラリ
 　http://raa.ruby-lang.org/project/osc/
 
@@ -50,19 +50,26 @@ Keane Jarvi氏によるRXTXを使用しています。
 ・RXTX：http://www.rxtx.org/
 
 ■更新履歴
-Funnel 005 (2007.12.17)
+Funnel 006（2007.12.21）
+・Processing用ライブラリのバグ修正と改良
+　・イベントハンドラchangeで値を取得した時に1つ前の値になるバグを修正
+　・イベントハンドラgainerButtonEventを追加
+　・led()およびbutton()を追加
+　・各ポートの番号を返すプロパティanalogInput[0]などを追加
+
+Funnel 005（2007.12.17）
 ・ActionScript 3とProcessingライブラリにFunnel I/OモジュールおよびXBeeのサポートを追加
 
-Funnel 004 (2007.12.06)
+Funnel 004（2007.12.06）
 ・ソフトウェアライブラリの内部構造を変更
 ・ソフトウェアライブラリ間で定数やメソッドなどを統一
 ・RubyライブラリにFunnel I/OモジュールおよびXBeeのサポートを追加
 ・Funnel I/Oモジュールのハードウェアおよびファームウェアを追加
 
-Funnel 003 (2007.11.12)
+Funnel 003（2007.11.12）
 ・Processing用ライブラリのバグを修正（WindowsでのOutOfMemoryエラー）
 
-Funnel 002 (2007.11.08)
+Funnel 002（2007.11.08）
 ・Processing用ライブラリのバグを修正（ScalerとConvolution）
 ・ActionScript 3ライブラリのバグを修正
 　http://gainer.cc/forum/index.php?topic=205
