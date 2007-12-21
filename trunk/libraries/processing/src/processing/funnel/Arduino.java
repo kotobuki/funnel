@@ -7,7 +7,7 @@ import processing.core.PApplet;
  * @version 1.0
  * 
  */
-public class Arduino extends IOSystem{
+public final class Arduino extends IOSystem{
 	
 	public static final String moduleName = "Arduino";
 	/**

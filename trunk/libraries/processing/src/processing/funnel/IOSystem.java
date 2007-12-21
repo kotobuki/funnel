@@ -25,23 +25,20 @@ public class IOSystem implements Runnable{
 	public static final int PORT_DOUT = 3;
 
 
-	private HashMap iomodules = new HashMap();
+	protected HashMap iomodules = new HashMap();
 	
 	private final int TIMEOUT = 1000; 
 	private OSCClient client;
 	/**
 	 * autoUpdate=trueの送信時の更新間隔
 	 */
-	private int updateInterval = 30;
+	private int updateInterval = 30;	
 
-	private boolean quitServer = false;//終了時サーバーを終了するか
-	
-
-	
 	private Thread thread=null;
 	private boolean isWorking = false;
 	
 
+	private boolean quitServer = false;//終了時サーバーを終了するか
 	//定数
 	private int NO_ERROR = 0;
 	private int ERROR = -1;
@@ -220,6 +217,10 @@ public class IOSystem implements Runnable{
 
 		reboot();
 
+		if(!configuration(moduleID,config.getPortStatus())){
+			return false;
+		}
+		
 		if(!addModule(moduleID,config,config.getModuleName())){
 			return false;
 		}
@@ -371,15 +372,10 @@ public class IOSystem implements Runnable{
 
 	
 	public boolean addModule(int id,Configuration config,String name){
-		
-		if(!configuration(id,config.getPortStatus())){
-			return false;
-		}
-		
+
 		Set key = iomodules.entrySet();
 		if(!key.contains(new Integer(id))){
-			IOModule module = new IOModule(parent,id,config,name);
-			iomodules.put(new Integer(id), module);
+			iomodules.put(new Integer(id), new IOModule(parent,id,config,name));
 			return true;
 		}
 		

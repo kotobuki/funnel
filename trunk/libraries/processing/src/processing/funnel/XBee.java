@@ -2,10 +2,10 @@ package processing.funnel;
 
 import processing.core.PApplet;
 
-public class XBee extends IOSystem{
+public final class XBee extends IOSystem{
 
 	
-	public static final String moduleName = "Fio";
+	public static final String moduleName = "Xbee";
 	
 	/**
 	 * 0xFFFF : broadcast
