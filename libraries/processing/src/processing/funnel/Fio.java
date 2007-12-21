@@ -7,7 +7,7 @@ import processing.core.PApplet;
  * @version 1.0
  * 
  */
-public class Fio extends IOSystem{
+public final class Fio extends IOSystem{
 	
 	public static final String moduleName = "Fio";
 	

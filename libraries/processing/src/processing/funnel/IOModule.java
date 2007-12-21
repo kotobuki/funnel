@@ -20,12 +20,12 @@ public class IOModule{
 	Method onFallingEdge = null;
 	Method onChange = null;
 
-	private Port port[];
-	private int id;
-	private String name;
-	private Configuration config;
+	protected Port port[];
+	protected int id;
+	public String name;
+	protected Configuration config;
 	
-	private void errorMessage(String message){
+	protected void errorMessage(String message){
 		System.out.println(message);
 		System.exit(-1);	
 	}
@@ -75,6 +75,7 @@ public class IOModule{
       // no such method, or an error.. which is fine, just ignore
 		}	
 	}
+	
 	
 	//Portそのものを返す
 	public Port port(int nPort){
@@ -162,7 +163,7 @@ public class IOModule{
 		}
 
 	
-		//only input value
+		//入力値を更新する
 		public void updateInput(float value){
 			times++;
 			if(times > maxCount){
@@ -231,16 +232,14 @@ public class IOModule{
 						}
 					}					
 				}
-				
 
-				
 
 			}
 	
 		}
 		
 		//入力値を更新する
-		private void updateValueInput(float value){
+		protected void updateValueInput(float value){
 			lastValue = this.value;
 			if(this.value != value){
 				this.value = value;

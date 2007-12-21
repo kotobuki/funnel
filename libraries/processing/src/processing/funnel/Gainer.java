@@ -1,7 +1,8 @@
 package processing.funnel;
 
-//import java.lang.reflect.Method;
+
 import java.util.Arrays;
+import java.util.Set;
 
 import processing.core.PApplet;
 
@@ -116,7 +117,7 @@ public final class Gainer extends IOSystem{
 	static public int analogOutput[];
 	static public int digitalOutput[];
 
-//	Method gainerButtonEventMethod;
+
 	
 
 	public Gainer(PApplet parent, String hostName,
@@ -128,13 +129,6 @@ public final class Gainer extends IOSystem{
 		}
 		initPorts(config.portStatus);
 		
-//		try {
-//			gainerButtonEventMethod = 
-//				parent.getClass().getMethod("gainerButtonEvent",new Class[] { Boolean.TYPE });
-//
-//		} catch (Exception e) {
-//      // no such method, or an error.. which is fine, just ignore
-//		}	
 	}
 	
 	public Gainer(PApplet parent,Configuration config){
@@ -273,8 +267,19 @@ public final class Gainer extends IOSystem{
 
 	}
 
+	
+	public boolean addModule(int id,Configuration config,String name){
 
-
+		System.out.println("Gainer addmodule");
+		Set key = iomodules.entrySet();
+		if(!key.contains(new Integer(id))){
+			iomodules.put(new Integer(id), new GainerIOModule(parent,id,config,name));
+			return true;
+		}
+		
+		return false;
+	}
+	
 	//Gainerショートカット
 	public IOModule.Port analogOutput(int nPort){
 		return iomodule(0).port(analogOutput[nPort]);
