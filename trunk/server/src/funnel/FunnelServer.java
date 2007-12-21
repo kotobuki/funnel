@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 005 (2007-12-17)";
+	private static final String buildName = "Funnel 006 (2007-12-21)";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
