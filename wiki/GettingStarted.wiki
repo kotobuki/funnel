@@ -1,5 +1,5 @@
 #summary How to start using Funnel
-#labels Featured
+#labels Deprecated
 
 = Getting Started =
 
