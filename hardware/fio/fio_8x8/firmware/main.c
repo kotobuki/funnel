@@ -33,7 +33,7 @@ void main()
 		UpdateOutputs();
 
 		UpdateInputs();
-		ReportIOStatus(ioEnable, dioStatus, adcData, 8);
+		ReportIOStatus(ioEnable, dioStatus, adcData, 4);
 	}
 }
 
@@ -57,6 +57,8 @@ void Initialize()
 	ADC_Start(ADC_MEDPOWER);
 }
 
+const BYTE muxNumToChNumTbl[8] = {7, 3, 6, 2, 5, 1, 4, 0};
+
 void UpdateInputs(void)
 {
 	BYTE channel = 0;
@@ -67,14 +69,14 @@ void UpdateInputs(void)
 		while (ADC_fIsDataAvailable() == 0) {
 			;
 		}
-		adcData[channel] = ADC_iGetDataClearFlag();
+		adcData[muxNumToChNumTbl[channel]] = ADC_iGetDataClearFlag();
 	}
 
 	// just for testing
 	if (GET_BUTTON()) {
-		dioStatus = 0x7777;
+		dioStatus = 0x0100;	// button is the 8th digital input
 	} else {
-		dioStatus = 0x2222;
+		dioStatus = 0x0000;	// button is the 8th digital input
 	}
 }
 

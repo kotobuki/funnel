@@ -86,7 +86,7 @@ void ReportIOStatus(WORD ioEnable, WORD dioStatus, WORD *adcStatus, BYTE adcChan
 {
 	BYTE i = 0;
 	BYTE idx = 0;
-
+#if 0
 	rfData[0] = 0x83;	// API Identifier
 	rfData[1] = 0xFF;	// From Address (MSB)
 	rfData[2] = 0xFF;	// From Address (LSB)
@@ -104,7 +104,22 @@ void ReportIOStatus(WORD ioEnable, WORD dioStatus, WORD *adcStatus, BYTE adcChan
 		rfData[idx] = (BYTE)(adcStatus[i] & 0xFF);
 		idx++;
 	}
-	SendTransmitRequest(0x1234, 10 + (adcChannels * 2));
+	SendTransmitRequest(0x0000, 10 + (adcChannels * 2));
+#else
+	rfData[0] = DIGITAL_MESSAGE;
+	rfData[1] = (BYTE)(dioStatus % 0x80);
+	rfData[2] = (BYTE)(dioStatus >> 7);
+	idx = 3;
+	for (i = 0; i < adcChannels; i++) {
+		rfData[idx] = ANALOG_MESSAGE + i;			// analog in: 0xE0 - 0xEF
+		idx++;
+		rfData[idx] = (BYTE)(adcStatus[i] % 0x80);	// analog in value (LSB)
+		idx++;
+		rfData[idx] = (BYTE)(adcStatus[i] >> 7);	// analog in value (MSB)
+		idx++;
+	}
+	SendTransmitRequest(0x0000, idx);
+#endif
 }
 
 
@@ -131,7 +146,7 @@ void UART_RX_ISR()
 			rxBytesToReceive = (rxData[1] << 8) + rxData[2] + 4;
 		} else if (rxIndex == (rxBytesToReceive - 1)) {
 //			if ((rxSum & 0xFF) + rxData[rxBytesToReceive - 1] == 0xFF) {
-			if (1) {
+			if (1) {	// ignore checksum (FOR TESTING USE ONLY)
 				hasPacketToHandle = TRUE;
 			}
 		} else if (rxIndex > 2) {
