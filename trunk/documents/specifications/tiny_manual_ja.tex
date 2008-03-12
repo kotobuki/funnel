@@ -17,8 +17,11 @@ lineskip={-2pt}
 \begin{document}
 
 \begin{center}
-{\LARGE Funnel簡易マニュアル}
+{\LARGE Funnel簡易マニュアル（ビルド006用）}
 \end{center}
+
+%\title{Funnel簡易マニュアル（ビルド006用）}
+%\author{開発者：小林茂\\共同開発者：遠藤孝則＋増田一太郎}
 
 %\maketitle
 
@@ -34,15 +37,15 @@ lineskip={-2pt}
 \item ソフトウェア
 	\begin{itemize}
 	\item Java実行環境（1.4.2以上）
-	\item Flash Professional CS3\footnote{http://www.adobe.com/jp/products/flash/}・Flex Builder 2\footnote{http://www.adobe.com/jp/products/flex/}・Flex 2 SDK\footnote{http://www.adobe.com/jp/products/flex/sdk/}
+	\item Flash Professional CS3\footnote{http://www.adobe.com/jp/products/flash/}・Flex Builder 2/3\footnote{http://www.adobe.com/jp/products/flex/}・Flex 2/3 SDK\footnote{http://www.adobe.com/jp/products/flex/sdk/}
 	\item Processing（0135 BETA以上）\footnote{http://processing.org/download/index.html}
 	\item Ruby（1.8.6以上）\footnote{http://www.ruby-lang.org/ja/downloads/}＋OSCライブラリ\footnote{http://raa.ruby-lang.org/project/osc/}
 	\end{itemize}
 \item ハードウェア
 	\begin{itemize}
 	\item Gainer I/Oモジュール v1.0\footnote{http://www.triggerdevice.com/items/}またはv1.3\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8480}
-	\item Arduino USB/NG/Diecimila\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=666}
-	\item XBee Series 1 (XBS1)\footnote{http://www.digi-intl.co.jp/maxstream/products/XBeeZigBeeModule.html}
+	\item Arduino USB/NG/Diecimila\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=666}またはBoarduinoなどのArduinoクローン
+	\item XBee 802.15.4 OEM RFモジュール\footnote{http://www.digi-intl.co.jp/digi/wireless/zigbee/xbee-series1-module.html}
 	\item Funnel I/O 4$\times$4\footnote{Funnelの配布パッケージの一部として回路図及び基板レイアウトデータを公開}
 	\end{itemize}
 \end{itemize}
@@ -71,10 +74,52 @@ lineskip={-2pt}
 	\end{itemize}
 \end{itemize}
 
+\section{ドライバのインストール}
+
+\subsection{WIndows XP/Vistaの場合}
+まず最初にドライバをダウンロードします。ウェブブラウザで次のURLにアクセスし、Operating System（オペレーティング・システム）の欄がWindows XPと書かれているドライバをダウンロードします。
+
+\vspace{8pt}
+http://www.ftdichip.com/Drivers/VCP.htm
+\vspace{8pt}
+
+ドライバのダウンロードが終わったら、ZIPファイルを展開（右クリックして表示されるメニューから「全て展開…」を実行）します。展開が終わったら、I/OモジュールにUSBケーブルの片方のコネクタを接続し、もう片方のコネクタをPC側に接続します。数秒後、ドライバのインストールを要求するダイアログが表示されますので、ダイアログにしたがってドライバのインストールを行います。
+
+\begin{itemize}
+\item ソフトウェア検索のため、Windows Updateに接続しますか？\\→「いいえ、今回は接続しません。」選択します
+\item インストール方法を選んでください\\→「一覧または特定の場所からインストールする（詳細）」を選択します
+\item 次の場所で最適のドライバを検索する\\→「次の場所を含める」をチェックし、先ほどドライバを展開したフォルダを指定します
+\end{itemize}
+
+同じような操作を2回要求されますので、2回目も1回目と同様にドライバを展開したフォルダを指定します。 
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.0cm, clip]{driver_win_1.pdf}
+\includegraphics[mediaboxonly, height=5.0cm, clip]{driver_win_2.pdf}
+
+\vspace{3pt}
+
+\includegraphics[mediaboxonly, height=5.0cm, clip]{driver_win_3.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{ドライバーインストール時の画面例（Windows XP SP2）}
+\label{default}
+\end{center}
+\end{figure}
+
+\subsection{Mac OS Xの場合}
+まず最初にドライバをダウンロードします。ウェブブラウザで次のURLにアクセスし、Operating System（オペレーティング・システム）の欄がMac OS Xと書かれているドライバをダウンロードします。
+
+\vspace{8pt}
+http://www.ftdichip.com/Drivers/VCP.htm
+\vspace{8pt}
+
+ドライバのダウンロードが終わると、自動的にディスクイメージファイル（拡張子はdmg）がマウントされます。もし自動的にマウントされない場合には、ファイルをダブルクリックしてマウントします。マウントが終わると、自動的にドライバのインストーラが起動します。インストーラが起動したら、インストーラの指示に従ってドライバをインストールします。途中で管理者のパスワードを入力するように求められますので、パスワードを入力します。インストール終了時には、指示に従って再起動してください。
+
 \section{Funnel Serverの設定と起動}
 \subsection{設定}
-使用するハードウェアに合わせてFunnel Serverの設定ファイルを変更して下さい。Funnel Serverでは2つのネットワークポートを利用し、デフォルト値は9000番と9001番です。他のアプリケーションがこれらのポートを使用している場合には、他の番号に変更して下さい。comポートを指定しない場合には、自動検出を試みます。
-\begin{lstlisting}[caption={settings.yamlの設定例},label=useless]
+Gainer I/Oモジュール以外のI/Oモジュールを使用する場合には、ハードウェアに合わせてFunnel Serverの設定ファイル（settings.yaml）を変更して下さい。Funnel Serverでは2つのネットワークポートを利用し、デフォルト値は9000番と9001番です。他のアプリケーションがこれらのポートを使用している場合には、競合しない番号に変更して下さい。comポートを指定しない場合には、自動検出を試みますので、1台のみI/Oモジュールを接続する場合には設定不要です。
+\begin{lstlisting}[caption={Gainer I/Oモジュール用のsettings.yamlの設定例},label=useless]
 server:
   command port: 9000
   notification port: 9001
@@ -84,14 +129,35 @@ io:
   com: 
 \end{lstlisting}
 
+\begin{lstlisting}[caption={Arduino I/Oボード用のsettings.yamlの設定例},label=useless]
+server:
+  command port: 9000
+  notification port: 9001
+
+io:
+  type: Arduino
+  com: 
+\end{lstlisting}
+
 \subsection{起動}
 設定が終わったら、\texttt{funnel\_server.jar}をダブルクリックしてFunnel Serverを起動してください。正常に起動した場合には次のような画面が表示されます。何らかのエラーメッセージが表示される場合には、メッセージを参考に設定ファイルやハードウェアを確認してください。
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[mediaboxonly, height=4.5cm, clip]{funnel_server_launch_ja.pdf}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{funnel_server_launch_ja.pdf}
 \vskip -\lastskip \vskip -3pt
 \caption{Gainer I/Oモジュールに接続したFunnel Serverが正常に起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+I/Oモジュールを接続しないで起動した場合、あるいは間違ってタイプを設定した場合には、次のようなメッセージが表示されます。この場合には、USBケーブルがきちんと接続されているか、I/OモジュールのLEDが点灯しているか、設定ファイルで別のタイプを設定していないかを確認してください。
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{funnel_server_launch_unconnected_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{Gainer I/Oモジュールを接続しないでFunnel Serverを起動した時の画面例}
 \label{default}
 \end{center}
 \end{figure}
@@ -99,7 +165,11 @@ io:
 \section{各ライブラリごとの準備と使用方法}
 
 \subsection{ActionScript 3}
+\subsubsection{準備}
 \texttt{libraries/actionscript3/src/funnel/}がライブラリのフォルダになりますので、それぞれの環境に合わせて設定して下さい。\texttt{libraries/actionscript3/src/}にGainerとArduino用のサンプルがあります。
+
+\subsubsection{動作確認}
+\texttt{libraries/actionscript3/src/GainerTest.as}をパブリッシュし、Flash Playerで再生してください。Gainer I/Oモジュールのボタンを押すとLEDが点灯し、離すと消灯すれば正常に動作しています。
 
 \subsection{Processing}
 
