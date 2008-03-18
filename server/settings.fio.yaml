@@ -3,9 +3,9 @@ server:
   notification port: 9001
 
 io:
-  type: Gainer
+  type: Fio
   com: 
-  baudrate: 
+  baudrate: 57600
 
 ...
 # Just as a reference. The following lines after '...' will be ignored.

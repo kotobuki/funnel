@@ -36,7 +36,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	// TODO: update this portion to support XBS2
 	private static final int MAX_IO_PORT = 9;
 
-	private static final int MAX_NODES = 65536;
+	private static final int MAX_NODES = 65535;
 	private static final int MAX_FRAME_SIZE = 100;
 
 	// private final Float FLOAT_ZERO = new Float(0.0f);
@@ -65,7 +65,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 
 	private Hashtable nodes;
 
-	public XbeeIO(FunnelServer server, String serialPortName) {
+	public XbeeIO(FunnelServer server, String serialPortName, int baudRate) {
 		this.parent = server;
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 		dioPortRange = new funnel.PortRange();
@@ -88,8 +88,14 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 						port = (SerialPort) portId.open("serial xbee", 2000); //$NON-NLS-1$
 						input = port.getInputStream();
 						output = port.getOutputStream();
-						port.setSerialPortParams(rate, databits, stopbits,
-								parity);
+						if (baudRate > 0) {
+							parent.printMessage("baudrate: " + baudRate);
+							port.setSerialPortParams(baudRate, databits,
+									stopbits, parity);
+						} else {
+							port.setSerialPortParams(rate, databits, stopbits,
+									parity);
+						}
 						port
 								.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN);
 						port
@@ -156,7 +162,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 			Object arguments[] = new Object[2 + MAX_IO_PORT];
 			arguments[0] = id;
 			arguments[1] = new Integer(0);
-			for (int i = 0; i < MAX_IO_PORT; i++) {
+			// NOTE: Update here to support XBee ZNet 2.5
+			for (int i = 0; i < 8; i++) {	// was "i < MAX_IO_PORT"
 				arguments[2 + i] = new Float(inputData[id.intValue()][i]);
 			}
 			bundle.addPacket(new OSCMessage("/in", arguments)); //$NON-NLS-1$

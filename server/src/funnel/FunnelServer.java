@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 006 (2007-12-21)";
+	private static final String buildName = "Funnel 007 [alpha 1] (2008-03-18)";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
@@ -76,6 +76,7 @@ public class FunnelServer extends Frame {
 		String commandPort = "9000"; //$NON-NLS-1$
 		String notificationPort = "9001"; //$NON-NLS-1$
 		String serialPort = null;
+		int baudRate = -1;
 
 		try {
 			Map settings = (Map) YAML.load(new FileReader("settings.yaml")); //$NON-NLS-1$
@@ -126,6 +127,10 @@ public class FunnelServer extends Frame {
 			} else {
 				serialPort = modules.get("com").toString(); //$NON-NLS-1$
 			}
+			
+			if (modules.get("baudrate") != null) { //$NON-NLS-1$
+				baudRate = Integer.valueOf(modules.get("baudrate").toString()).intValue();
+			}
 		} catch (FileNotFoundException e) {
 			printMessage(Messages.getString("FunnelServer.NoSettingsFile")); //$NON-NLS-1$
 			commandPort = "9000"; //$NON-NLS-1$
@@ -163,7 +168,7 @@ public class FunnelServer extends Frame {
 			}
 		} else if (type.equalsIgnoreCase("XBee") || type.equalsIgnoreCase("Fio")) { //$NON-NLS-1$
 			try {
-				ioModule = new XbeeIO(this, serialPort);
+				ioModule = new XbeeIO(this, serialPort, baudRate);
 			} catch (RuntimeException e) {
 				printMessage(Messages.getString("FunnelServer.CannotOpenXbee")); //$NON-NLS-1$
 				return;
