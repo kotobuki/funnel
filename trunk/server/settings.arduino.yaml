@@ -3,9 +3,9 @@ server:
   notification port: 9001
 
 io:
-  type: Gainer
+  type: Arduino
   com: 
-  baudrate: 
+  baudrate: 115200
 
 ...
 # Just as a reference. The following lines after '...' will be ignored.
