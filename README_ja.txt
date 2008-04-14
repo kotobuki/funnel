@@ -1,20 +1,24 @@
 ■はじめに
 Funnelはフィジカルコンピューティングのためのツールキットです。
-Gainer I/OモジュールとArduino I/Oボードに対応し、それぞれの入出力ポート
-に対して閾（しきい）値による分割、LPFやHPFなどのフィルタ処理、
-スケーリング、オシレータなどのフィルタをセットすることができます。
+Gainer I/Oモジュール、Arduino I/Oボード、XBee無線モデムと
+Funnel I/Oモジュールに対応し、それぞれの入出力ポートに対して閾
+（しきい）値による分割、LPFやHPFなどのフィルタ処理、スケーリング、
+オシレータなどのフィルタをセットすることができます。
 詳細や今後のプランに関しては、specifications_ja.pdfを参照して下さい。
-なお、これはあくまで現時点での仕様や計画であり、今後大幅に変更される可能
-性もあります。
+なお、これはあくまで現時点での仕様や計画であり、今後大幅に変更
+される可能性もあります。
+
+最新の情報に関しては次のウェブサイトを参照してください：
+http://funnel.cc
 
 ■動作環境
 □動作確認を行ったOS
-・Windows XP SP2
-・Mac OS X 10.4
+・Windows XP SP2/Vista
+・Mac OS X 10.4/10.5
 
 □ライブラリの動作環境
-・Flash CS3、Flex Builder 2、Flex 2 SDKなどActionScript 3でプログラミング
-　できる環境
+・Flash CS3、Flex Builder 2/3、Flex 2/3 SDKなどActionScript 3で
+　プログラミングできる環境
 ・Processing 0135
 ・Ruby 1.8.2（1.9では未確認）＋ふなばただよしさんのOSCライブラリ
 　http://raa.ruby-lang.org/project/osc/
@@ -25,7 +29,7 @@ Gainer I/OモジュールとArduino I/Oボードに対応し、それぞれの入出力ポート
 □ハードウェア
 ・Gainer I/Oモジュールv1.0
 ・Arduino USB/NG/Diecimila＋Firmata v1.0のファームウェア
-　Standard_Firmata_334
+　Standard_Firmata_334（またはFirmataライブラリを使用したスケッチ）
 　http://www.arduino.cc/playground/Interfacing/Firmata
 
 ■バグレポートや要望など
@@ -50,6 +54,12 @@ Keane Jarvi氏によるRXTXを使用しています。
 ・RXTX：http://www.rxtx.org/
 
 ■更新履歴
+Funnel 007（2008.04.20）
+・XBeeに関するサンプルを追加
+・XBeeを使用した際Processingライブラリがクラッシュするバグを修正
+・ArduinoおよびXBeeでシリアル通信のボーレートを設定できるようにした
+・RXTXライブラリをPowerPCマシンでも動作するよう入れ替えた
+
 Funnel 006（2007.12.21）
 ・Processing用ライブラリのバグ修正と改良
 　・イベントハンドラchangeで値を取得した時に1つ前の値になるバグを修正
@@ -100,3 +110,6 @@ Funnel 000（2007.09.24）
 FunnelはIPA（情報処理推進機構）未踏ソフトウェア創造事業（2007年第I期）
 の支援を受けて開発されました（テーマ名：プロトタイピングのためのツール
 キット「Funnel」の開発）。
+
+Funnelの開発に関して以下の方々に感謝いたします：
+・David A. Mellis（RXTXライブラリのバイナリ）
