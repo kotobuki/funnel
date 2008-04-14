@@ -1,20 +1,22 @@
 INTRODUCTION
-Funnel is a toolkit for physical computing. Funnel supports 
-Arduino I/O boards and Gainer I/O modules. The user can set 
-filters to input or outputs ports: range division, filtering 
-(e.g. LPF, HPF), scaling and oscillators.
-Details, future plans are described at the following location, 
-but are subject to change.
-http://code.google.com/p/funnel/
+Funnel is a toolkit for physical computing. Funnel supports Arduino I/O 
+boards, Gainer I/O modules, XBee wireless modems and Funnel I/O 
+modules. The user can set filters to input or outputs ports: range division, 
+filtering (e.g. LPF, HPF), scaling and oscillators.
+Details, future plans are described at the following location, but are 
+subject to change.
+
+About the latest information, please refer to the following web site:
+http://funnel.cc
 
 
 REQUIREMENTS
 * OS
-  * Windows XP SP2
-  * Mac OS X 10.4
+  * Windows XP SP2/Vista
+  * Mac OS X 10.4/10.5
 * Runtime environments for software libraries
   * Various programming environments for ActionScript 3 (e.g. 
-    Flash CS3, Flex Builder 2, Flex SDK 2)
+    Flash CS3, Flex Builder 2/3, Flex SDK 2/3)
   * Processing 0135
   * Ruby 1.8.2 with OSC library by Tadayoshi Funaba
     http://raa.ruby-lang.org/project/osc/
@@ -22,7 +24,7 @@ REQUIREMENTS
   * Java Runtime Environment 1.4.2 or higher
 * Hardware
   * Arduino USB/NG/Diecimila with Firmara firmware v1.0
-    Standard_Firmata_334
+    Standard_Firmata_334 (or sketches with Firmata library)
     http://www.arduino.cc/playground/Interfacing/Firmata
   * Gainer I/O module v1.0
 
@@ -56,6 +58,12 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
+Funnel 007 (2008.04.20)
+* added examples for XBee
+* fixed a bug about XBee (the Processing library crushes)
+* added serial baud rate setting for Arduino and XBee
+* replaced the binary files of the RXTX to run on PowerPC machines
+
 Funnel 006 (2007.12.21)
 * fixed bugs and added new features in the Processing library
   * modified to return proper value in "change()"
@@ -103,6 +111,10 @@ Funnel 000 (2007.09.24)
 
 
 ACKNOWLEDGMENTS
-Funnel is developed with the support of the Exploratory 
-Software Project (the first half of 2007) of IPA (Information-
-technology Promotion Agency).
+Funnel is developed with the support of the Exploratory Software 
+Project (the first half of 2007) of IPA (Information-technology 
+Promotion Agency).
+
+We would like to acknowledge the following people for assisting us in 
+creating Funnel:
+* David A. Mellis (for the binary files of the RXTX library)
