@@ -1,0 +1,49 @@
+<project name="FunnelP5" default="dist" basedir=".">
+	<description>
+		Build file for FunnelP5
+	</description>
+	
+	<property name="build" location="." />
+	<!-- processing directory -->
+	<property name="dest" location="C:\processing-0125\libraries\funnel\library" />
+	<property name="code" location="C:\processing-0125\libraries\funnel\code" />
+
+	<target name="compile" description = "Compile the source">
+		<javac srcdir="./" destdir="./" source="1.3">
+			<classpath>
+				<pathelement path="${classpath}"/>
+			</classpath>
+			
+		</javac>
+	</target>
+	<target name="dist" depends="compile" description="Jar it all up">
+		<jar 
+			destfile="${dest}/funnel.jar"
+			basedir="${build}"
+			includes="processing/funnel/*.class com/illposed/osc/*.class com/illposed/osc/utility/*.class"
+		/>
+			
+		<copy todir="${code}">
+			<fileset dir="processing/funnel" includes="*.java"/>
+		</copy>
+	</target>
+	
+	<target name="test" depends="compile" description="test on eclipse p5">
+		<!-- Only put the important stuff in javaosc.jar -->
+		<jar 
+			destfile="../workingOnP5/funnel.jar"
+			basedir="${build}"
+			includes="processing/funnel/*.class com/illposed/osc/*.class com/illposed/osc/utility/*.class"
+		/>
+
+	</target>	
+	
+	<target name="doc" description="Create the documentation">
+		<javadoc destdir="doc/">
+			<fileset dir="src/">
+				<include name="processing/gainer/*.java"/>			
+			</fileset>
+		</javadoc>
+	</target>	
+
+</project>
