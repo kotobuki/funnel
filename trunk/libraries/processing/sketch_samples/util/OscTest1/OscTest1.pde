@@ -2,7 +2,8 @@
 Osc Test 1
 draw()の間隔で update()を呼び出してOscをアップデート
 
-注意　Osc.stop()してもupdate()で更新される
+注意　Osc.start()しなくてよい。
+Osc.stop()してもupdate()で更新される
 */
 
 import processing.funnel.*;
@@ -17,7 +18,7 @@ void setup()
   background(255); 
   //周期 1.0/s 回数 1 time
   osc = new Osc(this,Osc.SIN,1.0,1);
-  osc.start();
+  osc.reset();
   
 }
 
