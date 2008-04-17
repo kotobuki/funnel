@@ -210,26 +210,41 @@ public class Osc{
 		}
 		
 		public void run(){
+			long updateTickMillis = 0;
+			long noupdateTickMillis = 0;
 			System.out.println("OscServiceThread start");
-			serviceTickMillis = System.currentTimeMillis();
+			
 			while(isWorking){
-				long now = System.currentTimeMillis();
-				if(now - serviceTickMillis > Osc.serviceInterval && Osc.serviceInterval != 0){
-				
+				long processMillis = System.currentTimeMillis() - updateTickMillis;//ˆ—‚É‚©‚©‚Á‚½ŽžŠÔ
+
+				if((processMillis > Osc.serviceInterval) && Osc.serviceInterval != 0){
+	
 					synchronized(oscList){
 						ListIterator it = oscList.listIterator();
 						for(ListIterator i = it;it.hasNext();){
 							
 							Osc osc = (Osc)i.next();
 							osc.update();
-
+		
 						}
-					}
-					
-					serviceTickMillis = System.currentTimeMillis();
+						updateTickMillis = System.currentTimeMillis();
+					}				
 				}
-
+				
+				try {
+					processMillis = System.currentTimeMillis() - noupdateTickMillis;
+					long sleepMillis = Osc.serviceInterval - processMillis;
+					//System.out.println("sleepMillis " + sleepMillis + "  processMillis " + processMillis);
+					if(sleepMillis > 1){
+						Thread.sleep(sleepMillis);
+						//System.out.println("sleep " + sleepMillis);
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				noupdateTickMillis = System.currentTimeMillis();
 			}
+			
 			System.out.println("OscServiceThread out");
 		}
 	}
