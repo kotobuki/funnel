@@ -16,15 +16,11 @@ void setup()
 {
   size(200, 200);
   frameRate(30);
+
   gainer= new Gainer(this, Gainer.MODE1);
   gainer.autoUpdate = true;
 
-  Filter filters[] = {
-    new SetPoint(0.5, 0.0)
-  };
-  gainer.analogInput(0).filters = filters;
-
-  osc = new Osc(this, Osc.SIN, 1.0, 0);
+  osc = new Osc(this, Osc.SQUARE, 1.0, 0);
   osc.serviceInterval = 30;
   osc.addEventListener(Osc.UPDATE, "oscUpdated");
 }
@@ -36,20 +32,16 @@ void draw()
 
 void oscUpdated(Osc osc)
 {
-  gainer.analogOutput(0).value = osc.value;
+  gainer.led().value = osc.value;
+//  gainer.analogOutput(0).value = osc.value;
 }
 
-void risingEdge(PortEvent e)
+void gainerButtonEvent(boolean pressed)
 {
-  if (e.target.number == gainer.analogInput[0]) {
+  if (pressed) {
     osc.reset();
     osc.start();
-  }
-}
-
-void fallingEdge(PortEvent e)
-{
-  if (e.target.number == gainer.analogInput[0]) {
+  } else {
     osc.stop();
   }
 }
