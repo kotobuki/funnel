@@ -13,7 +13,7 @@ void setup()
 {
   size(200, 200);
   frameRate(30);
-  gainer= new Gainer(this, Gainer.MODE1);
+  gainer = new Gainer(this, Gainer.MODE1);
   gainer.autoUpdate = true;
 }
 
