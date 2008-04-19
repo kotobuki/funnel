@@ -1,11 +1,11 @@
 /**
  * Flash a LED on change
  * 
- * Flash a LED on change of ain 0
+ * Flash a LED on changes of the ain 0
  * ain 0の値が変化したときにLEDを一瞬点灯させる
  * 
- * input: a photocell
- * output: LED
+ * input: a photocell (connect to the ain 0)
+ * output: LED (connect to the aout 0)
  */
 
 import processing.funnel.*;
@@ -18,8 +18,7 @@ void setup()
   size(200, 200);
   frameRate(30);
 
-  gio= new Gainer(this, Gainer.MODE1);
-  gio.autoUpdate = true;
+  gio = new Gainer(this, Gainer.MODE1);
 
   Filter filters[] = {
     new SetPoint(0.65, 0.05)
@@ -34,7 +33,12 @@ void draw()
     changed = false;
   } else {
     gio.analogOutput(0).value = 0;
-  }  
+  }
+
+  // NOTE: Do update manually, or a flash might be ignored depends on 
+  // the timing of auto update
+  // 注意：手動で更新すること。そうしないと事項更新のタイミング次第で無視されてしまう。
+  gio.update();
 }
 
 // The event handler for SetPoint filters to input ports
