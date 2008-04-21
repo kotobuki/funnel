@@ -11,10 +11,11 @@ Funnel I/Oモジュールに対応し、それぞれの入出力ポートに対して閾
 最新の情報に関しては次のウェブサイトを参照してください：
 http://funnel.cc
 
+
 ■動作環境
-□動作確認を行ったOS
-・Windows XP SP2/Vista
-・Mac OS X 10.4/10.5
+□OS
+・Windows XP SP2またはVista
+・Mac OS X 10.4または10.5
 
 □ライブラリの動作環境
 ・Flash CS3、Flex Builder 2/3、Flex 2/3 SDKなどActionScript 3で
@@ -32,6 +33,7 @@ http://funnel.cc
 　Standard_Firmata_334（またはFirmataライブラリを使用したスケッチ）
 　http://www.arduino.cc/playground/Interfacing/Firmata
 
+
 ■バグレポートや要望など
 バグレポートや要望は、Google CodeのIssuesシステムを利用して下さい。
 このシステムのユーザーインタフェースは英語のみですが、日本語で記入して
@@ -44,6 +46,7 @@ http://code.google.com/p/funnel/issues/list
 ・日本語：http://gainer.cc/forum/index.php?board=26.0
 ・英語：http://gainer.cc/forum/index.php?board=25.0
 
+
 ■クレジット
 Funnelはオープンソースプロジェクトです。
 Funnel開発チームの構成メンバーは小林茂、遠藤孝則、増田一太郎です。
@@ -53,12 +56,16 @@ Keane Jarvi氏によるRXTXを使用しています。
 ・JvYAML：https://jvyaml.dev.java.net/
 ・RXTX：http://www.rxtx.org/
 
+
 ■更新履歴
-Funnel 007（2008.04.20）
-・XBeeに関するサンプルを追加
-・XBeeを使用した際Processingライブラリがクラッシュするバグを修正
-・ArduinoおよびXBeeでシリアル通信のボーレートを設定できるようにした
-・RXTXライブラリをPowerPCマシンでも動作するよう入れ替えた
+Funnel 007（2008.04.21）
+・Processing用ライブラリの改良とバグ修正
+　・Make: Tokyo MeetingでのGainerワークショップ用に作成したサンプルを追加
+　・XBee用のサンプルを追加
+　・XBeeを使用した際Processingライブラリがクラッシュするバグを修正
+・Funnel Serverの改良と不具合対応
+　・ArduinoおよびXBeeでシリアル通信のボーレートを設定できるようにした
+　・RXTXライブラリをPowerPCマシンでも動作するよう入れ替えた
 
 Funnel 006（2007.12.21）
 ・Processing用ライブラリのバグ修正と改良
@@ -105,6 +112,7 @@ Funnel 000（2007.09.24）
 　Diecimilaで動作確認を行いました。
 ・Funnel ServerのOSCはTCPのみ対応しています（UDPのサポートはありません）。
 ・パフォーマンスはまだ最適化されていません。
+
 
 ■謝辞
 FunnelはIPA（情報処理推進機構）未踏ソフトウェア創造事業（2007年第I期）

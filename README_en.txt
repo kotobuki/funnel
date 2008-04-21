@@ -12,8 +12,8 @@ http://funnel.cc
 
 REQUIREMENTS
 * OS
-  * Windows XP SP2/Vista
-  * Mac OS X 10.4/10.5
+  * Windows XP SP2 or Vista
+  * Mac OS X 10.4 or 10.5
 * Runtime environments for software libraries
   * Various programming environments for ActionScript 3 (e.g. 
     Flash CS3, Flex Builder 2/3, Flex SDK 2/3)
@@ -58,11 +58,16 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
-Funnel 007 (2008.04.20)
-* added examples for XBee
-* fixed a bug about XBee (the Processing library crushes)
-* added serial baud rate setting for Arduino and XBee
-* replaced the binary files of the RXTX to run on PowerPC machines
+Funnel 007 (2008.04.21)
+* fixed bugs and added new features in the Processing library
+  * added examples for Gainer (created for the workshop at 
+    Make: Tokyo Meeting)
+  * added examples for XBee
+  * fixed a bug about XBee (the Processing library crushes)
+* added a new feature and fixed an issue about the Funnel Server
+  * added serial baud rate setting for Arduino and XBee
+  * replaced the binary files of the RXTX to run on PowerPC 
+    machines
 
 Funnel 006 (2007.12.21)
 * fixed bugs and added new features in the Processing library
