@@ -4,9 +4,11 @@
 import serial
 import time
 
-sp = serial.Serial('/dev/tty.usbserial-A1001hqj', 9600, timeout = 2)
+sp = serial.Serial('/dev/tty.usbserial-A1001hqj', 38400, timeout = 5)
 print sp
 print ""
+
+time.sleep(3)
 
 sp.write("+++")
 reply = sp.read(3)
@@ -37,6 +39,7 @@ def dump_settings():
   query("D1")
   query("P0")
   query("AP")
+  query("BD")
 
 print ""
 print "*** BEFORE ***"
@@ -49,6 +52,7 @@ query("MY 1")     # set my address to 1
 query("DL 2")     # set destination address to 2
 query("ID 1111")  # PAN ID is 1111
 query("AP 2")     # set API mode to API with escape characters
+# query("BD 5")     # set interface baud rate to 38400
 query("WR")       # write all parameters
 
 print ""
