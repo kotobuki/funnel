@@ -69,16 +69,18 @@ end
   @xs << OSC::Message.new('/out', 'if', i, 1)
 end
 
-@xs << OSC::Message.new('/in', 'ii', 3, 100)
-@xs << OSC::Message.new('/in/[1..3]')
-@xs << OSC::Message.new('/in/*')
+#@xs << OSC::Message.new('/in', 'ii', 3, 100)
+#@xs << OSC::Message.new('/in/[1..3]')
+#@xs << OSC::Message.new('/in/*')
 
 send_commands
 
 sleep(5)
 
+@receiver.close
+
 @xs << OSC::Message.new('/polling', 'i', 0)
-@xs << OSC::Message.new('/quit', nil)
+#@xs << OSC::Message.new('/quit', nil)
 send_commands
 
-th.join
+th.join(0.5)
