@@ -1,4 +1,5 @@
 #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+#include "stdlib.h"
 
 #include "xbee.h"
 #include "fio.h"
@@ -27,6 +28,12 @@ const BYTE IDX_IO_ENABLE_MSB = 9;
 const BYTE IDX_IO_ENABLE_LSB = 10;
 const BYTE IDX_IO_STATUS_START = 11;
 
+void (*pAnalogMessageHandler)(BYTE pin, WORD value) = NULL;
+void (*pDigitalMessageHandler)(BYTE pin, WORD value) = NULL;
+void (*pReportAnalogHandler)(BYTE pin, WORD value) = NULL;
+void (*pReportDigitalHandler)(BYTE pin, WORD value) = NULL;
+void (*pSetPinModeHandler)(BYTE pin, WORD value) = NULL;
+
 BYTE rfData[128];
 BYTE frameData[128];
 BYTE txBuffer[128];
@@ -36,16 +43,6 @@ BYTE rxIndex = 0;
 BYTE rxData[100];
 BYTE rxBytesToReceive = 0;
 WORD rxSum = 0;
-
-// total number of pins currently supported
-#define TOTAL_ANALOG_PINS		(8)
-#define TOTAL_DIGITAL_PINS		(10)
-
-// for comparing along with INPUT and OUTPUT
-#define IN		(0)
-#define OUT		(1)
-#define PWM		(2)
-#define SERVO	(3)
 
 // max number of data bytes in non-SysEx messages
 #define MAX_DATA_BYTES	(2)
@@ -61,46 +58,50 @@ WORD rxSum = 0;
 #define SYSTEM_RESET			(0xFF) // reset from MIDI
 
 // local functions
-void digitalWrite(BYTE pin, BYTE isHigh);
-void　analogWrite(BYTE pin, BYTE value);
-void setDigitalPinMode(BYTE pin, BYTE mode);
-void setAnalogPinReporting(BYTE pin, BOOL enabled);
+void parseFirmataMessage(BYTE inputData);
+void sendTransmitRequest(WORD destAddress, BYTE rfDataLength);
+void sendCommand(BYTE frameDataLength);
 
 // variables for Firmata like message parser
 BYTE bytesToReceive = 0;
 BYTE storedInputData[MAX_DATA_BYTES + 1];
-BYTE analogData[TOTAL_DIGITAL_PINS];
 
 BYTE executeMultiByteCommand = 0;
 BYTE multiByteChannel = 0;
 
-WORD　pwmStatus = 0;
-BOOL digitalInputsEnabled = FALSE;
-
 BOOL hasPacketToHandle = FALSE;
 
-BOOL HasPacketToHandle(void)
+void begin()
+{
+	// Nothing to do!?
+}
+
+#define FIRMATA_MAJOR_VERSION   1 // for non-compatible changes
+#define FIRMATA_MINOR_VERSION   0 // for backwards compatible changes
+
+void printVersion(void)
+{
+	rfData[0] = REPORT_VERSION;
+	rfData[1] = (BYTE)FIRMATA_MAJOR_VERSION;
+	rfData[2] = (BYTE)FIRMATA_MINOR_VERSION;
+	sendTransmitRequest(0x0000, 3);
+}
+
+BOOL available(void)
 {
 	return hasPacketToHandle;
 }
 
-void ClearHasPacketFlag(void)
-{
-	hasPacketToHandle = FALSE;
-}
-
-void ReportIOStatus(WORD ioEnable, WORD dioStatus, WORD *adcStatus, BYTE adcChannels)
+void reportIOStatus(WORD dioStatus, WORD *adcStatus, BYTE adcChannels)
 {
 	BYTE i = 0;
 	BYTE idx = 0;
 
 	// NOTE: modify here to report more than 14 digital pins
-	if (digitalInputsEnabled) {
-		rfData[0] = DIGITAL_MESSAGE;
-		rfData[1] = (BYTE)(dioStatus % 0x80);
-		rfData[2] = (BYTE)(dioStatus >> 7);
-		idx = 3;
-	}
+	rfData[0] = DIGITAL_MESSAGE;
+	rfData[1] = (BYTE)(dioStatus % 0x80);
+	rfData[2] = (BYTE)(dioStatus >> 7);
+	idx = 3;
 
 	for (i = 0; i < adcChannels; i++) {
 		rfData[idx] = ANALOG_MESSAGE + i;			// analog in: 0xE0 - 0xEF
@@ -111,7 +112,7 @@ void ReportIOStatus(WORD ioEnable, WORD dioStatus, WORD *adcStatus, BYTE adcChan
 		idx++;
 	}
 	// send the message to the coordinator of the PAN
-	SendTransmitRequest(0x0000, idx);
+	sendTransmitRequest(0x0000, idx);
 }
 
 void UART_RX_ISR()
@@ -156,9 +157,12 @@ void UART_TX_ISR()
 
 }
 
-void ParsePacket(void) {
+void processInput(void)
+{
 	BYTE length = 0;
 	BYTE i = 0;
+
+	hasPacketToHandle = FALSE;
 
 	switch ((BYTE)rxData[IDX_API_IDENTIFIER]) {
 	case RX_PACKET_16BIT:
@@ -168,7 +172,7 @@ void ParsePacket(void) {
 		// bit 2: PAN Broadcast
 		length = rxData[IDX_LENGTH_LSB] - 5;	// RF Data Length
 		for (i = 0; i < length; i++) {
-			ParseFirmataMessage(rxData[IDX_RF_DATA + i]);
+			parseFirmataMessage(rxData[IDX_RF_DATA + i]);
 		}
 		break;
 	case TX_STATUS_MESSAGE:
@@ -220,8 +224,55 @@ void ParsePacket(void) {
 	}
 }
 
-void ParseFirmataMessage(BYTE inputData) {
+void attach(BYTE command, void* myHandler)
+{
+	switch (command) {
+	case ANALOG_MESSAGE:
+		pAnalogMessageHandler = myHandler;
+		break;
+	case DIGITAL_MESSAGE:
+		pDigitalMessageHandler = myHandler;
+		break;
+	case REPORT_ANALOG:
+		pReportAnalogHandler = myHandler;
+		break;
+	case REPORT_DIGITAL:
+		pReportDigitalHandler = myHandler;
+		break;
+	case SET_PIN_MODE:
+		pSetPinModeHandler = myHandler;
+		break;
+	default:
+		break;
+	}
+}
+
+void detach(BYTE command)
+{
+	switch (command) {
+	case ANALOG_MESSAGE:
+		pAnalogMessageHandler = NULL;
+		break;
+	case DIGITAL_MESSAGE:
+		pDigitalMessageHandler = NULL;
+		break;
+	case REPORT_ANALOG:
+		pReportAnalogHandler = NULL;
+		break;
+	case REPORT_DIGITAL:
+		pReportDigitalHandler = NULL;
+		break;
+	case SET_PIN_MODE:
+		pSetPinModeHandler = NULL;
+		break;
+	default:
+		break;
+	}
+}
+
+void parseFirmataMessage(BYTE inputData) {
 	BYTE command = 0;
+	WORD value = 0;
 	
 	if (bytesToReceive > 0 & inputData < 128) {
 		bytesToReceive--;
@@ -229,26 +280,30 @@ void ParseFirmataMessage(BYTE inputData) {
 		if ((executeMultiByteCommand != 0) && (bytesToReceive == 0)) {
  			switch (executeMultiByteCommand) {
 			case ANALOG_MESSAGE:
-				analogData[multiByteChannel] = (BYTE)((storedInputData[0] << 7) + storedInputData[1]);
+				if (pAnalogMessageHandler != NULL) {
+					value = (BYTE)((storedInputData[0] << 7) + storedInputData[1]);
+					pAnalogMessageHandler(multiByteChannel, value);
+				}
 				break;
 			case DIGITAL_MESSAGE:
-				SetDigitalOutputs((WORD)((storedInputData[0] << 7) + storedInputData[1])); //(LSB, MSB)
+				if (pDigitalMessageHandler != NULL) {
+					value = (WORD)((storedInputData[0] << 7) + storedInputData[1]);
+					pDigitalMessageHandler(0, value);
+				}
 				break;
 			case SET_DIGITAL_PIN_MODE:
-				setDigitalPinMode(storedInputData[1], storedInputData[0]); // (pin#, mode)
-				if(storedInputData[0] == IN) {
-					digitalInputsEnabled = TRUE; // enable reporting of digital inputs
+				if (pSetPinModeHandler != NULL) {
+					pSetPinModeHandler(storedInputData[1], storedInputData[0]); // (pin#, mode)
 				}
 				break;
 			case REPORT_ANALOG_PIN:
-				setAnalogPinReporting(multiByteChannel,storedInputData[0]);
+				if (pReportAnalogHandler != NULL) {
+					pReportAnalogHandler(multiByteChannel, storedInputData[0]);
+				}
 				break;
 			case REPORT_DIGITAL_PORTS:
-				// TODO: implement MIDI channel as port base for more than 16 digital inputs
-				if(storedInputData[0] == 0) {
-					digitalInputsEnabled = FALSE;
-				} else {
-					digitalInputsEnabled = TRUE;
+				if (pReportDigitalHandler != NULL) {
+					pReportDigitalHandler(multiByteChannel, storedInputData[0]);
 				}
 				break;
 			default:
@@ -280,7 +335,7 @@ void ParseFirmataMessage(BYTE inputData) {
 			// this doesn't do anything yet
 			break;
 		case REPORT_VERSION:
-			// this doesn't do anything yet
+			printVersion();
 			break;
 		default:
 			break;
@@ -288,20 +343,7 @@ void ParseFirmataMessage(BYTE inputData) {
 	}	
 }
 
-void SetDigitalOutputs(WORD newState)
-{
-	BYTE i;
-	WORD mask;
-
-	for (i = 0; i < TOTAL_DIGITAL_PINS; ++i) {
-		mask = 1 << i;
-		if (!(pwmStatus & mask)) {
-			digitalWrite(i, (BOOL)(newState & mask ? TRUE : FALSE));
-		}
-	}
-}
-
-void SendTransmitRequest(WORD destAddress, BYTE rfDataLength) {
+void sendTransmitRequest(WORD destAddress, BYTE rfDataLength) {
 	BYTE frameDataLength = 5 + rfDataLength;
 	BYTE idx = 0;
 	
@@ -313,10 +355,10 @@ void SendTransmitRequest(WORD destAddress, BYTE rfDataLength) {
 	for (idx = 0; idx < rfDataLength; idx++) {
 		frameData[5 + idx] = rfData[idx];
 	}
-	SendCommand(frameDataLength);
+	sendCommand(frameDataLength);
 }
 
-void SendCommand(BYTE frameDataLength) {
+void sendCommand(BYTE frameDataLength) {
 	WORD sum = 0;
 	BYTE length = 0;
 	BYTE escaped = 0;
@@ -349,73 +391,4 @@ void SendCommand(BYTE frameDataLength) {
 	txLength = length + 4;
 
 	UART_Write(txBuffer, txLength);
-}
-
-void digitalWrite(BYTE pin, BOOL isHigh)
-{
-	switch (pin) {
-		case 0:
-			if (isHigh) SET_DOUT_0_H(); else SET_DOUT_0_L();
-			break;
-		case 1:
-			if (isHigh) SET_DOUT_1_H(); else SET_DOUT_1_L();
-			break;
-		case 2:
-			if (isHigh) SET_DOUT_2_H(); else SET_DOUT_2_L();
-			break;
-		case 3:
-			if (isHigh) SET_DOUT_3_H(); else SET_DOUT_3_L();
-			break;
-		case 4:
-			if (isHigh) SET_DOUT_4_H(); else SET_DOUT_4_L();
-			break;
-		case 5:
-			if (isHigh) SET_DOUT_5_H(); else SET_DOUT_5_L();
-			break;
-		case 6:
-			if (isHigh) SET_DOUT_6_H(); else SET_DOUT_6_L();
-			break;
-		case 7:
-			if (isHigh) SET_DOUT_7_H(); else SET_DOUT_7_L();
-			break;
-		case 9:
-			if (isHigh) SET_LED_H(); else SET_LED_L();
-			break;
-		default:
-			break;
-	}
-}
-
-void　analogWrite(BYTE pin, BYTE value)
-{
-	switch (pin) {
-		case 0:
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		case 5:
-			break;
-		case 6:
-			break;
-		case 7:
-			break;
-		default:
-			break;
-	}
-}
-
-void setDigitalPinMode(BYTE pin, BYTE mode)
-{
-
-}
-
-void setAnalogPinReporting(BYTE pin, BOOL enabled)
-{
-
 }
