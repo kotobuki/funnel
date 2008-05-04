@@ -1,7 +1,5 @@
 $: << '../..'
 
-include_class 'processing.core.PConstants'
-
 require 'funnel'
 include Funnel
 
