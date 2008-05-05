@@ -48,6 +48,8 @@ module Funnel
       @dout_ports = config.dout_ports
       @button = config.button
       @led = config.led
+
+      button.filters = [SetPoint.new(0.5, 0)] unless @button == nil
     end
 
     def analog_input(number)
