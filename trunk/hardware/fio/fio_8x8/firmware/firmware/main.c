@@ -10,11 +10,15 @@
 
 WORD adcData[TOTAL_ANALOG_PINS];
 WORD dioStatus = 0x0000;
+WORD analogPinsToReport = 0x00FF;	// ain 0-7
+WORD digitalPinsToReport = 0x0100;	// button pin only
 
 // prototypes of event handlers
 void analogMessageHandler(BYTE pin, WORD value);
 void digitalMessageHandler(BYTE pin, WORD value);
 void setPinModeHandler(BYTE pin, WORD value);
+void reportAnalogHandler(BYTE pin, WORD state);
+void reportDigitalHandler(BYTE pin, WORD state);
 
 void updateInputs(void);
 
@@ -64,19 +68,39 @@ void setup()
 	PWM8_6_Start();
 	PWM8_7_Start();
 
-	attach(ANALOG_MESSAGE, analogMessageHandler);
-	attach(DIGITAL_MESSAGE, digitalMessageHandler);
-	begin();
+	Firmata_attach(ANALOG_MESSAGE, analogMessageHandler);
+	Firmata_attach(DIGITAL_MESSAGE, digitalMessageHandler);
+	Firmata_attach(REPORT_ANALOG, reportAnalogHandler);
+	Firmata_attach(REPORT_DIGITAL, reportDigitalHandler);
+	Firmata_begin();
 }
 
 void loop(void)
 {
-	if (available()) {
-		processInput();
+	BYTE analogPin = 0;
+	BYTE digitalPin = 0;
+	
+	if (Firmata_available()) {
+		Firmata_processInput();
 	}
 
 	updateInputs();
+#if 0
+	// NOTE: This is not a Firmata way to report status
 	reportIOStatus(dioStatus, adcData, TOTAL_ANALOG_PINS);
+#else
+	Firmata_beginPacket();
+
+	for (analogPin = 0; analogPin < TOTAL_ANALOG_PINS; analogPin++) {
+		if (analogPinsToReport & (1 << analogPin)) {
+			Firmata_sendAnalog(analogPin, adcData[analogPin]);
+		}
+	}
+
+	Firmata_sendDigitalPort(0, dioStatus);
+
+	Firmata_endPacket();
+#endif
 }
 
 void main()
@@ -104,11 +128,11 @@ void updateInputs(void)
 		adcData[muxNumToChNumTbl[channel]] = ADC_iGetDataClearFlag();
 	}
 
-	// just for testing
+	// TODO: Implement for the other pins
 	if (GET_BUTTON()) {
-		dioStatus = 0x0100;	// button is the 8th digital input
+		dioStatus = dioStatus | 0x0100;		// button is the 8th digital input
 	} else {
-		dioStatus = 0x0000;	// button is the 8th digital input
+		dioStatus = dioStatus &~ 0x0100;	// button is the 8th digital input
 	}
 }
 
@@ -146,17 +170,6 @@ void analogMessageHandler(BYTE pin, WORD value)
 
 void digitalMessageHandler(BYTE pin, WORD isHigh)
 {
-/*
-	BYTE i;
-	WORD mask;
-
-	for (i = 0; i < TOTAL_DIGITAL_PINS; ++i) {
-		mask = 1 << i;
-		if (!(pwmStatus & mask)) {
-			digitalWrite(i, (BOOL)(newState & mask ? TRUE : FALSE));
-		}
-	}
-*/
 	switch (pin) {
 	case 0:
 		if (isHigh) SET_DOUT_0_H(); else SET_DOUT_0_L();
@@ -193,4 +206,22 @@ void digitalMessageHandler(BYTE pin, WORD isHigh)
 void setPinModeHandler(BYTE pin, WORD value)
 {
 	// NOTE: TO BE IMPLEMENTED!!!
+}
+
+void reportAnalogHandler(BYTE pin, WORD state)
+{
+	if (state == 0) {
+		analogPinsToReport = analogPinsToReport &~ (1 << pin);
+	} else {
+		analogPinsToReport = analogPinsToReport | (1 << pin);
+	}
+}
+
+void reportDigitalHandler(BYTE pin, WORD state)
+{
+	if (state == 0) {
+		digitalPinsToReport = digitalPinsToReport &~ (1 << pin);
+	} else {
+		digitalPinsToReport = digitalPinsToReport | (1 << pin);
+	}
 }

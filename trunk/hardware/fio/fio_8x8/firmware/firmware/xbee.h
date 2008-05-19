@@ -20,31 +20,36 @@ enum {
 };
 
 // start the library
-void begin(void);
+void Firmata_begin(void);
 
 // send the protocol version to the host computer
-void printVersion(void);
+void Firmata_printVersion(void);
 
 // check to see if there are any incoming messages in the buffer
-BOOL available(void);
+BOOL Firmata_available(void);
 
 // process incoming messages from the buffer, sending the data to any registered callback functions
-void processInput(void);
+void Firmata_processInput(void);
 
 // attach a function to an incoming message type
-void attach(BYTE command, void* myHandler);
+void Firmata_attach(BYTE command, void* myHandler);
 
 // detach a function from an incoming message type
-void detach(BYTE command);
+void Firmata_detach(BYTE command);
 
-/*
 // send an analog message
-void sendAnalog(BYTE pin, WORD value);
+void Firmata_sendAnalog(BYTE pin, WORD value);
 
 // send digital ports as individual bytes
-void sendDigitalPorts(BYTE pin, BYTE firstPort, BYTE secondPort);
-*/
+void Firmata_sendDigitalPort(BYTE port, WORD portData);
 
-// NOTE: TO BE MODIFIED!?
+// begin a packet
+// NOTE: Original extention for FIO 8x8 to support XBee API mode 2
+void Firmata_beginPacket(void);
+
+// close and send a packet
+// NOTE: Original extention for FIO 8x8 to support XBee API mode 2
+void Firmata_endPacket(void);
+
 // This is non-Firmata library standard API
 void reportIOStatus(WORD dioStatus, WORD *adcStatus, BYTE adcChannels);

@@ -34,6 +34,7 @@ void (*pReportAnalogHandler)(BYTE pin, WORD value) = NULL;
 void (*pReportDigitalHandler)(BYTE pin, WORD value) = NULL;
 void (*pSetPinModeHandler)(BYTE pin, WORD value) = NULL;
 
+BYTE rfDataIdx = 0;
 BYTE rfData[128];
 BYTE frameData[128];
 BYTE txBuffer[128];
@@ -61,6 +62,7 @@ WORD rxSum = 0;
 void parseFirmataMessage(BYTE inputData);
 void sendTransmitRequest(WORD destAddress, BYTE rfDataLength);
 void sendCommand(BYTE frameDataLength);
+void putByteToPacket(BYTE data);
 
 // variables for Firmata like message parser
 BYTE bytesToReceive = 0;
@@ -71,7 +73,7 @@ BYTE multiByteChannel = 0;
 
 BOOL hasPacketToHandle = FALSE;
 
-void begin()
+void Firmata_begin()
 {
 	// Nothing to do!?
 }
@@ -79,7 +81,7 @@ void begin()
 #define FIRMATA_MAJOR_VERSION   1 // for non-compatible changes
 #define FIRMATA_MINOR_VERSION   0 // for backwards compatible changes
 
-void printVersion(void)
+void Firmata_printVersion(void)
 {
 	rfData[0] = REPORT_VERSION;
 	rfData[1] = (BYTE)FIRMATA_MAJOR_VERSION;
@@ -87,7 +89,7 @@ void printVersion(void)
 	sendTransmitRequest(0x0000, 3);
 }
 
-BOOL available(void)
+BOOL Firmata_available(void)
 {
 	return hasPacketToHandle;
 }
@@ -157,7 +159,7 @@ void UART_TX_ISR()
 
 }
 
-void processInput(void)
+void Firmata_processInput(void)
 {
 	BYTE length = 0;
 	BYTE i = 0;
@@ -224,7 +226,7 @@ void processInput(void)
 	}
 }
 
-void attach(BYTE command, void* myHandler)
+void Firmata_attach(BYTE command, void* myHandler)
 {
 	switch (command) {
 	case ANALOG_MESSAGE:
@@ -247,7 +249,7 @@ void attach(BYTE command, void* myHandler)
 	}
 }
 
-void detach(BYTE command)
+void Firmata_detach(BYTE command)
 {
 	switch (command) {
 	case ANALOG_MESSAGE:
@@ -268,6 +270,32 @@ void detach(BYTE command)
 	default:
 		break;
 	}
+}
+
+void Firmata_sendAnalog(BYTE pin, WORD value) {
+	putByteToPacket(ANALOG_MESSAGE | (pin & 0xF));
+	putByteToPacket((BYTE)(value % 0x80));	// MSB
+	putByteToPacket((BYTE)(value >> 7));	// LSB
+}
+
+void Firmata_sendDigitalPort(BYTE port, WORD portData) {
+	putByteToPacket(DIGITAL_MESSAGE | (port & 0xF));
+	putByteToPacket((BYTE)(portData % 0x80));	// Tx bits 0-6
+	putByteToPacket((BYTE)(portData >> 7));		// Tx bits 7-13
+}
+
+void Firmata_beginPacket(void) {
+	rfDataIdx = 0;
+}
+
+void Firmata_endPacket(void) {
+	// send the message to the coordinator of the PAN
+	sendTransmitRequest(0x0000, rfDataIdx);
+}
+
+void putByteToPacket(BYTE data) {
+	rfData[rfDataIdx] = data;
+	rfDataIdx++;
 }
 
 void parseFirmataMessage(BYTE inputData) {
@@ -335,7 +363,7 @@ void parseFirmataMessage(BYTE inputData) {
 			// this doesn't do anything yet
 			break;
 		case REPORT_VERSION:
-			printVersion();
+			Firmata_printVersion();
 			break;
 		default:
 			break;
