@@ -7,6 +7,9 @@
 #pragma interrupt_handler UART_RX_ISR
 #pragma interrupt_handler UART_TX_ISR
 
+/*
+ * XBee Related Definitions
+ */
 #define FRAME_DELIMITER	(0x7E)
 #define ESCAPE			(0x7D)
 #define XON				(0x11)
@@ -27,6 +30,13 @@ const BYTE IDX_RF_DATA = 8;
 const BYTE IDX_IO_ENABLE_MSB = 9;
 const BYTE IDX_IO_ENABLE_LSB = 10;
 const BYTE IDX_IO_STATUS_START = 11;
+
+
+/*
+ * Firmata Related Definitions
+ */
+#define FIRMATA_MAJOR_VERSION   1 // for non-compatible changes
+#define FIRMATA_MINOR_VERSION   0 // for backwards compatible changes
 
 void (*pAnalogMessageHandler)(BYTE pin, WORD value) = NULL;
 void (*pDigitalMessageHandler)(BYTE pin, WORD value) = NULL;
@@ -67,19 +77,15 @@ void putByteToPacket(BYTE data);
 // variables for Firmata like message parser
 BYTE bytesToReceive = 0;
 BYTE storedInputData[MAX_DATA_BYTES + 1];
-
 BYTE executeMultiByteCommand = 0;
 BYTE multiByteChannel = 0;
-
 BOOL hasPacketToHandle = FALSE;
+
 
 void Firmata_begin()
 {
 	// Nothing to do!?
 }
-
-#define FIRMATA_MAJOR_VERSION   1 // for non-compatible changes
-#define FIRMATA_MINOR_VERSION   0 // for backwards compatible changes
 
 void Firmata_printVersion(void)
 {
@@ -92,71 +98,6 @@ void Firmata_printVersion(void)
 BOOL Firmata_available(void)
 {
 	return hasPacketToHandle;
-}
-
-void reportIOStatus(WORD dioStatus, WORD *adcStatus, BYTE adcChannels)
-{
-	BYTE i = 0;
-	BYTE idx = 0;
-
-	// NOTE: modify here to report more than 14 digital pins
-	rfData[0] = DIGITAL_MESSAGE;
-	rfData[1] = (BYTE)(dioStatus % 0x80);
-	rfData[2] = (BYTE)(dioStatus >> 7);
-	idx = 3;
-
-	for (i = 0; i < adcChannels; i++) {
-		rfData[idx] = ANALOG_MESSAGE + i;			// analog in: 0xE0 - 0xEF
-		idx++;
-		rfData[idx] = (BYTE)(adcStatus[i] % 0x80);	// analog in value (LSB)
-		idx++;
-		rfData[idx] = (BYTE)(adcStatus[i] >> 7);	// analog in value (MSB)
-		idx++;
-	}
-	// send the message to the coordinator of the PAN
-	sendTransmitRequest(0x0000, idx);
-}
-
-void UART_RX_ISR()
-{
-	BYTE inputData = UART_bReadRxData();
-	if (inputData == FRAME_DELIMITER) {
-		rxIndex = 0;
-		rxSum = 0;
-		wasEscaped = FALSE;
-		rxData[rxIndex] = inputData;
-	} else if (inputData == ESCAPE) {
-		wasEscaped = TRUE;
-	} else {
-		rxIndex++;
-		if (wasEscaped) {
-			rxData[rxIndex] = (inputData ^ 0x20);
-			wasEscaped = FALSE;
-		} else {
-			rxData[rxIndex] = inputData;
-		}
-		if (rxIndex == IDX_LENGTH_LSB) {
-			// [START][LENGTH MSB][LENGTH LSB][FRAME DATA][CHECKSUM]
-			rxBytesToReceive = (rxData[1] << 8) + rxData[2] + 4;
-		} else if (rxIndex == (rxBytesToReceive - 1)) {
-#if 0
-			if ((rxSum & 0xFF) + rxData[rxBytesToReceive - 1] == 0xFF) {
-#else
-			// ignore checksum (FOR TESTING USE ONLY)
-			if (1) {
-#endif
-				hasPacketToHandle = TRUE;
-			}
-		} else if (rxIndex > 2) {
-			rxSum += rxData[rxIndex];
-		}
-	}
-}
-
-// just to inhibit "multiple define: '_UART_RX_ISR'" error
-void UART_TX_ISR()
-{
-
 }
 
 void Firmata_processInput(void)
@@ -293,10 +234,73 @@ void Firmata_endPacket(void) {
 	sendTransmitRequest(0x0000, rfDataIdx);
 }
 
-void putByteToPacket(BYTE data) {
-	rfData[rfDataIdx] = data;
-	rfDataIdx++;
+
+void reportIOStatus(WORD dioStatus, WORD *adcStatus, BYTE adcChannels)
+{
+	BYTE i = 0;
+	BYTE idx = 0;
+
+	// NOTE: modify here to report more than 14 digital pins
+	rfData[0] = DIGITAL_MESSAGE;
+	rfData[1] = (BYTE)(dioStatus % 0x80);
+	rfData[2] = (BYTE)(dioStatus >> 7);
+	idx = 3;
+
+	for (i = 0; i < adcChannels; i++) {
+		rfData[idx] = ANALOG_MESSAGE + i;			// analog in: 0xE0 - 0xEF
+		idx++;
+		rfData[idx] = (BYTE)(adcStatus[i] % 0x80);	// analog in value (LSB)
+		idx++;
+		rfData[idx] = (BYTE)(adcStatus[i] >> 7);	// analog in value (MSB)
+		idx++;
+	}
+	// send the message to the coordinator of the PAN
+	sendTransmitRequest(0x0000, idx);
 }
+
+
+void UART_RX_ISR()
+{
+	BYTE inputData = UART_bReadRxData();
+	if (inputData == FRAME_DELIMITER) {
+		rxIndex = 0;
+		rxSum = 0;
+		wasEscaped = FALSE;
+		rxData[rxIndex] = inputData;
+	} else if (inputData == ESCAPE) {
+		wasEscaped = TRUE;
+	} else {
+		rxIndex++;
+		if (wasEscaped) {
+			rxData[rxIndex] = (inputData ^ 0x20);
+			wasEscaped = FALSE;
+		} else {
+			rxData[rxIndex] = inputData;
+		}
+		if (rxIndex == IDX_LENGTH_LSB) {
+			// [START][LENGTH MSB][LENGTH LSB][FRAME DATA][CHECKSUM]
+			rxBytesToReceive = (rxData[1] << 8) + rxData[2] + 4;
+		} else if (rxIndex == (rxBytesToReceive - 1)) {
+#if 0
+			if ((rxSum & 0xFF) + rxData[rxBytesToReceive - 1] == 0xFF) {
+#else
+			// ignore checksum (FOR TESTING USE ONLY)
+			if (1) {
+#endif
+				hasPacketToHandle = TRUE;
+			}
+		} else if (rxIndex > 2) {
+			rxSum += rxData[rxIndex];
+		}
+	}
+}
+
+// just to inhibit "multiple define: '_UART_RX_ISR'" error
+void UART_TX_ISR()
+{
+
+}
+
 
 void parseFirmataMessage(BYTE inputData) {
 	BYTE command = 0;
@@ -419,4 +423,9 @@ void sendCommand(BYTE frameDataLength) {
 	txLength = length + 4;
 
 	UART_Write(txBuffer, txLength);
+}
+
+void putByteToPacket(BYTE data) {
+	rfData[rfDataIdx] = data;
+	rfDataIdx++;
 }
