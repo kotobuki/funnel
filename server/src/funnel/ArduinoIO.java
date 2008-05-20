@@ -12,8 +12,6 @@
 package funnel;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -30,59 +28,7 @@ import gnu.io.SerialPortEventListener;
  * @author kotobuki
  * 
  */
-public class ArduinoIO extends IOModule implements SerialPortEventListener {
-	private static final int ARD_TOTAL_ANALOG_PINS = 6;
-	private static final int ARD_TOTAL_DIGITAL_PINS = 14;
-	private static final int ARD_TOTAL_PINS = ARD_TOTAL_ANALOG_PINS
-			+ ARD_TOTAL_DIGITAL_PINS;
-	private static final int ARD_MAX_DATA_BYTES = 3;
-
-	private static final int ARD_ANALOG_MESSAGE = 0xE0;
-	private static final int ARD_DIGITAL_MESSAGE = 0x90;
-	private static final int ARD_REPORT_ANALOG_PIN = 0xC0;
-	private static final int ARD_REPORT_DIGITAL_PORTS = 0xD0;
-	private static final int ARD_SET_DIGITAL_PIN_MODE = 0xF4;
-	private static final int ARD_REPORT_VERSION = 0xF9;
-	private static final int ARD_SYSTEM_RESET = 0xFF;
-
-	private static final int ARD_PIN_MODE_IN = 0x00;
-	private static final int ARD_PIN_MODE_OUT = 0x01;
-	private static final int ARD_PIN_MODE_PWM = 0x02;
-	private static final int ARD_PIN_MODE_AIN = 0x03;
-
-	private static final int[] aoutAvailablePorts = new int[] { 9, 11, 12, 15,
-			16, 17 };
-
-	private SerialPort port;
-	private InputStream input;
-	private OutputStream output;
-
-	private final int rate = 57600;
-	private final int parity = SerialPort.PARITY_NONE;
-	private final int databits = 8;
-	private final int stopbits = SerialPort.STOPBITS_1;
-
-	// data processing variables
-	private int bytesToReceive = 0;
-	private int executeMultiByteCommand = 0;
-	private int multiByteChannel = 0;
-
-	// data
-	private int[] storedInputData = new int[ARD_MAX_DATA_BYTES];
-	private float[] analogData = new float[ARD_TOTAL_ANALOG_PINS];
-	private float[] digitalData = new float[ARD_TOTAL_DIGITAL_PINS];
-	private int[] pinMode = new int[ARD_TOTAL_PINS];
-	private int[] firmwareVersion = new int[ARD_MAX_DATA_BYTES];
-	private int digitalPins = 0;
-
-	private funnel.PortRange analogPortRange;
-	private funnel.PortRange digitalPortRange;
-	private Vector dinPortChunks;
-
-	private final Float FLOAT_ZERO = new Float(0.0f);
-
-	private funnel.BlockingQueue firmwareVersionQueue;
-
+public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 	public ArduinoIO(FunnelServer server, String serialPortName) {
 		this.parent = server;
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
@@ -276,72 +222,11 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 			try {
 				while (input.available() > 0) {
 					int inputData = input.read();
-					int command = 0;
-
-					if (inputData < 0)
-						inputData = 256 + inputData;
-
-					// we have data
-					if (bytesToReceive > 0 && inputData < 128) {
-						bytesToReceive--;
-
-						storedInputData[bytesToReceive] = inputData;
-
-						if ((executeMultiByteCommand != 0)
-								&& (bytesToReceive == 0)) {
-							// we got everything
-							switch (executeMultiByteCommand) {
-							case ARD_DIGITAL_MESSAGE:
-								processDigitalBytes(storedInputData[1],
-										storedInputData[0]); // (LSB, MSB)
-								break;
-							case ARD_REPORT_VERSION: // Report version
-								firmwareVersion[0] = storedInputData[0]; // major
-								firmwareVersion[1] = storedInputData[1]; // minor
-								firmwareVersion[2] = 0;
-								printMessage(Messages
-										.getString("IOModule.FirmwareVesrion") //$NON-NLS-1$
-										+ firmwareVersion[0] + "." //$NON-NLS-1$
-										+ firmwareVersion[1] + "." //$NON-NLS-1$
-										+ firmwareVersion[2]);
-								firmwareVersionQueue.push(new String(""));
-								break;
-							case ARD_ANALOG_MESSAGE:
-								analogData[multiByteChannel] = (float) ((storedInputData[0] << 7) | storedInputData[1]) / 1023.0f;
-								break;
-							}
-
-						}
-					}
-
-					// we have a command
-					else {
-
-						// remove channel info from command byte if less than
-						// 0xF0
-						if (inputData < 240) {
-							command = inputData & 240;
-							multiByteChannel = inputData & 15;
-						} else {
-							// commands in the 0xF* range don't use channel data
-							command = inputData;
-						}
-
-						switch (command) {
-						case ARD_REPORT_VERSION:
-						case ARD_DIGITAL_MESSAGE:
-						case ARD_ANALOG_MESSAGE:
-							bytesToReceive = 2; // 3 bytes needed
-							executeMultiByteCommand = command;
-							break;
-						}
-
-					}
+					processInput(inputData);
 				}
 			} catch (IOException e) {
 
 			}
-
 		}
 	}
 
@@ -524,66 +409,7 @@ public class ArduinoIO extends IOModule implements SerialPortEventListener {
 		disableDigitalPinReporting();
 	}
 
-	private void processDigitalBytes(int pin0_6, int pin7_13) {
-		int mask;
-		int twoBytesForPorts;
-
-		// this should be converted to use PORTs (?)
-		twoBytesForPorts = pin0_6 + (pin7_13 << 7);
-
-		// ignore Rx,Tx pins (0 and 1)
-		for (int i = 2; i < ARD_TOTAL_DIGITAL_PINS; ++i) {
-			mask = 1 << i;
-			digitalData[i] = (float) ((twoBytesForPorts & mask) >> i);
-		}
-	}
-
-	private void setAnalogPinReporting(int pin, int mode) {
-		writeByte(ARD_REPORT_ANALOG_PIN + pin);
-		writeByte(mode);
-	}
-
-	private void enableDigitalPinReporting() {
-		writeByte(ARD_REPORT_DIGITAL_PORTS);
-		writeByte(1);
-	}
-
-	private void disableDigitalPinReporting() {
-		writeByte(ARD_REPORT_DIGITAL_PORTS);
-		writeByte(0);
-	}
-
-	private void setPinMode(int pin, int mode) {
-		writeByte(ARD_SET_DIGITAL_PIN_MODE);
-		writeByte(pin);
-		writeByte(mode);
-	}
-
-	private void digitalWrite(int pin, int mode) {
-		int bitMask = 1 << pin;
-
-		if (mode == 1) {
-			digitalPins |= bitMask;
-		} else if (mode == 0) {
-			digitalPins &= ~bitMask;
-		}
-
-		writeByte(ARD_DIGITAL_MESSAGE);
-		writeByte(digitalPins % 128); // Tx pins 0-6
-		writeByte(digitalPins >> 7); // Tx pins 7-13
-	}
-
-	private void analogWrite(int pin, float value) {
-		int intValue = Math.round(value * 255.0f);
-		intValue = (intValue < 0) ? 0 : intValue;
-		intValue = (intValue > 255) ? 255 : intValue;
-
-		writeByte(ARD_ANALOG_MESSAGE + pin);
-		writeByte(intValue % 128);
-		writeByte(intValue >> 7);
-	}
-
-	private void writeByte(int data) {
+	void writeByte(int data) {
 		try {
 			output.write((byte) data);
 			output.flush();
