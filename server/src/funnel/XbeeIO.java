@@ -28,6 +28,9 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private static final int IDX_IO_ENABLE_MSB = 9;
 	private static final int IDX_IO_ENABLE_LSB = 10;
 	private static final int IDX_IO_STATUS_START = 11;
+	private static final int IDX_PACKET_OPTIONS = 7;
+	private static final int IDX_PACKET_RF_DATA = 8;
+	private static final int RX_PACKET_16_BIT = 0x81;
 	private static final int RX_IO_STATUS_16BIT = 0x83;
 	private static final int AT_COMMAND_RESPONSE = 0x88;
 	private static final int TX_STATUS_MESSAGE = 0x89;
@@ -39,7 +42,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private static final int MAX_NODES = 65535;
 	private static final int MAX_FRAME_SIZE = 100;
 
-	// private final Float FLOAT_ZERO = new Float(0.0f);
+	private final Float FLOAT_ZERO = new Float(0.0f);
 
 	private boolean wasEscaped = false;
 	private int rxIndex = 0;
@@ -48,8 +51,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 	private int rxSum = 0;
 	private float[][] inputData = new float[MAX_NODES][MAX_IO_PORT];
 	private int[] rssi = new int[MAX_NODES];
-
-	// private funnel.BlockingQueue aoutCommandQueue;
 
 	private SerialPort port;
 	private InputStream input;
@@ -69,12 +70,11 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		this.parent = server;
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 		dioPortRange = new funnel.PortRange();
-		dioPortRange.setRange(0, 9); // 8 ports (XBS1), 10 ports (XBS2)
+		dioPortRange.setRange(0, 17); // 8 ports (XBS1), 10 ports (XBS2), 18
+		// ports (FIO 8x8)
 		pwmPortRange = new funnel.PortRange();
 		pwmPortRange.setRange(10, 13); // 4 ports
 		nodes = new Hashtable();
-
-		// aoutCommandQueue = new funnel.BlockingQueue();
 
 		try {
 			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
@@ -163,7 +163,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 			arguments[0] = id;
 			arguments[1] = new Integer(0);
 			// NOTE: Update here to support XBee ZNet 2.5
-			for (int i = 0; i < 8; i++) {	// was "i < MAX_IO_PORT"
+			for (int i = 0; i < 8; i++) { // was "i < MAX_IO_PORT"
 				arguments[2 + i] = new Float(inputData[id.intValue()][i]);
 			}
 			bundle.addPacket(new OSCMessage("/in", arguments)); //$NON-NLS-1$
@@ -225,9 +225,11 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 			int index = 2 + i;
 			if (arguments[index] != null && arguments[index] instanceof Float) {
 				if (dioPortRange.contains(port)) {
-					// digitalWrite(port, FLOAT_ZERO.equals(arguments[index]) ?
-					// 0 : 1);
-					printMessage("NOT SUPPORTED: DO for " + port);
+					// TODO: This is a temporal implementation.
+					// TODO: Update this class to handle Firmata messages
+					digitalWrite(moduleId, port - 8, FLOAT_ZERO
+							.equals(arguments[index]) ? 0 : 1);
+					// printMessage("NOT SUPPORTED: DO for " + port);
 				} else if (pwmPortRange.contains(port)) {
 					analogWrite(moduleId, port, ((Float) arguments[index])
 							.floatValue());
@@ -300,7 +302,21 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 
 	private void parseData(int[] data, int bytes) {
 		switch ((int) data[IDX_API_IDENTIFIER]) {
-		case RX_IO_STATUS_16BIT:
+		case RX_PACKET_16_BIT: {
+			// {Source Address(MSB)}+{Source Address: LSB}+{RSSI}+{Options}+{RF
+			// Data}
+			int source = (data[IDX_SOURCE_ADDRESS_MSB] << 8)
+					+ data[IDX_SOURCE_ADDRESS_LSB];
+			rssi[source] = data[IDX_RSSI] * -1;
+			int options = data[IDX_PACKET_OPTIONS];
+			// parent.printMessage(new String("SOURCE:" + source + ", RSSI:"
+			// + rssi[source] + "dB" + ", bytes:"
+			// + Integer.toHexString(data[IDX_PACKET_RF_DATA]) + ","
+			// + Integer.toHexString(data[IDX_PACKET_RF_DATA + 1]) + ","
+			// + Integer.toHexString(data[IDX_PACKET_RF_DATA + 2])));
+		}
+			break;
+		case RX_IO_STATUS_16BIT: {
 			int source = (data[IDX_SOURCE_ADDRESS_MSB] << 8)
 					+ data[IDX_SOURCE_ADDRESS_LSB];
 			rssi[source] = data[IDX_RSSI] * -1;
@@ -345,6 +361,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 			}
 			// parent.printMessage(new String("SOURCE:" + source + ", RSSI:"
 			// + rssi[source] + "dB"));
+		}
 			break;
 		case AT_COMMAND_RESPONSE:
 			// Networking Identification Command (ND)
@@ -423,7 +440,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 			default:
 				break;
 			}
-			// aoutCommandQueue.push(new Integer(data[IDX_API_IDENTIFIER + 2]));
 			break;
 		case MODEM_STATUS:
 			// {0x7E}+{0x00+0x02}+{0x8A}+{cmdData}+{sum}
@@ -461,60 +477,26 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 		}
 	}
 
-	// private void digitalWrite(int pin, int mode) {
-	// // parent.printMessage("digitalWrite(" + pin + ", " + mode + ")");
-	// int bitMask = 1 << pin;
-	// int outData = 0;
-	//
-	// if (mode == 1) {
-	// outData = 1 << pin;
-	// }
-	//
-	// byte[] rfData = new byte[14];
-	// rfData[0] = 0x7E; // Frame Delimiter
-	// rfData[1] = 0x00; // Length MSB
-	// rfData[2] = 0x0A; // Length LSB
-	// rfData[3] = (byte) 0x83; // API ID
-	// rfData[4] = 0x00; // Source Address MSB
-	// rfData[5] = 0x01; // Source Address LSB
-	// rfData[6] = 0x20; // RSSI
-	// rfData[7] = 0x00; // Options
-	// rfData[8] = 0x01; // Samples
-	// rfData[9] = (byte) (bitMask >> 8); // I/O Enable MSB
-	// rfData[10] = (byte) (bitMask & 0xFF); // I/O Enable LSB
-	// rfData[11] = (byte) (outData >> 8); // I/O Status MSB
-	// rfData[12] = (byte) (outData & 0xFF); // I/O Status LSB
-	// int sum = 0;
-	// for (int i = 3; i < 13; i++) {
-	// sum += rfData[i];
-	// }
-	// rfData[13] = (byte) (0xFF - (sum & 0xFF));
-	// }
+	private void digitalWrite(int address, int pin, int mode) {
+		parent.printMessage("digitalWrite(" + pin + ", " + mode + ")");
+		int bitMask = 1 << pin;
+		// analog inputs
+		int outData = 0;
+
+		if (mode == 1) {
+			outData = outData | bitMask;
+		}
+
+		byte[] rfData = new byte[3];
+		rfData[0] = (byte) (0x90 + 0); // TODO: Support port value to handle
+		// more than 14 pins
+		rfData[1] = (byte) (outData % 128);
+		rfData[2] = (byte) (outData >> 7);
+
+		sendTransmitRequest(address, rfData);
+	}
 
 	private void analogWrite(int address, int pin, float value) {
-		// parent.printMessage("analogWrite(" + pin + ", " + value + ")");
-		// int intValue = Math.round(value * 1023.0f);
-		// intValue = (intValue < 0) ? 0 : intValue;
-		// intValue = (intValue > 1023) ? 1023 : intValue;
-
-		// byte[] rfData = new byte[12];
-		// rfData[0] = 0x7E; // Frame Delimiter
-		// rfData[1] = 0x00; // Length MSB
-		// rfData[2] = 0x08; // Length LSB
-		// rfData[3] = (byte) 0x08; // API ID
-		// rfData[4] = 0x01; // Frame ID
-		// rfData[5] = 'M'; // Source Address LSB
-		// rfData[6] = '0'; // RSSI
-		// rfData[7] = '0'; // Options
-		// rfData[8] = '3'; // Options
-		// rfData[9] = 'F'; // Samples
-		// rfData[10] = 'F'; // I/O Enable MSB
-		// int sum = 0;
-		// for (int i = 3; i < 11; i++) {
-		// sum += rfData[i];
-		// }
-		// rfData[11] = (byte) (0xFF - (sum & 0xFF));
-
 		int intValue = Math.round(value * 255.0f);
 		intValue = (intValue < 0) ? 0 : intValue;
 		intValue = (intValue > 255) ? 255 : intValue;
@@ -548,7 +530,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener {
 			outData[5 + i] = rfData[i];
 		}
 		sendCommand(outData);
-		// aoutCommandQueue.pop(50);
 	}
 
 	private void sendCommand(byte[] frameData) {
