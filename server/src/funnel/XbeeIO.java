@@ -22,8 +22,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 
 	private static final int MAX_NODES = 65535;
 
-	private final Float FLOAT_ZERO = new Float(0.0f);
-
 	private float[][] inputData = new float[MAX_NODES][MAX_IO_PORT];
 	private int[] rssi = new int[MAX_NODES];
 
@@ -197,26 +195,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 	}
 
 	public void setOutput(Object[] arguments) {
-		int moduleId = ((Integer) arguments[0]).intValue();
-		int start = ((Integer) arguments[1]).intValue();
-		for (int i = 0; i < (arguments.length - 2); i++) {
-			int port = start + i;
-			int index = 2 + i;
-			if (arguments[index] != null && arguments[index] instanceof Float) {
-				if (dioPortRange.contains(port)) {
-					// TODO: This is a temporal implementation.
-					// TODO: Update this class to handle Firmata messages
-					digitalWrite(moduleId, port - 8, FLOAT_ZERO
-							.equals(arguments[index]) ? 0 : 1);
-					// printMessage("NOT SUPPORTED: DO for " + port);
-				} else if (pwmPortRange.contains(port)) {
-					analogWrite(moduleId, port, ((Float) arguments[index])
-							.floatValue());
-				}
-			}
-		}
-		// NOTE: Output side control is not supported in XBee series 1
-		// TODO: Implement output control support for XBee series 2
 		return;
 	}
 
@@ -245,38 +223,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void digitalWrite(int address, int pin, int mode) {
-		parent.printMessage("digitalWrite(" + pin + ", " + mode + ")");
-		int bitMask = 1 << pin;
-		// analog inputs
-		int outData = 0;
-
-		if (mode == 1) {
-			outData = outData | bitMask;
-		}
-
-		byte[] rfData = new byte[3];
-		rfData[0] = (byte) (0x90 + 0); // TODO: Support port value to handle
-		// more than 14 pins
-		rfData[1] = (byte) (outData % 128);
-		rfData[2] = (byte) (outData >> 7);
-
-		xbee.sendTransmitRequest(address, rfData);
-	}
-
-	private void analogWrite(int address, int pin, float value) {
-		int intValue = Math.round(value * 255.0f);
-		intValue = (intValue < 0) ? 0 : intValue;
-		intValue = (intValue > 255) ? 255 : intValue;
-
-		byte[] rfData = new byte[3];
-		rfData[0] = (byte) (0xE0 + pin);
-		rfData[1] = (byte) (intValue % 128);
-		rfData[2] = (byte) (intValue >> 7);
-
-		xbee.sendTransmitRequest(address, rfData);
 	}
 
 	public void rxPacketEvent(int source, int rssi, int options, int[] data) {
