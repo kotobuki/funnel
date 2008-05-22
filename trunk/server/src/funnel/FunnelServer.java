@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 007 (2008-04-21)";
+	private static final String buildName = "Funnel 008 (2008-05-22)";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
@@ -127,9 +127,10 @@ public class FunnelServer extends Frame {
 			} else {
 				serialPort = modules.get("com").toString(); //$NON-NLS-1$
 			}
-			
+
 			if (modules.get("baudrate") != null) { //$NON-NLS-1$
-				baudRate = Integer.valueOf(modules.get("baudrate").toString()).intValue();
+				baudRate = Integer.valueOf(modules.get("baudrate").toString())
+						.intValue();
 			}
 		} catch (FileNotFoundException e) {
 			printMessage(Messages.getString("FunnelServer.NoSettingsFile")); //$NON-NLS-1$
@@ -144,7 +145,7 @@ public class FunnelServer extends Frame {
 		// //$NON-NLS-1$
 		// printMessage("serial port: " + serialPort); //$NON-NLS-1$
 
-		if (type.equalsIgnoreCase("Gainer")) { //$NON-NLS-1$
+		if (type.equalsIgnoreCase("gainer")) { //$NON-NLS-1$
 			try {
 				ioModule = new GainerIO(this, serialPort);
 				ioModule.reboot();
@@ -155,9 +156,9 @@ public class FunnelServer extends Frame {
 			} finally {
 				setTitle("Funnel Server: Gainer");
 			}
-		} else if (type.equalsIgnoreCase("Arduino")) { //$NON-NLS-1$
+		} else if (type.equalsIgnoreCase("arduino")) { //$NON-NLS-1$
 			try {
-				ioModule = new ArduinoIO(this, serialPort);
+				ioModule = new ArduinoIO(this, serialPort, 115200);
 				// Arduino Diecimila will reboot automatically
 			} catch (RuntimeException e) {
 				printMessage(Messages
@@ -166,18 +167,23 @@ public class FunnelServer extends Frame {
 			} finally {
 				setTitle("Funnel Server: Arduino");
 			}
-		} else if (type.equalsIgnoreCase("XBee") || type.equalsIgnoreCase("Fio")) { //$NON-NLS-1$
+		} else if (type.equalsIgnoreCase("xbee")) { //$NON-NLS-1$
 			try {
 				ioModule = new XbeeIO(this, serialPort, baudRate);
 			} catch (RuntimeException e) {
-				printMessage(Messages.getString("FunnelServer.CannotOpenXbee")); //$NON-NLS-1$
+				printMessage(Messages.getString("FunnelServer.CannotOpenXBee")); //$NON-NLS-1$
 				return;
 			} finally {
-				if (type.equalsIgnoreCase("XBee")) {
-					setTitle("Funnel Server: XBee");
-				} else {
-					setTitle("Funnel Server: Funnel I/O");
-				}
+				setTitle("Funnel Server: XBee");
+			}
+		} else if (type.equalsIgnoreCase("fio")) { //$NON-NLS-1$
+			try {
+				ioModule = new FunnelIO(this, serialPort, baudRate);
+			} catch (RuntimeException e) {
+				printMessage(Messages.getString("FunnelServer.CannotOpenFio")); //$NON-NLS-1$
+				return;
+			} finally {
+				setTitle("Funnel Server: Funnel I/O");
 			}
 		}
 

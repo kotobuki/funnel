@@ -19,7 +19,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 
 	// TODO: update this portion to support XBS2
 	private static final int MAX_IO_PORT = 9;
-
 	private static final int MAX_NODES = 65535;
 
 	private float[][] inputData = new float[MAX_NODES][MAX_IO_PORT];
@@ -34,22 +33,13 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 	private final int databits = 8;
 	private final int stopbits = SerialPort.STOPBITS_1;
 
-	private funnel.PortRange dioPortRange;
-	private funnel.PortRange pwmPortRange;
-
 	private Hashtable nodes;
-
 	private XBee xbee;
 
 	public XbeeIO(FunnelServer server, String serialPortName, int baudRate) {
 		this.parent = server;
+
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
-		dioPortRange = new funnel.PortRange();
-		dioPortRange.setRange(0, 17); 	// 8 ports (XBS1)
-										// 10 ports (XBS2)
-										// 18 ports (FIO 8x8)
-		pwmPortRange = new funnel.PortRange();
-		pwmPortRange.setRange(10, 13); // 4 ports
 		nodes = new Hashtable();
 
 		try {
@@ -82,17 +72,9 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 						parent.printMessage(Messages
 								.getString("IOModule.Started") //$NON-NLS-1$
 								+ serialPortName);
-
-						xbee.sendATCommand("VR");
-						xbee.sendATCommand("MY");
-						xbee.sendATCommand("ID");
-						xbee.sendATCommand("ND");
 					}
 				}
 			}
-			if (port == null)
-				printMessage(Messages.getString("IOModule.PortNotFoundError")); //$NON-NLS-1$
-
 		} catch (Exception e) {
 			printMessage(Messages.getString("IOModule.InsideSerialError")); //$NON-NLS-1$
 			e.printStackTrace();
@@ -100,7 +82,16 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 			input = null;
 			output = null;
 		}
-		xbee = new XBee(this, output);
+
+		if (port == null) {
+			printMessage(Messages.getString("IOModule.PortNotFoundError")); //$NON-NLS-1$
+		} else {
+			xbee = new XBee(this, output);
+			xbee.sendATCommand("VR");
+			xbee.sendATCommand("MY");
+			xbee.sendATCommand("ID");
+			xbee.sendATCommand("ND");
+		}
 	}
 
 	public void dispose() {

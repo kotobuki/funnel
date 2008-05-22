@@ -26,11 +26,11 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 	private static final int[] PWM_CAPABLE_PINS = new int[] { 9, 11, 12, 15,
 			16, 17 };
 
-	public ArduinoIO(FunnelServer server, String serialPortName) {
+	public ArduinoIO(FunnelServer server, String serialPortName, int baudRate) {
 		super(TOTAL_ANALOG_PINS, TOTAL_DIGITAL_PINS, PWM_CAPABLE_PINS);
 		this.parent = server;
 
-		begin(serialPortName);
+		begin(serialPortName, baudRate, 15000);
 	}
 
 	synchronized public void serialEvent(SerialPortEvent serialEvent) {
