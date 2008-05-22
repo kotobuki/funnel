@@ -88,7 +88,11 @@ public class XBee {
 					+ data[IDX_SOURCE_ADDRESS_LSB];
 			int rssi = data[IDX_RSSI] * -1;
 			int options = data[IDX_PACKET_OPTIONS];
-			listener.rxPacketEvent(source, rssi, options, data);
+			int[] rxData = new int[bytes - 9];
+			for (int i = 0; i < rxData.length; i++) {
+				rxData[i] = data[i + 8];
+			}
+			listener.rxPacketEvent(source, rssi, options, rxData);
 		}
 			break;
 		case RX_IO_STATUS_16BIT: {
