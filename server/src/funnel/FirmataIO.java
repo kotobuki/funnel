@@ -44,7 +44,7 @@ public abstract class FirmataIO extends IOModule implements
 	protected int bytesToReceive = 0;
 	protected int executeMultiByteCommand = 0;
 	protected int multiByteChannel = 0;
-	protected int[] storedInputData = null;
+	protected int[] storedInputData = new int[ARD_MAX_DATA_BYTES];
 	protected float[] analogData = null;
 	protected float[] digitalData = null;
 	protected int[] pinMode = new int[totalPins];
@@ -452,60 +452,53 @@ public abstract class FirmataIO extends IOModule implements
 		if (inputData < 0)
 			inputData = 256 + inputData;
 
-		if (false) {
-			// we have data
-			if (bytesToReceive > 0 && inputData < 128) {
-				bytesToReceive--;
+		// We have data
+		if (bytesToReceive > 0 && inputData < 128) {
+			bytesToReceive--;
 
-				storedInputData[bytesToReceive] = inputData;
-				if ((executeMultiByteCommand != 0) && (bytesToReceive == 0)) {
-					// we got everything
-					switch (executeMultiByteCommand) {
-					case ARD_DIGITAL_MESSAGE:
-						processDigitalBytes(storedInputData[1],
-								storedInputData[0]); // (LSB,
-						// MSB)
-						break;
-					case ARD_REPORT_VERSION: // Report version
-						firmwareVersion[0] = storedInputData[0]; // major
-						firmwareVersion[1] = storedInputData[1]; // minor
-						firmwareVersion[2] = 0;
-						printMessage(Messages
-								.getString("IOModule.FirmwareVesrion") //$NON-NLS-1$
-								+ firmwareVersion[0] + "." //$NON-NLS-1$
-								+ firmwareVersion[1] + "." //$NON-NLS-1$
-								+ firmwareVersion[2]);
-						firmwareVersionQueue.push(new String(""));
-						break;
-					case ARD_ANALOG_MESSAGE:
-						analogData[multiByteChannel] = (float) ((storedInputData[0] << 7) | storedInputData[1]) / 1023.0f;
-						if (multiByteChannel == 0) {
-							printMessage(new String("ain 0: " + analogData[0]));
-						}
-						break;
-					}
-
-				}
-			} else {
-				// we have a command
-				// remove channel info from command byte if less than
-				// 0xF0
-				if (inputData < 240) {
-					command = inputData & 240;
-					multiByteChannel = inputData & 15;
-				} else {
-					// commands in the 0xF* range don't use channel data
-					command = inputData;
-				}
-
-				switch (command) {
-				case ARD_REPORT_VERSION:
+			storedInputData[bytesToReceive] = inputData;
+			if ((executeMultiByteCommand != 0) && (bytesToReceive == 0)) {
+				// We got everything
+				switch (executeMultiByteCommand) {
 				case ARD_DIGITAL_MESSAGE:
+					processDigitalBytes(storedInputData[1], storedInputData[0]); // (LSB,
+					// MSB)
+					break;
+				case ARD_REPORT_VERSION: // Report version
+					firmwareVersion[0] = storedInputData[0]; // major
+					firmwareVersion[1] = storedInputData[1]; // minor
+					firmwareVersion[2] = 0;
+					printMessage(Messages.getString("IOModule.FirmwareVesrion") //$NON-NLS-1$
+							+ firmwareVersion[0] + "." //$NON-NLS-1$
+							+ firmwareVersion[1] + "." //$NON-NLS-1$
+							+ firmwareVersion[2]);
+					firmwareVersionQueue.push(new String(""));
+					break;
 				case ARD_ANALOG_MESSAGE:
-					bytesToReceive = 2; // 3 bytes needed
-					executeMultiByteCommand = command;
+					analogData[multiByteChannel] = (float) ((storedInputData[0] << 7) | storedInputData[1]) / 1023.0f;
 					break;
 				}
+
+			}
+		} else {
+			// We have a command
+			// remove channel info from command byte if less than
+			// 0xF0
+			if (inputData < 240) {
+				command = inputData & 240;
+				multiByteChannel = inputData & 15;
+			} else {
+				// commands in the 0xF* range don't use channel data
+				command = inputData;
+			}
+
+			switch (command) {
+			case ARD_REPORT_VERSION:
+			case ARD_DIGITAL_MESSAGE:
+			case ARD_ANALOG_MESSAGE:
+				bytesToReceive = 2; // 3 bytes needed
+				executeMultiByteCommand = command;
+				break;
 			}
 		}
 	}
