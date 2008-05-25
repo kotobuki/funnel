@@ -26,7 +26,7 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		super(TOTAL_ANALOG_PINS, TOTAL_DIGITAL_PINS, PWM_CAPABLE_PINS);
 		this.parent = server;
 
-		begin(serialPortName, baudRate, 100);
+		begin(serialPortName, baudRate);
 
 		xbee = new XBee(this, output);
 		xbee.sendATCommand("VR");
@@ -38,7 +38,8 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	}
 
 	void writeByte(int data) {
-		// TODO Auto-generated method stub
+		xbee.writeToPacket(data);
+		parent.printMessage("data: " + Integer.toHexString(data).toUpperCase());
 	}
 
 	public void firmwareVersionEvent(String version) {
@@ -107,8 +108,8 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		for (int i = 0; i < TOTAL_ANALOG_PINS; i++) {
 			this.inputData[source][i] = this.analogData[i];
 		}
-		printMessage(new String("ain: " + this.inputData[source][0] + ","
-				+ this.inputData[source][1]));
+//		printMessage(new String("ain: " + this.inputData[source][0] + ","
+//				+ this.inputData[source][1]));
 	}
 
 	public void sourceAddressEvent(String sourceAddress) {
@@ -153,35 +154,11 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		}
 	}
 
-	private void digitalWrite(int address, int pin, int mode) {
-		parent.printMessage("digitalWrite(" + pin + ", " + mode + ")");
-		int bitMask = 1 << pin;
-		// analog inputs
-		int outData = 0;
-
-		if (mode == 1) {
-			outData = outData | bitMask;
-		}
-
-		byte[] rfData = new byte[3];
-		rfData[0] = (byte) (0x90 + 0); // TODO: Support port value to handle
-		// more than 14 pins
-		rfData[1] = (byte) (outData % 128);
-		rfData[2] = (byte) (outData >> 7);
-
-		xbee.sendTransmitRequest(address, rfData);
+	protected void beginPacketIfNeeded(int destinationId) {
+		xbee.beginPacket(destinationId);
 	}
-
-	private void analogWrite(int address, int pin, float value) {
-		int intValue = Math.round(value * 255.0f);
-		intValue = (intValue < 0) ? 0 : intValue;
-		intValue = (intValue > 255) ? 255 : intValue;
-
-		byte[] rfData = new byte[3];
-		rfData[0] = (byte) (0xE0 + pin);
-		rfData[1] = (byte) (intValue % 128);
-		rfData[2] = (byte) (intValue >> 7);
-
-		xbee.sendTransmitRequest(address, rfData);
+	
+	protected void endPacketIfNeeded() {
+		xbee.endPacket();		
 	}
 }

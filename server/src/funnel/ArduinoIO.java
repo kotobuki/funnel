@@ -30,7 +30,11 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 		super(TOTAL_ANALOG_PINS, TOTAL_DIGITAL_PINS, PWM_CAPABLE_PINS);
 		this.parent = server;
 
-		begin(serialPortName, baudRate, 15000);
+		begin(serialPortName, baudRate);
+
+		queryVersion();
+		firmwareVersionQueue.pop(15000);
+		firmwareVersionQueue.clear();
 	}
 
 	synchronized public void serialEvent(SerialPortEvent serialEvent) {

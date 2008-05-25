@@ -209,8 +209,8 @@ public abstract class FirmataIO extends IOModule implements
 		// the Firmata firmware 0.31
 		sleep(500);
 
-		writeByte(ARD_REPORT_VERSION);
-		firmwareVersionQueue.pop(15000);
+//		writeByte(ARD_REPORT_VERSION);
+//		firmwareVersionQueue.pop(15000);
 		printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
 	}
 
@@ -238,6 +238,8 @@ public abstract class FirmataIO extends IOModule implements
 			throw new IllegalArgumentException(
 					"The number of pins does not match to that of the Arduino I/O module"); //$NON-NLS-1$
 		}
+
+		beginPacketIfNeeded(moduleId);
 		for (int i = 0; i < config.length; i++) {
 			if (config[i] == null) {
 				throw new IllegalArgumentException(
@@ -276,6 +278,7 @@ public abstract class FirmataIO extends IOModule implements
 				}
 			}
 		}
+		endPacketIfNeeded();
 
 		boolean wasNotInput = true;
 		int from = 0;
@@ -318,7 +321,10 @@ public abstract class FirmataIO extends IOModule implements
 	public void setOutput(Object[] arguments) {
 		// printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
 		// //$NON-NLS-1$ //$NON-NLS-2$
+		int moduleId = ((Integer) arguments[0]).intValue();
 		int start = ((Integer) arguments[1]).intValue();
+
+		beginPacketIfNeeded(moduleId);
 		for (int i = 0; i < (arguments.length - 2); i++) {
 			int port = start + i;
 			int index = 2 + i;
@@ -339,6 +345,7 @@ public abstract class FirmataIO extends IOModule implements
 				}
 			}
 		}
+		endPacketIfNeeded();
 	}
 
 	/*
@@ -369,10 +376,12 @@ public abstract class FirmataIO extends IOModule implements
 			return;
 		}
 
+		beginPacketIfNeeded(0xFFFF);
 		for (int pin = 0; pin < totalAnalogPins; pin++) {
 			setAnalogPinReporting(pin, 1);
 		}
 		enableDigitalPinReporting();
+		endPacketIfNeeded();
 		isPolling = true;
 	}
 
@@ -387,13 +396,15 @@ public abstract class FirmataIO extends IOModule implements
 		}
 
 		isPolling = false;
+		beginPacketIfNeeded(0xFFFF);
 		for (int pin = 0; pin < totalAnalogPins; pin++) {
 			setAnalogPinReporting(pin, 0);
 		}
 		disableDigitalPinReporting();
+		endPacketIfNeeded();
 	}
 
-	protected void begin(String serialPortName, int baudRate, int timeOut) {
+	protected void begin(String serialPortName, int baudRate) {
 		printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 
 		try {
@@ -417,10 +428,6 @@ public abstract class FirmataIO extends IOModule implements
 									parity);
 						}
 						port.notifyOnDataAvailable(true);
-
-						writeByte(ARD_REPORT_VERSION);
-						firmwareVersionQueue.pop(timeOut);
-						firmwareVersionQueue.clear();
 					}
 				}
 			}
@@ -446,7 +453,6 @@ public abstract class FirmataIO extends IOModule implements
 	}
 
 	protected void processInput(int inputData) {
-
 		int command = 0;
 
 		if (inputData < 0)
@@ -465,14 +471,11 @@ public abstract class FirmataIO extends IOModule implements
 					// MSB)
 					break;
 				case ARD_REPORT_VERSION: // Report version
-					firmwareVersion[0] = storedInputData[0]; // major
-					firmwareVersion[1] = storedInputData[1]; // minor
-					firmwareVersion[2] = 0;
-					printMessage(Messages.getString("IOModule.FirmwareVesrion") //$NON-NLS-1$
-							+ firmwareVersion[0] + "." //$NON-NLS-1$
-							+ firmwareVersion[1] + "." //$NON-NLS-1$
-							+ firmwareVersion[2]);
-					firmwareVersionQueue.push(new String(""));
+					firmwareVersion[0] = storedInputData[0]; // minor
+					firmwareVersion[1] = storedInputData[1]; // major
+					printMessage("Firmata Vesrion: " + firmwareVersion[1] + "."
+							+ firmwareVersion[0]);
+//					firmwareVersionQueue.push(new String(""));
 					break;
 				case ARD_ANALOG_MESSAGE:
 					analogData[multiByteChannel] = (float) ((storedInputData[0] << 7) | storedInputData[1]) / 1023.0f;
@@ -560,6 +563,20 @@ public abstract class FirmataIO extends IOModule implements
 		writeByte(ARD_ANALOG_MESSAGE + pin);
 		writeByte(intValue % 128);
 		writeByte(intValue >> 7);
+	}
+
+	protected void beginPacketIfNeeded(int destinationId) {
+		// Nothing to do except for Funnel I/O
+		return;
+	}
+
+	protected void endPacketIfNeeded() {
+		// Nothing to do except for Funnel I/O
+		return;
+	}
+
+	protected void queryVersion() {
+		writeByte(ARD_REPORT_VERSION);
 	}
 
 	abstract void writeByte(int data);
