@@ -38,7 +38,7 @@ module Funnel
       return MODE8
     end
 
-    def initialize(mode = MODE1, host = 'localhost', port = 9000, interval = 33)
+    def initialize(mode = MODE1, host = '127.0.0.1', port = 9000, interval = 33)
       config = Configuration.new(Configuration::GAINER, mode)
       @system = IOSystem.new(config, host, port, interval)
 

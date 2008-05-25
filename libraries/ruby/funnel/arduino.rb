@@ -10,7 +10,7 @@ module Funnel
       return @@FIRMATA
     end
 
-    def initialize(config, host = 'localhost', port = 9000, interval = 33)
+    def initialize(config, host = '127.0.0.1', port = 9000, interval = 33)
       @system = IOSystem.new(config, host, port, interval)
 
       @analog_pins = config.analog_pins
