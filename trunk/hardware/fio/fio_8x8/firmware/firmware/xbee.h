@@ -1,5 +1,7 @@
 #include <m8c.h>        // part specific constants and macros
 
+#pragma interrupt_handler XBEE_UART_RX_ISR
+
 // total number of pins currently supported
 #define TOTAL_ANALOG_PINS		(8)
 #define TOTAL_DIGITAL_PINS		(10)
@@ -27,6 +29,8 @@ void Firmata_printVersion(void);
 
 // check to see if there are any incoming messages in the buffer
 BOOL Firmata_available(void);
+
+void clearFlag(void);
 
 // process incoming messages from the buffer, sending the data to any registered callback functions
 void Firmata_processInput(void);
