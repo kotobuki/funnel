@@ -8,6 +8,9 @@
 #include "xbee.h"
 #include "fio.h"
 
+//       ljmp _XBEE_UART_RX_ISR
+
+
 WORD adcData[TOTAL_ANALOG_PINS];
 WORD dioStatus = 0x0000;
 WORD analogPinsToReport = 0x00FF;	// ain 0-7
@@ -30,8 +33,8 @@ void setup()
     M8C_EnableGInt;
     
 	SleepTimer_Start();
-	SleepTimer_SetInterval(SleepTimer_64_HZ);	// Set interrupt to a  
-	SleepTimer_EnableInt();						// 64 Hz rate 	
+	SleepTimer_SetInterval(SleepTimer_512_HZ);	// Set interrupt to a 512 Hz rate
+	SleepTimer_EnableInt();
 
 	// initialize and start analog input related blocks
 	AMUX_InputSelect(0);
@@ -84,31 +87,27 @@ void loop(void)
 		Firmata_processInput();
 	}
 
-	updateInputs();
-#if 0
-	// NOTE: This is not a Firmata way to report status
-	reportIOStatus(dioStatus, adcData, TOTAL_ANALOG_PINS);
-#else
-	Firmata_beginPacket();
+	if (SleepTimer_bGetTimer() > 0) {
+		return;
+	}
 
+	SleepTimer_SetTimer(8);
+	updateInputs();
+	Firmata_beginPacket();
 	for (analogPin = 0; analogPin < TOTAL_ANALOG_PINS; analogPin++) {
 		if (analogPinsToReport & (1 << analogPin)) {
 			Firmata_sendAnalog(analogPin, adcData[analogPin]);
 		}
 	}
-
 	Firmata_sendDigitalPort(0, dioStatus);
-
 	Firmata_endPacket();
-#endif
 }
 
 void main()
 {
 	setup();
-
+	SleepTimer_SetTimer(128);
 	while(1) {
-		SleepTimer_SyncWait(1, SleepTimer_WAIT_RELOAD);
 		loop();
 	}
 }
@@ -130,9 +129,9 @@ void updateInputs(void)
 
 	// TODO: Implement for the other pins
 	if (GET_BUTTON()) {
-		dioStatus = dioStatus | 0x0100;		// button is the 8th digital input
+		dioStatus = dioStatus | 0x0100;	// button is the 8th digital input
 	} else {
-		dioStatus = dioStatus &~ 0x0100;	// button is the 8th digital input
+		dioStatus = dioStatus & 0xFEFF;	// button is the 8th digital input
 	}
 }
 

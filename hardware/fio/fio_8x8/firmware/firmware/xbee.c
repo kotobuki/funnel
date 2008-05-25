@@ -4,9 +4,6 @@
 #include "xbee.h"
 #include "fio.h"
 
-#pragma interrupt_handler UART_RX_ISR
-#pragma interrupt_handler UART_TX_ISR
-
 /*
  * XBee Related Definitions
  */
@@ -98,6 +95,11 @@ void Firmata_printVersion(void)
 BOOL Firmata_available(void)
 {
 	return hasPacketToHandle;
+}
+
+void clearFlag(void)
+{
+	hasPacketToHandle = FALSE;
 }
 
 void Firmata_processInput(void)
@@ -215,8 +217,8 @@ void Firmata_detach(BYTE command)
 
 void Firmata_sendAnalog(BYTE pin, WORD value) {
 	putByteToPacket(ANALOG_MESSAGE | (pin & 0xF));
-	putByteToPacket((BYTE)(value % 0x80));	// MSB
-	putByteToPacket((BYTE)(value >> 7));	// LSB
+	putByteToPacket((BYTE)(value % 0x80));	// LSB
+	putByteToPacket((BYTE)(value >> 7));	// MSB
 }
 
 void Firmata_sendDigitalPort(BYTE port, WORD portData) {
@@ -259,9 +261,10 @@ void reportIOStatus(WORD dioStatus, WORD *adcStatus, BYTE adcChannels)
 }
 
 
-void UART_RX_ISR()
+void XBEE_UART_RX_ISR()
 {
 	BYTE inputData = UART_bReadRxData();
+	
 	if (inputData == FRAME_DELIMITER) {
 		rxIndex = 0;
 		rxSum = 0;
@@ -294,13 +297,6 @@ void UART_RX_ISR()
 		}
 	}
 }
-
-// just to inhibit "multiple define: '_UART_RX_ISR'" error
-void UART_TX_ISR()
-{
-
-}
-
 
 void parseFirmataMessage(BYTE inputData) {
 	BYTE command = 0;
