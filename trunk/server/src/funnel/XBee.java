@@ -38,6 +38,10 @@ public class XBee {
 	private int rxBytesToReceive = 0;
 	private int rxSum = 0;
 
+	private int txDestAddress = 0xFFFF;
+	private byte[] txData = new byte[MAX_FRAME_SIZE];
+	private int txDataIdx = 0;
+	
 	public XBee(XBeeEventListener listener, OutputStream output) {
 		this.listener = listener;
 		this.output = output;
@@ -199,6 +203,24 @@ public class XBee {
 		}
 	}
 
+	public void beginPacket(int destAddress) {
+		txDestAddress = destAddress;
+		txDataIdx = 0;
+	}
+
+	public void writeToPacket(int data) {
+		txData[txDataIdx] = (byte)data;
+		txDataIdx++;
+		if (txDataIdx >= (MAX_FRAME_SIZE - 1)) {
+			sendTransmitRequest(txDestAddress, txData, txDataIdx);
+			txDataIdx = 0;
+		}
+	}
+	
+	public void endPacket() {
+		sendTransmitRequest(txDestAddress, txData, txDataIdx);
+	}
+
 	public void sendATCommand(String command) {
 		byte[] outData = new byte[2 + command.length()];
 		outData[0] = 0x08; // AT Command
@@ -209,14 +231,14 @@ public class XBee {
 		sendCommand(outData);
 	}
 
-	public void sendTransmitRequest(int destAddress, byte[] rfData) {
-		byte[] outData = new byte[5 + rfData.length];
+	public void sendTransmitRequest(int destAddress, byte[] rfData, int rfDataLength) {
+		byte[] outData = new byte[5 + rfDataLength];
 		outData[0] = 0x01; // Transmit Request
 		outData[1] = 0x00; // Frame ID (0x00 means no ACK)
 		outData[2] = (byte) (destAddress >> 8);
 		outData[3] = (byte) (destAddress & 0xFF);
 		outData[4] = 0x01; // Options (0x00: with ACK, 0x01: without ACK)
-		for (int i = 0; i < rfData.length; i++) {
+		for (int i = 0; i < rfDataLength; i++) {
 			outData[5 + i] = rfData[i];
 		}
 		sendCommand(outData);
