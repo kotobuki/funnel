@@ -147,12 +147,6 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 
 		xbee.beginPacket(my);
 		xbee.writeToPacket(0xF9);
-		xbee.writeToPacket(0xF9);
-		xbee.writeToPacket(0xF9);
-		xbee.endPacket();
-
-		xbee.beginPacket(my);
-		digitalWrite(9, 1);
 		xbee.endPacket();
 	}
 

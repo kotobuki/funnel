@@ -26,13 +26,12 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 008 (2008-05-25)";
+	private static final String buildName = "Funnel 008 (2008-05-26) [EXPERIMENTAL]";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
 	private IOModule ioModule = null;
 	private TextArea loggingArea;
-	// private boolean logEnable = false;
 	private final int width = 480;
 	private final int height = 270;
 
@@ -65,13 +64,6 @@ public class FunnelServer extends Frame {
 		loggingArea.setFont(new Font("Monospaced", Font.PLAIN, 12)); //$NON-NLS-1$
 		this.add(loggingArea);
 
-		// printMessage(Messages.getString("FunnelServer.License"));
-		// //$NON-NLS-1$
-		// printMessage("");
-		// printMessage(Messages.getString("FunnelServer.Acknowledgements"));
-		// //$NON-NLS-1$
-		// printMessage("");
-
 		String type = ""; //$NON-NLS-1$
 		String commandPort = "9000"; //$NON-NLS-1$
 		String notificationPort = "9001"; //$NON-NLS-1$
@@ -80,31 +72,20 @@ public class FunnelServer extends Frame {
 
 		try {
 			Map settings = (Map) YAML.load(new FileReader("settings.yaml")); //$NON-NLS-1$
-			// printMessage("Settings:"); //$NON-NLS-1$
-
 			Map serverSettings = (Map) settings.get("server"); //$NON-NLS-1$
 			if (serverSettings.get("command port") == null) { //$NON-NLS-1$
 				commandPort = "9000"; //$NON-NLS-1$
 			} else {
 				commandPort = serverSettings.get("command port").toString(); //$NON-NLS-1$
-				// printMessage("command port:" + commandPort); //$NON-NLS-1$
 			}
 			if (serverSettings.get("notification port") == null) { //$NON-NLS-1$
 				notificationPort = "9001"; //$NON-NLS-1$
 			} else {
 				notificationPort = serverSettings.get("notification port") //$NON-NLS-1$
 						.toString();
-				// printMessage("notification port:" + notificationPort);
-				// //$NON-NLS-1$
 			}
 
 			Map modules = (Map) settings.get("io"); //$NON-NLS-1$
-			// printMessage("type:" + modules.get("type")); //$NON-NLS-1$
-			// //$NON-NLS-2$
-			// printMessage("com:" + modules.get("com")); //$NON-NLS-1$
-			// //$NON-NLS-2$
-			// printMessage(""); //$NON-NLS-1$
-
 			if (modules.get("type") == null) { //$NON-NLS-1$
 				printMessage(Messages
 						.getString("FunnelServer.TypeIsNotSpecified")); //$NON-NLS-1$
@@ -138,12 +119,6 @@ public class FunnelServer extends Frame {
 			notificationPort = "9001"; //$NON-NLS-1$
 			serialPort = IOModule.getSerialPortName();
 		}
-
-		// Dump read setting from the settings file
-		// printMessage("command server port: " + commandPort); //$NON-NLS-1$
-		// printMessage("notification server port: " + notificationPort);
-		// //$NON-NLS-1$
-		// printMessage("serial port: " + serialPort); //$NON-NLS-1$
 
 		if (type.equalsIgnoreCase("gainer")) { //$NON-NLS-1$
 			try {
