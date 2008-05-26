@@ -26,7 +26,7 @@ FE
 [A]ST=1388
 [A]SP=0
 [A]DP=3E8
-[A]BD=6
+[A]BD=5
 [A]RO=3
 [A]AP=2
 [A]PR=FF
