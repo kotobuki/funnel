@@ -37,11 +37,24 @@ const BYTE IDX_IO_STATUS_START = 11;
 #define FIRMATA_MAJOR_VERSION   1 // for non-compatible changes
 #define FIRMATA_MINOR_VERSION   0 // for backwards compatible changes
 
-void (*pAnalogMessageHandler)(BYTE pin, WORD value) = NULL;
-void (*pDigitalMessageHandler)(BYTE pin, WORD value) = NULL;
-void (*pReportAnalogHandler)(BYTE pin, WORD value) = NULL;
-void (*pReportDigitalHandler)(BYTE pin, WORD value) = NULL;
-void (*pSetPinModeHandler)(BYTE pin, WORD value) = NULL;
+#if 0
+void (*pAnalogMessageHandler)(BYTE pin, WORD value);
+void (*pDigitalMessageHandler)(BYTE pin, WORD value);
+void (*pReportAnalogHandler)(BYTE pin, WORD value);
+void (*pReportDigitalHandler)(BYTE pin, WORD value);
+void (*pSetPinModeHandler)(BYTE pin, WORD value);
+#endif
+
+#if 0
+pEventHandler pAnalogMessageHandler = NULL;
+pEventHandler pDigitalMessageHandler = NULL;
+pEventHandler pReportAnalogHandler = NULL;
+pEventHandler pReportDigitalHandler = NULL;
+pEventHandler pSetPinModeHandler = NULL;
+#endif
+
+void handleAnalogMessage(BYTE pin, WORD value);
+void handleDigitalMessage(BYTE pin, WORD value);
 
 BYTE rfDataIdx = 0;
 BYTE rfData[128];
@@ -173,7 +186,8 @@ void parseXBeePacket(void)
 	}
 }
 
-void Firmata_attach(BYTE command, void* myHandler)
+#if 0
+void Firmata_attach(BYTE command, pEventHandler myHandler)
 {
 	switch (command) {
 	case ANALOG_MESSAGE:
@@ -218,6 +232,7 @@ void Firmata_detach(BYTE command)
 		break;
 	}
 }
+#endif
 
 void Firmata_sendAnalog(BYTE pin, WORD value) {
 	putByteToPacket(ANALOG_MESSAGE | (pin & 0xF));
@@ -238,30 +253,6 @@ void Firmata_beginPacket(void) {
 void Firmata_endPacket(void) {
 	// send the message to the coordinator of the PAN
 	sendTransmitRequest(0x0000, rfDataIdx);
-}
-
-
-void reportIOStatus(WORD dioStatus, WORD *adcStatus, BYTE adcChannels)
-{
-	BYTE i = 0;
-	BYTE idx = 0;
-
-	// NOTE: modify here to report more than 14 digital pins
-	rfData[0] = DIGITAL_MESSAGE;
-	rfData[1] = (BYTE)(dioStatus % 0x80);
-	rfData[2] = (BYTE)(dioStatus >> 7);
-	idx = 3;
-
-	for (i = 0; i < adcChannels; i++) {
-		rfData[idx] = ANALOG_MESSAGE + i;			// analog in: 0xE0 - 0xEF
-		idx++;
-		rfData[idx] = (BYTE)(adcStatus[i] % 0x80);	// analog in value (LSB)
-		idx++;
-		rfData[idx] = (BYTE)(adcStatus[i] >> 7);	// analog in value (MSB)
-		idx++;
-	}
-	// send the message to the coordinator of the PAN
-	sendTransmitRequest(0x0000, idx);
 }
 
 void XBEE_UART_RX_ISR()
@@ -323,32 +314,36 @@ void parseFirmataMessage(BYTE inputData) {
 		if ((executeMultiByteCommand != 0) && (bytesToReceive == 0)) {
  			switch (executeMultiByteCommand) {
 			case ANALOG_MESSAGE:
-				if (pAnalogMessageHandler != NULL) {
-					value = (BYTE)((storedInputData[0] << 7) + storedInputData[1]);
-					pAnalogMessageHandler(multiByteChannel, value);
-				}
+//				if (pAnalogMessageHandler != NULL) {
+//					value = (WORD)((storedInputData[0] << 7) + storedInputData[1]);
+//					(*pAnalogMessageHandler)(multiByteChannel, value);
+//				}
+				value = (WORD)((storedInputData[0] << 7) + storedInputData[1]);
+				handleAnalogMessage(multiByteChannel, value);
 				break;
 			case DIGITAL_MESSAGE:
-				if (pDigitalMessageHandler != NULL) {
-					value = (WORD)((storedInputData[0] << 7) + storedInputData[1]);
-					pDigitalMessageHandler(0, value);
-				}
+//				if (pDigitalMessageHandler != NULL) {
+//					value = (WORD)((storedInputData[0] << 7) + storedInputData[1]);
+//					(*pDigitalMessageHandler)(0, value);
+//				}
+				value = (WORD)((storedInputData[0] << 7) + storedInputData[1]);
+				handleDigitalMessage(0, value);
 				break;
 			case SET_DIGITAL_PIN_MODE:
-				if (pSetPinModeHandler != NULL) {
-					pSetPinModeHandler(storedInputData[1], storedInputData[0]); // (pin#, mode)
-				}
+//				if (pSetPinModeHandler != NULL) {
+//					(*pSetPinModeHandler)(storedInputData[1], storedInputData[0]); // (pin#, mode)
+//				}
 				break;
-			case REPORT_ANALOG_PIN:
-				if (pReportAnalogHandler != NULL) {
-					pReportAnalogHandler(multiByteChannel, storedInputData[0]);
-				}
-				break;
-			case REPORT_DIGITAL_PORTS:
-				if (pReportDigitalHandler != NULL) {
-					pReportDigitalHandler(multiByteChannel, storedInputData[0]);
-				}
-				break;
+//			case REPORT_ANALOG_PIN:
+//				if (pReportAnalogHandler != NULL) {
+//					(*pReportAnalogHandler)(multiByteChannel, storedInputData[0]);
+//				}
+//				break;
+//			case REPORT_DIGITAL_PORTS:
+//				if (pReportDigitalHandler != NULL) {
+//					(*pReportDigitalHandler)(multiByteChannel, storedInputData[0]);
+//				}
+//				break;
 			default:
 				break;
  			}
@@ -440,4 +435,48 @@ void sendCommand(BYTE frameDataLength) {
 void putByteToPacket(BYTE data) {
 	rfData[rfDataIdx] = data;
 	rfDataIdx++;
+}
+
+void handleAnalogMessage(BYTE pin, WORD value)
+{
+	switch (pin) {
+	case 0:
+		PWM8_0_WritePulseWidth((BYTE)value);
+		break;
+	case 1:
+		PWM8_1_WritePulseWidth((BYTE)value);
+		break;
+	case 2:
+		PWM8_2_WritePulseWidth((BYTE)value);
+		break;
+	case 3:
+		PWM8_3_WritePulseWidth((BYTE)value);
+		break;
+	case 4:
+		PWM8_4_WritePulseWidth((BYTE)value);
+		break;
+	case 5:
+		PWM8_5_WritePulseWidth((BYTE)value);
+		break;
+	case 6:
+		PWM8_6_WritePulseWidth((BYTE)value);
+		break;
+	case 7:
+		PWM8_7_WritePulseWidth((BYTE)value);
+		break;
+	default:
+		break;
+	}
+}
+
+void handleDigitalMessage(BYTE port, WORD value)
+{
+	// TODO: Support digital pin from 0 to 8
+	
+	// digital pin 9 is the on-board LED
+	if (value & 0x0200) {
+		SET_LED_H();
+	} else {
+		SET_LED_L();
+	}
 }

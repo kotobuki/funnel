@@ -16,12 +16,14 @@ WORD dioStatus = 0x0000;
 WORD analogPinsToReport = 0x00FF;	// ain 0-7
 WORD digitalPinsToReport = 0x0100;	// button pin only
 
+#if 0
 // prototypes of event handlers
 void analogMessageHandler(BYTE pin, WORD value);
 void digitalMessageHandler(BYTE pin, WORD value);
 void setPinModeHandler(BYTE pin, WORD value);
 void reportAnalogHandler(BYTE pin, WORD state);
 void reportDigitalHandler(BYTE pin, WORD state);
+#endif
 
 void updateInputs(void);
 
@@ -68,10 +70,12 @@ void setup()
 	PWM8_6_Start();
 	PWM8_7_Start();
 
+#if 0
 	Firmata_attach(ANALOG_MESSAGE, analogMessageHandler);
 	Firmata_attach(DIGITAL_MESSAGE, digitalMessageHandler);
 	Firmata_attach(REPORT_ANALOG, reportAnalogHandler);
 	Firmata_attach(REPORT_DIGITAL, reportDigitalHandler);
+#endif
 	Firmata_begin();
 }
 
@@ -132,6 +136,7 @@ void updateInputs(void)
 	}
 }
 
+#if 0
 void analogMessageHandler(BYTE pin, WORD value)
 {
 	switch (pin) {
@@ -164,38 +169,15 @@ void analogMessageHandler(BYTE pin, WORD value)
 	}
 }
 
-void digitalMessageHandler(BYTE pin, WORD isHigh)
+void digitalMessageHandler(BYTE port, WORD value)
 {
-	switch (pin) {
-	case 0:
-		if (isHigh) SET_DOUT_0_H(); else SET_DOUT_0_L();
-		break;
-	case 1:
-		if (isHigh) SET_DOUT_1_H(); else SET_DOUT_1_L();
-		break;
-	case 2:
-		if (isHigh) SET_DOUT_2_H(); else SET_DOUT_2_L();
-		break;
-	case 3:
-		if (isHigh) SET_DOUT_3_H(); else SET_DOUT_3_L();
-		break;
-	case 4:
-		if (isHigh) SET_DOUT_4_H(); else SET_DOUT_4_L();
-		break;
-	case 5:
-		if (isHigh) SET_DOUT_5_H(); else SET_DOUT_5_L();
-		break;
-	case 6:
-		if (isHigh) SET_DOUT_6_H(); else SET_DOUT_6_L();
-		break;
-	case 7:
-		if (isHigh) SET_DOUT_7_H(); else SET_DOUT_7_L();
-		break;
-	case 9:
-		if (isHigh) SET_LED_H(); else SET_LED_L();
-		break;
-	default:
-		break;
+	// TODO: Support digital pin from 0 to 8
+	
+	// digital pin 9 is the on-board LED
+	if (value & 0x0200) {
+		SET_LED_H();
+	} else {
+		SET_LED_L();
 	}
 }
 
@@ -221,3 +203,4 @@ void reportDigitalHandler(BYTE pin, WORD state)
 		digitalPinsToReport = digitalPinsToReport | (1 << pin);
 	}
 }
+#endif
