@@ -18,6 +18,7 @@ module Funnel
     
     def register_node(id, ni = "")
       add_io_module(id, Configuration.new(Configuration::FIO), ni)
+      io_module(id).port(16).filters = [SetPoint.new(0.5, 0)] unless id == ALL
     end
     
     def wait_for_nodes(number)

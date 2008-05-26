@@ -2,16 +2,22 @@
 $: << '..'
 
 require 'funnel'
+include Funnel
 
-# communicate with a specific node to get sensor values
-module Funnel
-  nodes = [2]
-  fio = Fio.new(nodes)
+# communicate with a specific node to get a button status
+nodes = [1]
+@fio = Fio.new(nodes)
 
-  fio.io_module(2).port(0).on PortEvent::CHANGE do |event|
-    s = sprintf("AD0: %5.3f %s", event.target.value, "*" * (event.target.value * 40))
-    puts s
-  end
+sleep 2
 
-  sleep(10)
+@fio.io_module(1).port(17).value = 1
+
+@fio.io_module(1).port(16).on RISING_EDGE do
+  puts 'ON!'
 end
+
+@fio.io_module(1).port(16).on FALLING_EDGE do
+  puts 'OFF'
+end
+
+sleep 5
