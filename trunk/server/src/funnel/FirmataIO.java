@@ -25,10 +25,10 @@ public abstract class FirmataIO extends IOModule implements
 	private static final int ARD_SET_DIGITAL_PIN_MODE = 0xF4;
 	private static final int ARD_REPORT_VERSION = 0xF9;
 	private static final int ARD_SYSTEM_RESET = 0xFF;
-	private static final int ARD_PIN_MODE_IN = 0x00;
-	private static final int ARD_PIN_MODE_OUT = 0x01;
-	private static final int ARD_PIN_MODE_PWM = 0x02;
-	private static final int ARD_PIN_MODE_AIN = 0x03;
+	protected static final int ARD_PIN_MODE_IN = 0x00;
+	protected static final int ARD_PIN_MODE_OUT = 0x01;
+	protected static final int ARD_PIN_MODE_PWM = 0x02;
+	protected static final int ARD_PIN_MODE_AIN = 0x03;
 
 	protected int totalAnalogPins = 6;
 	protected int totalDigitalPins = 14;
@@ -194,23 +194,24 @@ public abstract class FirmataIO extends IOModule implements
 
 		// Set all outputs 0
 		// This part will be replaced if Firmata supports s REAL reboot function
-		for (int i = digitalPinRange.getMin(); i <= digitalPinRange.getMax(); i++) {
-			if (pinMode[i] == ARD_PIN_MODE_OUT) {
-				digitalWrite(i, 0);
-			} else if (pinMode[i] == ARD_PIN_MODE_PWM) {
-				analogWrite(i, 0.0f);
-			}
-		}
+		// for (int i = digitalPinRange.getMin(); i <= digitalPinRange.getMax();
+		// i++) {
+		// if (pinMode[i] == ARD_PIN_MODE_OUT) {
+		// digitalWrite(i, 0);
+		// } else if (pinMode[i] == ARD_PIN_MODE_PWM) {
+		// analogWrite(i, 0.0f);
+		// }
+		// }
 
 		printMessage(Messages.getString("IOModule.Rebooting")); //$NON-NLS-1$
-		writeByte(ARD_SYSTEM_RESET);
+		// writeByte(ARD_SYSTEM_RESET);
 
 		// This is dummy, since the system reset function is not implemented in
 		// the Firmata firmware 0.31
 		sleep(500);
 
-//		writeByte(ARD_REPORT_VERSION);
-//		firmwareVersionQueue.pop(15000);
+		// writeByte(ARD_REPORT_VERSION);
+		// firmwareVersionQueue.pop(15000);
 		printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
 	}
 
@@ -239,7 +240,7 @@ public abstract class FirmataIO extends IOModule implements
 					"The number of pins does not match to that of the Arduino I/O module"); //$NON-NLS-1$
 		}
 
-		beginPacketIfNeeded(moduleId);
+		// beginPacketIfNeeded(moduleId);
 		for (int i = 0; i < config.length; i++) {
 			if (config[i] == null) {
 				throw new IllegalArgumentException(
@@ -263,13 +264,16 @@ public abstract class FirmataIO extends IOModule implements
 								"AOUT is not available on the following port: "
 										+ i);
 					}
-					setPinMode(i - digitalPinRange.getMin(), ARD_PIN_MODE_PWM);
+					// setPinMode(i - digitalPinRange.getMin(),
+					// ARD_PIN_MODE_PWM);
 					pinMode[i] = ARD_PIN_MODE_PWM;
 				} else if (PORT_DIN.equals(config[i])) {
-					setPinMode(i - digitalPinRange.getMin(), ARD_PIN_MODE_IN);
+					// setPinMode(i - digitalPinRange.getMin(),
+					// ARD_PIN_MODE_IN);
 					pinMode[i] = ARD_PIN_MODE_IN;
 				} else if (PORT_DOUT.equals(config[i])) {
-					setPinMode(i - digitalPinRange.getMin(), ARD_PIN_MODE_OUT);
+					// setPinMode(i - digitalPinRange.getMin(),
+					// ARD_PIN_MODE_OUT);
 					pinMode[i] = ARD_PIN_MODE_OUT;
 				} else {
 					throw new IllegalArgumentException(
@@ -278,7 +282,7 @@ public abstract class FirmataIO extends IOModule implements
 				}
 			}
 		}
-		endPacketIfNeeded();
+		// endPacketIfNeeded();
 
 		boolean wasNotInput = true;
 		int from = 0;
@@ -319,7 +323,8 @@ public abstract class FirmataIO extends IOModule implements
 	 * @see funnel.IOModule#setOutput(java.lang.Object[])
 	 */
 	public void setOutput(Object[] arguments) {
-		// printMessage("arguments: " + arguments[0] + ", " + arguments[1]);
+		printMessage("arguments: " + arguments[0] + ", " + arguments[1] + ", "
+				+ arguments[2]);
 		// //$NON-NLS-1$ //$NON-NLS-2$
 		int moduleId = ((Integer) arguments[0]).intValue();
 		int start = ((Integer) arguments[1]).intValue();
@@ -475,7 +480,7 @@ public abstract class FirmataIO extends IOModule implements
 					firmwareVersion[1] = storedInputData[1]; // major
 					printMessage("Firmata Vesrion: " + firmwareVersion[1] + "."
 							+ firmwareVersion[0]);
-//					firmwareVersionQueue.push(new String(""));
+					// firmwareVersionQueue.push(new String(""));
 					break;
 				case ARD_ANALOG_MESSAGE:
 					analogData[multiByteChannel] = (float) ((storedInputData[0] << 7) | storedInputData[1]) / 1023.0f;
@@ -553,6 +558,7 @@ public abstract class FirmataIO extends IOModule implements
 		writeByte(ARD_DIGITAL_MESSAGE);
 		writeByte(stateOfDigitalPins % 128); // Tx pins 0-6
 		writeByte(stateOfDigitalPins >> 7); // Tx pins 7-13
+		printMessage("dout: " + pin + ", " + mode);
 	}
 
 	protected void analogWrite(int pin, float value) {

@@ -1,8 +1,10 @@
 package funnel;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
+import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
 
 import gnu.io.SerialPortEvent;
@@ -39,11 +41,65 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 
 	void writeByte(int data) {
 		xbee.writeToPacket(data);
-		parent.printMessage("data: " + Integer.toHexString(data).toUpperCase());
 	}
 
 	public void firmwareVersionEvent(String version) {
 		parent.printMessage(version);
+	}
+
+	public void reboot() {
+		super.reboot();
+		xbee.sendATCommand("ND");
+	}
+
+	public void setOutput(Object[] arguments) {
+		int moduleId = ((Integer) arguments[0]).intValue();
+		int start = ((Integer) arguments[1]).intValue();
+
+		beginPacketIfNeeded(moduleId);
+		for (int i = 0; i < (arguments.length - 2); i++) {
+			int port = start + i;
+			int index = 2 + i;
+			if (digitalPinRange.contains(port)) {
+				// converts from global pin number to local pin number
+				// e.g. global pin number 6 means local pin number 0
+				int pin = port - digitalPinRange.getMin();
+
+				if (arguments[index] != null
+						&& arguments[index] instanceof Float) {
+					if (pinMode[port] == ARD_PIN_MODE_OUT) {
+						digitalWrite(pin,
+								FLOAT_ZERO.equals(arguments[index]) ? 0 : 1);
+					} else if (pinMode[port] == ARD_PIN_MODE_PWM) {
+						// analogWrite(pin, ((Float) arguments[index])
+						// .floatValue());
+					}
+				}
+			}
+		}
+		endPacketIfNeeded();
+	}
+
+	public OSCBundle getAllInputsAsBundle() {
+		if (nodes.isEmpty()) {
+			return null;
+		}
+
+		OSCBundle bundle = new OSCBundle();
+		Enumeration e = nodes.keys();
+
+		while (e.hasMoreElements()) {
+			Integer id = (Integer) e.nextElement();
+			Object arguments[] = new Object[2 + totalPins];
+			arguments[0] = id;
+			arguments[1] = new Integer(0);
+			for (int i = 0; i < totalPins; i++) {
+				arguments[2 + i] = new Float(inputData[id.intValue()][i]);
+			}
+			bundle.addPacket(new OSCMessage("/in", arguments)); //$NON-NLS-1$
+		}
+
+		return bundle;
 	}
 
 	public void modemStatusEvent(int status) {
@@ -88,6 +144,16 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 			nodes.remove(new Integer(my));
 		}
 		nodes.put(new Integer(my), ni);
+
+		xbee.beginPacket(my);
+		xbee.writeToPacket(0xF9);
+		xbee.writeToPacket(0xF9);
+		xbee.writeToPacket(0xF9);
+		xbee.endPacket();
+
+		xbee.beginPacket(my);
+		digitalWrite(9, 1);
+		xbee.endPacket();
 	}
 
 	public void panIdEvent(String panId) {
@@ -108,8 +174,12 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		for (int i = 0; i < TOTAL_ANALOG_PINS; i++) {
 			this.inputData[source][i] = this.analogData[i];
 		}
-//		printMessage(new String("ain: " + this.inputData[source][0] + ","
-//				+ this.inputData[source][1]));
+		for (int i = 0; i < TOTAL_DIGITAL_PINS; i++) {
+			this.inputData[source][digitalPinRange.getMin() + i] = this.digitalData[i];
+		}
+		// printMessage(new String("ain: " + this.inputData[source][0] + ","
+		// + this.inputData[source][1]));
+		// printMessage(new String("button: " + this.inputData[source][16]));
 	}
 
 	public void sourceAddressEvent(String sourceAddress) {
@@ -157,8 +227,8 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	protected void beginPacketIfNeeded(int destinationId) {
 		xbee.beginPacket(destinationId);
 	}
-	
+
 	protected void endPacketIfNeeded() {
-		xbee.endPacket();		
+		xbee.endPacket();
 	}
 }

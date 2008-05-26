@@ -41,7 +41,7 @@ public class XBee {
 	private int txDestAddress = 0xFFFF;
 	private byte[] txData = new byte[MAX_FRAME_SIZE];
 	private int txDataIdx = 0;
-	
+
 	public XBee(XBeeEventListener listener, OutputStream output) {
 		this.listener = listener;
 		this.output = output;
@@ -209,14 +209,14 @@ public class XBee {
 	}
 
 	public void writeToPacket(int data) {
-		txData[txDataIdx] = (byte)data;
+		txData[txDataIdx] = (byte) data;
 		txDataIdx++;
 		if (txDataIdx >= (MAX_FRAME_SIZE - 1)) {
 			sendTransmitRequest(txDestAddress, txData, txDataIdx);
 			txDataIdx = 0;
 		}
 	}
-	
+
 	public void endPacket() {
 		sendTransmitRequest(txDestAddress, txData, txDataIdx);
 	}
@@ -231,7 +231,8 @@ public class XBee {
 		sendCommand(outData);
 	}
 
-	public void sendTransmitRequest(int destAddress, byte[] rfData, int rfDataLength) {
+	public void sendTransmitRequest(int destAddress, byte[] rfData,
+			int rfDataLength) {
 		byte[] outData = new byte[5 + rfDataLength];
 		outData[0] = 0x01; // Transmit Request
 		outData[1] = 0x00; // Frame ID (0x00 means no ACK)
@@ -274,7 +275,8 @@ public class XBee {
 		outData[2] = (byte) (length - escaped); // Length (LSB)
 		outData[3 + length] = (byte) (0xFF - (sum & 0xFF)); // Checksum
 		try {
-			output.write(outData);
+			output.write(outData, 0, length + 4);
+			output.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
