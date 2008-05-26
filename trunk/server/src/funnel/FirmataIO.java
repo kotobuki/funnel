@@ -24,7 +24,7 @@ public abstract class FirmataIO extends IOModule implements
 	private static final int ARD_REPORT_DIGITAL_PORTS = 0xD0;
 	private static final int ARD_SET_DIGITAL_PIN_MODE = 0xF4;
 	private static final int ARD_REPORT_VERSION = 0xF9;
-	private static final int ARD_SYSTEM_RESET = 0xFF;
+//	private static final int ARD_SYSTEM_RESET = 0xFF;
 	protected static final int ARD_PIN_MODE_IN = 0x00;
 	protected static final int ARD_PIN_MODE_OUT = 0x01;
 	protected static final int ARD_PIN_MODE_PWM = 0x02;
@@ -558,7 +558,6 @@ public abstract class FirmataIO extends IOModule implements
 		writeByte(ARD_DIGITAL_MESSAGE);
 		writeByte(stateOfDigitalPins % 128); // Tx pins 0-6
 		writeByte(stateOfDigitalPins >> 7); // Tx pins 7-13
-		printMessage("dout: " + pin + ", " + mode);
 	}
 
 	protected void analogWrite(int pin, float value) {
