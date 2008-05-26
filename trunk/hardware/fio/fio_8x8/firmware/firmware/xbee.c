@@ -3,6 +3,7 @@
 
 #include "xbee.h"
 #include "fio.h"
+#include "ring_buffer.h"
 
 /*
  * XBee Related Definitions
@@ -17,6 +18,7 @@
 #define TX_STATUS_MESSAGE	(0x89)
 #define MODEM_STATUS		(0x8A)
 
+const BYTE IDX_LENGTH_MSB = 1;
 const BYTE IDX_LENGTH_LSB = 2;
 const BYTE IDX_API_IDENTIFIER = 3;
 const BYTE IDX_SOURCE_ADDRESS_MSB = 4;
@@ -48,9 +50,14 @@ BYTE txBuffer[128];
 
 BOOL wasEscaped = FALSE;
 BYTE rxIndex = 0;
-BYTE rxData[100];
+BYTE receivedPacket[128];
 BYTE rxBytesToReceive = 0;
 WORD rxSum = 0;
+
+char rxBuffer[256];
+rbuffer_t rxBufferInfo;
+//BOOL hasPacketToHandle = FALSE;
+//BYTE receivedPacketSize = 0;
 
 // max number of data bytes in non-SysEx messages
 #define MAX_DATA_BYTES	(2)
@@ -76,12 +83,14 @@ BYTE bytesToReceive = 0;
 BYTE storedInputData[MAX_DATA_BYTES + 1];
 BYTE executeMultiByteCommand = 0;
 BYTE multiByteChannel = 0;
-BOOL hasPacketToHandle = FALSE;
 
 
 void Firmata_begin()
 {
-	// Nothing to do!?
+	if (rbuffer_init(&rxBufferInfo, rxBuffer, 256) != NULL) {
+		UART_EnableInt();
+		UART_Start(UART_PARITY_NONE);
+	}
 }
 
 void Firmata_printVersion(void)
@@ -94,35 +103,30 @@ void Firmata_printVersion(void)
 
 BOOL Firmata_available(void)
 {
-	return hasPacketToHandle;
+	return (rbuffer_size(&rxBufferInfo) > 0);
 }
 
-void clearFlag(void)
-{
-	hasPacketToHandle = FALSE;
-}
-
-void Firmata_processInput(void)
+void parseXBeePacket(void)
 {
 	BYTE length = 0;
 	BYTE i = 0;
 
-	hasPacketToHandle = FALSE;
+//	hasPacketToHandle = FALSE;
 
-	switch ((BYTE)rxData[IDX_API_IDENTIFIER]) {
+	switch ((BYTE)receivedPacket[IDX_API_IDENTIFIER]) {
 	case RX_PACKET_16BIT:
 		// {0x7E}+{0x00}+{0x**}+{0x81}+{MSB}+{LSB}+{RSSI}+{OPTION}+{RF Data}+{Checksum}
 		// OPTION
 		// bit 1: Address Broadcast
 		// bit 2: PAN Broadcast
-		length = rxData[IDX_LENGTH_LSB] - 5;	// RF Data Length
+		length = receivedPacket[IDX_LENGTH_LSB] - 5;	// RF Data Length
 		for (i = 0; i < length; i++) {
-			parseFirmataMessage(rxData[IDX_RF_DATA + i]);
+			parseFirmataMessage(receivedPacket[IDX_RF_DATA + i]);
 		}
 		break;
 	case TX_STATUS_MESSAGE:
 		// {0x7E}+{0x00+0x03}+{0x89}+{Frame ID}+{Status}+{Checksum}
-		switch (rxData[IDX_API_IDENTIFIER + 2]) {
+		switch (receivedPacket[IDX_API_IDENTIFIER + 2]) {
 		case 0x01:
 			// NO ACK
 			break;
@@ -138,7 +142,7 @@ void Firmata_processInput(void)
 		break;
 	case MODEM_STATUS:
 		// {0x7E}+{0x00+0x02}+{0x8A}+{cmdData}+{sum}
-		switch (rxData[IDX_API_IDENTIFIER + 1]) {
+		switch (receivedPacket[IDX_API_IDENTIFIER + 1]) {
 		case 0x00:
 			// HARDWARE RESET
 			break;
@@ -260,40 +264,51 @@ void reportIOStatus(WORD dioStatus, WORD *adcStatus, BYTE adcChannels)
 	sendTransmitRequest(0x0000, idx);
 }
 
-
 void XBEE_UART_RX_ISR()
 {
 	BYTE inputData = UART_bReadRxData();
+	rbuffer_write(&rxBufferInfo, &inputData, 1);
+}
+
+void Firmata_processInput() {
+	BYTE inputData = 0;
+
+	while (rbuffer_size(&rxBufferInfo) > 0) {
+		rbuffer_read(&rxBufferInfo, &inputData, 1);
 	
-	if (inputData == FRAME_DELIMITER) {
-		rxIndex = 0;
-		rxSum = 0;
-		wasEscaped = FALSE;
-		rxData[rxIndex] = inputData;
-	} else if (inputData == ESCAPE) {
-		wasEscaped = TRUE;
-	} else {
-		rxIndex++;
-		if (wasEscaped) {
-			rxData[rxIndex] = (inputData ^ 0x20);
+		if (inputData == FRAME_DELIMITER) {
+			rxIndex = 0;
+			rxSum = 0;
 			wasEscaped = FALSE;
+			receivedPacket[rxIndex] = inputData;
+		} else if (inputData == ESCAPE) {
+			wasEscaped = TRUE;
 		} else {
-			rxData[rxIndex] = inputData;
-		}
-		if (rxIndex == IDX_LENGTH_LSB) {
-			// [START][LENGTH MSB][LENGTH LSB][FRAME DATA][CHECKSUM]
-			rxBytesToReceive = (rxData[1] << 8) + rxData[2] + 4;
-		} else if (rxIndex == (rxBytesToReceive - 1)) {
-#if 0
-			if ((rxSum & 0xFF) + rxData[rxBytesToReceive - 1] == 0xFF) {
-#else
-			// ignore checksum (FOR TESTING USE ONLY)
-			if (1) {
-#endif
-				hasPacketToHandle = TRUE;
+			rxIndex++;
+			if (wasEscaped) {
+				receivedPacket[rxIndex] = (inputData ^ 0x20);
+				wasEscaped = FALSE;
+			} else {
+				receivedPacket[rxIndex] = inputData;
 			}
-		} else if (rxIndex > 2) {
-			rxSum += rxData[rxIndex];
+	
+			if (rxIndex == IDX_LENGTH_MSB) {
+				rxBytesToReceive = (inputData << 8);
+			} else if (rxIndex == IDX_LENGTH_LSB) {
+				// [START][LENGTH MSB][LENGTH LSB][FRAME DATA][CHECKSUM]
+				rxBytesToReceive = rxBytesToReceive + inputData + 4;
+			} else if (rxIndex == (rxBytesToReceive - 1)) {
+#if 0
+				if ((rxSum & 0xFF) + rxData[rxBytesToReceive - 1] == 0xFF) {
+#else
+				// ignore checksum (FOR TESTING USE ONLY)
+				if (1) {
+#endif
+					parseXBeePacket();
+				}
+			} else if (rxIndex > 2) {
+				rxSum += inputData;
+			}
 		}
 	}
 }
@@ -371,6 +386,7 @@ void parseFirmataMessage(BYTE inputData) {
 	}	
 }
 
+// TODO: Modify this function to avaid deep copy
 void sendTransmitRequest(WORD destAddress, BYTE rfDataLength) {
 	BYTE frameDataLength = 5 + rfDataLength;
 	BYTE idx = 0;

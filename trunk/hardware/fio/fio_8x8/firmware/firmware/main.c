@@ -27,9 +27,6 @@ void updateInputs(void);
 
 void setup()
 {
-	UART_EnableInt();
-	UART_Start(UART_PARITY_NONE);
-
     M8C_EnableGInt;
     
 	SleepTimer_Start();
