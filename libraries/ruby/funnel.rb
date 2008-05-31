@@ -9,6 +9,8 @@ require 'funnel/iosystem.rb'
 require 'funnel/port.rb'
 require 'funnel/xbee.rb'
 
+require 'funnel/scope.rb'
+
 module Funnel
   AIN = Port::AIN
   AOUT = Port::AOUT
