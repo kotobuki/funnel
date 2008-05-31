@@ -10,17 +10,37 @@ require 'funnel/port'
 require 'funnel/filter'
 require 'funnel/iomodule'
 
+begin
+  require 'java'
+  require 'rplib.jar'
+  include_class 'processing.core.PApplet'
+  include_class 'IPAppletAdapter'
+  puts "INFO: Ready to use the action-coding environment"
+  $action_coding_mode = true
+rescue LoadError
+  # It seems that action-coding environment is not available
+  $action_coding_mode = false
+end
+
 module Funnel
   (GAINER, ARDUINO, XBEE, FIO) = Array(Configuration::GAINER..Configuration::FIO)
 #  (IN, OUT, PWM) = Array(Configuration::IN..Configuration::PWM)
 
   class IOSystem
+    include IPAppletAdapter if $action_coding_mode
+
     MINIMUM_SAMPLING_INTERVAL = 10
     ALL = 0xFFFF
 
     attr_accessor :auto_update
 
-    def initialize(config = nil, host = '127.0.0.1', port = 9000, interval = 33)
+    def initialize(config, host, port, interval, applet = nil)
+
+      if applet != nil then
+        @applet = applet
+        @applet.registerDispose(self)
+      end
+      
       begin
         @command_port = TCPSocket.open(host, port)
         puts "command port: #{@command_port.addr.at(2)}, #{@command_port.addr.at(1)}"
@@ -34,7 +54,17 @@ module Funnel
         raise RuntimeError, "can't connect to the notification port (#{port + 1}) of the funnel_server"
       end
 
-      send_command(OSC::Message.new('/reset'), 5)
+      begin
+        send_command(OSC::Message.new('/reset'), 5)
+      rescue RuntimeError => e
+        puts "RuntimeError occurred: #{e.message}"
+        begin
+          send_command(OSC::Message.new('/reset'), 5)
+          puts "Tried again rebooting and got success"
+        rescue
+          puts "ERROR: Failed to reboot twice!!!"
+        end
+      end
 
       if interval < MINIMUM_SAMPLING_INTERVAL
         then interval = MINIMUM_SAMPLING_INTERVAL
@@ -49,13 +79,13 @@ module Funnel
       @broadcast = nil
       @autoregister = false
 
-      Thread.new do
+      @th = Thread.new do
         loop do
           packet = @notification_port.recv(8192)
           begin
             OSC::Packet.decode(packet).each do |time, message|
               case message.address
-              when '/in':
+              when '/in'
                 id = message.to_a[0]
                 next if @modules[id] == nil
                 from = message.to_a[1]
@@ -63,7 +93,7 @@ module Funnel
                 counts.times do |i|
                   @modules[id].port(from + i).value = message.to_a[2 + i]
                 end
-              when '/node':
+              when '/node'
                 next unless @autoregister
                 id = message.to_a[0]
                 ni = message.to_a[1]
@@ -102,11 +132,11 @@ module Funnel
           # puts "received: #{message.address}, #{message.to_a}"
           if message.to_a[0] < FunnelErrorEvent::NO_ERROR then
             case message.to_a[0]
-            when FunnelErrorEvent::ERROR:
+            when FunnelErrorEvent::ERROR
               puts "ERROR: #{message.to_a[1]}"
-            when FunnelErrorEvent::REBOOT_ERROR:
-              raise REBOOT_ERROR, "REBOOT_ERROR: #{message.to_a[1]}"
-            when FunnelErrorEvent::CONFIGURATION_ERROR:
+            when FunnelErrorEvent::REBOOT_ERROR
+              raise RuntimeError, "REBOOT_ERROR: #{message.to_a[1]}"
+            when FunnelErrorEvent::CONFIGURATION_ERROR
               raise RuntimeError, "CONFIGURATION_ERROR: #{message.to_a[1]}"
             end
           end
@@ -154,6 +184,13 @@ module Funnel
       end
     end
 
+    def dispose
+      puts "INFO: Disposing..."
+      @th.join 1
+      @command_port.close
+      @notification_port.close
+      puts "INFO: Disposed!"
+    end
   end
 end
 

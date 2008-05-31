@@ -38,9 +38,23 @@ module Funnel
       return MODE8
     end
 
-    def initialize(mode = MODE1, host = '127.0.0.1', port = 9000, interval = 33)
+    def initialize(arguments = nil)
+      # default values
+      mode = MODE1
+      host = '127.0.0.1'
+      port = 9000
+      interval = 33
+
+      if arguments != nil then
+        mode = arguments[:mode] unless arguments[:mode] == nil
+        host = arguments[:host] unless arguments[:host] == nil
+        port = arguments[:port] unless arguments[:port] == nil
+        interval = arguments[:interval] unless arguments[:interval] == nil
+        applet = arguments[:applet]
+      end
+      
       config = Configuration.new(Configuration::GAINER, mode)
-      @system = IOSystem.new(config, host, port, interval)
+      @system = IOSystem.new(config, host, port, interval, applet)
 
       @ain_ports = config.ain_ports
       @din_ports = config.din_ports

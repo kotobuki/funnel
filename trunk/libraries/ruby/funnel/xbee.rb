@@ -14,8 +14,20 @@ module Funnel
       return XBS2
     end
     
-    def initialize(nodes, host = '127.0.0.1', port = 9000, interval = 33)
-      super(nil, host, port, interval)
+    def initialize(arguments)
+      # default values
+      nodes = nil
+      host = '127.0.0.1'
+      port = 9000
+      interval = 33
+
+      nodes = arguments[:nodes]
+      host = arguments[:host] unless arguments[:host] == nil
+      port = arguments[:port] unless arguments[:port] == nil
+      interval = arguments[:interval] unless arguments[:interval] == nil
+      applet = arguments[:applet]
+
+      super(nil, host, port, interval, applet)
       @config = Configuration.new(Configuration::XBEE, XBS1)
       nodes = [] if nodes == nil
       nodes.each do |id|
