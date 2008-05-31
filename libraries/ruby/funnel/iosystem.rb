@@ -10,16 +10,17 @@ require 'funnel/port'
 require 'funnel/filter'
 require 'funnel/iomodule'
 
-begin
-  require 'java'
-  require 'rplib.jar'
-  include_class 'processing.core.PApplet'
-  include_class 'IPAppletAdapter'
-  puts "INFO: Ready to use the action-coding environment"
-  $action_coding_mode = true
-rescue LoadError
-  # It seems that action-coding environment is not available
-  $action_coding_mode = false
+if defined? IRP then
+  begin
+    # Load action-coding related libraries
+    require 'java'
+    require 'rplib.jar'
+    include_class 'processing.core.PApplet'
+    include_class 'IPAppletAdapter'
+    puts "INFO: Ready to use the action-coding environment"
+  rescue LoadError
+    # It seems that action-coding environment is not available
+  end
 end
 
 module Funnel
@@ -27,7 +28,7 @@ module Funnel
 #  (IN, OUT, PWM) = Array(Configuration::IN..Configuration::PWM)
 
   class IOSystem
-    include IPAppletAdapter if $action_coding_mode
+    include IPAppletAdapter if defined? IRP
 
     MINIMUM_SAMPLING_INTERVAL = 10
     ALL = 0xFFFF
