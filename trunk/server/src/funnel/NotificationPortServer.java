@@ -53,11 +53,12 @@ public class NotificationPortServer extends Server {
 	Notifier notifier;
 	Thread notifierThread;
 	boolean isNotifierRunning = false;
+	private Vector<NotificationPortClient> clist;
 
 	public NotificationPortServer(FunnelServer parent, int port) {
 		this.parent = parent;
 		this.port = port;
-		clist = new Vector();
+		clist = new Vector<NotificationPortClient>();
 		isNotifierRunning = true;
 		notifier = new Notifier();
 		notifierThread = new Thread(notifier);
@@ -66,9 +67,9 @@ public class NotificationPortServer extends Server {
 
 	public void sendMessageToClients(OSCPacket message) {
 		if (clist != null) {
-			Enumeration elements = clist.elements();
+			Enumeration<NotificationPortClient> elements = clist.elements();
 			while (elements.hasMoreElements()) {
-				Client client = (Client) elements.nextElement();
+				Client client = elements.nextElement();
 				try {
 					client.send(message);
 				} catch (IOException e) {
@@ -111,7 +112,10 @@ public class NotificationPortServer extends Server {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		super.dispose();
+	}
+
+	public void deleteClient(Client c) {
+		clist.remove(c);
 	}
 
 }

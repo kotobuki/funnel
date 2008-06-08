@@ -12,6 +12,7 @@
 package funnel;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
@@ -33,8 +34,15 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 		begin(serialPortName, baudRate);
 
 		queryVersion();
-		firmwareVersionQueue.pop(15000);
-		firmwareVersionQueue.clear();
+		// TODO: Test here against a Diecimila I/O board to confirm
+		try {
+			firmwareVersionQueue.poll(10000, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			firmwareVersionQueue.clear();
+		}
 	}
 
 	synchronized public void serialEvent(SerialPortEvent serialEvent) {

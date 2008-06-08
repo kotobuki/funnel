@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
 import java.util.Vector;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
@@ -52,9 +54,9 @@ public abstract class FirmataIO extends IOModule implements
 	private int stateOfDigitalPins = 0x0000;
 	protected funnel.PortRange analogPinRange;
 	protected funnel.PortRange digitalPinRange;
-	protected Vector dinPortChunks;
+	protected Vector<PortRange> dinPortChunks;
 	protected final Float FLOAT_ZERO = new Float(0.0f);
-	protected funnel.BlockingQueue firmwareVersionQueue;
+	protected BlockingQueue<String> firmwareVersionQueue;
 
 	public FirmataIO(int analogPins, int digitalPins, int[] pwmPins) {
 		super();
@@ -67,13 +69,13 @@ public abstract class FirmataIO extends IOModule implements
 		analogData = new float[totalAnalogPins];
 		digitalData = new float[totalDigitalPins];
 		pinMode = new int[totalPins];
-		firmwareVersionQueue = new funnel.BlockingQueue();
+		firmwareVersionQueue = new LinkedBlockingQueue<String>(1);
 
 		analogPinRange = new funnel.PortRange();
 		analogPinRange.setRange(0, totalAnalogPins - 1);
 		digitalPinRange = new funnel.PortRange();
 		digitalPinRange.setRange(totalAnalogPins, totalPins - 1);
-		dinPortChunks = new Vector();
+		dinPortChunks = new Vector<PortRange>();
 	}
 
 	/*
@@ -167,7 +169,7 @@ public abstract class FirmataIO extends IOModule implements
 		bundle.addPacket(new OSCMessage("/in", ainArguments)); //$NON-NLS-1$
 
 		for (int j = 0; j < dinPortChunks.size(); j++) {
-			PortRange range = (PortRange) dinPortChunks.get(j);
+			PortRange range = dinPortChunks.get(j);
 			Object dinArguments[] = new Object[2 + range.getCounts()];
 			dinArguments[0] = new Integer(0);
 			dinArguments[1] = new Integer(range.getMin());
@@ -310,7 +312,7 @@ public abstract class FirmataIO extends IOModule implements
 
 		if (dinPortChunks != null) {
 			for (int i = 0; i < dinPortChunks.size(); i++) {
-				PortRange range = (PortRange) dinPortChunks.get(i);
+				PortRange range = dinPortChunks.get(i);
 				printMessage("digital inputs: [" + range.getMin() + ".."
 						+ range.getMax() + "]");
 			}
@@ -323,8 +325,8 @@ public abstract class FirmataIO extends IOModule implements
 	 * @see funnel.IOModule#setOutput(java.lang.Object[])
 	 */
 	public void setOutput(Object[] arguments) {
-		printMessage("arguments: " + arguments[0] + ", " + arguments[1] + ", "
-				+ arguments[2]);
+//		printMessage("arguments: " + arguments[0] + ", " + arguments[1] + ", "
+//				+ arguments[2]);
 		// //$NON-NLS-1$ //$NON-NLS-2$
 		int moduleId = ((Integer) arguments[0]).intValue();
 		int start = ((Integer) arguments[1]).intValue();
@@ -413,7 +415,7 @@ public abstract class FirmataIO extends IOModule implements
 		printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 
 		try {
-			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
+			Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
 
 			while (portList.hasMoreElements()) {
 				CommPortIdentifier portId = (CommPortIdentifier) portList
@@ -478,9 +480,10 @@ public abstract class FirmataIO extends IOModule implements
 				case ARD_REPORT_VERSION: // Report version
 					firmwareVersion[0] = storedInputData[0]; // minor
 					firmwareVersion[1] = storedInputData[1]; // major
-					printMessage("Firmata Vesrion: " + firmwareVersion[1] + "."
+					printMessage("Firmata Protocol Vesrion: " + firmwareVersion[1] + "."
 							+ firmwareVersion[0]);
-					// firmwareVersionQueue.push(new String(""));
+					 firmwareVersionQueue.add(firmwareVersion[1] + "."
+							+ firmwareVersion[0]);
 					break;
 				case ARD_ANALOG_MESSAGE:
 					analogData[multiByteChannel] = (float) ((storedInputData[0] << 7) | storedInputData[1]) / 1023.0f;
@@ -555,9 +558,32 @@ public abstract class FirmataIO extends IOModule implements
 			stateOfDigitalPins &= ~bitMask;
 		}
 
-		writeByte(ARD_DIGITAL_MESSAGE);
-		writeByte(stateOfDigitalPins % 128); // Tx pins 0-6
-		writeByte(stateOfDigitalPins >> 7); // Tx pins 7-13
+		int port = -1;
+		if (pin < 8) {
+			port = 0;
+		} else if (pin < 16) {
+			port = 1;
+		} else if (pin < 24) {
+			port = 2;
+		}
+		
+		switch (port) {
+		case 0:
+			writeByte(ARD_DIGITAL_MESSAGE | port);
+			writeByte(stateOfDigitalPins & 0x7F); // digital pins 0-6
+			writeByte((stateOfDigitalPins & 0x0080) >> 7); // digital pins 7
+			break;
+		case 1:
+			writeByte(ARD_DIGITAL_MESSAGE | port);
+			writeByte((stateOfDigitalPins >> 8) & 0x7F); // digital pins 8-14
+			writeByte((stateOfDigitalPins & 0x8000) >> 15); // digital pins 15
+			break;
+		case 2:
+			// TODO: Support digitalWrite to analog pins
+			break;
+		default:
+			break;
+		}
 	}
 
 	protected void analogWrite(int pin, float value) {

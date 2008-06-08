@@ -2,14 +2,11 @@ package funnel;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Enumeration;
-import java.util.Vector;
 
-public class Server extends Thread {
+public abstract class Server extends Thread {
 	protected static int samplingInterval = 100;
 
 	protected ServerSocket srvsocket;
-	protected Vector clist;
 	protected int port;
 	protected FunnelServer parent;
 
@@ -50,9 +47,9 @@ public class Server extends Thread {
 		return parent.getIOModule();
 	}
 
-	public synchronized int getClientsCount() {
-		return clist.size();
-	}
+	// public synchronized int getClientsCount() {
+	// return clist.size();
+	// }
 
 	public void printMessage(String msg) {
 		parent.printMessage(msg);
@@ -68,19 +65,9 @@ public class Server extends Thread {
 		}
 	}
 
-	public void deleteClient(Client c) {
-		clist.remove(c);
-	}
+	abstract public void deleteClient(Client c);
 
-	public void dispose() {
-		if (clist != null) {
-			Enumeration e = clist.elements();
-			while (e.hasMoreElements()) {
-				CommandPortClient c = (CommandPortClient) (e.nextElement());
-				c.stopListening();
-			}
-		}
-	}
+	abstract public void dispose();
 
 	public static int getSamplingInterval() {
 		return samplingInterval;

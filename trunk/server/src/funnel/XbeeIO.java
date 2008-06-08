@@ -33,17 +33,17 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 	private final int databits = 8;
 	private final int stopbits = SerialPort.STOPBITS_1;
 
-	private Hashtable nodes;
+	private Hashtable<Integer, String> nodes;
 	private XBee xbee;
 
 	public XbeeIO(FunnelServer server, String serialPortName, int baudRate) {
 		this.parent = server;
 
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
-		nodes = new Hashtable();
+		nodes = new Hashtable<Integer, String>();
 
 		try {
-			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
+			Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
 
 			while (portList.hasMoreElements()) {
 				CommPortIdentifier portId = (CommPortIdentifier) portList
@@ -123,10 +123,10 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 		}
 
 		OSCBundle bundle = new OSCBundle();
-		Enumeration e = nodes.keys();
+		Enumeration<Integer> e = nodes.keys();
 
 		while (e.hasMoreElements()) {
-			Integer id = (Integer) e.nextElement();
+			Integer id = e.nextElement();
 			Object arguments[] = new Object[2 + MAX_IO_PORT];
 			arguments[0] = id;
 			arguments[1] = new Integer(0);

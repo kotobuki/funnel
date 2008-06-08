@@ -33,7 +33,7 @@ public abstract class IOModule {
 		String theSerialPortName = null;
 
 		try {
-			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
+			Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
 			while (portList.hasMoreElements()) {
 				CommPortIdentifier portId = (CommPortIdentifier) portList
 						.nextElement();
