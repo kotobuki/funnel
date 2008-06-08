@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env ruby -wKU
 $: << '..'
 
 require 'funnel'
@@ -7,7 +7,7 @@ module Funnel
   config = Arduino.FIRMATA
   config.set_digital_pin_mode(11, PWM)
   config.set_digital_pin_mode(13, OUT)
-  aio = Arduino.new(config)
+  aio = Arduino.new :config => config
 
   aio.analog_pin(0).filters = [SetPoint.new(0.5, 0.1)]
   aio.analog_pin(0).on PortEvent::CHANGE do |event|
