@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 008 (2008-05-26) [EXPERIMENTAL]";
+	private static final String buildName = "Funnel 008 (2008-06-08) [EXPERIMENTAL]";
 
 	private CommandPortServer commandPortServer;
 	private NotificationPortServer notificationPortServer;
@@ -51,7 +51,7 @@ public class FunnelServer extends Frame {
 		// Create the GUI elements
 		setTitle("Funnel Server"); //$NON-NLS-1$
 		setSize(width, height);
-		show();
+		setVisible(true);
 		setLayout(null);
 		setResizable(false);
 		loggingArea = new TextArea(
@@ -71,8 +71,8 @@ public class FunnelServer extends Frame {
 		int baudRate = -1;
 
 		try {
-			Map settings = (Map) YAML.load(new FileReader("settings.yaml")); //$NON-NLS-1$
-			Map serverSettings = (Map) settings.get("server"); //$NON-NLS-1$
+			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader("settings.yaml")); //$NON-NLS-1$
+			Map<?, ?> serverSettings = (Map<?, ?>) settings.get("server"); //$NON-NLS-1$
 			if (serverSettings.get("command port") == null) { //$NON-NLS-1$
 				commandPort = "9000"; //$NON-NLS-1$
 			} else {
@@ -85,7 +85,7 @@ public class FunnelServer extends Frame {
 						.toString();
 			}
 
-			Map modules = (Map) settings.get("io"); //$NON-NLS-1$
+			Map<?, ?> modules = (Map<?, ?>) settings.get("io"); //$NON-NLS-1$
 			if (modules.get("type") == null) { //$NON-NLS-1$
 				printMessage(Messages
 						.getString("FunnelServer.TypeIsNotSpecified")); //$NON-NLS-1$
@@ -133,7 +133,10 @@ public class FunnelServer extends Frame {
 			}
 		} else if (type.equalsIgnoreCase("arduino")) { //$NON-NLS-1$
 			try {
-				ioModule = new ArduinoIO(this, serialPort, 115200);
+				if (baudRate < 0) {
+					baudRate = 115200;
+				}
+				ioModule = new ArduinoIO(this, serialPort, baudRate);
 				// Arduino Diecimila will reboot automatically
 			} catch (RuntimeException e) {
 				printMessage(Messages

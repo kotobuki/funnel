@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
@@ -29,13 +32,13 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	private final int databits = 8;
 	private final int stopbits = SerialPort.STOPBITS_1;
 
-	private funnel.BlockingQueue rebootCommandQueue;
-	private funnel.BlockingQueue endCommandQueue;
-	private funnel.BlockingQueue versionCommandQueue;
-	private funnel.BlockingQueue ledCommandQueue;
-	private funnel.BlockingQueue configCommandQueue;
-	private funnel.BlockingQueue aoutCommandQueue;
-	private funnel.BlockingQueue doutCommandQueue;
+	private BlockingQueue<String> rebootCommandQueue;
+	private BlockingQueue<String> endCommandQueue;
+	private BlockingQueue<String> versionCommandQueue;
+	private BlockingQueue<String> ledCommandQueue;
+	private BlockingQueue<String> configCommandQueue;
+	private BlockingQueue<String> aoutCommandQueue;
+	private BlockingQueue<String> doutCommandQueue;
 
 	private funnel.PortRange ainPortRange;
 	private funnel.PortRange dinPortRange;
@@ -136,13 +139,13 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		this.parent = server;
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 
-		rebootCommandQueue = new funnel.BlockingQueue();
-		endCommandQueue = new funnel.BlockingQueue();
-		versionCommandQueue = new funnel.BlockingQueue();
-		ledCommandQueue = new funnel.BlockingQueue();
-		configCommandQueue = new funnel.BlockingQueue();
-		aoutCommandQueue = new funnel.BlockingQueue();
-		doutCommandQueue = new funnel.BlockingQueue();
+		rebootCommandQueue = new LinkedBlockingQueue<String>(1);
+		endCommandQueue = new LinkedBlockingQueue<String>(1);
+		versionCommandQueue = new LinkedBlockingQueue<String>(1);
+		ledCommandQueue = new LinkedBlockingQueue<String>(1);
+		configCommandQueue = new LinkedBlockingQueue<String>(1);
+		aoutCommandQueue = new LinkedBlockingQueue<String>(1);
+		doutCommandQueue = new LinkedBlockingQueue<String>(1);
 		ainPortRange = new funnel.PortRange();
 		dinPortRange = new funnel.PortRange();
 		aoutPortRange = new funnel.PortRange();
@@ -150,7 +153,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		buttonPortRange = new funnel.PortRange();
 
 		try {
-			Enumeration portList = CommPortIdentifier.getPortIdentifiers();
+			Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
 
 			while (portList.hasMoreElements()) {
 				CommPortIdentifier portId = (CommPortIdentifier) portList
@@ -289,12 +292,22 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 		printMessage(Messages.getString("IOModule.Rebooting")); //$NON-NLS-1$
 		write("Q*"); //$NON-NLS-1$
-		rebootCommandQueue.pop(1000);
-		rebootCommandQueue.sleep(100);
-		write("?*"); //$NON-NLS-1$
-		String versionString = (String) versionCommandQueue.pop(1000);
-		printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
-		printMessage(Messages.getString("IOModule.FirmwareVesrion") + versionString.substring(1, 9)); //$NON-NLS-1$
+		try {
+			rebootCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sleep(100);
+		try {
+			write("?*"); //$NON-NLS-1$
+			String versionString = (String) versionCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+			printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
+			printMessage(Messages.getString("IOModule.FirmwareVesrion") + versionString.substring(1, 9)); //$NON-NLS-1$
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	synchronized public void serialEvent(SerialPortEvent serialEvent) {
@@ -412,9 +425,15 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 					"Can't find such a configuration"); //$NON-NLS-1$
 		}
 		write("KONFIGURATION_" + configuration + "*"); //$NON-NLS-1$ //$NON-NLS-2$
-		String configurationString = (String) configCommandQueue.pop(1000);
-		printMessage("configuration: " + configurationString); //$NON-NLS-1$
-		configCommandQueue.sleep(100);
+		try {
+			String configurationString;
+			configurationString = (String) configCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+			printMessage("configuration: " + configurationString); //$NON-NLS-1$
+			sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void setOutput(Object[] arguments) {
@@ -449,10 +468,20 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 				} else if (LED_PORT.intValue() == port) {
 					if (FLOAT_ZERO.equals(arguments[index])) {
 						write("l*"); //$NON-NLS-1$
-						ledCommandQueue.pop(1000);
+						try {
+							ledCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					} else {
 						write("h*"); //$NON-NLS-1$
-						ledCommandQueue.pop(1000);
+						try {
+							ledCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					inputs[port] = ((Float) arguments[index]).floatValue();
 				}
@@ -489,10 +518,20 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 				} else if (LED_PORT.intValue() == port) {
 					if (FLOAT_ZERO.equals(arguments[index])) {
 						write("l*"); //$NON-NLS-1$
-						ledCommandQueue.pop(1000);
+						try {
+							ledCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					} else {
 						write("h*"); //$NON-NLS-1$
-						ledCommandQueue.pop(1000);
+						try {
+							ledCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					inputs[port] = ((Float) arguments[index]).floatValue();
 				}
@@ -512,7 +551,12 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 				setDigitalOutputs(digitalValues);
 				if (hasAnalogValues) {
 					// let's pop the queue to clear
-					aoutCommandQueue.pop(1000);
+					try {
+						aoutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -540,7 +584,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			printMessage("polling started: ain"); //$NON-NLS-1$
 			write("i*"); //$NON-NLS-1$
 		}
-		configCommandQueue.sleep(100);
+		sleep(100);
 		if (dinPortRange.getCounts() > 0) {
 			printMessage("polling started: din"); //$NON-NLS-1$
 			write("r*"); //$NON-NLS-1$
@@ -556,7 +600,12 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		this.isPolling = false;
 		printMessage("polling stopped"); //$NON-NLS-1$
 		write("E*"); //$NON-NLS-1$
-		endCommandQueue.pop(1000);
+		try {
+			endCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void clear() {
@@ -566,20 +615,55 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 	private void dispatch(String command) {
 		if (command.equals("Q*")) { //$NON-NLS-1$
-			rebootCommandQueue.push(new Integer(0));
+			try {
+				rebootCommandQueue.put(command);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (command.equals("E*")) { //$NON-NLS-1$
-			endCommandQueue.push(new Integer(0));
+			try {
+				endCommandQueue.put(command);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (command.startsWith("?")) { //$NON-NLS-1$
-			versionCommandQueue.push(command);
+			try {
+				versionCommandQueue.put(command);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (command.startsWith("KONFIGURATION_")) { //$NON-NLS-1$
-			configCommandQueue.push(command);
+			try {
+				configCommandQueue.put(command);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (command.equals("h*") || command.equals("l*")) { //$NON-NLS-1$ //$NON-NLS-2$
-			ledCommandQueue.push(command);
+			try {
+				ledCommandQueue.put(command);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (command.startsWith("a") || command.startsWith("A")) { //$NON-NLS-1$ //$NON-NLS-2$
-			aoutCommandQueue.push(command);
+			try {
+				aoutCommandQueue.put(command);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (command.startsWith("H") || command.startsWith("L") //$NON-NLS-1$ //$NON-NLS-2$
 				|| command.startsWith("D")) { //$NON-NLS-1$
-			doutCommandQueue.push(command);
+			try {
+				doutCommandQueue.put(command);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (command.startsWith("i") || command.startsWith("I")) { //$NON-NLS-1$ //$NON-NLS-2$
 			String value;
 			for (int i = 0; i < ainPortRange.getCounts(); i++) {
@@ -650,7 +734,12 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			s += sv;
 			s += "*"; //$NON-NLS-1$
 			write(s);
-			aoutCommandQueue.pop(1000);
+			try {
+				aoutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			throw new IndexOutOfBoundsException(
 					"Gainer error!! out of bounds analog out"); //$NON-NLS-1$
@@ -676,7 +765,12 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		s += "*";
 		write(s);
 		if (!async) {
-			aoutCommandQueue.pop(1000);
+			try {
+				aoutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -730,7 +824,12 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 			String s = "D" + sv + "*";
 			write(s);
-			doutCommandQueue.pop(1000);
+			try {
+				doutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			throw new IndexOutOfBoundsException("Out of bounds: dout");
 		}
@@ -741,7 +840,12 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			int outChannel = ch - doutPortRange.getMin();
 			String s = "H" + Integer.toHexString(outChannel).toUpperCase() + "*"; //$NON-NLS-1$ //$NON-NLS-2$
 			write(s);
-			doutCommandQueue.pop(1000);
+			try {
+				doutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			throw new IndexOutOfBoundsException(
 					"Gainer error!! out of bounds digital out"); //$NON-NLS-1$
@@ -753,7 +857,12 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			int outChannel = ch - doutPortRange.getMin();
 			String s = "L" + Integer.toHexString(outChannel).toUpperCase() + "*"; //$NON-NLS-1$ //$NON-NLS-2$
 			write(s);
-			doutCommandQueue.pop(1000);
+			try {
+				doutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			throw new IndexOutOfBoundsException(
 					"Gainer error!! out of bounds digital out"); //$NON-NLS-1$
@@ -818,10 +927,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		} else {
 			try {
 				write("Q*"); //$NON-NLS-1$
-				rebootCommandQueue.pop(100);
-				rebootCommandQueue.sleep(100);
+				rebootCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+				sleep(100);
 				write("?*"); //$NON-NLS-1$
-				String versionString = (String) versionCommandQueue.pop(100);
+				String versionString = (String) versionCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
 				if (versionString == null) {
 					return false;
 				} else {

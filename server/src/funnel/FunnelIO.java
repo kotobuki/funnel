@@ -20,7 +20,7 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	private static final int MAX_NODES = 65535;
 	private float[][] inputData = new float[MAX_NODES][MAX_IO_PORT];
 	private int[] rssi = new int[MAX_NODES];
-	private Hashtable nodes;
+	private Hashtable<Integer, String> nodes;
 
 	private XBee xbee;
 
@@ -36,7 +36,7 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		xbee.sendATCommand("ID");
 		xbee.sendATCommand("ND");
 
-		nodes = new Hashtable();
+		nodes = new Hashtable<Integer, String>();
 	}
 
 	void writeByte(int data) {
@@ -86,10 +86,10 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		}
 
 		OSCBundle bundle = new OSCBundle();
-		Enumeration e = nodes.keys();
+		Enumeration<Integer> e = nodes.keys();
 
 		while (e.hasMoreElements()) {
-			Integer id = (Integer) e.nextElement();
+			Integer id = e.nextElement();
 			Object arguments[] = new Object[2 + totalPins];
 			arguments[0] = id;
 			arguments[1] = new Integer(0);

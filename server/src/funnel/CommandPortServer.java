@@ -10,13 +10,16 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Enumeration;
 import java.util.Vector;
 
 public class CommandPortServer extends Server {
+	private Vector<CommandPortClient> clist;
+
 	public CommandPortServer(FunnelServer parent, int port) {
 		this.parent = parent;
 		this.port = port;
-		clist = new Vector();
+		clist = new Vector<CommandPortClient>();
 	}
 
 	public void run() {
@@ -31,7 +34,8 @@ public class CommandPortServer extends Server {
 				CommandPortClient client = new CommandPortClient(this, sock);
 				clist.add(client);
 				client.startListening();
-				printMessage(Messages.getString("FunnelServer.CommandPort") + client.getIP()
+				printMessage(Messages.getString("FunnelServer.CommandPort")
+						+ client.getIP()
 						+ Messages
 								.getString("CommandPortServer.ClientConnected")); //$NON-NLS-1$
 			}
@@ -42,4 +46,19 @@ public class CommandPortServer extends Server {
 			stopServer();
 		}
 	}
+
+	public void dispose() {
+		if (clist != null) {
+			Enumeration<CommandPortClient> e = clist.elements();
+			while (e.hasMoreElements()) {
+				CommandPortClient c = e.nextElement();
+				c.stopListening();
+			}
+		}
+	}
+
+	public void deleteClient(Client c) {
+		clist.remove(c);
+	}
+
 }
