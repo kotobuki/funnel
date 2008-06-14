@@ -16,7 +16,7 @@ http://farm4.static.flickr.com/3024/2575627150_20679ebc84_m.jpg
 = Key features =
 
   * An Arduino clone with a XBee module (802.15.4 or ZNet 2.5)
-  * Almost same sise as a FRISK box (but much thicker...)
+  * Almost same size as a FRISK box (but much thicker...)
   * ATMEGA168V @ 8MHz (a ceramic resonator is optional)
   * On-board DC/DC converter (austriamicrosystems' AS1322)
   * The schematic was derived from LilyPad Arduino v1.6
