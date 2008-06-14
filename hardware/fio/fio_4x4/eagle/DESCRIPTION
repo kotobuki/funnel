@@ -1,6 +1,0 @@
-<h3>Funnel I/O 4x4</h3>
-<ul>
-<li>XBee Series 1 + CY8C27143</li>
-<li>in: 4ch (10bit ADC)</li>
-<li>out: 4ch (8bit PWM)</li>
-</ul>
