@@ -48,19 +48,72 @@ module Funnel
       rescue
         raise RuntimeError, "can't connect to the command port (#{port}) of the funnel_server"
       end
-      begin
-        @notification_port = TCPSocket.open(host, port + 1)
-        puts "notification port: #{@notification_port.addr.at(2)}, #{@notification_port.addr.at(1)}"
-      rescue
-        raise RuntimeError, "can't connect to the notification port (#{port + 1}) of the funnel_server"
+
+      @th = Thread.new do
+        loop do
+          data = @command_port.recv(8192)
+          processed_size = 0
+          while processed_size < data.length do
+            packet_size = data.slice(processed_size, 4).unpack('N').at(0)
+            packet = data.slice(processed_size + 4, packet_size)
+
+            begin
+              OSC::Packet.decode(packet).each do |time, message|
+                case message.address
+                when '/in'
+                  id = message.to_a[0]
+                  next if @modules[id] == nil
+                  from = message.to_a[1]
+                  counts = message.to_a.length - 2
+                  counts.times do |i|
+                    @modules[id].port(from + i).value = message.to_a[2 + i]
+                  end
+                when '/node'
+                  next unless @autoregister
+                  id = message.to_a[0]
+                  ni = message.to_a[1]
+                  register_node(id, ni)
+                when '/configure'
+                  if message.to_a[0] < FunnelErrorEvent::NO_ERROR then
+                    case message.to_a[0]
+                    when FunnelErrorEvent::CONFIGURATION_ERROR
+                      raise RuntimeError, "CONFIGURATION_ERROR: #{message.to_a[1]}"
+                    end
+                  end
+                when '/reset'
+                  if message.to_a[0] < FunnelErrorEvent::NO_ERROR then
+                    case message.to_a[0]
+                    when FunnelErrorEvent::REBOOT_ERROR
+                      raise RuntimeError, "REBOOT_ERROR: #{message.to_a[1]}"
+                    end
+                  end
+                when '/out'
+                when '/samplingInterval'
+                when '/polling'
+                  if message.to_a[0] < FunnelErrorEvent::NO_ERROR then
+                    case message.to_a[0]
+                    when FunnelErrorEvent::ERROR
+                      puts "ERROR: #{message.address}, #{message.to_a[1]}"
+                    end
+                  else
+                    puts "OK: #{message.address}"
+                  end
+                end
+              end
+            rescue EOFError
+              puts "notification port: EOF error"
+            end
+            processed_size += packet_size + 4
+          end
+        end
       end
 
       begin
-        send_command(OSC::Message.new('/reset'), 5)
+        send_command(OSC::Message.new('/reset'))
       rescue RuntimeError => e
         puts "RuntimeError occurred: #{e.message}"
         begin
-          send_command(OSC::Message.new('/reset'), 5)
+          send_command(OSC::Message.new('/reset'))
           puts "Tried again rebooting and got success"
         rescue
           puts "ERROR: Failed to reboot twice!!!"
@@ -80,33 +133,6 @@ module Funnel
       @broadcast = nil
       @autoregister = false
 
-      @th = Thread.new do
-        loop do
-          packet = @notification_port.recv(8192)
-          begin
-            OSC::Packet.decode(packet).each do |time, message|
-              case message.address
-              when '/in'
-                id = message.to_a[0]
-                next if @modules[id] == nil
-                from = message.to_a[1]
-                counts = message.to_a.length - 2
-                counts.times do |i|
-                  @modules[id].port(from + i).value = message.to_a[2 + i]
-                end
-              when '/node'
-                next unless @autoregister
-                id = message.to_a[0]
-                ni = message.to_a[1]
-                register_node(id, ni)
-              end
-            end
-          rescue EOFError
-            puts "notification port: EOF error"
-          end
-        end
-      end
-
       send_command(OSC::Message.new('/polling', 'i', 1))
     end
 
@@ -124,29 +150,11 @@ module Funnel
       # should be implemented in a derived class
     end
 
-    def send_command(command, seconds_to_wait = 1)
-      @command_port.send(command.encode, 0)
-      packet = nil
-      begin
-        timeout(seconds_to_wait) {packet = @command_port.recv(4096)}
-        OSC::Packet.decode(packet).each do |time, message|
-          # puts "received: #{message.address}, #{message.to_a}"
-          if message.to_a[0] < FunnelErrorEvent::NO_ERROR then
-            case message.to_a[0]
-            when FunnelErrorEvent::ERROR
-              puts "ERROR: #{message.to_a[1]}"
-            when FunnelErrorEvent::REBOOT_ERROR
-              raise RuntimeError, "REBOOT_ERROR: #{message.to_a[1]}"
-            when FunnelErrorEvent::CONFIGURATION_ERROR
-              raise RuntimeError, "CONFIGURATION_ERROR: #{message.to_a[1]}"
-            end
-          end
-        end
-      rescue TimeoutError
-        puts "TimeoutError: command = #{command.address}"
-      rescue EOFError
-        puts "EOFError: packet = #{packet}"
-      end
+    def send_command(command)
+      encoded = command.encode
+      data = [encoded.length].pack('N') + encoded
+      @command_port.send(data, 0)
+      @command_port.flush
     end
 
     def send_output_command(id, start, values)
@@ -189,7 +197,6 @@ module Funnel
       puts "INFO: Disposing..."
       @th.join 1
       @command_port.close
-      @notification_port.close
       puts "INFO: Disposed!"
     end
   end
