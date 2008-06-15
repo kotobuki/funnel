@@ -249,7 +249,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 		OSCMessage message = new OSCMessage("/node");
 		message.addArgument(new Integer(my));
 		message.addArgument(new String(ni));
-		parent.getNotificationPortServer().sendMessageToClients(message);
+		parent.getCommandPortServer().sendMessageToClients(message);
 		if (nodes.containsKey(new Integer(my))) {
 			nodes.remove(new Integer(my));
 		}
