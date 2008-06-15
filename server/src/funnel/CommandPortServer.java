@@ -13,6 +13,8 @@ import java.net.Socket;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import com.illposed.osc.OSCPacket;
+
 public class CommandPortServer extends Server {
 	private Vector<CommandPortClient> clist;
 
@@ -49,16 +51,30 @@ public class CommandPortServer extends Server {
 
 	public void dispose() {
 		if (clist != null) {
-			Enumeration<CommandPortClient> e = clist.elements();
-			while (e.hasMoreElements()) {
-				CommandPortClient c = e.nextElement();
-				c.stopListening();
+			Enumeration<CommandPortClient> clients = clist.elements();
+			while (clients.hasMoreElements()) {
+				CommandPortClient client = clients.nextElement();
+				client.stopListening();
 			}
 		}
 	}
 
-	public void deleteClient(Client c) {
-		clist.remove(c);
+	public void deleteClient(Client client) {
+		clist.remove(client);
+	}
+
+	public void sendMessageToClients(OSCPacket message) {
+		if (clist != null) {
+			Enumeration<CommandPortClient> clients = clist.elements();
+			while (clients.hasMoreElements()) {
+				Client client = clients.nextElement();
+				try {
+					client.send(message);
+				} catch (IOException e) {
+					// TODO Remove the client!?
+				}
+			}
+		}
 	}
 
 }

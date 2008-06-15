@@ -26,10 +26,9 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 008 (2008-06-08) [EXPERIMENTAL]";
+	private static final String buildName = "Funnel 008 (2008-06-15) [EXPERIMENTAL]";
 
-	private CommandPortServer commandPortServer;
-	private NotificationPortServer notificationPortServer;
+	private CommandPortServer server;
 	private IOModule ioModule = null;
 	private TextArea loggingArea;
 	private final int width = 480;
@@ -65,24 +64,18 @@ public class FunnelServer extends Frame {
 		this.add(loggingArea);
 
 		String type = ""; //$NON-NLS-1$
-		String commandPort = "9000"; //$NON-NLS-1$
-		String notificationPort = "9001"; //$NON-NLS-1$
+		String networkPort = "9000"; //$NON-NLS-1$
 		String serialPort = null;
 		int baudRate = -1;
 
 		try {
-			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader("settings.yaml")); //$NON-NLS-1$
+			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader(
+					"settings.yaml")); //$NON-NLS-1$
 			Map<?, ?> serverSettings = (Map<?, ?>) settings.get("server"); //$NON-NLS-1$
-			if (serverSettings.get("command port") == null) { //$NON-NLS-1$
-				commandPort = "9000"; //$NON-NLS-1$
+			if (serverSettings.get("port") == null) { //$NON-NLS-1$
+				networkPort = "9000"; //$NON-NLS-1$
 			} else {
-				commandPort = serverSettings.get("command port").toString(); //$NON-NLS-1$
-			}
-			if (serverSettings.get("notification port") == null) { //$NON-NLS-1$
-				notificationPort = "9001"; //$NON-NLS-1$
-			} else {
-				notificationPort = serverSettings.get("notification port") //$NON-NLS-1$
-						.toString();
+				networkPort = serverSettings.get("port").toString(); //$NON-NLS-1$
 			}
 
 			Map<?, ?> modules = (Map<?, ?>) settings.get("io"); //$NON-NLS-1$
@@ -94,7 +87,7 @@ public class FunnelServer extends Frame {
 				type = modules.get("type").toString(); //$NON-NLS-1$
 			}
 
-			if (modules.get("com") == null) { //$NON-NLS-1$
+			if (modules.get("port") == null) { //$NON-NLS-1$
 				printMessage(Messages
 						.getString("FunnelServer.PortIsNotSpecified")); //$NON-NLS-1$
 				if (!type.equalsIgnoreCase("Gainer")) {
@@ -106,7 +99,7 @@ public class FunnelServer extends Frame {
 					}
 				}
 			} else {
-				serialPort = modules.get("com").toString(); //$NON-NLS-1$
+				serialPort = modules.get("port").toString(); //$NON-NLS-1$
 			}
 
 			if (modules.get("baudrate") != null) { //$NON-NLS-1$
@@ -115,8 +108,7 @@ public class FunnelServer extends Frame {
 			}
 		} catch (FileNotFoundException e) {
 			printMessage(Messages.getString("FunnelServer.NoSettingsFile")); //$NON-NLS-1$
-			commandPort = "9000"; //$NON-NLS-1$
-			notificationPort = "9001"; //$NON-NLS-1$
+			networkPort = "9000"; //$NON-NLS-1$
 			serialPort = IOModule.getSerialPortName();
 		}
 
@@ -165,13 +157,8 @@ public class FunnelServer extends Frame {
 			}
 		}
 
-		commandPortServer = new CommandPortServer(this, Integer
-				.parseInt(commandPort));
-		commandPortServer.start();
-
-		notificationPortServer = new NotificationPortServer(this, Integer
-				.parseInt(notificationPort));
-		notificationPortServer.start();
+		server = new CommandPortServer(this, Integer.parseInt(networkPort));
+		server.start();
 	}
 
 	public IOModule getIOModule() {
@@ -179,11 +166,7 @@ public class FunnelServer extends Frame {
 	}
 
 	public CommandPortServer getCommandPortServer() {
-		return commandPortServer;
-	}
-
-	public NotificationPortServer getNotificationPortServer() {
-		return notificationPortServer;
+		return server;
 	}
 
 	// Print a message on the logging console

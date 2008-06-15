@@ -27,7 +27,7 @@ public abstract class Client extends TcpOSCPort {
 		this.in = this.socket.getInputStream();
 		this.out = this.socket.getOutputStream();
 		this.bufferedOut = new BufferedOutputStream(this.socket
-				.getOutputStream());
+				.getOutputStream(), 4096);
 		// this.socket.setTcpNoDelay(true);
 	}
 
@@ -78,13 +78,16 @@ public abstract class Client extends TcpOSCPort {
 	 */
 	public void send(OSCPacket aPacket) throws IOException {
 		byte[] byteArray = aPacket.getByteArray();
-		/*
-		 * DatagramPacket packet = new DatagramPacket(byteArray,
-		 * byteArray.length, address, port); socket.send(packet);
-		 */
+		byte[] packetSize = new byte[4];
 
+		// Reference: http://opensoundcontrol.org/spec-1_0
+		// The first 4 bytes should be a packet size in int32 (big-endian)
+		packetSize[0] = (byte) ((byteArray.length >>> 24) & 0xFF);
+		packetSize[1] = (byte) ((byteArray.length >>> 16) & 0xFF);
+		packetSize[2] = (byte) ((byteArray.length >>> 8) & 0xFF);
+		packetSize[3] = (byte) ((byteArray.length >>> 0) & 0xFF);
+		bufferedOut.write(packetSize);
 		bufferedOut.write(byteArray, 0, byteArray.length);
 		bufferedOut.flush();
 	}
-
 }

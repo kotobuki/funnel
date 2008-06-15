@@ -76,11 +76,6 @@ public class CommandPortClient extends Client implements Runnable {
 	}
 
 	private void handleMessage(OSCMessage message) {
-		// server.printMessage(message.getAddress());
-		// for (int i = 0; i < message.getArguments().length; i++) {
-		// server.printMessage("\t" + message.getArguments()[i]);
-		// }
-
 		if (message.getAddress().equals("/reset")) {
 			try {
 				server.getIOModule().reboot();
@@ -151,10 +146,30 @@ public class CommandPortClient extends Client implements Runnable {
 	 */
 	public void run() {
 		byte[] buffer = new byte[1536]; // this is a common MTU
+		byte[] packet = new byte[buffer.length];
 		try {
-			while (in.read(buffer, 0, 1536) != -1 && isListening) {
-				OSCPacket oscPacket = converter.convert(buffer, in.available());
-				dispatcher.dispatchPacket(oscPacket);
+			while (isListening) {
+				int readSize = in.read(buffer, 0, 1536);
+				int processedSize = 0;
+
+				if (readSize == -1) {
+					break;
+				}
+
+				while (processedSize < readSize) {
+					int packetSize = (buffer[processedSize + 0] << 24)
+							+ (buffer[processedSize + 1] << 16)
+							+ (buffer[processedSize + 2] << 8)
+							+ buffer[processedSize + 3];
+
+					// TODO: Modify here to do not copy arrays to improve
+					// performance
+					System.arraycopy(buffer, processedSize + 4, packet, 0,
+							packetSize);
+					OSCPacket oscPacket = converter.convert(packet, packetSize);
+					dispatcher.dispatchPacket(oscPacket);
+					processedSize += packetSize + 4;
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
