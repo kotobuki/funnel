@@ -4,8 +4,8 @@
 
 # Instructions
 #
-# To build the bootloader for the LilyPad:
-# make lily
+# To build the bootloader for the Funnel I/O:
+# make fio
 
 
 # program name should not be changed...
@@ -55,8 +55,8 @@ OBJDUMP        = avr-objdump
 
 all:
 
-lily: CFLAGS += '-DMAX_TIME_COUNT=F_CPU>>1' '-DNUM_LED_FLASHES=3'
-lily: $(PROGRAM).hex
+fio: CFLAGS += '-DMAX_TIME_COUNT=F_CPU>>2' '-DNUM_LED_FLASHES=3'
+fio: $(PROGRAM).hex
 
 $(PROGRAM).hex: $(PROGRAM).elf
 	$(OBJCOPY) -j .text -j .data -O ihex $< $@
