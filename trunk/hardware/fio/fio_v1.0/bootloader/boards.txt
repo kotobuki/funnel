@@ -117,3 +117,23 @@ lilypad.bootloader.lock_bits=0x0F
 lilypad.build.mcu=atmega168
 lilypad.build.f_cpu=8000000L
 lilypad.build.core=arduino
+
+##############################################################
+
+fio.name=Funnel I/O
+
+fio.upload.protocol=stk500
+fio.upload.maximum_size=14336
+fio.upload.speed=19200
+
+fio.bootloader.low_fuses=0xe2
+fio.bootloader.high_fuses=0xdd
+fio.bootloader.extended_fuses=0x00
+fio.bootloader.path=fio
+fio.bootloader.file=ATmegaBOOT_168.hex
+fio.bootloader.unlock_bits=0x3F
+fio.bootloader.lock_bits=0x0F
+
+fio.build.mcu=atmega168
+fio.build.f_cpu=8000000L
+fio.build.core=arduino

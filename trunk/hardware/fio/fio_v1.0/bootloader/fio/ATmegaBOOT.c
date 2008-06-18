@@ -251,6 +251,10 @@ int main(void)
     uint8_t ch,ch2;
     uint16_t w;
 
+    /* To avoid a watchdog-initiated device reset */
+    MCUSR = 0;
+    wdt_disable();
+
     asm volatile("nop\n\t");
 
     /* set pin direction for bootloader pin and enable pullup */
