@@ -27,7 +27,7 @@ public abstract class FirmataIO extends IOModule implements
 	private static final int ARD_REPORT_DIGITAL_PORTS = 0xD0;
 	private static final int ARD_SET_DIGITAL_PIN_MODE = 0xF4;
 	private static final int ARD_REPORT_VERSION = 0xF9;
-	// private static final int ARD_SYSTEM_RESET = 0xFF;
+	private static final int ARD_SYSTEM_RESET = 0xFF;
 	protected static final int ARD_PIN_MODE_IN = 0x00;
 	protected static final int ARD_PIN_MODE_OUT = 0x01;
 	protected static final int ARD_PIN_MODE_PWM = 0x02;
@@ -216,12 +216,7 @@ public abstract class FirmataIO extends IOModule implements
 
 		printMessage(Messages.getString("IOModule.Rebooting")); //$NON-NLS-1$
 
-		// NOTE:
-		// In Firmata 2.0 beta 0, the system reset command will remove all
-		// callbacks. So don't use the command here, or your I/O board will stop
-		// responding
-		// 
-		// writeByte(ARD_SYSTEM_RESET);
+		writeByte(ARD_SYSTEM_RESET);
 		sleep(500);
 
 		writeByte(ARD_REPORT_VERSION);
