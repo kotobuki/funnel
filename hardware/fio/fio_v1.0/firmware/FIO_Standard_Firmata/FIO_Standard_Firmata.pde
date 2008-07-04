@@ -26,7 +26,7 @@ void setPinModeCallback(byte pin, int mode) {
     pinMode(pin, mode);
     break;
   case PWM:
-    pinMode(pin,OUTPUT);
+    pinMode(pin, OUTPUT);
     break;
   default:
     break;
@@ -34,7 +34,7 @@ void setPinModeCallback(byte pin, int mode) {
 }
 
 void analogWriteCallback(byte pin, int value) {
-  setPinModeCallback(pin,PWM);
+  setPinModeCallback(pin, PWM);
   analogWrite(pin, value);
 }
 
@@ -56,8 +56,11 @@ void digitalWriteCallback(byte port, int value) {
 void reportAnalogCallback(byte pin, int value) {
   if (value == 0) {
     analogInputsToReport = analogInputsToReport &~ (1 << pin);
-  } else { // everything but 0 enables reporting of that pin
+    pinMode(14 + pin, OUTPUT);
+  } 
+  else { // everything but 0 enables reporting of that pin
     analogInputsToReport = analogInputsToReport | (1 << pin);
+    pinMode(14 + pin, INPUT);
   }
 }
 
@@ -67,6 +70,15 @@ void reportDigitalCallback(byte port, int value) {
   // turn off analog reporting when used as digital
   if (port == ANALOG_PORT) {
     analogInputsToReport = 0;
+  }
+}
+
+void systemResetCallback() {
+  for (byte i = 0; i < 3; i++) {
+    digitalWrite(13, HIGH);
+    delay(100);
+    digitalWrite(13, LOW);
+    delay(100);
   }
 }
 
@@ -80,10 +92,12 @@ void setup() {
   Firmata.attach(REPORT_ANALOG, reportAnalogCallback);
   Firmata.attach(REPORT_DIGITAL, reportDigitalCallback);
   Firmata.attach(SET_PIN_MODE, setPinModeCallback);
+  Firmata.attach(SYSTEM_RESET, systemResetCallback);
 
   for (i = 0; i < TOTAL_DIGITAL_PINS; ++i) {
     pinMode(i, OUTPUT);
   }
+
   for (i = 0; i < TOTAL_PORTS; ++i) {
     reportPINs[i] = false;
   }
