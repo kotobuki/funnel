@@ -12,11 +12,10 @@ import gnu.io.SerialPortEvent;
 public class FunnelIO extends FirmataIO implements XBeeEventListener {
 
 	private static final int TOTAL_ANALOG_PINS = 8;
-	private static final int TOTAL_DIGITAL_PINS = 10;
-	private static final int[] PWM_CAPABLE_PINS = new int[] { 8, 9, 10, 11, 12,
-			13, 14, 15 };
+	private static final int TOTAL_DIGITAL_PINS = 14;
+	private static final int[] PWM_CAPABLE_PINS = new int[] { 3, 5, 6, 9, 10, 11 };
 
-	private static final int MAX_IO_PORT = 18;
+	private static final int MAX_IO_PORT = 22;
 	private static final int MAX_NODES = 65535;
 	private float[][] inputData = new float[MAX_NODES][MAX_IO_PORT];
 	private int[] rssi = new int[MAX_NODES];
@@ -29,8 +28,21 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		this.parent = server;
 
 		begin(serialPortName, baudRate);
+		byte[] command = new byte[] { '+', '+', '+' };
+		byte[] apiModeCommand = new byte[] { 'A', 'T', 'A', 'P', '2', ',', ' ', 'C', 'N', 13 };
+		try {
+			output.write(command);
+			sleep(1500);
+			output.write(apiModeCommand);
+			sleep(100);
+			parent.printMessage("XBee API Mode: 2");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		xbee = new XBee(this, output);
+
 		xbee.sendATCommand("VR");
 		xbee.sendATCommand("MY");
 		xbee.sendATCommand("ID");
@@ -65,11 +77,9 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 				// e.g. global pin number 6 means local pin number 0
 				int pin = port - digitalPinRange.getMin();
 
-				if (arguments[index] != null
-						&& arguments[index] instanceof Float) {
+				if (arguments[index] != null && arguments[index] instanceof Float) {
 					if (pinMode[port] == ARD_PIN_MODE_OUT) {
-						digitalWrite(pin,
-								FLOAT_ZERO.equals(arguments[index]) ? 0 : 1);
+						digitalWrite(pin, FLOAT_ZERO.equals(arguments[index]) ? 0 : 1);
 					} else if (pinMode[port] == ARD_PIN_MODE_PWM) {
 						// analogWrite(pin, ((Float) arguments[index])
 						// .floatValue());
@@ -130,11 +140,9 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		}
 	}
 
-	public void networkingIdentificationEvent(int my, int sh, int sl, int db,
-			String ni) {
-		String info = "NODE: MY=" + my + ", SH=" + Integer.toHexString(sh)
-				+ ", SL=" + Integer.toHexString(sl) + ", dB=" + db + ", NI=\'"
-				+ ni + "\'";
+	public void networkingIdentificationEvent(int my, int sh, int sl, int db, String ni) {
+		String info = "NODE: MY=" + my + ", SH=" + Integer.toHexString(sh) + ", SL="
+				+ Integer.toHexString(sl) + ", dB=" + db + ", NI=\'" + ni + "\'";
 		parent.printMessage(info);
 		OSCMessage message = new OSCMessage("/node");
 		message.addArgument(new Integer(my));
@@ -154,9 +162,8 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		parent.printMessage(panId);
 	}
 
-	public void rxIOStatusEvent(int source, int rssi, int ioEnable,
-			boolean hasDigitalData, boolean hasAnalogData, int dinStatus,
-			float[] analogData) {
+	public void rxIOStatusEvent(int source, int rssi, int ioEnable, boolean hasDigitalData,
+			boolean hasAnalogData, int dinStatus, float[] analogData) {
 		// NOTE: Funnel I/O doesn't use RX_IO_STATUS_16BIT
 	}
 
