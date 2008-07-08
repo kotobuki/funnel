@@ -6,14 +6,14 @@ package funnel.osc
 	 * 
 	 * @private
 	 * 
-	 */	
+	 */ 
 	public class OSCMessage extends OSCPacket
 	{	
 		public function OSCMessage(address:String, ...args) {
 			super(address);
 			for each (var arg:* in args)
-			    if (arg is OSCType)
-			    	addValue(arg);
+				if (arg is OSCType)
+					addValue(arg);
 		}
 		
 		public function addValue(value:OSCType):void {
@@ -27,13 +27,13 @@ package funnel.osc
 		private function getTypeStr():String {
 			var typeStr:String = ",";
 			for each (var o:OSCType in _values)
-			    typeStr += o.type;
+				typeStr += o.type;
 			return typeStr;
 		}
 		
 		override protected function writeBody(bytes:ByteArray):void {
 			for each (var o:OSCType in _values)
-			    o.writeToBytes(bytes);
+				o.writeToBytes(bytes);
 		}
 		
 		internal static function createWithBytes(bytes:ByteArray):OSCMessage {

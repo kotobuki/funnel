@@ -4,7 +4,7 @@ package funnel
 	
 	/**
 	 * GAINER専用のマトリクスLEDをコントロールするクラスです。
-	 */	
+	 */ 
 	public class MatrixLED extends IOSystem
 	{
 		/**
@@ -35,7 +35,7 @@ package funnel
 						rgb = data.getPixel(j, i);
 						r = ((rgb & 0xff0000) >> 16);
 						g = ((rgb & 0xff00) >> 8);
-						b = ( rgb & 0xff);  
+						b = ( rgb & 0xff);	
 						pixels.push((0.3*r + 0.59*g + 0.11*b) / 255);
 					}
 				}

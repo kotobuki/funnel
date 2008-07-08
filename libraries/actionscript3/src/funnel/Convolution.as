@@ -3,7 +3,7 @@ package funnel
 	/**
 	 * 入力に対して畳み込み演算を行うクラスです。細かいノイズを取り除くためのローパスフィルタや、ドリフトを取り除くためのハイパスフィタ等があります。
 	 * 
-	 */	
+	 */ 
 	public class Convolution implements IFilter
 	{
 		/**
@@ -34,7 +34,7 @@ package funnel
 		
 		/**
 		 * 入力バッファの積和を行う際に用いる係数の配列。代入した場合、バッファはクリアされます。
-		 */	
+		 */ 
 		public function get coef():Array {
 			return _coef;
 		}

@@ -2,7 +2,7 @@ package funnel
 {
 	/**
 	 * フィルタのインタフェースです。
-	 */	
+	 */ 
 	public interface IFilter
 	{
 		/**

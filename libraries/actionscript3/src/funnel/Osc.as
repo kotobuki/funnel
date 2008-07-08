@@ -13,7 +13,7 @@ package funnel
 	/**
 	 * LEDをふわふわ点滅させたりする時などに使います。回数を1回に設定すると、ワンショットの制御にも使えます。サービス間隔はOsc.serviceIntervalの設定に従います。
 	 * 
-	 */	
+	 */ 
 	public class Osc extends EventDispatcher implements IGenerator
 	{	
 		/**
@@ -186,7 +186,7 @@ package funnel
 		/**
 		 * 三角波
 		 * 
-		 */	
+		 */ 
 		public static function TRIANGLE(val:Number):Number {
 			val %= 1;
 			if (val <= 0.25) return 2 * val + 0.5;
@@ -197,7 +197,7 @@ package funnel
 		/**
 		 * ノコギリ波
 		 * 
-		 */	
+		 */ 
 		public static function SAW(val:Number):Number {
 			val %= 1;
 			if (val <= 0.5) return val + 0.5;
@@ -207,7 +207,7 @@ package funnel
 		/**
 		 * インパルス
 		 * 
-		 */	
+		 */ 
 		public static function IMPULSE(val:Number):Number {
 			if (val <= 1) return 1;
 			else return 0;

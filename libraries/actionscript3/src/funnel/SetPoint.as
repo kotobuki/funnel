@@ -3,7 +3,7 @@ package funnel
 	/**
 	 * アナログの値に対して閾値とヒステリシスを持つポイントをセットし、現在の状態を段階化して返します。ポイントが1つの場合の出力は0または1の2種類、ポイントが2つの場合は0または1または2の3種類、ポイントがn個の場合は0からnまでのn種類になります。 
 	 * 
-	 */	
+	 */ 
 	public class SetPoint implements IFilter
 	{
 		private var _points:Object;
@@ -27,7 +27,7 @@ package funnel
 		
 		/**
 		 * @inheritDoc
-		 */	
+		 */ 
 		public function processSample(val:Number):Number
 		{
 			var status:int = _lastStatus;

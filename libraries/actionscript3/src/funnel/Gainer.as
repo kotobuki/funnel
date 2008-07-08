@@ -2,7 +2,7 @@ package funnel
 {
 	/**
 	 * Gainer I/Oモジュールを扱うためのクラスです。
-	 */	
+	 */ 
 	public class Gainer extends IOSystem
 	{
 		private var _port:Function;
@@ -22,98 +22,98 @@ package funnel
 		public static function get MODE1():Configuration {
 			var k:Configuration = new Configuration();
 			k.config = [
-		    	AIN,  AIN,  AIN,  AIN,
-		    	DIN,  DIN,  DIN,  DIN,
-		    	AOUT, AOUT, AOUT, AOUT,
-		    	DOUT, DOUT, DOUT, DOUT,
-		    	DOUT, DIN
-		    ];
-		    k.ainPorts = [0, 1, 2, 3];
-		    k.dinPorts = [4, 5, 6, 7];
-		    k.aoutPorts = [8, 9, 10, 11];
-		    k.doutPorts = [12, 13, 14, 15];
-		    k.button = 17;
-		    k.led = 16;
-		    return k;
-		}
-		
-		/**
-		 * @copy Gainer#MODE1()
-		 */	
-		public static function get MODE2():Configuration {
-			var k:Configuration = new Configuration();
-			k.config = [
-				AIN,  AIN,  AIN,  AIN,
-				AIN,  AIN,  AIN,  AIN,
+				AIN,  AIN,	AIN,  AIN,
+				DIN,  DIN,	DIN,  DIN,
 				AOUT, AOUT, AOUT, AOUT,
 				DOUT, DOUT, DOUT, DOUT,
 				DOUT, DIN
 			];
-		    k.ainPorts = [0, 1, 2, 3, 4, 5, 6, 7];
-		    k.aoutPorts = [8, 9, 10, 11];
-		    k.doutPorts = [12, 13, 14, 15];
-		    k.button = 17;
-		    k.led = 16;
-		    return k;
-		}
-		
-		/**
-		 * @copy Gainer#MODE1()
-		 */	
-		public static function get MODE3():Configuration {
-			var k:Configuration = new Configuration();
-			k.config = [
-				AIN,  AIN,  AIN,  AIN,
-				DIN,  DIN,  DIN,  DIN,
-				AOUT, AOUT, AOUT, AOUT,
-				AOUT, AOUT, AOUT, AOUT,
-				DOUT, DIN
-			];
-		    k.ainPorts = [0, 1, 2, 3];
-		    k.dinPorts = [4, 5, 6, 7];
-		    k.aoutPorts = [8, 9, 10, 11, 12, 13, 14, 15];
-		    k.button = 17;
-		    k.led = 16;
-		    return k;
-		}
-		
-		/**
-		 * @copy Gainer#MODE1()
-		 */	
-		public static function get MODE4():Configuration {
-			var k:Configuration = new Configuration();
-			k.config = [
-				AIN,  AIN,  AIN,  AIN,
-				AIN,  AIN,  AIN,  AIN,
-				AOUT, AOUT, AOUT, AOUT,
-				AOUT, AOUT, AOUT, AOUT,
-				DOUT, DIN
-			];
-		    k.ainPorts = [0, 1, 2, 3, 4, 5, 6, 7];
-          	k.aoutPorts = [8, 9, 10, 11, 12, 13, 14, 15];
-          	k.button = 17;
-          	k.led = 16;
-          	return k;
-		}
-		
-		/**
-		 * @copy Gainer#MODE1()
-		 */	
-		public static function get MODE5():Configuration {
-			var k:Configuration = new Configuration();
-			k.config = [
-				DIN,  DIN,  DIN,  DIN,
-				DIN,  DIN,  DIN,  DIN,
-				DIN,  DIN,  DIN,  DIN,
-				DIN,  DIN,  DIN,  DIN
-		    ];
-          	k.dinPorts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+			k.ainPorts = [0, 1, 2, 3];
+			k.dinPorts = [4, 5, 6, 7];
+			k.aoutPorts = [8, 9, 10, 11];
+			k.doutPorts = [12, 13, 14, 15];
+			k.button = 17;
+			k.led = 16;
 			return k;
 		}
 		
 		/**
 		 * @copy Gainer#MODE1()
-		 */	
+		 */ 
+		public static function get MODE2():Configuration {
+			var k:Configuration = new Configuration();
+			k.config = [
+				AIN,  AIN,	AIN,  AIN,
+				AIN,  AIN,	AIN,  AIN,
+				AOUT, AOUT, AOUT, AOUT,
+				DOUT, DOUT, DOUT, DOUT,
+				DOUT, DIN
+			];
+			k.ainPorts = [0, 1, 2, 3, 4, 5, 6, 7];
+			k.aoutPorts = [8, 9, 10, 11];
+			k.doutPorts = [12, 13, 14, 15];
+			k.button = 17;
+			k.led = 16;
+			return k;
+		}
+		
+		/**
+		 * @copy Gainer#MODE1()
+		 */ 
+		public static function get MODE3():Configuration {
+			var k:Configuration = new Configuration();
+			k.config = [
+				AIN,  AIN,	AIN,  AIN,
+				DIN,  DIN,	DIN,  DIN,
+				AOUT, AOUT, AOUT, AOUT,
+				AOUT, AOUT, AOUT, AOUT,
+				DOUT, DIN
+			];
+			k.ainPorts = [0, 1, 2, 3];
+			k.dinPorts = [4, 5, 6, 7];
+			k.aoutPorts = [8, 9, 10, 11, 12, 13, 14, 15];
+			k.button = 17;
+			k.led = 16;
+			return k;
+		}
+		
+		/**
+		 * @copy Gainer#MODE1()
+		 */ 
+		public static function get MODE4():Configuration {
+			var k:Configuration = new Configuration();
+			k.config = [
+				AIN,  AIN,	AIN,  AIN,
+				AIN,  AIN,	AIN,  AIN,
+				AOUT, AOUT, AOUT, AOUT,
+				AOUT, AOUT, AOUT, AOUT,
+				DOUT, DIN
+			];
+			k.ainPorts = [0, 1, 2, 3, 4, 5, 6, 7];
+			k.aoutPorts = [8, 9, 10, 11, 12, 13, 14, 15];
+			k.button = 17;
+			k.led = 16;
+			return k;
+		}
+		
+		/**
+		 * @copy Gainer#MODE1()
+		 */ 
+		public static function get MODE5():Configuration {
+			var k:Configuration = new Configuration();
+			k.config = [
+				DIN,  DIN,	DIN,  DIN,
+				DIN,  DIN,	DIN,  DIN,
+				DIN,  DIN,	DIN,  DIN,
+				DIN,  DIN,	DIN,  DIN
+			];
+			k.dinPorts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+			return k;
+		}
+		
+		/**
+		 * @copy Gainer#MODE1()
+		 */ 
 		public static function get MODE6():Configuration {
 			var k:Configuration = new Configuration();
 			k.config = [
@@ -122,13 +122,13 @@ package funnel
 				DOUT, DOUT, DOUT, DOUT,
 				DOUT, DOUT, DOUT, DOUT
 			];
-          	k.doutPorts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+			k.doutPorts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 			return k;
 		}
 		
 		/**
 		 * @copy Gainer#MODE1()
-		 */	
+		 */ 
 		public static function get MODE7():Configuration {
 			var k:Configuration = new Configuration();
 			k.config = [
@@ -156,17 +156,17 @@ package funnel
 		
 		/**
 		 * @copy Gainer#MODE1()
-		 */	
+		 */ 
 		public static function get MODE8():Configuration {
 			var k:Configuration = new Configuration();
 			k.config = [
-				DIN,  DIN,  DIN,  DIN,
-				DIN,  DIN,  DIN,  DIN,
+				DIN,  DIN,	DIN,  DIN,
+				DIN,  DIN,	DIN,  DIN,
 				DOUT, DOUT, DOUT, DOUT,
 				DOUT, DOUT, DOUT, DOUT
 			];
-		    k.dinPorts = [0, 1, 2, 3, 4, 5, 6, 7];
-          	k.doutPorts = [8, 9, 10, 11, 12, 13, 14, 15];
+			k.dinPorts = [0, 1, 2, 3, 4, 5, 6, 7];
+			k.doutPorts = [8, 9, 10, 11, 12, 13, 14, 15];
 			return k;
 		}
 		
@@ -194,7 +194,7 @@ package funnel
 		 * @param portNum ポート番号
 		 * @return portNumで指定したPortオブジェクト
 		 * @see Port
-		 */	
+		 */ 
 		public function analogInput(portNum:uint):Port {
 			return _port(_ainPorts[portNum]);
 		}
@@ -204,7 +204,7 @@ package funnel
 		 * @param portNum ポート番号
 		 * @return portNumで指定したPortオブジェクト
 		 * @see Port
-		 */	
+		 */ 
 		public function digitalInput(portNum:uint):Port {
 			return _port(_dinPorts[portNum]);
 		}
@@ -214,7 +214,7 @@ package funnel
 		 * @param portNum ポート番号
 		 * @return portNumで指定したPortオブジェクト
 		 * @see Port
-		 */	
+		 */ 
 		public function analogOutput(portNum:uint):Port {
 			return _port(_aoutPorts[portNum]);
 		}
@@ -224,21 +224,21 @@ package funnel
 		 * @param portNum ポート番号
 		 * @return portNumで指定したPortオブジェクト
 		 * @see Port
-		 */	
+		 */ 
 		public function digitalOutput(portNum:uint):Port {
 			return _port(_doutPorts[portNum]);
 		}
 		
 		/**
 		 * I/Oモジュール上のボタンを表すポート
-		 */	
+		 */ 
 		public function get button():Port {
 			return _port(_button);
 		}
 		
 		/**
 		 * I/Oモジュール上のLEDを表すポート
-		 */	
+		 */ 
 		public function get led():Port {
 			return _port(_led);
 		}
