@@ -6,7 +6,7 @@ package funnel.osc
 	 * 
 	 * @private
 	 * 
-	 */	
+	 */ 
 	public class OSCBundle extends OSCPacket
 	{
 		private static const BUNDLE:String = "#bundle";
@@ -19,7 +19,7 @@ package funnel.osc
 		//TODO:とりあえず0にしておくが
 		override protected function writeTag(bytes:ByteArray):void {
 			for (var i:uint = 0; i < 8; ++i)
-			    bytes.writeByte(0);
+				bytes.writeByte(0);
 		}
 		
 		override protected function writeBody(bytes:ByteArray):void {
@@ -33,7 +33,7 @@ package funnel.osc
 		internal static function createWithBytes(bytes:ByteArray, end:int):OSCBundle {
 			var bundle:OSCBundle = new OSCBundle();
 			if (OSCString.createWithBytes(bytes).value != BUNDLE)
-			    return null;
+				return null;
 			bytes.position += 8; //TODO: readLongしてtimeに格納すべき
 			while (bytes.position < end) {
 				var packet:OSCPacket = OSCPacket.createWithBytes(bytes, OSCInt.createWithBytes(bytes).value);

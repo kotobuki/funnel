@@ -4,7 +4,7 @@ package funnel
 	
 	/**
 	 * ポート値の変化に関連するイベントを表すクラスです。
-	 */	
+	 */ 
 	public class PortEvent extends Event
 	{
 		/**

@@ -10,7 +10,7 @@ package funnel
 	 * Socketのラッパーです。ソケットの接続処理をTaskとして管理します。
 	 * @private
 	 * 
-	 */	
+	 */ 
 	public class NetPort extends EventDispatcher
 	{
 		protected var _socket:Socket;

@@ -9,7 +9,7 @@ package funnel
 
 	/**
 	 * ジェネレーターのインタフェースです。
-	 */	
+	 */ 
 	public interface IGenerator extends IEventDispatcher
 	{
 		/**

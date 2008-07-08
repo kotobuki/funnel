@@ -4,7 +4,7 @@ package funnel
 
 	/**
 	 * ジェネレーターのイベントを表すクラスです。
-	 */	
+	 */ 
 	public class GeneratorEvent extends Event
 	{
 		/**

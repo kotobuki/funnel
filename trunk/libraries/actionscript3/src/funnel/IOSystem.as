@@ -2,7 +2,6 @@ package funnel
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	
 	import funnel.osc.*;
 	
 	/**
@@ -101,7 +100,7 @@ package funnel
 		}
 		
 		private function onReceiveInput(event:Event):void {
-		  var message:OSCMessage = _commandPort.inputMessage;
+			var message:OSCMessage = _commandPort.inputMessage;
 			var portValues:Array = message.value;
 			var module:IOModule = _modules[portValues[0].value];
 			var startPortNum:uint = portValues[1].value;

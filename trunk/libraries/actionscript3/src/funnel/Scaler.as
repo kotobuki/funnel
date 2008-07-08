@@ -2,7 +2,7 @@ package funnel
 {
 	/**
 	 * ある範囲の入力をある範囲にスケーリングするためのクラスです。直線でのスケーリング以外に、よく使われるカーブも用意されています。
-	 */	
+	 */ 
 	public class Scaler implements IFilter
 	{
 		/**
@@ -63,8 +63,7 @@ package funnel
 		/**
 		 * @inheritDoc
 		 */		
-		public function processSample(val:Number):Number
-		{
+		public function processSample(val:Number):Number {
 			var inRange:Number = inMax - inMin;
 			var outRange:Number = outMax - outMin;
 			var normVal:Number = (val - inMin) / inRange;

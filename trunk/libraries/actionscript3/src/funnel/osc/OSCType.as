@@ -6,7 +6,7 @@ package funnel.osc
 	 * 
 	 * @private
 	 * 
-	 */	
+	 */ 
 	public class OSCType
 	{
 		public static const FLOAT:String = "f";

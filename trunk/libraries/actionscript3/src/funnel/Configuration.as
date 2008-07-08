@@ -3,7 +3,7 @@ package funnel
 	/**
 	 * I/Oモジュールのコンフィギュレーションを設定するためのクラスです。コンフィギュレーションはI/Oモジュールとの通信を開始する段階で決定する必要があるため、IOSystemのコンストラクタの引数で指定します。
 	 * @see IOSystem#IOSystem()
-	 */	
+	 */ 
 	public class Configuration
 	{	
 		/**
@@ -76,12 +76,12 @@ package funnel
 		public function setDigitalPinMode(portNum:uint, mode:uint):void {
 			if (digitalPins == null) throw new ArgumentError("digital pins are not available");
 			if (digitalPins[portNum] == null) throw new ArgumentError("digital pin is not available");
-          	if ([DIN, DOUT, AOUT].indexOf(mode) != -1) {
-          		config[digitalPins[portNum]] = mode;
-          	} else {
-          		throw new ArgumentError("mode #" + mode +" is not available");
-          	}
-        }
-        
+			if ([DIN, DOUT, AOUT].indexOf(mode) != -1) {
+				config[digitalPins[portNum]] = mode;
+			} else {
+				throw new ArgumentError("mode #" + mode +" is not available");
+			}
+		}
+		
 	}
 }

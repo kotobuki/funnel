@@ -20,7 +20,7 @@ package funnel
 	
 	/**
 	 * I/Oモジュールの入出力ポートを表すクラスです。
-	 */	
+	 */ 
 	public class Port extends EventDispatcher
 	{
 		/**
@@ -46,7 +46,7 @@ package funnel
 		private var _value:Number;
 		private var _lastValue:Number;
 		private var _number:uint;
-		private var _type:uint;	
+		private var _type:uint; 
 		private var _filters:Array;
 		private var _generator:IGenerator;
 		private var _sum:Number;

@@ -1,6 +1,6 @@
 /*
-    The model for asynchronous computation used in this class is heavily inspired 
-    by Mochikit(http://mochikit.com/) and Twisted(http://twistedmatrix.com/trac/).
+	The model for asynchronous computation used in this class is heavily inspired 
+	by Mochikit(http://mochikit.com/) and Twisted(http://twistedmatrix.com/trac/).
 */
 
 package funnel
@@ -12,7 +12,7 @@ package funnel
 	 * 非同期処理を同期化するためのクラスです。
 	 * @private
 	 * 
-	 */	
+	 */ 
 	public class Task {
 		
 		private var chain:Array;
@@ -23,14 +23,14 @@ package funnel
 		
 		public function Task(funcs:Array = null) {
 			chain = [];
-	    	finished = false;
-	    	status = -1;
-	    	
-	    	if (funcs != null) {
-		    	for each (var f:Function in funcs) {
-		    		chain.push([f, null]);
-		    	}
-	    	}
+			finished = false;
+			status = -1;
+			
+			if (funcs != null) {
+				for each (var f:Function in funcs) {
+					chain.push([f, null]);
+				}
+			}
 		}
 		
 		static public function bindArgs(f:Function, args:Array):Function {
@@ -84,13 +84,13 @@ package funnel
 			notify();
 			return this;
 		}
-	    
-	    private function notify():void {
-	    	if (finished) {
+		
+		private function notify():void {
+			if (finished) {
 				finished = false;
 				fire();
 			}
-	    }
+		}
 		
 		public function complete(res:* = null):Task {
 			if (status != -1) throw Error('complete() can be called only once');
@@ -109,12 +109,12 @@ package funnel
 		}
 		
 		public function cancel():void {
-        	if (status == -1) {
-        		onCanceled();
-	            if (status == -1) fail(new Error('task was canceled'));
-	        } else if (res is Task) {
-	            res.cancel();
-	        }
+			if (status == -1) {
+				onCanceled();
+				if (status == -1) fail(new Error('task was canceled'));
+			} else if (res is Task) {
+				res.cancel();
+			}
 		}
 		
 		protected function onCanceled():void {}
@@ -134,17 +134,17 @@ package funnel
 				} else {
 					res = f();
 				}
-                
-                if (res is Task) {
-	                res.onFired = resume;
-	                res.notify();
-                } else {
-                	fire();
-                }
-            } else {
-            	finished = true;
-            	if (onFired != null) onFired();
-            }
+				
+				if (res is Task) {
+					res.onFired = resume;
+					res.notify();
+				} else {
+					fire();
+				}
+			} else {
+				finished = true;
+				if (onFired != null) onFired();
+			}
 		}
 		
 		private function resume():void {

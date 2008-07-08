@@ -6,7 +6,7 @@ package funnel
 	/**
 	 * PCに接続されたI/Oモジュールを抽象化して共通の方法でアクセスするためのクラスです。
 	 * 
-	 */	
+	 */ 
 	public class IOModule
 	{
 		private var _system:IOSystem;

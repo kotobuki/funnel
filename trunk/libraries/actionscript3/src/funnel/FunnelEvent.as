@@ -4,7 +4,7 @@ package funnel
 	
 	/**
 	 * IOSystemのイベントを表すクラスです。
-	 */	
+	 */ 
 	public class FunnelEvent extends Event
 	{
 		/**

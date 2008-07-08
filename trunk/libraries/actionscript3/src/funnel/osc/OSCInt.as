@@ -6,7 +6,7 @@ package funnel.osc
 	 * 
 	 * @private
 	 * 
-	 */	
+	 */ 
 	public class OSCInt extends OSCType
 	{
 		public function OSCInt(value:*) {

@@ -3,7 +3,7 @@ package funnel
 	/**
 	 * ArduinoクラスはファームウェアとしてFirmataを搭載したArduinoをI/Oモジュールとして扱うためのクラスです。
 	 * 
-	 */	
+	 */ 
 	public class Arduino extends IOSystem
 	{
 		private var _port:Function;

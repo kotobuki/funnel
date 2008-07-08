@@ -6,7 +6,7 @@ package funnel.osc
 	 * 
 	 * @private
 	 * 
-	 */	
+	 */ 
 	public class OSCFloat extends OSCType
 	{
 		public function OSCFloat(value:*) {
@@ -23,6 +23,6 @@ package funnel.osc
 		
 		public static function createWithBytes(bytes:ByteArray):OSCFloat {
 			return new OSCFloat(bytes.readFloat());
-		} 	
+		}	
 	}
 }

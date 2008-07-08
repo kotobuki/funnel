@@ -7,7 +7,7 @@ package funnel.osc
 	 * 
 	 * @private
 	 * 
-	 */	
+	 */ 
 	public class OSCPacket
 	{		
 		private static const NUMBERSIGN:int = 35;
@@ -46,10 +46,10 @@ package funnel.osc
 		
 		public static function createWithBytes(bytes:ByteArray, end:int = -1):OSCPacket {
 			if (end == -1)
-			    end = bytes.length;
+				end = bytes.length;
 				
 			if (bytes[bytes.position] == NUMBERSIGN)
-		    	return OSCBundle.createWithBytes(bytes, end);
+				return OSCBundle.createWithBytes(bytes, end);
 			else
 				return OSCMessage.createWithBytes(bytes);
 		}
