@@ -2,6 +2,7 @@ package funnel
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	
 	import funnel.osc.*;
 	
 	/**
@@ -36,7 +37,6 @@ package funnel
 		public var autoUpdate:Boolean;
 		private var _modules:Object;
 		private var _commandPort:CommandPort;
-		private var _notificationPort:NotificationPort;
 		private var _samplingInterval:int;
 		private var _task:Task;
 
@@ -50,12 +50,10 @@ package funnel
 			autoUpdate = true;
 			_modules = {};
 			_commandPort = new CommandPort();
-			_notificationPort = new NotificationPort();
-			_notificationPort.addEventListener(Event.CHANGE, onReceiveBundle);
+			_commandPort.addEventListener(Event.CHANGE, onReceiveInput);
 			
 			_task = new Task().complete();
 			_task.addCallback(_commandPort.connect, host, portNum);
-			_task.addCallback(_notificationPort.connect, host, portNum+1);
 			sendReset();
 			for each (var config:Configuration in configs) {
 				var id:uint = config.moduleID;
@@ -102,22 +100,16 @@ package funnel
 			}
 		}
 		
-		private function onReceiveBundle(event:Event):void {
-			var packet:OSCPacket = _notificationPort.inputPacket;
-			if (packet.address == '/node') return;
-			
-			var messages:Array = packet.value;
-			for (var i:uint = 0; i < messages.length; ++i) {
-				var message:OSCMessage = messages[i];
-				var portValues:Array = message.value;
-				var module:IOModule = _modules[portValues[0].value];
-				var startPortNum:uint = portValues[1].value;
-				for (var j:uint = 0; j < portValues.length - 2; ++j) {
-					var aPort:Port = module.port(startPortNum + j);
-					var type:uint = aPort.type;
-					if (type == Port.AIN || type == Port.DIN) {
-						aPort.value = portValues[j + 2].value;
-					}
+		private function onReceiveInput(event:Event):void {
+		  var message:OSCMessage = _commandPort.inputMessage;
+			var portValues:Array = message.value;
+			var module:IOModule = _modules[portValues[0].value];
+			var startPortNum:uint = portValues[1].value;
+			for (var j:uint = 0; j < portValues.length - 2; ++j) {
+				var aPort:Port = module.port(startPortNum + j);
+				var type:uint = aPort.type;
+				if (type == Port.AIN || type == Port.DIN) {
+					aPort.value = portValues[j + 2].value;
 				}
 			}
 		}
