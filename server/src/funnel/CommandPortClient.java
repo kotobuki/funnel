@@ -79,37 +79,31 @@ public class CommandPortClient extends Client implements Runnable {
 		if (message.getAddress().equals("/reset")) {
 			try {
 				server.getIOModule().reboot();
-			} catch (Exception e) {
-				sendSimpleReply(message.getAddress(), REBOOT_ERROR, e
-						.getMessage());
-			} finally {
 				sendSimpleReply(message.getAddress(), NO_ERROR, null);
+			} catch (Exception e) {
+				sendSimpleReply(message.getAddress(), REBOOT_ERROR, e.getMessage());
 			}
 		} else if (message.getAddress().equals("/polling")) {
 			try {
 				server.getIOModule().setPolling(message.getArguments());
+				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			} catch (Exception e) {
 				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
-			} finally {
-				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			}
 		} else if (message.getAddress().startsWith("/in")) {
-			Object[] reply = null;
 			try {
-				reply = server.getIOModule().getInputs(message.getAddress(),
+				Object[] reply = server.getIOModule().getInputs(message.getAddress(),
 						message.getArguments());
+				sendReply(message.getAddress(), reply);
 			} catch (IllegalArgumentException e) {
 				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
-			} finally {
-				sendReply(message.getAddress(), reply);
 			}
 		} else if (message.getAddress().equals("/out")) {
 			try {
 				server.getIOModule().setOutput(message.getArguments());
+				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			} catch (Exception e) {
 				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
-			} finally {
-				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			}
 		} else if (message.getAddress().equals("/samplingInterval")) {
 			Integer samplingInterval = (Integer) message.getArguments()[0];
@@ -118,11 +112,9 @@ public class CommandPortClient extends Client implements Runnable {
 		} else if (message.getAddress().equals("/configure")) {
 			try {
 				server.getIOModule().setConfiguration(message.getArguments());
-			} catch (IllegalArgumentException e) {
-				sendSimpleReply(message.getAddress(), CONFIGURATION_ERROR, e
-						.getMessage());
-			} finally {
 				sendSimpleReply(message.getAddress(), NO_ERROR, null);
+			} catch (IllegalArgumentException e) {
+				sendSimpleReply(message.getAddress(), CONFIGURATION_ERROR, e.getMessage());
 			}
 		} else if (message.getAddress().equals("/quit")) {
 			sendSimpleReply(message.getAddress(), NO_ERROR, null);
@@ -158,14 +150,12 @@ public class CommandPortClient extends Client implements Runnable {
 
 				while (processedSize < readSize) {
 					int packetSize = (buffer[processedSize + 0] << 24)
-							+ (buffer[processedSize + 1] << 16)
-							+ (buffer[processedSize + 2] << 8)
+							+ (buffer[processedSize + 1] << 16) + (buffer[processedSize + 2] << 8)
 							+ buffer[processedSize + 3];
 
 					// TODO: Modify here to do not copy arrays to improve
 					// performance
-					System.arraycopy(buffer, processedSize + 4, packet, 0,
-							packetSize);
+					System.arraycopy(buffer, processedSize + 4, packet, 0, packetSize);
 					OSCPacket oscPacket = converter.convert(packet, packetSize);
 					dispatcher.dispatchPacket(oscPacket);
 					processedSize += packetSize + 4;
@@ -175,8 +165,7 @@ public class CommandPortClient extends Client implements Runnable {
 			e.printStackTrace();
 		} finally {
 			server
-					.printMessage(Messages
-							.getString("FunnelServer.CommandPort") + getIP() + Messages.getString("Server.ClientDisconnected")); //$NON-NLS-1$
+					.printMessage(Messages.getString("FunnelServer.CommandPort") + getIP() + Messages.getString("Server.ClientDisconnected")); //$NON-NLS-1$
 			server.getIOModule().reboot();
 			close();
 		}
@@ -194,9 +183,7 @@ public class CommandPortClient extends Client implements Runnable {
 		try {
 			send(reply);
 		} catch (Exception e) {
-			server
-					.printMessage("Error sending reply to the client: "
-							+ address);
+			server.printMessage("Error sending reply to the client: " + address);
 		}
 	}
 
@@ -205,9 +192,7 @@ public class CommandPortClient extends Client implements Runnable {
 		try {
 			send(reply);
 		} catch (Exception e) {
-			server
-					.printMessage("Error sending reply to the client: "
-							+ address);
+			server.printMessage("Error sending reply to the client: " + address);
 		}
 	}
 
