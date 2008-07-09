@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.Vector;
 
@@ -29,6 +30,7 @@ public class IOSystem implements Runnable{
 	
 	private final int TIMEOUT = 1000; 
 	private OSCClient client;
+	
 	/**
 	 * autoUpdate=trueの送信時の更新間隔
 	 */
@@ -39,6 +41,7 @@ public class IOSystem implements Runnable{
 	
 
 	private boolean quitServer = false;//終了時サーバーを終了するか
+	
 	//定数
 	private int NO_ERROR = 0;
 	private int ERROR = -1;
@@ -50,22 +53,23 @@ public class IOSystem implements Runnable{
 	public boolean autoUpdate = false;
 	public int samplingInterval;
 	////
-
+	
+	private boolean waitAnswer;
+	private LinkedList waitQueue;
 
 	
 	public IOSystem(PApplet parent, String hostName,
-			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config){
+			int commandPortNumber,int samplingInterval,Configuration config){
 		
 		this.parent = parent;
 		this.samplingInterval = samplingInterval;
-		
-		
+
 		
 		client = new OSCClient();
-		if(client.openFunnel(hostName, commandPortNumber, notifyPortNumber)){
-			
-			new Tokenizer(this,client.notifyPort);
-			
+		if(client.openFunnel(hostName, commandPortNumber)){
+
+			new CommandTokenizer(this,client.commandPort);
+			waitQueue = new LinkedList();
 
 		}else{
 			errorMessage("Funnel server could not open !");
@@ -75,29 +79,27 @@ public class IOSystem implements Runnable{
 	
 	public IOSystem(PApplet parent,Configuration config){
 		
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
+		this(parent,"localhost",CommandPort.defaultPort,
 				33,config);
 	}
 
 	public IOSystem(PApplet parent, int samplingInterval, Configuration config ){
 		
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
+		this(parent,"localhost",CommandPort.defaultPort,
 				samplingInterval,config);
 	}
 
 	public IOSystem(PApplet parent,
 			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config ){
 		
-		this(parent,"localhost",commandPortNumber,notifyPortNumber,
+		this(parent,"localhost",commandPortNumber,
 				samplingInterval,config);
 	}
 	
-	
-	
+
 	//funnelのautupdate==trueに依存
 	public void run(){
 		long updateTickMillis = 0;
-		long noupdateTickMillis = 0;
 		System.out.println("funnelServiceThread start");
 
 		while(isWorking){
@@ -109,20 +111,15 @@ public class IOSystem implements Runnable{
 				update();
 				
 				updateTickMillis = System.currentTimeMillis();
+				
 			}
-			
-			try {
-				processMillis = System.currentTimeMillis() - noupdateTickMillis;
-				long sleepMillis = updateInterval - processMillis;
-				//System.out.println("sleepMillis " + sleepMillis + "processMillis " + processMillis);
-				if(sleepMillis > 10){
-					Thread.sleep(sleepMillis);
-					//System.out.println("sleep " + sleepMillis);
-				}
+
+			try{
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			noupdateTickMillis = System.currentTimeMillis();
+		
 		}
 		
 		System.out.println("funnelServiceThread out");
@@ -130,23 +127,25 @@ public class IOSystem implements Runnable{
 	
 	public void dispose(){
 
+		//endPolling();
+		reboot();
+	
+
 		isWorking = false;
-		
-		if(thread!=null){
+
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
 
-		endPolling();
 
 		if(quitServer){
 			quit();
 		}
 
-		client.cleanOSCPort();
+
+		client.cleanOSCPort();	
 		
 		System.out.println("dispose funnel");
 	}
@@ -178,43 +177,78 @@ public class IOSystem implements Runnable{
 				io.port(nPort).updateInput(((Float)message.getArguments()[i]).floatValue());
 	
 			}
-		
-		
+
 	}
 
+	private void waitMessage(OSCMessage message){
+//		System.out.print("   waitMessage recieve " + message.getAddress() + "   ");
+//		for(int i=0;i<message.getArguments().length;i++){
+//			System.out.print(message.getArguments()[i] + "   " );
+//		}
+//		System.out.println( " " );
+		
+		
+		if(waitQueue.lastIndexOf(message.getAddress()) != -1){
+			waitAnswer = false;
+		}
+
+		if(message.getAddress().equals("/configure")){
+			for(int i=0;i<message.getArguments().length;i++){
+				int returnCode = ((Integer)message.getArguments()[i]).intValue();
+				if( returnCode == NO_ERROR){
+					System.out.println("configureation NO_ERROR");
+				}else if( returnCode == CONFIGURATION_ERROR){	
+					System.out.println("configureation CONFIGURATION_ERROR");
+				}else{
+					System.out.println("configureation ERROR");
+				}
+			}
+		}
+}
 
 	private void execCode(String code,boolean answer){
+		//System.out.println("ececCode  " + code);
 		try {
 			client.sendFunnel(code);
 			if(answer){
-				client.readFunnel(code, TIMEOUT);
+				client.waitFunnel(code);		
 			}
-		} catch(TimeoutException e){
-			System.out.println("Timeout exception ");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
 	}
 	
 	//answer : 戻り値を確認する
-	private OSCMessage execCode(String code,Object args[],boolean answer){
+	private boolean execCode(String code,Object args[],boolean answer){
 		try {
 			client.sendFunnel(code,args);
 			if(answer){
-				return client.readFunnel(code, TIMEOUT);
-			}
-		} catch(TimeoutException e){
-			System.out.println("Timeout exception ");
-		} catch (IOException e) {
+				waitAnswer = true;
+				waitQueue.addLast(code);
+				long start = System.currentTimeMillis();
+				do{
+					long now = System.currentTimeMillis();
+					long rest = TIMEOUT - (now-start);
+					
+					if(rest <= 0){
+						System.out.println("timeout return   " +  Thread.currentThread().getName() );
+						//throw new TimeoutException("TimeoutException!! " + (now - start));
+					}
+					client.waitFunnel(code);//!message.getAddress().equals(address)
+				}while(waitAnswer);
+				
+			}				
+
+		}catch (IOException e) {
 			e.printStackTrace();
 		}
-		return new OSCMessage("nil");
+		return true;
 	}
 	
 	public boolean initialize(int moduleID,Configuration config){
 
-		parent.registerDispose(this);
 
+		
 		reboot();
 
 		if(!configuration(moduleID,config.getPortStatus())){
@@ -226,19 +260,28 @@ public class IOSystem implements Runnable{
 		}
 		setSamplingInterval(samplingInterval);
 	
+		
+		parent.registerDispose(this);
+		return true;
+	}
+	
+	public boolean startIOSystem(){
+			
 		beginPolling();
 		
 		thread = new Thread(this,"funnelServiceThread");
 		isWorking = true;
 		thread.start();
 		
-
+		new NotifyTokenizer(this,client.commandPort);
+		
 		return true;
 	}
 	
 	
 	private void reboot(){
 		execCode("/reset",true);
+
 	}
 	
 	private void quit(){
@@ -254,23 +297,8 @@ public class IOSystem implements Runnable{
 			args[i+1] = new Integer(config[i]);
 		}
 		
-		OSCMessage message = execCode("/configure",args,true);
-		System.out.println(" recieve " + message.getAddress());
-		
-		for(int i=0;i<message.getArguments().length;i++){
-			int returnCode = ((Integer)message.getArguments()[i]).intValue();
-			if( returnCode == NO_ERROR){
-				System.out.println("configureation NO_ERROR");
-			}else if( returnCode == CONFIGURATION_ERROR){	
-				System.out.println("configureation CONFIGURATION_ERROR");
-				return false;
-			}else{
-				System.out.println("configureation ERROR");
-				return false;
-			}
-		}
+		execCode("/configure",args,true);
 
-		
 		return true;
 	}
 	
@@ -278,25 +306,24 @@ public class IOSystem implements Runnable{
 		Object args[] = new Object[1];
 		args[0] = new Integer(ms);
 		
-		OSCMessage message = execCode("/samplingInterval",args,true);
-		//System.out.println(" recieve " + message.getAddress());
+		execCode("/samplingInterval",args,true);
+
 	}
 	
 	private void beginPolling(){
 		Object args[] = new Object[1];
 		args[0] = new Integer(1);
 		
-		OSCMessage message = execCode("/polling",args,true);
-		//System.out.println(" recieve " + message.getAddress());
+		execCode("/polling",args,true);
+
 	}
 
 	private void endPolling(){
 		Object args[] = new Object[1];
 		args[0] = new Integer(0);
 		
-		OSCMessage message = execCode("/polling",args,true);	
-		//System.out.println(" recieve " + message.getAddress());
-		
+		execCode("/polling",args,true);	
+
 	}
 	
 
@@ -324,9 +351,8 @@ public class IOSystem implements Runnable{
 		for(int n=0;n<nPort;n++){
 			args[n+2] = new Float(io.port(startPort+n).value);
 		}
-		//System.out.println("/out " + outport + " " + io.port(outport).value);
-		OSCMessage message = execCode("/out",args,true);
-		//System.out.println(message.getAddress());	
+		execCode("/out",args,true);
+
 	}
 	
 	public void update(){
@@ -396,13 +422,13 @@ public class IOSystem implements Runnable{
 	//
 	//return code tokenizer
 	
-	class Tokenizer implements OSCListener{
+	class NotifyTokenizer implements OSCListener{
 		
 		IOSystem io;
-		public Tokenizer(IOSystem io,NotifyPort notifyPort){
+		public NotifyTokenizer(IOSystem io,CommandPort port){
 			this.io = io;
-			notifyPort.addListener("/in", this);
-			notifyPort.startListening();
+			port.addListener("/in", this);
+			port.startListening();
 		}
 		public void acceptMessage(Date time, OSCMessage message){
 			io.interpretMessage(message);
@@ -410,7 +436,25 @@ public class IOSystem implements Runnable{
 		}
 	}
 	
-
+	//
+	//return code tokenizer
+	
+	class CommandTokenizer implements OSCListener{
+		
+		IOSystem io;
+		public CommandTokenizer(IOSystem io,CommandPort port){
+			this.io = io;
+			port.addListener("/reset", this);
+			port.addListener("/configure", this);
+			port.addListener("/out", this);
+			port.addListener("/polling", this);
+			port.addListener("/samplingInterval", this);
+		}
+		public void acceptMessage(Date time, OSCMessage message){
+			io.waitMessage(message);
+			
+		}
+	}
 	
 	
 }

@@ -6,16 +6,27 @@ import java.io.*;
 
 import com.illposed.osc.*;
 import com.illposed.osc.utility.OSCByteArrayToJavaConverter;
+import com.illposed.osc.utility.OSCPacketDispatcher;
 
 /**
  * @author endo
  * @version 1.0
  * 
  */
-public final class CommandPort extends TcpOSCPort {
+public final class CommandPort extends TcpOSCPort implements Runnable{
 
 	private OutputStream out;
 	private InputStream in;
+	
+	//state for listening
+	private boolean isListening = false;
+
+	private OSCByteArrayToJavaConverter converter = new OSCByteArrayToJavaConverter();
+	private OSCPacketDispatcher dispatcher = new OSCPacketDispatcher();
+	
+	private Thread thread;
+	
+
 	/**
 	 * default port number 9000
 	 */
@@ -43,47 +54,94 @@ public final class CommandPort extends TcpOSCPort {
 		this(InetAddress.getLocalHost(), defaultPort);
 	}
 	
-
-	public void send(OSCPacket aPacket) throws IOException {
+	public void run() {
+		System.out.println("notify thread start");
+		while(isListening){
+			try{
+				receive();
+			}catch(IOException e){ 
+				isListening = false;
+				
+				//e.printStackTrace();
+			} 
+		}
+		System.out.println("notify thread out");
+	}
 	
-		byte[] byteArray = aPacket.getByteArray();
-		//System.out.println(new String(byteArray));//debug‚ÅŽg‚¤‚©‚à
+	
+	
+	/**
+	 *
+	 */
+	public void startListening() {
+		isListening = true;
+		thread = new Thread(this,"NotifyThread");
+		thread.start();
+	}
+	
+	/**
+	 * @throws InterruptedException 
+	 */
+	public void stopListening() throws InterruptedException {
 		
-	/*
-		DatagramPacket packet =
-			new DatagramPacket(byteArray, byteArray.length, address, port);
-		socket.send(packet);
-	*/
+		while(isListening){
+			isListening = false;
+			thread.join(2000);
+		}
+	}
+	
 
-		out.write(byteArray,0,byteArray.length);
+	
+	/**
+	 */
+	public void addListener(String anAddress, OSCListener listener) {
+		dispatcher.addListener(anAddress, listener);
+	}
+	
+	public void send(OSCPacket aPacket) throws IOException {
+		byte[] byteArray = aPacket.getByteArray();
+		  
+		//OSCMessage mes = (OSCMessage)aPacket;System.out.print("command send " + mes.getAddress());
+		
+		byte[] tcpPacket = new byte[byteArray.length+4];
+		//System.out.println(" byteArray.length " + byteArray.length);
+		// Reference: http://opensoundcontrol.org/spec-1_0
+		// The first 4 bytes should be a packet size in int32 (big-endian)
+		tcpPacket[0] = (byte) ((byteArray.length >>> 24) & 0xFF);
+		tcpPacket[1] = (byte) ((byteArray.length >>> 16) & 0xFF);
+		tcpPacket[2] = (byte) ((byteArray.length >>> 8) & 0xFF);
+		tcpPacket[3] = (byte) ((byteArray.length >>> 0) & 0xFF);
+		
+		System.arraycopy(byteArray, 0, tcpPacket, 4, byteArray.length);
+
+		out.write(tcpPacket);
 		out.flush();
 	}
 	
-	public OSCMessage receive(String adress,int timeout) throws IOException,TimeoutException{
-		
-		byte[] buffer = new byte[1536];
+	//
+	public synchronized void receive() throws IOException{
 
+		byte[] buffer = new byte[1536]; // this is a common MTU
 		OSCMessage message = new OSCMessage("nil");
-		long start = System.currentTimeMillis();
+
+		int readBytes = in.read(buffer,0,1536);
+		int processedSize = 0;
+
 		
-		do{
-			long now = System.currentTimeMillis();
-			long rest = timeout - (now-start);
-			if(rest <= 0){
-				System.out.println("timeout return_  " +  Thread.currentThread().getName() );
-				throw new TimeoutException("TimeoutException!! " + (now - start));
-			}
-			OSCByteArrayToJavaConverter converter = new OSCByteArrayToJavaConverter();
+		while (processedSize < readBytes) {
+			int packetSize = (buffer[processedSize + 0] << 24)
+					+ (buffer[processedSize + 1] << 16)
+					+ (buffer[processedSize + 2] << 8)
+					+ buffer[processedSize + 3];
+
 			
-			int readBytes = in.read(buffer,0,1536);
-			if(readBytes > 0){
-				//System.out.println("waiting " + adress);
-				message = (OSCMessage)converter.convert(buffer, readBytes);
-			}
+			byte[] packet = new byte[packetSize];
+			System.arraycopy(buffer, processedSize + 4, packet, 0,packetSize);
+			message = (OSCMessage)converter.convert(packet, packetSize);
+			dispatcher.dispatchPacket(message);
 			
-		}while(!message.getAddress().equals(adress));
-			
-		return message;
+			processedSize += packetSize + 4;
+		}		
 	}
 	
 	public void close(){

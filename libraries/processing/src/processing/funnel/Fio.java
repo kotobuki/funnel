@@ -28,8 +28,8 @@ public final class Fio extends IOSystem{
 
 
 	public Fio(PApplet parent, String hostName,
-			int commandPortNumber, int notifyPortNumber,int samplingInterval,int[] IDs,Configuration config){
-		super(parent,hostName,commandPortNumber,notifyPortNumber,samplingInterval,config);
+			int commandPortNumber,int samplingInterval,int[] IDs,Configuration config){
+		super(parent,hostName,commandPortNumber,samplingInterval,config);
 
 		if(!initialize(moduleID,config)){
 			errorMessage("Funnel configuration error!");
@@ -38,29 +38,29 @@ public final class Fio extends IOSystem{
 			String name = "Fio." + i;
 			addModule(IDs[i],config,name);
 		}
-		
+		startIOSystem();
 	}
 	
 	public Fio(PApplet parent,int[] IDs){	
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
+		this(parent,"localhost",CommandPort.defaultPort,
 				33,IDs,FIO);
 	}
 	
 	public Fio(PApplet parent, int[] IDs, Configuration config){
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
+		this(parent,"localhost",CommandPort.defaultPort,
 				33,IDs,config);
 	}
 	
 	public Fio(PApplet parent, int samplingInterval,int[] IDs, Configuration config ){
 		
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
+		this(parent,"localhost",CommandPort.defaultPort,
 				samplingInterval,IDs,config);
 	}
 
 	public Fio(PApplet parent,
-			int commandPortNumber, int notifyPortNumber,int samplingInterval,int[] IDs, Configuration config ){
+			int commandPortNumber,int samplingInterval,int[] IDs, Configuration config ){
 		
-		this(parent,"localhost",commandPortNumber,notifyPortNumber,
+		this(parent,"localhost",commandPortNumber,
 				samplingInterval,IDs,config);
 	}
 

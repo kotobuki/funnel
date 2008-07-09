@@ -121,32 +121,34 @@ public final class Gainer extends IOSystem{
 	
 
 	public Gainer(PApplet parent, String hostName,
-			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config){
-		super(parent,hostName,commandPortNumber,notifyPortNumber,samplingInterval,config);
+			int commandPortNumber,int samplingInterval,Configuration config){
+		super(parent,hostName,commandPortNumber,samplingInterval,config);
 		
 		if(!initialize(moduleID,config)){
 			errorMessage("Funnel configuration error!");
 		}
 		initPorts(config.portStatus);
 		
+		startIOSystem();
+		
 	}
 	
 	public Gainer(PApplet parent,Configuration config){
 		
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
+		this(parent,"localhost",CommandPort.defaultPort,
 				33,config);
 	}
 
 	public Gainer(PApplet parent, int samplingInterval, Configuration config ){
 		
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
+		this(parent,"localhost",CommandPort.defaultPort,
 				samplingInterval,config);
 	}
 
 	public Gainer(PApplet parent,
 			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config ){
 		
-		this(parent,"localhost",commandPortNumber,notifyPortNumber,
+		this(parent,"localhost",commandPortNumber,
 				samplingInterval,config);
 	}
 	
@@ -270,7 +272,7 @@ public final class Gainer extends IOSystem{
 	
 	public boolean addModule(int id,Configuration config,String name){
 
-		System.out.println("Gainer addmodule");
+		//System.out.println("addmodule() Gainer");
 		Set key = iomodules.entrySet();
 		if(!key.contains(new Integer(id))){
 			iomodules.put(new Integer(id), new GainerIOModule(parent,id,config,name));

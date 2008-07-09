@@ -41,7 +41,7 @@ public class Osc{
 	private long spendTickMillis;
 	
 	private boolean isMoving = false;
-	
+
 	
 	public Osc(PApplet parent, int wave, float freq, int times){
 		
@@ -94,7 +94,7 @@ public class Osc{
 		}
 		
 		parent.registerDispose(this);
-		
+
 	}
 	
 	public void dispose(){
@@ -113,9 +113,9 @@ public class Osc{
 	}
 	
 	public void stop(){
-		if(isMoving){
-			serviceThread.removeOsc(this);
+		if(isMoving){	
 			isMoving=false;
+			serviceThread.removeOsc(this);
 		}
 	}
 	
@@ -155,7 +155,9 @@ public class Osc{
 		if(onUpdate != null ){
 			
 			try{
+
 				onUpdate.invoke(parent,new Object[]{ this });
+				
 			}catch(Exception e){
 				e.printStackTrace();
 				onUpdate = null;
@@ -176,11 +178,13 @@ public class Osc{
 	class OscThread extends Thread{
 		boolean isWorking = false;
 		long serviceTickMillis;
-		List oscList;
-		
+//		List oscList;
+		Vector oscList;
+
 		public OscThread(int id){
 			super("OscServiceThread");
-			oscList = Collections.synchronizedList(new LinkedList());
+//			oscList = Collections.synchronizedList(new LinkedList());
+			oscList = new Vector();
 		}
 		
 		public void startThread(){
@@ -202,51 +206,57 @@ public class Osc{
 		}
 		
 		public synchronized void addOsc(Osc osc){
+
 			oscList.add(osc);
 		}
 		
 		public synchronized void removeOsc(Osc osc){
+			
 			oscList.remove(osc);
 		}
 		
 		public void run(){
 			long updateTickMillis = 0;
-			long noupdateTickMillis = 0;
 			System.out.println("OscServiceThread start");
 			
 			while(isWorking){
-				long processMillis = System.currentTimeMillis() - updateTickMillis;//ˆ—‚É‚©‚©‚Á‚½ŽžŠÔ
+				long processMillis = System.currentTimeMillis() - updateTickMillis;//ŒJ‚è•Ô‚·‚Ü‚Å‚Ìˆ—‚É‚©‚©‚Á‚½ŽžŠÔ
 
 				if((processMillis > Osc.serviceInterval) && Osc.serviceInterval != 0){
-	
-					synchronized(oscList){
-						ListIterator it = oscList.listIterator();
-						for(ListIterator i = it;it.hasNext();){
-							
-							Osc osc = (Osc)i.next();
-							osc.update();
-		
+					
+					synchronized (oscList){
+
+//						ListIterator it;
+//						int i=0;
+//						do{
+//							it = oscList.listIterator(i++);
+//							if(it.hasNext()){
+//								Osc osc = (Osc)oscList.iterator().next();
+//								osc.update();
+//							}
+//						}while(it.hasNext());
+						
+						for(int i=0;i<oscList.size();i++){
+							Osc osc = (Osc)oscList.get(i);
+							osc.update();		
 						}
-						updateTickMillis = System.currentTimeMillis();
-					}				
+
+					}
+
+					updateTickMillis = System.currentTimeMillis();
 				}
 				
-				try {
-					processMillis = System.currentTimeMillis() - noupdateTickMillis;
-					long sleepMillis = Osc.serviceInterval - processMillis;
-					//System.out.println("sleepMillis " + sleepMillis + "  processMillis " + processMillis);
-					if(sleepMillis > 1){
-						Thread.sleep(sleepMillis);
-						//System.out.println("sleep " + sleepMillis);
-					}
+				try{
+						Thread.sleep(1);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				noupdateTickMillis = System.currentTimeMillis();
 			}
 			
 			System.out.println("OscServiceThread out");
 		}
+		
+
 	}
 	
 	interface OscFunction {

@@ -3,6 +3,11 @@ package processing.funnel;
 import processing.core.PApplet;
 import java.lang.reflect.Method;
 
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public class GainerIOModule extends IOModule{
 	
 	Method gainerButtonEventMethod = null;
