@@ -13,7 +13,6 @@ import com.illposed.osc.*;
  */
 public final class OSCClient {
 	
-	public NotifyPort notifyPort;
 	public CommandPort commandPort;
 	public InetAddress host;
 	
@@ -24,27 +23,25 @@ public final class OSCClient {
 	public void cleanOSCPort(){
 		
 		try {
-			notifyPort.stopListening();
+			commandPort.stopListening();
+			System.out.println("commandPort close");
+			commandPort.close();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		notifyPort.close();
-		
-		
-		commandPort.close();
+
+
 
 	}
 	
-	public boolean openFunnel(String hostName, int commandPortNumber,int notifyPortNumber){
+	public boolean openFunnel(String hostName, int commandPortNumber){
 		
 		InetAddress host;
 		try {
 			host = InetAddress.getByName(hostName);
-			System.out.println("host adress " + host.getHostAddress());
+			System.out.println("opened host address " + host.getHostAddress());
 			commandPort = new CommandPort(host,commandPortNumber);
-			notifyPort = new NotifyPort(host,notifyPortNumber);
-			
+		
 		} catch (UnknownHostException e) {
 			//e.printStackTrace();
 			return false;
@@ -73,9 +70,12 @@ public final class OSCClient {
 		return true;
 	}
 	
-	public OSCMessage readFunnel(String adress,int timeout) throws IOException, TimeoutException{
+	public boolean waitFunnel(String address) throws IOException{
+
+		commandPort.receive();
+
 		
-			return commandPort.receive(adress, timeout);
+		return true;
 	}
 	
 

@@ -44,31 +44,33 @@ public final class Arduino extends IOSystem{
 	
 
 	public Arduino(PApplet parent, String hostName,
-			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config){
-		super(parent,hostName,commandPortNumber,notifyPortNumber,samplingInterval,config);
+			int commandPortNumber ,int samplingInterval,Configuration config){
+		super(parent,hostName,commandPortNumber,samplingInterval,config);
 		
 		if(!initialize(moduleID,config)){
 			errorMessage("Funnel configuration error!");
 		}
 		initPorts(config.portStatus);
+		
+		startIOSystem();
 	}
 	
 	public Arduino(PApplet parent,Configuration config){
 		
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
+		this(parent,"localhost",CommandPort.defaultPort,
 				33,config);
 	}
 
 	public Arduino(PApplet parent, int samplingInterval, Configuration config ){
 		
-		this(parent,"localhost",CommandPort.defaultPort,NotifyPort.defaultPort,
+		this(parent,"localhost",CommandPort.defaultPort,
 				samplingInterval,config);
 	}
 
 	public Arduino(PApplet parent,
 			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config ){
 		
-		this(parent,"localhost",commandPortNumber,notifyPortNumber,
+		this(parent,"localhost",commandPortNumber,
 				samplingInterval,config);
 	}
 	
