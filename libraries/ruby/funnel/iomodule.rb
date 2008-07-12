@@ -37,7 +37,13 @@ module Funnel
       @updated_port_indices = Array.new(@port_count, false)
       @auto_update = true
 
-      parent.send_command(OSC::Message.new('/configure', 'i' * (config.to_a.size + 1), id, *config.to_a))
+      begin
+        parent.send_command(OSC::Message.new('/configure', 'i' * (config.to_a.size + 1), id, *config.to_a), true)
+      rescue RuntimeError => e
+        puts "RuntimeError occurred at configuration: #{e.message}"
+      rescue TimeoutError => e
+        puts "TimeoutError occurred at configuration: #{e.message}"
+      end
     end
       
     def init_ports(config)

@@ -49,6 +49,8 @@ module Funnel
         raise RuntimeError, "can't connect to the command port (#{port}) of the funnel_server"
       end
 
+      @command_queue = Queue.new
+
       @th = Thread.new do
         loop do
           data = @command_port.recv(8192)
@@ -74,30 +76,27 @@ module Funnel
                   ni = message.to_a[1]
                   register_node(id, ni)
                 when '/configure'
-                  if message.to_a[0] < FunnelErrorEvent::NO_ERROR then
-                    case message.to_a[0]
-                    when FunnelErrorEvent::CONFIGURATION_ERROR
-                      raise RuntimeError, "CONFIGURATION_ERROR: #{message.to_a[1]}"
-                    end
+                  if message.to_a[0] == FunnelErrorEvent::CONFIGURATION_ERROR then
+                    raise RuntimeError, "CONFIGURATION_ERROR: #{message.to_a[1]}"
+                  else
+                    @command_queue.push message
                   end
                 when '/reset'
-                  if message.to_a[0] < FunnelErrorEvent::NO_ERROR then
-                    case message.to_a[0]
-                    when FunnelErrorEvent::REBOOT_ERROR
-                      raise RuntimeError, "REBOOT_ERROR: #{message.to_a[1]}"
-                    end
+                  if message.to_a[0] == FunnelErrorEvent::REBOOT_ERROR then
+                    raise RuntimeError, "REBOOT_ERROR: #{message.to_a[1]}"
+                  else
+                    @command_queue.push message
                   end
-                when '/out'
                 when '/samplingInterval'
                 when '/polling'
-                  if message.to_a[0] < FunnelErrorEvent::NO_ERROR then
-                    case message.to_a[0]
-                    when FunnelErrorEvent::ERROR
-                      puts "ERROR: #{message.address}, #{message.to_a[1]}"
-                    end
+                  if message.to_a[0] == FunnelErrorEvent::ERROR then
+                    puts "ERROR: #{message.address}, #{message.to_a[1]}"
                   else
                     puts "OK: #{message.address}"
+                    @command_queue.push message
                   end
+                when '/out'
+                  puts "ERROR: #{message.address}" if message.to_a[0] < FunnelErrorEvent::NO_ERROR
                 end
               end
             rescue EOFError
@@ -109,21 +108,30 @@ module Funnel
       end
 
       begin
-        send_command(OSC::Message.new('/reset'))
+        send_command(OSC::Message.new('/reset'), true)
       rescue RuntimeError => e
         puts "RuntimeError occurred: #{e.message}"
         begin
-          send_command(OSC::Message.new('/reset'))
+          send_command(OSC::Message.new('/reset'), true)
           puts "Tried again rebooting and got success"
         rescue
           puts "ERROR: Failed to reboot twice!!!"
         end
+      rescue TimeoutError => e
+        puts "TimeoutError occurred: #{e.message}"
       end
 
       if interval < MINIMUM_SAMPLING_INTERVAL
         then interval = MINIMUM_SAMPLING_INTERVAL
       end
-      send_command(OSC::Message.new('/samplingInterval', 'i', interval))
+      begin
+        send_command(OSC::Message.new('/samplingInterval', 'i', interval))
+      rescue RuntimeError => e
+        puts "RuntimeError occurred at setting the sampling interval: #{e.message}"
+      rescue TimeoutError => e
+        puts "TimeoutError occurred at setting the sampling interval: #{e.message}"
+      end
+      
       @sampling_interval = interval
 
       @auto_update = true
@@ -133,10 +141,17 @@ module Funnel
       @broadcast = nil
       @autoregister = false
 
-      send_command(OSC::Message.new('/polling', 'i', 1))
+      begin
+        send_command(OSC::Message.new('/polling', 'i', 1))
+      rescue RuntimeError => e
+        puts "RuntimeError occurred at start polling: #{e.message}"
+      rescue TimeoutError => e
+        puts "TimeoutError occurred at start polling: #{e.message}"
+      end
+        
     end
 
-    def add_io_module(id, config, name ="")
+    def add_io_module(id, config, name = "")
       @modules.delete(id) if @modules.has_key?(id)
       io_module = IOModule.new(self, id, config, name)
       @modules[id] = io_module
@@ -150,11 +165,18 @@ module Funnel
       # should be implemented in a derived class
     end
 
-    def send_command(command)
+    def send_command(command, synchronized = false, time_limit = 1)
       encoded = command.encode
       data = [encoded.length].pack('N') + encoded
       @command_port.send(data, 0)
       @command_port.flush
+      if synchronized then
+        reply = nil
+        timeout(time_limit) {
+          reply = @command_queue.pop
+        }
+        raise RuntimeError, "Expected reply was #{command.address}, but is #{reply.address}" if command.address != reply.address
+      end
     end
 
     def send_output_command(id, start, values)
