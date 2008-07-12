@@ -222,7 +222,7 @@ module Funnel
       end
 
       if (@times != 0 and @frequency * @time >= @times) then
-        @@listeners.delete(self.update)
+        @@listeners.delete(self)
         @time = @times / @frequency
       end
 
