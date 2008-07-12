@@ -221,42 +221,38 @@ module Funnel
         @time = @time + @@interval
       end
 
-      if (@times != 0 and @frequency * @time >= @times) then
+      if (@times != 0 and @frequency * @time > @times) then
+        @value = @offset
+        @listener.call(@value) if @listener
         @@listeners.delete(self)
         @time = @times / @frequency
+      else
+        @value = @amplitude * @wave_func.call(@frequency * (@time + @phase)) + @offset
+        @listener.call(@value) if @listener
       end
-
-      @value = @amplitude * @wave_func.call(@frequency * (@time + @phase)) + @offset
-      @listener.call(@value) if @listener
     end
 
+    # NOTE: 1/4 phase shifted sin wave
     SIN = lambda { |val|
-      0.5 * (1 + Math.sin(2 * Math::PI * val))
+      return 0.5 * (1 + Math.sin(2 * Math::PI * (val - 0.25)))
     }
 
     SQUARE = lambda { |val|
       return (val % 1 <= 0.5) ? 1.0 : 0.0
     }
 
+    # NOTE: 1/4 phase shifted triangle wave
     TRIANGLE = lambda { |val|
-      val %= 1;
-      if (val <= 0.25) then return 2 * val + 0.5
-      elsif (val <= 0.75) then return -2 * val + 1.5
-      else return 2 * val - 1.5
-      end
+      val %= 1
+      return (val <= 0.5) ? (2 * val) : (2 - 2 * val)
     }
 
     SAW = lambda { |val|
-      val %= 1;
-      if (val <= 0.5) then return val + 0.5
-      else return val - 0.5
-      end
+      return 1 - (val % 1)
     }
 
     IMPULSE = lambda { |val|
-      if (val <= 1) then return 1
-      else return 0
-      end
+      return (val < 1) ? 1.0 : 0.0
     }
   end
 
