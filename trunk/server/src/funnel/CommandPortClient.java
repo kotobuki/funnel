@@ -153,6 +153,12 @@ public class CommandPortClient extends Client implements Runnable {
 							+ (buffer[processedSize + 1] << 16) + (buffer[processedSize + 2] << 8)
 							+ buffer[processedSize + 3];
 
+					if (packetSize > 1536) {
+						server
+								.printMessage("ERROR: Your client's endianness is not compatible with the server.");
+						break;
+					}
+
 					// TODO: Modify here to do not copy arrays to improve
 					// performance
 					System.arraycopy(buffer, processedSize + 4, packet, 0, packetSize);
