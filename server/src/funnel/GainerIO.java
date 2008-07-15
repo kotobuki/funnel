@@ -317,7 +317,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			String versionString = (String) versionCommandQueue.poll(1000,
 					TimeUnit.MILLISECONDS);
 			printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
-			printMessage(Messages.getString("IOModule.FirmwareVesrion") + versionString.substring(1, 9)); //$NON-NLS-1$
+			printMessage(Messages.getString("IOModule.FirmwareVesrion") + versionString.substring(1, versionString.length() - 1)); //$NON-NLS-1$
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
