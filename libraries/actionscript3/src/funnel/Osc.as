@@ -162,9 +162,10 @@ package funnel
 			if (times != 0 && freq * sec >= times) {
 				stop();
 				sec = times / freq;
-			}
-			
-			_value = amplitude * wave(freq * (sec + phase)) + offset;
+				_value = offset;
+      } else {
+        _value = amplitude * wave(freq * (sec + phase)) + offset;
+      }
 			dispatchEvent(new GeneratorEvent(GeneratorEvent.UPDATE));
 		}
 		
@@ -172,7 +173,7 @@ package funnel
 		 * サイン波
 		 */		
 		public static function SIN(val:Number):Number {
-			return 0.5 * (1 + Math.sin(2 * Math.PI * val));
+			return 0.5 * (1 + Math.sin(2 * Math.PI * (val - 0.25)));
 		}
 		
 		/**
@@ -188,10 +189,8 @@ package funnel
 		 * 
 		 */ 
 		public static function TRIANGLE(val:Number):Number {
-			val %= 1;
-			if (val <= 0.25) return 2 * val + 0.5;
-			else if (val <= 0.75) return -2 * val + 1.5;
-			else return 2 * val - 1.5;
+      val %= 1;
+      return (val <= 0.5) ? (2 * val) : (2 - 2 * val);
 		}
 		
 		/**
