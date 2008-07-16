@@ -163,9 +163,9 @@ package funnel
 				stop();
 				sec = times / freq;
 				_value = offset;
-      } else {
-        _value = amplitude * wave(freq * (sec + phase)) + offset;
-      }
+			} else {
+				_value = amplitude * wave(freq * (sec + phase)) + offset;
+			}
 			dispatchEvent(new GeneratorEvent(GeneratorEvent.UPDATE));
 		}
 		
@@ -189,8 +189,8 @@ package funnel
 		 * 
 		 */ 
 		public static function TRIANGLE(val:Number):Number {
-      val %= 1;
-      return (val <= 0.5) ? (2 * val) : (2 - 2 * val);
+			val %= 1;
+			return (val <= 0.5) ? (2 * val) : (2 - 2 * val);
 		}
 		
 		/**
