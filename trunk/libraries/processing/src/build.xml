@@ -40,8 +40,8 @@
 	
 	<target name="doc" description="Create the documentation">
 		<javadoc destdir="doc/">
-			<fileset dir="src/">
-				<include name="processing/gainer/*.java"/>			
+			<fileset dir="./">
+				<include name="processing/funnel/*.java"/>			
 			</fileset>
 		</javadoc>
 	</target>	
