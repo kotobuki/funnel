@@ -24,7 +24,7 @@ public class Osc{
 	
 	public static final int UPDATE = 600;
 	
-	int wave;//タイプ
+	public int wave;//タイプ
 	private OscFunction wavefunc;
 	
 	public float value;
@@ -101,7 +101,7 @@ public class Osc{
 
 		serviceThread.stopThread();
 		
-		System.out.println("dispose osc");
+		//System.out.println("dispose osc");
 	}
 	
 	public void start(){
@@ -144,14 +144,14 @@ public class Osc{
 
 		long now = System.currentTimeMillis();
 		float sec = (float)(now-startTickMillis)/1000;
-		
+
 		if(times != 0 && freq*sec >=times){
 			stop();
 			sec = times/freq;
 		}
-		
+
 		value = amplitude * wavefunc.calculate(freq * (sec + phase)) + offset;
-		
+
 		if(onUpdate != null ){
 			
 			try{
@@ -164,7 +164,6 @@ public class Osc{
 //				errorMessage("onRisingEdge handler error !!");
 			}
 		}
-
 	}
 	
 	public void update(long millis){
@@ -267,52 +266,41 @@ public class Osc{
 	class OscFunctionSIN implements OscFunction{
 		
 		public float calculate(float val){
-			return 0.5f * (float)(1 + Math.sin(2*Math.PI * val));
+			
+			return 0.5f * (float)(1 + Math.sin(2*Math.PI * val-0.25f));
 		}
 	}
 	
 	class OscFunctionSQUARE implements OscFunction{
 		
 		public float calculate(float val){
-			return (val%1 <= 0.5) ? 1.0f: 0;
+			
+			return  (val%1.0f <= 0.5f) ? 1.0f: 0;
 		}
 	}
 	
 	class OscFunctionTRIANGLE implements OscFunction{
 		
 		public float calculate(float val){
-			val %= 1;
-			if(val <= 0.25){
-				return 2*val+0.5f;
-			}else if(val <= 0.75){
-				return -2*val+1.5f;
-			}else{
-				return 2*val-1.5f;
-			}
-			
+
+			val %= 1.0f;
+			return val<=0.5 ? 2*val : 2-2*val;			
 		}
 	}
 	
 	class OscFunctionSAW implements OscFunction{
 		
 		public float calculate(float val){
-			val %=1;
-			if(val <0.5){
-				return val+0.5f;
-			}else{
-				return val-0.5f;
-			}
+			
+			val %=1.0f;
+			return 1-(val %1.0f);
 		}
 	}
 	
 	class OscFunctionIMPULSE implements OscFunction{
 		
 		public float calculate(float val){
-			if(val <= 1.0){
-				return 1.0f;
-			}else{
-				return 0;
-			}
+			return val<1.0f ? 1.0f :0.0f ;
 		}
 	}
 	
