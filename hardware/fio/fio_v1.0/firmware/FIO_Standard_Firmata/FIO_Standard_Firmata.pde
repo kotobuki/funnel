@@ -116,10 +116,16 @@ void loop()
   if (timer0_overflow_count > nextExecuteTime) {  
     nextExecuteTime = timer0_overflow_count + 32; // run this every 33ms
 
-    // report digital ports every time
-    Firmata.sendDigitalPort(0, PIND &~ B00000011); // ignore Rx/Tx 0/1
-    Firmata.sendDigitalPort(1, PINB);
+    // report digital ports if requested
+    if (reportPINs[0]) {
+      Firmata.sendDigitalPort(0, PIND &~ B00000011); // ignore Rx/Tx 0/1
+    }
 
+    if (reportPINs[1]) {
+      Firmata.sendDigitalPort(1, PINB);
+    }
+
+    // report analog inputs if requested
     for (analogPin = 0; analogPin < TOTAL_ANALOG_PINS; analogPin++) {
       if (analogInputsToReport & (1 << analogPin)) {
         Firmata.sendAnalog(analogPin, analogRead(analogPin));
