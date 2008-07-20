@@ -190,22 +190,19 @@ module Funnel
         @button = nil
         @led = nil
       when FIO
-        # 8 ADC inputs, 8 PWM outputs, 1 digital input, 1 digital output
         @config = [
-          Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-          Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-          Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT,
-          Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT,
-          Port::DIN, Port::DOUT
+          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
+          Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT,
+          Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT
         ]
         @ain_ports = nil
         @din_ports = nil
         @aout_ports = nil
         @dout_ports = nil
         @analog_pins = [0, 1, 2, 3, 4, 5, 6, 7]
-        @digital_pins = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
-        @button = [16]
-        @led = [17]
+        @digital_pins = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+        @button = nil
+        @led = nil
       end
     end
     

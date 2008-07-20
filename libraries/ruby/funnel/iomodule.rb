@@ -26,7 +26,7 @@ module Funnel
       end
     end
     
-    def initialize(parent, id, config, name = "")
+    def initialize(parent, id, config, name = "", do_configure = true)
       @parent = parent
       @id = id
       @port = []
@@ -36,6 +36,8 @@ module Funnel
       init_ports(config.to_a)
       @updated_port_indices = Array.new(@port_count, false)
       @auto_update = true
+
+      return unless do_configure
 
       begin
         parent.send_command(OSC::Message.new('/configure', 'i' * (config.to_a.size + 1), id, *config.to_a), true)
