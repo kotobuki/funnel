@@ -8,17 +8,16 @@ import java.util.TooManyListenersException;
 import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
-import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEventListener;
 
-public abstract class FirmataIO extends IOModule implements
-		SerialPortEventListener {
+public abstract class FirmataIO extends IOModule implements SerialPortEventListener {
+
+	protected static final int MAX_NODES = 65535;
 
 	private static final int ARD_MAX_DATA_BYTES = 3;
 	private static final int ARD_ANALOG_MESSAGE = 0xE0;
@@ -26,8 +25,8 @@ public abstract class FirmataIO extends IOModule implements
 	private static final int ARD_REPORT_ANALOG_PIN = 0xC0;
 	private static final int ARD_REPORT_DIGITAL_PORTS = 0xD0;
 	private static final int ARD_SET_DIGITAL_PIN_MODE = 0xF4;
-	private static final int ARD_REPORT_VERSION = 0xF9;
-	private static final int ARD_SYSTEM_RESET = 0xFF;
+	protected static final int ARD_REPORT_VERSION = 0xF9;
+	protected static final int ARD_SYSTEM_RESET = 0xFF;
 	protected static final int ARD_PIN_MODE_IN = 0x00;
 	protected static final int ARD_PIN_MODE_OUT = 0x01;
 	protected static final int ARD_PIN_MODE_PWM = 0x02;
@@ -44,12 +43,14 @@ public abstract class FirmataIO extends IOModule implements
 	protected final int parity = SerialPort.PARITY_NONE;
 	protected final int databits = 8;
 	protected final int stopbits = SerialPort.STOPBITS_1;
-	protected int bytesToReceive = 0;
-	protected int executeMultiByteCommand = 0;
-	protected int multiByteChannel = 0;
-	protected int[] storedInputData = new int[ARD_MAX_DATA_BYTES];
-	protected float[] analogData = null;
-	protected float[] digitalData = null;
+
+	protected int[] bytesToReceive = new int[MAX_NODES];
+	protected int[] executeMultiByteCommand = new int[MAX_NODES];
+	protected int[] multiByteChannel = new int[MAX_NODES];
+	protected int[][] storedInputData = new int[MAX_NODES][ARD_MAX_DATA_BYTES];
+
+	protected float[][] analogData = null;
+	protected float[][] digitalData = null;
 	protected int[] pinMode = new int[totalPins];
 	protected int[] firmwareVersion = new int[ARD_MAX_DATA_BYTES];
 	private int stateOfDigitalPins = 0x0000;
@@ -67,8 +68,8 @@ public abstract class FirmataIO extends IOModule implements
 		totalPins = totalAnalogPins + totalDigitalPins;
 		pwmCapablePins = (int[]) pwmPins.clone();
 
-		analogData = new float[totalAnalogPins];
-		digitalData = new float[totalDigitalPins];
+		analogData = new float[MAX_NODES][totalAnalogPins];
+		digitalData = new float[MAX_NODES][totalDigitalPins];
 		pinMode = new int[totalPins];
 		firmwareVersionQueue = new LinkedBlockingQueue<String>(1);
 
@@ -112,13 +113,11 @@ public abstract class FirmataIO extends IOModule implements
 	 * 
 	 * @see funnel.IOModule#getInputs(java.lang.String, java.lang.Object[])
 	 */
-	public Object[] getInputs(String address, Object[] arguments)
-			throws IllegalArgumentException {
+	public Object[] getInputs(String address, Object[] arguments) throws IllegalArgumentException {
 		int moduleId = 0;
 		int from = 0;
 		int counts = 0;
-		int totalPortCounts = analogPinRange.getCounts()
-				+ digitalPinRange.getCounts();
+		int totalPortCounts = analogPinRange.getCounts() + digitalPinRange.getCounts();
 
 		if (address.equals("/in")) { //$NON-NLS-1$
 			moduleId = ((Integer) arguments[0]).intValue();
@@ -144,28 +143,24 @@ public abstract class FirmataIO extends IOModule implements
 		for (int i = 0; i < counts; i++) {
 			int port = from + i;
 			if (digitalPinRange.contains(port)) {
-				results[2 + i] = new Float(digitalData[port
-						- digitalPinRange.getMin()]);
+				results[2 + i] = new Float(digitalData[moduleId][port - digitalPinRange.getMin()]);
 			} else if (analogPinRange.contains(port)) {
-				results[2 + i] = new Float(analogData[port
-						- analogPinRange.getMin()]);
+				results[2 + i] = new Float(analogData[moduleId][port - analogPinRange.getMin()]);
 			}
 		}
 		return results;
 	}
 
-	public void notifyUpdate(int from, int counts) {
+	public void notifyUpdate(int source, int from, int counts) {
 		Object[] results = new Object[2 + counts];
-		results[0] = new Integer(0); // TODO: Support multiple modules
+		results[0] = new Integer(source);
 		results[1] = new Integer(from);
 		for (int i = 0; i < counts; i++) {
 			int port = from + i;
 			if (digitalPinRange.contains(port)) {
-				results[2 + i] = new Float(digitalData[port
-						- digitalPinRange.getMin()]);
+				results[2 + i] = new Float(digitalData[source][port - digitalPinRange.getMin()]);
 			} else if (analogPinRange.contains(port)) {
-				results[2 + i] = new Float(analogData[port
-						- analogPinRange.getMin()]);
+				results[2 + i] = new Float(analogData[source][port - analogPinRange.getMin()]);
 			}
 		}
 
@@ -173,61 +168,12 @@ public abstract class FirmataIO extends IOModule implements
 		parent.getCommandPortServer().sendMessageToClients(message);
 	}
 
-	public OSCBundle getAllInputsAsBundle() {
-		if (!isPolling) {
-			return null;
-		}
-
-		OSCBundle bundle = new OSCBundle();
-
-		Object ainArguments[] = new Object[2 + analogPinRange.getCounts()];
-		ainArguments[0] = new Integer(0);
-		ainArguments[1] = new Integer(analogPinRange.getMin());
-		for (int i = 0; i < analogPinRange.getCounts(); i++) {
-			ainArguments[2 + i] = new Float(analogData[i]);
-		}
-		bundle.addPacket(new OSCMessage("/in", ainArguments)); //$NON-NLS-1$
-
-		for (int j = 0; j < dinPinChunks.size(); j++) {
-			PortRange range = dinPinChunks.get(j);
-			Object dinArguments[] = new Object[2 + range.getCounts()];
-			dinArguments[0] = new Integer(0);
-			dinArguments[1] = new Integer(range.getMin());
-			int offset = range.getMin() - digitalPinRange.getMin();
-			for (int i = 0; i < range.getCounts(); i++) {
-				dinArguments[2 + i] = new Float(digitalData[offset + i]);
-			}
-			bundle.addPacket(new OSCMessage("/in", dinArguments)); //$NON-NLS-1$
-		}
-
-		return bundle;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see funnel.IOModule#reboot()
 	 */
-	public void reboot() {
-		if (port == null) {
-			return;
-		}
-		stopPolling();
-
-		printMessage(Messages.getString("IOModule.Rebooting")); //$NON-NLS-1$
-
-		writeByte(ARD_SYSTEM_RESET);
-		sleep(500);
-
-		writeByte(ARD_REPORT_VERSION);
-		try {
-			firmwareVersionQueue.poll(10000, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) {
-			printMessage("ERROR: Couldn't get a version info after rebooting.");
-			e.printStackTrace();
-		}
-		printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
-	}
+	abstract public void reboot();
 
 	/*
 	 * (non-Javadoc)
@@ -241,12 +187,16 @@ public abstract class FirmataIO extends IOModule implements
 		}
 
 		int moduleId = ((Integer) arguments[0]).intValue();
+
+		if ((moduleId != 0) && (moduleId != 0xFFFF)) {
+			// Accept configuration command to a 0th module or broadcast only
+			return;
+		}
 		printMessage("Module ID: " + moduleId);
+
 		Object[] config = new Object[arguments.length - 1];
 		System.arraycopy(arguments, 1, config, 0, arguments.length - 1);
 
-		// TODO
-		// Should synchronize with the notification thread
 		dinPinChunks.clear();
 
 		if (config.length != totalPins) {
@@ -254,16 +204,14 @@ public abstract class FirmataIO extends IOModule implements
 					"The number of pins does not match to that of the Arduino I/O module"); //$NON-NLS-1$
 		}
 
-		// beginPacketIfNeeded(moduleId);
+		beginPacketIfNeeded(moduleId);
 		for (int i = 0; i < config.length; i++) {
 			if (config[i] == null) {
-				throw new IllegalArgumentException(
-						"Argument of the following port is null: " + i);
+				throw new IllegalArgumentException("Argument of the following port is null: " + i);
 			}
 			if (!(config[i] instanceof Integer)) {
 				throw new IllegalArgumentException(
-						"Argument of the following port is not an integer value: "
-								+ i);
+						"Argument of the following port is not an integer value: " + i);
 			}
 			if (analogPinRange.contains(i)) {
 				if (!PORT_AIN.equals(config[i])) {
@@ -275,8 +223,7 @@ public abstract class FirmataIO extends IOModule implements
 				if (PORT_AOUT.equals(config[i])) {
 					if (Arrays.binarySearch(pwmCapablePins, i) < 0) {
 						throw new IllegalArgumentException(
-								"AOUT is not available on the following port: "
-										+ i);
+								"AOUT is not available on the following port: " + i);
 					}
 					setPinMode(i - digitalPinRange.getMin(), ARD_PIN_MODE_PWM);
 					pinMode[i] = ARD_PIN_MODE_PWM;
@@ -288,12 +235,11 @@ public abstract class FirmataIO extends IOModule implements
 					pinMode[i] = ARD_PIN_MODE_OUT;
 				} else {
 					throw new IllegalArgumentException(
-							"A wrong port mode is specified for the following port: "
-									+ i);
+							"A wrong port mode is specified for the following port: " + i);
 				}
 			}
 		}
-		// endPacketIfNeeded();
+		endPacketIfNeeded();
 
 		boolean wasNotInput = true;
 		int from = 0;
@@ -322,8 +268,7 @@ public abstract class FirmataIO extends IOModule implements
 		if (dinPinChunks != null) {
 			for (int i = 0; i < dinPinChunks.size(); i++) {
 				PortRange range = dinPinChunks.get(i);
-				printMessage("digital inputs: [" + range.getMin() + ".."
-						+ range.getMax() + "]");
+				printMessage("digital inputs: [" + range.getMin() + ".." + range.getMax() + "]");
 			}
 		}
 	}
@@ -350,14 +295,11 @@ public abstract class FirmataIO extends IOModule implements
 				// e.g. global pin number 6 means local pin number 0
 				int pin = port - digitalPinRange.getMin();
 
-				if (arguments[index] != null
-						&& arguments[index] instanceof Float) {
+				if (arguments[index] != null && arguments[index] instanceof Float) {
 					if (pinMode[port] == ARD_PIN_MODE_OUT) {
-						digitalWrite(pin,
-								FLOAT_ZERO.equals(arguments[index]) ? 0 : 1);
+						digitalWrite(pin, FLOAT_ZERO.equals(arguments[index]) ? 0 : 1);
 					} else if (pinMode[port] == ARD_PIN_MODE_PWM) {
-						analogWrite(pin, ((Float) arguments[index])
-								.floatValue());
+						analogWrite(pin, ((Float) arguments[index]).floatValue());
 					}
 				}
 			}
@@ -428,8 +370,7 @@ public abstract class FirmataIO extends IOModule implements
 			Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
 
 			while (portList.hasMoreElements()) {
-				CommPortIdentifier portId = (CommPortIdentifier) portList
-						.nextElement();
+				CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
 
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
 					if (portId.getName().equals(serialPortName)) {
@@ -438,11 +379,9 @@ public abstract class FirmataIO extends IOModule implements
 						output = port.getOutputStream();
 						if (baudRate > 0) {
 							parent.printMessage("baudrate: " + baudRate);
-							port.setSerialPortParams(baudRate, databits,
-									stopbits, parity);
+							port.setSerialPortParams(baudRate, databits, stopbits, parity);
 						} else {
-							port.setSerialPortParams(rate, databits, stopbits,
-									parity);
+							port.setSerialPortParams(rate, databits, stopbits, parity);
 						}
 						port.notifyOnDataAvailable(true);
 					}
@@ -469,42 +408,40 @@ public abstract class FirmataIO extends IOModule implements
 		}
 	}
 
-	protected void processInput(int inputData) {
+	protected void processInput(int source, int inputData) {
 		int command = 0;
 
 		if (inputData < 0)
 			inputData = 256 + inputData;
 
 		// We have data
-		if (bytesToReceive > 0 && inputData < 128) {
-			bytesToReceive--;
+		if (bytesToReceive[source] > 0 && inputData < 128) {
+			bytesToReceive[source]--;
 
-			storedInputData[bytesToReceive] = inputData;
-			if ((executeMultiByteCommand != 0) && (bytesToReceive == 0)) {
+			storedInputData[source][bytesToReceive[source]] = inputData;
+			if ((executeMultiByteCommand[source] != 0) && (bytesToReceive[source] == 0)) {
 				// We got everything
-				switch (executeMultiByteCommand) {
+				switch (executeMultiByteCommand[source]) {
 				case ARD_DIGITAL_MESSAGE:
-					processDigitalBytes(multiByteChannel,
-							((storedInputData[0] << 7) | storedInputData[1]));
+					processDigitalBytes(source, multiByteChannel[source],
+							((storedInputData[source][0] << 7) | storedInputData[source][1]));
 					// TODO: Optimize here to do not report twice
 					for (int j = 0; j < dinPinChunks.size(); j++) {
 						PortRange range = dinPinChunks.get(j);
-						notifyUpdate(range.getMin(), range.getCounts());
+						notifyUpdate(source, range.getMin(), range.getCounts());
 					}
 					break;
 				case ARD_REPORT_VERSION: // Report version
-					firmwareVersion[0] = storedInputData[0]; // minor
-					firmwareVersion[1] = storedInputData[1]; // major
-					printMessage("Firmata Protocol Vesrion: "
-							+ firmwareVersion[1] + "." + firmwareVersion[0]);
-					firmwareVersionQueue.add(firmwareVersion[1] + "."
+					firmwareVersion[0] = storedInputData[source][0]; // minor
+					firmwareVersion[1] = storedInputData[source][1]; // major
+					printMessage("Firmata Protocol Vesrion: " + firmwareVersion[1] + "."
 							+ firmwareVersion[0]);
+					firmwareVersionQueue.add(firmwareVersion[1] + "." + firmwareVersion[0]);
 					break;
 				case ARD_ANALOG_MESSAGE:
-					analogData[multiByteChannel] = (float) ((storedInputData[0] << 7) | storedInputData[1]) / 1023.0f;
-					if (multiByteChannel == analogPinRange.getMax()) {
-						notifyUpdate(analogPinRange.getMin(), analogPinRange
-								.getCounts());
+					analogData[source][multiByteChannel[source]] = (float) ((storedInputData[source][0] << 7) | storedInputData[source][1]) / 1023.0f;
+					if (multiByteChannel[source] == analogPinRange.getMax()) {
+						notifyUpdate(source, analogPinRange.getMin(), analogPinRange.getCounts());
 					}
 					break;
 				}
@@ -516,7 +453,7 @@ public abstract class FirmataIO extends IOModule implements
 			// 0xF0
 			if (inputData < 240) {
 				command = inputData & 240;
-				multiByteChannel = inputData & 15;
+				multiByteChannel[source] = inputData & 15;
 			} else {
 				// commands in the 0xF* range don't use channel data
 				command = inputData;
@@ -526,14 +463,14 @@ public abstract class FirmataIO extends IOModule implements
 			case ARD_REPORT_VERSION:
 			case ARD_DIGITAL_MESSAGE:
 			case ARD_ANALOG_MESSAGE:
-				bytesToReceive = 2; // 3 bytes needed
-				executeMultiByteCommand = command;
+				bytesToReceive[source] = 2; // 3 bytes needed
+				executeMultiByteCommand[source] = command;
 				break;
 			}
 		}
 	}
 
-	protected void processDigitalBytes(int port, int value) {
+	protected void processDigitalBytes(int source, int port, int value) {
 		int mask;
 
 		switch (port) {
@@ -541,13 +478,13 @@ public abstract class FirmataIO extends IOModule implements
 			// ignore Rx,Tx pins (0 and 1)
 			for (int i = 2; i < 8; ++i) {
 				mask = 1 << i;
-				digitalData[i] = (float) ((value & mask) >> i);
+				digitalData[source][i] = (float) ((value & mask) >> i);
 			}
 			break;
 		case 1: // D8 - D13
 			for (int i = 8; i < totalDigitalPins; ++i) {
 				mask = 1 << i;
-				digitalData[i] = (float) ((value & mask) >> i);
+				digitalData[source][i] = (float) ((value & mask) >> i);
 			}
 			break;
 		default:

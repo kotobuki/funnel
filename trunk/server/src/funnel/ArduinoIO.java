@@ -24,8 +24,7 @@ import gnu.io.SerialPortEventListener;
 public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 	private static final int TOTAL_ANALOG_PINS = 6;
 	private static final int TOTAL_DIGITAL_PINS = 14;
-	private static final int[] PWM_CAPABLE_PINS = new int[] { 9, 11, 12, 15,
-			16, 17 };
+	private static final int[] PWM_CAPABLE_PINS = new int[] { 9, 11, 12, 15, 16, 17 };
 
 	public ArduinoIO(FunnelServer server, String serialPortName, int baudRate) {
 		super(TOTAL_ANALOG_PINS, TOTAL_DIGITAL_PINS, PWM_CAPABLE_PINS);
@@ -50,12 +49,33 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 			try {
 				while (input.available() > 0) {
 					int inputData = input.read();
-					processInput(inputData);
+					processInput(0, inputData);
 				}
 			} catch (IOException e) {
 
 			}
 		}
+	}
+
+	public void reboot() {
+		if (port == null) {
+			return;
+		}
+		stopPolling();
+
+		printMessage(Messages.getString("IOModule.Rebooting")); //$NON-NLS-1$
+
+		writeByte(ARD_SYSTEM_RESET);
+		sleep(500);
+
+		writeByte(ARD_REPORT_VERSION);
+		try {
+			firmwareVersionQueue.poll(10000, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			printMessage("ERROR: Couldn't get a version info after rebooting.");
+			e.printStackTrace();
+		}
+		printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
 	}
 
 	void writeByte(int data) {
