@@ -5,8 +5,6 @@ package funnel;
 
 import java.util.Enumeration;
 
-import com.illposed.osc.OSCBundle;
-
 import gnu.io.CommPortIdentifier;
 
 /**
@@ -35,8 +33,7 @@ public abstract class IOModule {
 		try {
 			Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
 			while (portList.hasMoreElements()) {
-				CommPortIdentifier portId = (CommPortIdentifier) portList
-						.nextElement();
+				CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
 					String foundPortName = portId.getName();
 					if (foundPortName.startsWith("/dev/cu.usbserial-")) {
@@ -66,11 +63,6 @@ public abstract class IOModule {
 	 * @return
 	 */
 	abstract public Object[] getInputs(String address, Object[] arguments);
-
-	/**
-	 * @return
-	 */
-	abstract public OSCBundle getAllInputsAsBundle();
 
 	/**
 	 * Reboot the I/O module

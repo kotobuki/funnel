@@ -1,10 +1,8 @@
 package funnel;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
-import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
 
 import gnu.io.SerialPortEvent;
@@ -13,11 +11,8 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 
 	private static final int TOTAL_ANALOG_PINS = 8;
 	private static final int TOTAL_DIGITAL_PINS = 14;
-	private static final int[] PWM_CAPABLE_PINS = new int[] { 3, 5, 6, 9, 10, 11 };
+	private static final int[] PWM_CAPABLE_PINS = new int[] { 11, 13, 14, 17, 18, 19 };
 
-	private static final int MAX_IO_PORT = 22;
-	private static final int MAX_NODES = 65535;
-	private float[][] inputData = new float[MAX_NODES][MAX_IO_PORT];
 	private int[] rssi = new int[MAX_NODES];
 	private Hashtable<Integer, String> nodes;
 
@@ -41,6 +36,18 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 			e.printStackTrace();
 		}
 
+		// // TODO: Replace following with a proper implementation
+		// for (int i = 0; i < analogPinRange.getCounts(); i++) {
+		// pinMode[i + analogPinRange.getMin()] = ARD_PIN_MODE_AIN;
+		// }
+		// for (int i = 0; i < digitalPinRange.getCounts(); i++) {
+		// pinMode[i + digitalPinRange.getMin()] = ARD_PIN_MODE_OUT;
+		// }
+		// pinMode[3 + digitalPinRange.getMin()] = ARD_PIN_MODE_PWM;
+		// pinMode[10 + digitalPinRange.getMin()] = ARD_PIN_MODE_PWM;
+		// pinMode[11 + digitalPinRange.getMin()] = ARD_PIN_MODE_PWM;
+		// pinMode[5 + digitalPinRange.getMin()] = ARD_PIN_MODE_PWM;
+
 		xbee = new XBee(this, output);
 
 		xbee.sendATCommand("VR");
@@ -60,56 +67,31 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	}
 
 	public void reboot() {
-		super.reboot();
 		xbee.sendATCommand("ND");
 	}
 
 	public void setOutput(Object[] arguments) {
 		int moduleId = ((Integer) arguments[0]).intValue();
 		int start = ((Integer) arguments[1]).intValue();
-
 		beginPacketIfNeeded(moduleId);
 		for (int i = 0; i < (arguments.length - 2); i++) {
 			int port = start + i;
 			int index = 2 + i;
 			if (digitalPinRange.contains(port)) {
 				// converts from global pin number to local pin number
-				// e.g. global pin number 6 means local pin number 0
+				// e.g. global pin number 8 means local pin number 0
 				int pin = port - digitalPinRange.getMin();
 
 				if (arguments[index] != null && arguments[index] instanceof Float) {
 					if (pinMode[port] == ARD_PIN_MODE_OUT) {
 						digitalWrite(pin, FLOAT_ZERO.equals(arguments[index]) ? 0 : 1);
 					} else if (pinMode[port] == ARD_PIN_MODE_PWM) {
-						// analogWrite(pin, ((Float) arguments[index])
-						// .floatValue());
+						analogWrite(pin, ((Float) arguments[index]).floatValue());
 					}
 				}
 			}
 		}
 		endPacketIfNeeded();
-	}
-
-	public OSCBundle getAllInputsAsBundle() {
-		if (nodes.isEmpty()) {
-			return null;
-		}
-
-		OSCBundle bundle = new OSCBundle();
-		Enumeration<Integer> e = nodes.keys();
-
-		while (e.hasMoreElements()) {
-			Integer id = e.nextElement();
-			Object arguments[] = new Object[2 + totalPins];
-			arguments[0] = id;
-			arguments[1] = new Integer(0);
-			for (int i = 0; i < totalPins; i++) {
-				arguments[2 + i] = new Float(inputData[id.intValue()][i]);
-			}
-			bundle.addPacket(new OSCMessage("/in", arguments)); //$NON-NLS-1$
-		}
-
-		return bundle;
 	}
 
 	public void modemStatusEvent(int status) {
@@ -170,17 +152,8 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	public void rxPacketEvent(int source, int rssi, int options, int[] rxData) {
 		this.rssi[source] = rssi;
 		for (int i = 0; i < rxData.length; i++) {
-			processInput(rxData[i]);
+			processInput(source, rxData[i]);
 		}
-		for (int i = 0; i < TOTAL_ANALOG_PINS; i++) {
-			this.inputData[source][i] = this.analogData[i];
-		}
-		for (int i = 0; i < TOTAL_DIGITAL_PINS; i++) {
-			this.inputData[source][digitalPinRange.getMin() + i] = this.digitalData[i];
-		}
-		// printMessage(new String("ain: " + this.inputData[source][0] + ","
-		// + this.inputData[source][1]));
-		// printMessage(new String("button: " + this.inputData[source][16]));
 	}
 
 	public void sourceAddressEvent(String sourceAddress) {

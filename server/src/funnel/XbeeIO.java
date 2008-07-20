@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import com.illposed.osc.OSCBundle;
 import com.illposed.osc.OSCMessage;
 
 import gnu.io.CommPortIdentifier;
@@ -14,8 +13,7 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
-public class XbeeIO extends IOModule implements SerialPortEventListener,
-		XBeeEventListener {
+public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEventListener {
 
 	// TODO: update this portion to support XBS2
 	private static final int MAX_IO_PORT = 9;
@@ -46,8 +44,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 			Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
 
 			while (portList.hasMoreElements()) {
-				CommPortIdentifier portId = (CommPortIdentifier) portList
-						.nextElement();
+				CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
 
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
 					if (portId.getName().equals(serialPortName)) {
@@ -56,21 +53,16 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 						output = port.getOutputStream();
 						if (baudRate > 0) {
 							parent.printMessage("baudrate: " + baudRate);
-							port.setSerialPortParams(baudRate, databits,
-									stopbits, parity);
+							port.setSerialPortParams(baudRate, databits, stopbits, parity);
 						} else {
-							port.setSerialPortParams(rate, databits, stopbits,
-									parity);
+							port.setSerialPortParams(rate, databits, stopbits, parity);
 						}
-						port
-								.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN);
-						port
-								.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_OUT);
+						port.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN);
+						port.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_OUT);
 						port.addEventListener(this);
 						port.notifyOnDataAvailable(true);
 
-						parent.printMessage(Messages
-								.getString("IOModule.Started") //$NON-NLS-1$
+						parent.printMessage(Messages.getString("IOModule.Started") //$NON-NLS-1$
 								+ serialPortName);
 					}
 				}
@@ -115,29 +107,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 			e.printStackTrace();
 		}
 		port = null;
-	}
-
-	public OSCBundle getAllInputsAsBundle() {
-		if (nodes.isEmpty()) {
-			return null;
-		}
-
-		OSCBundle bundle = new OSCBundle();
-		Enumeration<Integer> e = nodes.keys();
-
-		while (e.hasMoreElements()) {
-			Integer id = e.nextElement();
-			Object arguments[] = new Object[2 + MAX_IO_PORT];
-			arguments[0] = id;
-			arguments[1] = new Integer(0);
-			// NOTE: Update here to support XBee ZNet 2.5
-			for (int i = 0; i < 8; i++) { // was "i < MAX_IO_PORT"
-				arguments[2 + i] = new Float(inputData[id.intValue()][i]);
-			}
-			bundle.addPacket(new OSCMessage("/in", arguments)); //$NON-NLS-1$
-		}
-
-		return bundle;
 	}
 
 	public Object[] getInputs(String address, Object[] arguments) {
@@ -220,16 +189,14 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 		this.rssi[source] = rssi;
 	}
 
-	public void rxIOStatusEvent(int source, int rssi, int ioEnable,
-			boolean hasDigitalData, boolean hasAnalogData, int dinStatus,
-			float[] analogData) {
+	public void rxIOStatusEvent(int source, int rssi, int ioEnable, boolean hasDigitalData,
+			boolean hasAnalogData, int dinStatus, float[] analogData) {
 		this.rssi[source] = rssi;
 		if (hasDigitalData) {
 			for (int i = 0; i < MAX_IO_PORT; i++) {
 				int bitMask = 1 << i;
 				if ((ioEnable & bitMask) != 0) {
-					inputData[source][i] = ((dinStatus & bitMask) != 0) ? 1.0f
-							: 0.0f;
+					inputData[source][i] = ((dinStatus & bitMask) != 0) ? 1.0f : 0.0f;
 				}
 			}
 		}
@@ -240,11 +207,9 @@ public class XbeeIO extends IOModule implements SerialPortEventListener,
 		}
 	}
 
-	public void networkingIdentificationEvent(int my, int sh, int sl, int db,
-			String ni) {
-		String info = "NODE: MY=" + my + ", SH=" + Integer.toHexString(sh)
-				+ ", SL=" + Integer.toHexString(sl) + ", dB=" + db + ", NI=\'"
-				+ ni + "\'";
+	public void networkingIdentificationEvent(int my, int sh, int sl, int db, String ni) {
+		String info = "NODE: MY=" + my + ", SH=" + Integer.toHexString(sh) + ", SL="
+				+ Integer.toHexString(sl) + ", dB=" + db + ", NI=\'" + ni + "\'";
 		parent.printMessage(info);
 		OSCMessage message = new OSCMessage("/node");
 		message.addArgument(new Integer(my));
