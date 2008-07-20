@@ -219,6 +219,7 @@ module Funnel
 
     def dispose
       puts "INFO: Disposing..."
+      Osc.dispose
       @th.join 1
       @command_port.close
       puts "INFO: Disposed!"
