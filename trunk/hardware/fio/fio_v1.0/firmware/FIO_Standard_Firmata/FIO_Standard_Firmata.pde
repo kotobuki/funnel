@@ -114,7 +114,7 @@ void loop()
   }
 
   if (timer0_overflow_count > nextExecuteTime) {  
-    nextExecuteTime = timer0_overflow_count + 32; // run this every 33ms
+    nextExecuteTime = timer0_overflow_count + 15; // run this every 33ms
 
     // report digital ports if requested
     if (reportPINs[0]) {

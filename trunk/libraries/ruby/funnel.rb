@@ -13,6 +13,7 @@ require 'funnel/scope.rb'
 
 module Funnel
   AIN = Port::AIN
+  ALL = IOSystem::ALL
   AOUT = Port::AOUT
   CHANGE = PortEvent::CHANGE
   CONFIGURATION_ERROR = FunnelErrorEvent::CONFIGURATION_ERROR

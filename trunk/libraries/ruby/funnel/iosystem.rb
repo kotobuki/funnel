@@ -34,9 +34,10 @@ module Funnel
     ALL = 0xFFFF
 
     attr_accessor :auto_update
+    attr_accessor :autoregister
+    attr_accessor :broadcast
 
     def initialize(config, host, port, interval, applet = nil)
-
       if applet != nil then
         @applet = applet
         @applet.registerDispose(self)
@@ -79,12 +80,14 @@ module Funnel
                   if message.to_a[0] == FunnelErrorEvent::CONFIGURATION_ERROR then
                     raise RuntimeError, "CONFIGURATION_ERROR: #{message.to_a[1]}"
                   else
+                    puts "Configured successfully"
                     @command_queue.push message
                   end
                 when '/reset'
                   if message.to_a[0] == FunnelErrorEvent::REBOOT_ERROR then
                     raise RuntimeError, "REBOOT_ERROR: #{message.to_a[1]}"
                   else
+                    puts "Rebooted successfully"
                     @command_queue.push message
                   end
                 when '/samplingInterval'
@@ -124,13 +127,13 @@ module Funnel
       if interval < MINIMUM_SAMPLING_INTERVAL
         then interval = MINIMUM_SAMPLING_INTERVAL
       end
-      begin
-        send_command(OSC::Message.new('/samplingInterval', 'i', interval))
-      rescue RuntimeError => e
-        puts "RuntimeError occurred at setting the sampling interval: #{e.message}"
-      rescue TimeoutError => e
-        puts "TimeoutError occurred at setting the sampling interval: #{e.message}"
-      end
+      # begin
+      #   send_command(OSC::Message.new('/samplingInterval', 'i', interval), true)
+      # rescue RuntimeError => e
+      #   puts "RuntimeError occurred at setting the sampling interval: #{e.message}"
+      # rescue TimeoutError => e
+      #   puts "TimeoutError occurred at setting the sampling interval: #{e.message}"
+      # end
       
       @sampling_interval = interval
 
@@ -142,18 +145,17 @@ module Funnel
       @autoregister = false
 
       begin
-        send_command(OSC::Message.new('/polling', 'i', 1))
+        send_command(OSC::Message.new('/polling', 'i', 1), true)
       rescue RuntimeError => e
         puts "RuntimeError occurred at start polling: #{e.message}"
       rescue TimeoutError => e
         puts "TimeoutError occurred at start polling: #{e.message}"
       end
-        
     end
 
-    def add_io_module(id, config, name = "")
+    def add_io_module(id, config, name = "", do_configure = true)
       @modules.delete(id) if @modules.has_key?(id)
-      io_module = IOModule.new(self, id, config, name)
+      io_module = IOModule.new(self, id, config, name, do_configure)
       @modules[id] = io_module
     end
 
