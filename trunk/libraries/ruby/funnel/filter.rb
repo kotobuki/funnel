@@ -151,6 +151,11 @@ module Funnel
       @@interval = new_interval.to_f / 1000.0
     end
 
+    def self.dispose
+      @@service_thread.join 1 unless @@service_thread == nil
+      @@listeners = []
+    end
+
     def initialize(wave_func, frequency, *args)
       @wave_func = wave_func
       if frequency > 0 then
