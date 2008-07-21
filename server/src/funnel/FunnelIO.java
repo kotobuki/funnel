@@ -67,7 +67,7 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	}
 
 	public void reboot() {
-		xbee.sendATCommand("ND");
+		// xbee.sendATCommand("ND");
 	}
 
 	public void setOutput(Object[] arguments) {

@@ -192,7 +192,6 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			// Accept configuration command to a 0th module or broadcast only
 			return;
 		}
-		printMessage("Module ID: " + moduleId);
 
 		Object[] config = new Object[arguments.length - 1];
 		System.arraycopy(arguments, 1, config, 0, arguments.length - 1);
@@ -240,6 +239,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			}
 		}
 		endPacketIfNeeded();
+		// printMessage("Sent configuration commands (id: " + moduleId + ")");
 
 		boolean wasNotInput = true;
 		int from = 0;
