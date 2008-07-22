@@ -267,7 +267,7 @@ public class Osc{
 		
 		public float calculate(float val){
 			
-			return 0.5f * (float)(1 + Math.sin(2*Math.PI * val-0.25f));
+			return 0.5f * (float)(1 + Math.sin(2*Math.PI * (val-0.25f)));
 		}
 	}
 	
