@@ -146,18 +146,22 @@ public class Osc{
 		float sec = (float)(now-startTickMillis)/1000;
 
 		if(times != 0 && freq*sec >=times){
+			value = offset;
 			stop();
 			sec = times/freq;
+			
+		}else{
+			//System.out.print(freq * (sec + phase) + "  ");
+
+			value = amplitude * wavefunc.calculate(freq * (sec + phase)) + offset;
+
 		}
-
-		value = amplitude * wavefunc.calculate(freq * (sec + phase)) + offset;
-
 		if(onUpdate != null ){
 			
 			try{
 
 				onUpdate.invoke(parent,new Object[]{ this });
-				
+		
 			}catch(Exception e){
 				e.printStackTrace();
 				onUpdate = null;
@@ -224,17 +228,7 @@ public class Osc{
 				if((processMillis > Osc.serviceInterval) && Osc.serviceInterval != 0){
 					
 					synchronized (oscList){
-
-//						ListIterator it;
-//						int i=0;
-//						do{
-//							it = oscList.listIterator(i++);
-//							if(it.hasNext()){
-//								Osc osc = (Osc)oscList.iterator().next();
-//								osc.update();
-//							}
-//						}while(it.hasNext());
-						
+					
 						for(int i=0;i<oscList.size();i++){
 							Osc osc = (Osc)oscList.get(i);
 							osc.update();		
@@ -292,7 +286,6 @@ public class Osc{
 		
 		public float calculate(float val){
 			
-			val %=1.0f;
 			return 1-(val %1.0f);
 		}
 	}
