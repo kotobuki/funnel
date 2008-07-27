@@ -197,6 +197,7 @@ module Funnel
     end
 
     def start
+      reset
       stop
       @@listeners.push(self)
       @auto_update = true
