@@ -5,8 +5,8 @@ require 'funnel/port'
 module Funnel
   class Configuration
     (GAINER, ARDUINO, XBEE, FIO) = Array(0..3)
-    (MODE1, MODE2, MODE3, MODE4, MODE5, MODE6, MODE7, MODE8) = Array(1..8)
-    (XBS1, XBS2) = Array(0..1)
+    (MODE1, MODE2, MODE3, MODE4, MODE5, MODE6, MODE7) = Array(1..7)
+    (MULTIPOINT, ZNET) = Array(0..1)
 
     attr_reader :ain_ports
     attr_reader :din_ports
@@ -136,45 +136,30 @@ module Funnel
           @digital_pins = nil
           @button = nil
           @led = nil
-        when MODE8
-          @config = [
-            Port::DIN, Port::DIN, Port::DIN, Port::DIN,
-            Port::DIN, Port::DIN, Port::DIN, Port::DIN,
-            Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT,
-            Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT,
-          ]
-          @ain_ports = nil
-          @din_ports = [0, 1, 2, 3, 4, 5, 6, 7]
-          @aout_ports = nil
-          @dout_ports = [8, 9, 10, 11, 12, 13, 14, 15]
-          @analog_pins = nil
-          @digital_pins = nil
-          @button = nil
-          @led = nil
         end
       when ARDUINO
         @config = [
-          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-          Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN,
-          Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN
+          Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::DOUT, Port::AOUT, Port::AOUT,
+          Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::DOUT,
+          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN
         ]
         @ain_ports = nil
         @din_ports = nil
         @aout_ports = nil
         @dout_ports = nil
-        @analog_pins = [0, 1, 2, 3, 4, 5]
-        @digital_pins = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+        @analog_pins = [14, 15, 16, 17, 18, 19, 20, 21]
+        @digital_pins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
         @button = nil
         @led = nil
       when XBEE
         case mode
-        when XBS1 # XBee Series 1
+        when MULTIPOINT # was XBee Series 1
           # 8 digital I/O (including 6 ADC inputs)
           @config = [
             Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
             Port::DIN, Port::DIN
           ]
-        when XBS2 # XBee Series 2
+        when ZNET # was XBee Series 2
           # 10 digital I/O (including 4 ADC inputs)
           @config = [
             Port::AIN, Port::AIN, Port::AIN, Port::AIN, 
@@ -191,16 +176,16 @@ module Funnel
         @led = nil
       when FIO
         @config = [
-          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
           Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::DOUT, Port::AOUT, Port::AOUT,
           Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::DOUT
+          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
         ]
         @ain_ports = nil
         @din_ports = nil
         @aout_ports = nil
         @dout_ports = nil
-        @analog_pins = [0, 1, 2, 3, 4, 5, 6, 7]
-        @digital_pins = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+        @analog_pins = [14, 15, 16, 17, 18, 19, 20, 21]
+        @digital_pins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
         @button = nil
         @led = nil
       end
@@ -220,10 +205,13 @@ module Funnel
         raise ArgumentError, "mode #{mode} is not available"
       end
     end
-    
+
     def to_a
       return @config
     end
+
+    alias :pin_mode :set_digital_pin_mode
+
   end
 
 end

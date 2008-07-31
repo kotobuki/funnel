@@ -23,15 +23,15 @@ module Funnel
       autoregister = false
       @config = @@FIRMATA
 
-      if arguments != nil then
-        nodes = arguments[:nodes] unless arguments[:nodes] == nil
-        host = arguments[:host] unless arguments[:host] == nil
-        port = arguments[:port] unless arguments[:port] == nil
-        interval = arguments[:interval] unless arguments[:interval] == nil
-        autoregister = arguments[:autoregister] unless arguments[:autoregister] == nil
-        @config = arguments[:config] unless arguments[:config] == nil
-        applet = arguments[:applet]
-      end
+      raise ArguentError, "no arguments are supplied" if arguments == nil
+
+      nodes = arguments[:nodes] unless arguments[:nodes] == nil
+      host = arguments[:host] unless arguments[:host] == nil
+      port = arguments[:port] unless arguments[:port] == nil
+      interval = arguments[:interval] unless arguments[:interval] == nil
+      autoregister = arguments[:autoregister] unless arguments[:autoregister] == nil
+      @config = arguments[:config] unless arguments[:config] == nil
+      applet = arguments[:applet]
 
       super(nil, host, port, interval, applet)
       @autoregister = autoregister

@@ -42,7 +42,7 @@ module Funnel
         @applet = applet
         @applet.registerDispose(self)
       end
-      
+
       begin
         @command_port = TCPSocket.open(host, port)
         puts "command port: #{@command_port.addr.at(2)}, #{@command_port.addr.at(1)}"
@@ -134,7 +134,7 @@ module Funnel
       # rescue TimeoutError => e
       #   puts "TimeoutError occurred at setting the sampling interval: #{e.message}"
       # end
-      
+
       @sampling_interval = interval
 
       @auto_update = true

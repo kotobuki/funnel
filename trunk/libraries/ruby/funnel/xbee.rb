@@ -4,31 +4,34 @@ require "funnel/iosystem"
 
 module Funnel
   class XBee < IOSystem
-    (XBS1, XBS2) = Array(0..1)
+    (MULTIPOINT, ZNET) = Array(0..1)
 
-    def self.XBS1
-      return XBS1
+    def self.MULTIPOINT
+      return MULTIPOINT
     end
 
-    def self.XBS2
-      return XBS2
+    def self.ZNET
+      return ZNET
     end
     
     def initialize(arguments)
       # default values
+      @config = nil
       nodes = nil
       host = '127.0.0.1'
       port = 9000
       interval = 33
 
+      raise ArguentError, "no arguments are supplied" if arguments == nil
+
+      @config = Configuration.new Configuration::XBEE, arguments[:config] unless arguments[:config] == nil
       nodes = arguments[:nodes]
       host = arguments[:host] unless arguments[:host] == nil
       port = arguments[:port] unless arguments[:port] == nil
       interval = arguments[:interval] unless arguments[:interval] == nil
       applet = arguments[:applet]
 
-      super(nil, host, port, interval, applet)
-      @config = Configuration.new(Configuration::XBEE, XBS1)
+      super(@config, host, port, interval, applet)
       nodes = [] if nodes == nil
       nodes.each do |id|
         register_node(id, "")
