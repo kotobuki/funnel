@@ -11,7 +11,7 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 
 	private static final int TOTAL_ANALOG_PINS = 8;
 	private static final int TOTAL_DIGITAL_PINS = 14;
-	private static final int[] PWM_CAPABLE_PINS = new int[] { 11, 13, 14, 17, 18, 19 };
+	private static final int[] PWM_CAPABLE_PINS = new int[] { 3, 5, 6, 9, 10, 11 };
 
 	private int[] rssi = new int[MAX_NODES];
 	private Hashtable<Integer, String> nodes;
@@ -35,18 +35,6 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		// // TODO: Replace following with a proper implementation
-		// for (int i = 0; i < analogPinRange.getCounts(); i++) {
-		// pinMode[i + analogPinRange.getMin()] = ARD_PIN_MODE_AIN;
-		// }
-		// for (int i = 0; i < digitalPinRange.getCounts(); i++) {
-		// pinMode[i + digitalPinRange.getMin()] = ARD_PIN_MODE_OUT;
-		// }
-		// pinMode[3 + digitalPinRange.getMin()] = ARD_PIN_MODE_PWM;
-		// pinMode[10 + digitalPinRange.getMin()] = ARD_PIN_MODE_PWM;
-		// pinMode[11 + digitalPinRange.getMin()] = ARD_PIN_MODE_PWM;
-		// pinMode[5 + digitalPinRange.getMin()] = ARD_PIN_MODE_PWM;
 
 		xbee = new XBee(this, output);
 

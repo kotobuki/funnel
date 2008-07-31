@@ -22,9 +22,9 @@ import gnu.io.SerialPortEventListener;
  * 
  */
 public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
-	private static final int TOTAL_ANALOG_PINS = 6;
+	private static final int TOTAL_ANALOG_PINS = 8;
 	private static final int TOTAL_DIGITAL_PINS = 14;
-	private static final int[] PWM_CAPABLE_PINS = new int[] { 9, 11, 12, 15, 16, 17 };
+	private static final int[] PWM_CAPABLE_PINS = new int[] { 3, 5, 6, 9, 10, 11 };
 
 	public ArduinoIO(FunnelServer server, String serialPortName, int baudRate) {
 		super(TOTAL_ANALOG_PINS, TOTAL_DIGITAL_PINS, PWM_CAPABLE_PINS);
@@ -33,7 +33,7 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 		begin(serialPortName, baudRate);
 
 		queryVersion();
-		// TODO: Test here against a Diecimila I/O board to confirm
+
 		try {
 			firmwareVersionQueue.poll(10000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {

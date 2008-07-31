@@ -32,7 +32,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected static final int ARD_PIN_MODE_PWM = 0x02;
 	protected static final int ARD_PIN_MODE_AIN = 0x03;
 
-	protected int totalAnalogPins = 6;
+	protected int totalAnalogPins = 8;
 	protected int totalDigitalPins = 14;
 	protected int totalPins = totalAnalogPins + totalDigitalPins;
 	protected int[] pwmCapablePins = null;
@@ -73,11 +73,11 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		pinMode = new int[totalPins];
 		firmwareVersionQueue = new LinkedBlockingQueue<String>(1);
 
-		analogPinRange = new funnel.PortRange();
-		analogPinRange.setRange(0, totalAnalogPins - 1);
 		digitalPinRange = new funnel.PortRange();
-		digitalPinRange.setRange(totalAnalogPins, totalPins - 1);
+		digitalPinRange.setRange(0, totalPins - 1);
 		dinPinChunks = new Vector<PortRange>();
+		analogPinRange = new funnel.PortRange();
+		analogPinRange.setRange(totalDigitalPins, totalPins - 1);
 	}
 
 	/*
