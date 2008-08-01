@@ -78,51 +78,59 @@ module Funnel
     end
 
     def analog_input(number)
-      return if @ain_ports == nil
-      raise ArguentError, "analog input is not availabe at #{number}" if @ain_ports.at(number) == nil
-      @port[@ain_ports.at(number)]
+      return if @config.ain_ports == nil
+      raise ArgumentError, "analog input is not availabe" if @config.ain_ports == nil
+      raise ArgumentError, "analog input is not availabe at #{number}" if @config.ain_ports.at(number) == nil
+      @port[@config.ain_ports.at(number)]
     end
 
     def digital_input(number)
-      return if @din_ports == nil
-      raise ArguentError, "digital input is not availabe at #{number}" if @din_ports.at(number) == nil
-      @port[@din_ports.at(number)]
+      return if @config.din_ports == nil
+      raise ArgumentError, "digital input is not availabe" if @config.din_ports == nil
+      raise ArgumentError, "digital input is not availabe at #{number}" if @config.din_ports.at(number) == nil
+      @port[@config.din_ports.at(number)]
     end
 
     def analog_output(number)
-      return if @aout_ports == nil
-      raise ArguentError, "analog output is not availabe at #{number}" if @aout_ports.at(number) == nil
-      @port[@aout_ports.at(number)]
+      return if @config.aout_ports == nil
+      raise ArgumentError, "analog output is not availabe" if @config.aout_ports == nil
+      raise ArgumentError, "analog output is not availabe at #{number}" if @config.aout_ports.at(number) == nil
+      @port[@config.aout_ports.at(number)]
     end
 
     def digital_output(number)
-      return if @dout_ports == nil
-      raise ArguentError, "digital output is not availabe at #{number}" if @dout_ports.at(number) == nil
-      @port[@dout_ports.at(number)]
+      return if @config.dout_ports == nil
+      raise ArgumentError, "digital output is not availabe" if @config.dout_ports == nil
+      raise ArgumentError, "digital output is not availabe at #{number}" if @config.dout_ports.at(number) == nil
+      @port[@config.dout_ports.at(number)]
     end
 
     def button(number = 0)
-      return if @button == nil
-      raise ArguentError, "button is not availabe at #{number}" if @button.at(number) == nil
-      @port[@button.at(number)]
+      return if @config.button == nil
+      raise ArgumentError, "button is not availabe" if @config.button == nil
+      raise ArgumentError, "button is not availabe at #{number}" if @config.button.at(number) == nil
+      @port[@config.button.at(number)]
     end
 
     def led(number = 0)
-      return if @led == nil
-      raise ArguentError, "LED is not availabe at #{number}" if @led.at(number) == nil
-      @port[@led.at(number)]
+      return if @config.led == nil
+      raise ArgumentError, "LED is not availabe" if @config.led == nil
+      raise ArgumentError, "LED is not availabe at #{number}" if @config.led.at(number) == nil
+      @port[@config.led.at(number)]
     end
 
     def analog_pin(number)
-      return if @analog_pins == nil
-      raise ArguentError, "analog pin is not availabe at #{number}" if @analog_pins.at(number) == nil
-      @port[@analog_pins.at(number)]
+      return if @config.analog_pins == nil
+      raise ArgumentError, "analog pin is not availabe" if @config.analog_pins == nil
+      raise ArgumentError, "analog pin is not availabe at #{number}" if @config.analog_pins.at(number) == nil
+      @port[@config.analog_pins.at(number)]
     end
 
     def digital_pin(number)
-      return if @digital_pins == nil
-      raise ArguentError, "digital pin is not availabe at #{number}" if @digital_pins.at(number) == nil
-      @port[@digital_pins.at(number)]
+      return if @config.digital_pins == nil
+      raise ArgumentError, "digital pin is not availabe" if @config.digital_pins == nil
+      raise ArgumentError, "digital pin is not availabe at #{number}" if @config.digital_pins.at(number) == nil
+      @port[@config.digital_pins.at(number)]
     end
 
     alias :ain :analog_input
