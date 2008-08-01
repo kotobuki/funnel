@@ -51,7 +51,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 	protected float[][] analogData = null;
 	protected float[][] digitalData = null;
-	protected int[] pinMode = new int[totalPins];
+	protected int[] pinMode;
 	protected int[] firmwareVersion = new int[ARD_MAX_DATA_BYTES];
 	private int stateOfDigitalPins = 0x0000;
 	protected funnel.PortRange analogPinRange;
@@ -67,6 +67,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		totalDigitalPins = digitalPins;
 		totalPins = totalAnalogPins + totalDigitalPins;
 		pwmCapablePins = (int[]) pwmPins.clone();
+		pinMode = new int[totalPins];
 
 		analogData = new float[MAX_NODES][totalAnalogPins];
 		digitalData = new float[MAX_NODES][totalDigitalPins];
@@ -74,7 +75,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		firmwareVersionQueue = new LinkedBlockingQueue<String>(1);
 
 		digitalPinRange = new funnel.PortRange();
-		digitalPinRange.setRange(0, totalPins - 1);
+		digitalPinRange.setRange(0, totalDigitalPins - 1);
 		dinPinChunks = new Vector<PortRange>();
 		analogPinRange = new funnel.PortRange();
 		analogPinRange.setRange(totalDigitalPins, totalPins - 1);
@@ -440,7 +441,9 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 					break;
 				case ARD_ANALOG_MESSAGE:
 					analogData[source][multiByteChannel[source]] = (float) ((storedInputData[source][0] << 7) | storedInputData[source][1]) / 1023.0f;
-					if (multiByteChannel[source] == analogPinRange.getMax()) {
+					// TODO: Find a better way to determine received all analog
+					// values or not
+					if (multiByteChannel[source] == (analogPinRange.getCounts() - 1)) {
 						notifyUpdate(source, analogPinRange.getMin(), analogPinRange.getCounts());
 					}
 					break;
