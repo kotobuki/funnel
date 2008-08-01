@@ -78,14 +78,16 @@ module Funnel
                   register_node(id, ni)
                 when '/configure'
                   if message.to_a[0] == FunnelErrorEvent::CONFIGURATION_ERROR then
-                    raise RuntimeError, "CONFIGURATION_ERROR: #{message.to_a[1]}"
+                    # raise RuntimeError, "CONFIGURATION_ERROR: #{message.to_a[1]}"
+                    puts "CONFIGURATION_ERROR: #{message.to_a[1]}"
                   else
                     puts "Configured successfully"
                     @command_queue.push message
                   end
                 when '/reset'
                   if message.to_a[0] == FunnelErrorEvent::REBOOT_ERROR then
-                    raise RuntimeError, "REBOOT_ERROR: #{message.to_a[1]}"
+                    # raise RuntimeError, "REBOOT_ERROR: #{message.to_a[1]}"
+                    puts "REBOOT_ERROR: #{message.to_a[1]}"
                   else
                     puts "Rebooted successfully"
                     @command_queue.push message
@@ -138,7 +140,6 @@ module Funnel
       @sampling_interval = interval
 
       @auto_update = true
-
       @modules = Hash::new
       add_io_module(0, config) unless config == nil  # add the first I/O module if specified
       @broadcast = nil
@@ -174,6 +175,7 @@ module Funnel
       @command_port.flush
       if synchronized then
         reply = nil
+        # NOTE: Timeout might not occur
         timeout(time_limit) {
           reply = @command_queue.pop
         }

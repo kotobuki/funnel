@@ -11,7 +11,7 @@ def setup
   textFont font
 
   config = Arduino.FIRMATA
-  @fio = Arduino.new :config => config, :applet => self
+  @aio = Arduino.new :config => config, :applet => self
 
   @scope0 = Scope.new "X", 30, 35
   @scope1 = Scope.new "Y", 30, 165
@@ -20,7 +20,7 @@ end
 
 def draw
   background 0
-  @scope0.draw self, @fio.analog_pin(2).value
-  @scope1.draw self, @fio.analog_pin(1).value
-  @scope2.draw self, @fio.analog_pin(0).value
+  @scope0.draw self, @aio.a(2).value
+  @scope1.draw self, @aio.a(1).value
+  @scope2.draw self, @aio.a(0).value
 end
