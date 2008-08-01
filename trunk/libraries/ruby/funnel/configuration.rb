@@ -140,7 +140,7 @@ module Funnel
       when ARDUINO
         @config = [
           Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::DOUT, Port::AOUT, Port::AOUT,
-          Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::DOUT,
+          Port::DOUT, Port::DOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::DOUT, Port::DOUT,
           Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN
         ]
         @ain_ports = nil

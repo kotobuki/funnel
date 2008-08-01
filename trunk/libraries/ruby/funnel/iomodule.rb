@@ -52,7 +52,6 @@ module Funnel
     def init_ports(config)
       @port.clear
       config.each do |type|
-#        puts "port(#{@port_count}): #{port_def_to_str(type)}"
         port = Port.new(@port_count, type)
         @port.push(port)
         if port.type == Port::AOUT or port.type == Port::DOUT then
