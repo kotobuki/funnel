@@ -23,7 +23,7 @@ module Funnel
       autoregister = false
       @config = @@FIRMATA
 
-      raise ArguentError, "no arguments are supplied" if arguments == nil
+      raise ArgumentError, "no arguments are supplied" if arguments == nil
 
       nodes = arguments[:nodes] unless arguments[:nodes] == nil
       host = arguments[:host] unless arguments[:host] == nil

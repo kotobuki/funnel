@@ -17,7 +17,7 @@ module Funnel
       port = 9000
       interval = 33
 
-      raise ArguentError, "no arguments are supplied" if arguments == nil
+      raise ArgumentError, "no arguments are supplied" if arguments == nil
 
       config = arguments[:config] unless arguments[:config] == nil
       host = arguments[:host] unless arguments[:host] == nil
@@ -32,21 +32,21 @@ module Funnel
 
       # set SetPoint filters to each digital inputs
       config.digital_pins.each do |i|
-        @system.io_module(0).port(i).filters = [SetPoint.new(0.5, 0)] if config.to_a[i] == Configuration::IN
+        @system.io_module(0).port(i).filters = [SetPoint.new(0.5, 0)] if config.to_a[i] == Port::DIN
       end
     end
 
     def analog_pin(number)
-      return @system.io_module(0).analog_pin number
+      return @system.io_module(0).analog_pin(number)
       # return if @analog_pins == nil
-      # raise ArguentError, "analog pin is not availabe at #{number}" if @analog_pins.at(number) == nil
+      # raise ArgumentError, "analog pin is not availabe at #{number}" if @analog_pins.at(number) == nil
       # @system.io_module(0).port(@analog_pins.at(number))
     end
 
     def digital_pin(number)
-      return @system.io_module(0).digital_pin number
+      return @system.io_module(0).digital_pin(number)
       # return if @digital_pins == nil
-      # raise ArguentError, "digital pin is not availabe at #{number}" if @digital_pins.at(number) == nil
+      # raise ArgumentError, "digital pin is not availabe at #{number}" if @digital_pins.at(number) == nil
       # @system.io_module(0).port(@digital_pins.at(number))
     end
   end

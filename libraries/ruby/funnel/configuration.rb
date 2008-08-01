@@ -177,8 +177,8 @@ module Funnel
       when FIO
         @config = [
           Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::DOUT, Port::AOUT, Port::AOUT,
-          Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::DOUT
-          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
+          Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::DOUT,
+          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN
         ]
         @ain_ports = nil
         @din_ports = nil

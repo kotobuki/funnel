@@ -22,7 +22,7 @@ module Funnel
       port = 9000
       interval = 33
 
-      raise ArguentError, "no arguments are supplied" if arguments == nil
+      raise ArgumentError, "no arguments are supplied" if arguments == nil
 
       @config = Configuration.new Configuration::XBEE, arguments[:config] unless arguments[:config] == nil
       nodes = arguments[:nodes]
