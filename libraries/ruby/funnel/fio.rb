@@ -34,11 +34,21 @@ module Funnel
       applet = arguments[:applet]
 
       super(nil, host, port, interval, applet)
+
       @autoregister = autoregister
       @broadcast = IOModule.new(self, ALL, @config, "broadcast", true)
       nodes = [] if nodes == nil
       nodes.each do |id|
         register_node(id, "")
+      end
+
+      # Since we have not registered in the constructor, start polling manually
+      begin
+        send_command(OSC::Message.new('/polling', 'i', 1), true)
+      rescue RuntimeError => e
+        puts "RuntimeError occurred at start polling: #{e.message}"
+      rescue TimeoutError => e
+        puts "TimeoutError occurred at start polling: #{e.message}"
       end
     end
     
