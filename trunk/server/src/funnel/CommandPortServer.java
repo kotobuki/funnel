@@ -36,14 +36,11 @@ public class CommandPortServer extends Server {
 				CommandPortClient client = new CommandPortClient(this, sock);
 				clist.add(client);
 				client.startListening();
-				printMessage(Messages.getString("FunnelServer.CommandPort")
-						+ client.getIP()
-						+ Messages
-								.getString("CommandPortServer.ClientConnected")); //$NON-NLS-1$
+				printMessage(Messages.getString("FunnelServer.CommandPort") + client.getIP()
+						+ Messages.getString("CommandPortServer.ClientConnected")); //$NON-NLS-1$
 			}
 		} catch (IOException ioe) {
-			printMessage(Messages
-					.getString("CommandPortServer.ErrorInsideServer")); //$NON-NLS-1$
+			printMessage(Messages.getString("CommandPortServer.ErrorInsideServer")); //$NON-NLS-1$
 			ioe.printStackTrace();
 			stopServer();
 		}
@@ -61,6 +58,9 @@ public class CommandPortServer extends Server {
 
 	public void deleteClient(Client client) {
 		clist.remove(client);
+		if (clist.isEmpty()) {
+			getIOModule().stopPolling();
+		}
 	}
 
 	public void sendMessageToClients(OSCPacket message) {
