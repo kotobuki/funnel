@@ -182,6 +182,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	 * @see funnel.IOModule#setConfiguration(java.lang.Object[])
 	 */
 	public void setConfiguration(Object[] arguments) {
+		boolean wasPollingEnabled = isPolling;
 		if (isPolling) {
 			stopPolling();
 			sleep(100);
@@ -271,6 +272,10 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				PortRange range = dinPinChunks.get(i);
 				printMessage("digital inputs: [" + range.getMin() + ".." + range.getMax() + "]");
 			}
+		}
+
+		if (wasPollingEnabled) {
+			startPolling();
 		}
 	}
 
