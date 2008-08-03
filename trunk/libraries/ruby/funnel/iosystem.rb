@@ -145,6 +145,8 @@ module Funnel
       @broadcast = nil
       @autoregister = false
 
+      return if config == nil
+
       begin
         send_command(OSC::Message.new('/polling', 'i', 1), true)
       rescue RuntimeError => e
