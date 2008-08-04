@@ -241,7 +241,6 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			}
 		}
 		endPacketIfNeeded();
-		// printMessage("Sent configuration commands (id: " + moduleId + ")");
 
 		boolean wasNotInput = true;
 		int from = 0;
@@ -267,12 +266,13 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			dinPinChunks.add(range);
 		}
 
-		if (dinPinChunks != null) {
-			for (int i = 0; i < dinPinChunks.size(); i++) {
-				PortRange range = dinPinChunks.get(i);
-				printMessage("digital inputs: [" + range.getMin() + ".." + range.getMax() + "]");
-			}
-		}
+		// if (dinPinChunks != null) {
+		// for (int i = 0; i < dinPinChunks.size(); i++) {
+		// PortRange range = dinPinChunks.get(i);
+		// printMessage("digital inputs: [" + range.getMin() + ".." +
+		// range.getMax() + "]");
+		// }
+		// }
 
 		if (wasPollingEnabled) {
 			startPolling();
@@ -484,16 +484,18 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		switch (port) {
 		case 0: // D0 - D7
 			// ignore Rx,Tx pins (0 and 1)
-			for (int i = 2; i < 8; ++i) {
+			for (int i = 2; i < 8; i++) {
 				mask = 1 << i;
-				digitalData[source][i] = (float) ((value & mask) >> i);
+				digitalData[source][i] = ((value & mask) > 0) ? 1.0f : 0.0f;
 			}
 			break;
 		case 1: // D8 - D13
-			for (int i = 8; i < totalDigitalPins; ++i) {
-				mask = 1 << i;
-				digitalData[source][i] = (float) ((value & mask) >> i);
+			for (int i = 8; i <= digitalPinRange.getMax(); i++) {
+				mask = 1 << (i - 8);
+				digitalData[source][i] = ((value & mask) > 0) ? 1.0f : 0.0f;
 			}
+			break;
+		case 2: // A0 - A7
 			break;
 		default:
 			break;
@@ -506,10 +508,32 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	}
 
 	protected void enableDigitalPinReporting() {
+		boolean inputsAvailableInPort0 = false;
+		boolean inputsAvailableInPort1 = false;
+
+		if (dinPinChunks == null) {
+			return;
+		}
+
+		for (int i = 0; i < dinPinChunks.size(); i++) {
+			PortRange range = dinPinChunks.get(i);
+			for (int pin = 0; pin < 8; pin++) {
+				if (range.contains(pin)) {
+					inputsAvailableInPort0 = true;
+				}
+			}
+			for (int pin = 8; pin < 16; pin++) {
+				if (range.contains(pin)) {
+					inputsAvailableInPort1 = true;
+				}
+			}
+		}
+
 		writeByte(ARD_REPORT_DIGITAL_PORTS | 0x00);
-		writeByte(1);
+		writeByte(inputsAvailableInPort0 ? 1 : 0);
+
 		writeByte(ARD_REPORT_DIGITAL_PORTS | 0x01);
-		writeByte(1);
+		writeByte(inputsAvailableInPort1 ? 1 : 0);
 	}
 
 	protected void disableDigitalPinReporting() {
