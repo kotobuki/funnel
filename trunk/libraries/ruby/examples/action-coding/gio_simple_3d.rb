@@ -1,3 +1,19 @@
+# === Overview
+# A simple OpenGL example for Gainer I/O modules
+# [Author] Shigeru Kobayashi
+# [License] The new BSD license
+# === Operating environment
+# * a Gainer I/O module
+# * a sensor (e.g. photocell, potentiometer)
+# * Funnel 008 or later
+# * JRuby 1.1.*
+# * Processing 0135
+# * action-coding
+# === Connection
+# * ain 0: sensor
+# === Reference
+# * http://code.google.com/p/action-coding/
+
 $: << '../..'
 
 require 'funnel'

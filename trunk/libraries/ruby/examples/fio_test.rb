@@ -1,4 +1,23 @@
 #!/usr/bin/env ruby
+
+# === Overview
+# A simple full color LED example featuring Osc for Funnel I/O modules
+# Drive a full color LED with multiple 
+# [Author] Shigeru Kobayashi
+# [License] The new BSD license
+# === Operating environment
+# * Fio (Funnel I/O module) x 1 with Firmata v2 firmware
+# * a full color LED
+# * Funnel 008 or later
+# * Ruby 1.8.6
+# === Connection
+# * D3: a full Color LED (R)
+# * D10: a full Color LED (G)
+# * D11: a full Color LED (B)
+# === Reference
+# * http://code.google.com/p/action-coding/
+# * http://www.arduino.cc/playground/Interfacing/Firmata
+
 $: << '..'
 
 require 'funnel'

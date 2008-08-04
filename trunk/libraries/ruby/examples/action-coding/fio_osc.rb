@@ -4,7 +4,7 @@
 # [Author] Shigeru Kobayashi
 # [License] The new BSD license
 # === Operating environment
-# * Fio (Funnel I/O module) x 1 with Firmata v2 firmware
+# * a Fio (Funnel I/O module) with Firmata v2 firmware
 # * a full color LED
 # * Funnel 008 or later
 # * JRuby 1.1.*
