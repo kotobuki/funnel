@@ -1,7 +1,31 @@
+# === Overview
+# A simple accelerometer example for Funnel I/O modules
+# [Author] Shigeru Kobayashi
+# [License] The new BSD license
+# [Original] RGB Cube (distributed as a part of Processing 0135)
+# === Operating environment
+# * Fio (Funnel I/O module) x 1 with Firmata v2 firmware
+# * an accelerometer
+# * Funnel 008 or later
+# * JRuby 1.1.*
+# * Processing 0135
+# * action-coding
+# === Connection
+# * A0: accelerometer (Z)
+# * A1: accelerometer (Y)
+# * A2: accelerometer (X)
+# === Reference
+# * http://processing.org/learning/examples/rgbcube.html
+# * http://code.google.com/p/action-coding/
+# * http://www.arduino.cc/playground/Interfacing/Firmata
+
 $: << '../..'
 
 require 'funnel'
 include Funnel
+
+X = 2
+Y = 1
 
 def setup
   size 400, 400, P3D
@@ -9,22 +33,22 @@ def setup
   noStroke
   colorMode RGB, 1
 
-  nodes = [13]
+  nodes = [1]
   @system = Fio.new :applet => self, :nodes => nodes
-  @fio = @system.io_module 13
+  @fio = @system.io_module nodes.first
   
   f1 = [
-    Convolution(Convolutin::MOVING_AVERAGE),
-    Scaler(0.30, 0.70, -1, 1, Scaler::LINEAR, true)
+    Convolution.new Convolution::MOVING_AVERAGE,
+    Scaler.new 0.30, 0.70, -1, 1
   ]
   
   f2 = [
-    Convolution(Convolutin::MOVING_AVERAGE),
-    Scaler(0.30, 0.70, -1, 1, Scaler::LINEAR, true)
+    Convolution.new Convolution::MOVING_AVERAGE,
+    Scaler.new 0.30, 0.70, -1, 1
   ]
   
-  @fio.port(1).value = f1
-  @fio.port(2).value = f2
+  @fio.a(X).filters = f1
+  @fio.a(Y).filters = f2
 end
 
 def draw
@@ -32,8 +56,8 @@ def draw
 
   pushMatrix
     translate 200, 200, -30
-    rotateZ -asin(fio.port(1).value);
-    rotateX asin(fio.port(2).value);
+    rotateZ -asin(@fio.a(Y).value)
+    rotateX asin(@fio.a(X).value)
     scale 100
 
     beginShape QUADS
