@@ -4,7 +4,7 @@
 # [License] The new BSD license
 # [Original] RGB Cube (distributed as a part of Processing 0135)
 # === Operating environment
-# * Fio (Funnel I/O module) x 1 with Firmata v2 firmware
+# * a Fio (Funnel I/O module) with Firmata v2 firmware
 # * an accelerometer
 # * Funnel 008 or later
 # * JRuby 1.1.*

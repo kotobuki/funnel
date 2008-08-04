@@ -1,3 +1,22 @@
+# === Overview
+# A simple example featuring Scope for Arduino I/O boards
+# [Author] Shigeru Kobayashi
+# [License] The new BSD license
+# === Operating environment
+# * an Arduino I/O board with Firmata v2 firmware
+# * an accelerometer
+# * Funnel 008 or later
+# * JRuby 1.1.*
+# * Processing 0135
+# * action-coding
+# === Connection
+# * A0: accelerometer (Z)
+# * A1: accelerometer (Y)
+# * A2: accelerometer (X)
+# === Reference
+# * http://code.google.com/p/action-coding/
+# * http://www.arduino.cc/playground/Interfacing/Firmata
+
 $: << '../..'
 
 require 'funnel'
