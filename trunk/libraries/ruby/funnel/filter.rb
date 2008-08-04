@@ -110,7 +110,7 @@ module Funnel
       return val ** (1.0 / 4)
     }
 
-    def initialize(in_min, in_max, out_min, out_max, curve_func, limiter = true)
+    def initialize(in_min, in_max, out_min, out_max, curve_func = LINEAR, limiter = true)
       @in_min = in_min
       @in_max = in_max
       @out_min = out_min
