@@ -2,24 +2,33 @@
 $: << '..'
 
 require 'funnel'
+include Funnel
 
-module Funnel
-  nodes = [2]
-  fio = Fio.new(nodes)
+R = 3
+G = 10
+B = 11
 
-  fio.all_io_modules.each do |io|
-    puts "fio: id: #{io.id}, name: #{io.name}"
+config = Fio.FIRMATA
+config.set_digital_pin_mode(R, PWM)
+config.set_digital_pin_mode(G, PWM)
+config.set_digital_pin_mode(B, PWM)
 
-    io.port(0).on PortEvent::CHANGE do |event|
-      puts "node #{io.id} (#{io.name}): AD0: #{event.target.value}"
-    end
+nodes = [1]
+@fio = Fio.new :config => config, :nodes => nodes
 
-    Osc.service_interval = 50
-    dimmer = Osc.new(Osc::SIN, 1.0, 0)
-    io.port(10).filters = [dimmer]
-    dimmer.reset
-    dimmer.start
-  end
-
-  sleep(10)
+@fio.io_module(1).a(0).on CHANGE do |event|
+  puts "A0: #{event.target.value}"
 end
+
+@osc_r = Osc.new Osc::SIN, 0.5, 1, 0, 0, 0
+@osc_g = Osc.new Osc::SIN, 0.5, 1, 0, 0.33, 0
+@osc_b = Osc.new Osc::SIN, 0.5, 1, 0, 0.66, 0
+
+@fio.io_module(ALL).d(R).filters = [@osc_r]
+@fio.io_module(ALL).d(G).filters = [@osc_g]
+@fio.io_module(ALL).d(B).filters = [@osc_b]
+@osc_r.start
+@osc_g.start
+@osc_b.start
+
+sleep 10
