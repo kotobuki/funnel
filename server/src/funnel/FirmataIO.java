@@ -51,6 +51,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 	protected float[][] analogData = null;
 	protected float[][] digitalData = null;
+	protected boolean[] digitalPinUpdated = null;
 	protected int[] pinMode;
 	protected int[] firmwareVersion = new int[ARD_MAX_DATA_BYTES];
 	private int stateOfDigitalPins = 0x0000;
@@ -71,6 +72,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 		analogData = new float[MAX_NODES][totalAnalogPins];
 		digitalData = new float[MAX_NODES][totalDigitalPins];
+		digitalPinUpdated = new boolean[totalDigitalPins];
 		pinMode = new int[totalPins];
 		firmwareVersionQueue = new LinkedBlockingQueue<String>(1);
 
@@ -219,6 +221,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 					throw new IllegalArgumentException(
 							"Only AIN is available on the following port: " + i);
 				}
+				setPinMode(i, ARD_PIN_MODE_IN);
 				pinMode[i] = ARD_PIN_MODE_AIN;
 			} else if (digitalPinRange.contains(i)) {
 				if (PORT_AOUT.equals(config[i])) {
@@ -226,13 +229,13 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 						throw new IllegalArgumentException(
 								"AOUT is not available on the following port: " + i);
 					}
-					setPinMode(i - digitalPinRange.getMin(), ARD_PIN_MODE_PWM);
+					setPinMode(i, ARD_PIN_MODE_PWM);
 					pinMode[i] = ARD_PIN_MODE_PWM;
 				} else if (PORT_DIN.equals(config[i])) {
-					setPinMode(i - digitalPinRange.getMin(), ARD_PIN_MODE_IN);
+					setPinMode(i, ARD_PIN_MODE_IN);
 					pinMode[i] = ARD_PIN_MODE_IN;
 				} else if (PORT_DOUT.equals(config[i])) {
-					setPinMode(i - digitalPinRange.getMin(), ARD_PIN_MODE_OUT);
+					setPinMode(i, ARD_PIN_MODE_OUT);
 					pinMode[i] = ARD_PIN_MODE_OUT;
 				} else {
 					throw new IllegalArgumentException(
@@ -431,11 +434,6 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				case ARD_DIGITAL_MESSAGE:
 					processDigitalBytes(source, multiByteChannel[source],
 							((storedInputData[source][0] << 7) | storedInputData[source][1]));
-					// TODO: Optimize here to do not report twice
-					for (int j = 0; j < dinPinChunks.size(); j++) {
-						PortRange range = dinPinChunks.get(j);
-						notifyUpdate(source, range.getMin(), range.getCounts());
-					}
 					break;
 				case ARD_REPORT_VERSION: // Report version
 					firmwareVersion[0] = storedInputData[source][0]; // minor
@@ -480,25 +478,47 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 	protected void processDigitalBytes(int source, int port, int value) {
 		int mask;
+		float lastValue = 0;
+
+		for (int i = 0; i < totalDigitalPins; i++) {
+			digitalPinUpdated[i] = false;
+		}
 
 		switch (port) {
 		case 0: // D0 - D7
 			// ignore Rx,Tx pins (0 and 1)
 			for (int i = 2; i < 8; i++) {
 				mask = 1 << i;
+				lastValue = digitalData[source][i];
 				digitalData[source][i] = ((value & mask) > 0) ? 1.0f : 0.0f;
+				digitalPinUpdated[i] = (lastValue != digitalData[source][i]);
 			}
 			break;
 		case 1: // D8 - D13
 			for (int i = 8; i <= digitalPinRange.getMax(); i++) {
 				mask = 1 << (i - 8);
+				lastValue = digitalData[source][i];
 				digitalData[source][i] = ((value & mask) > 0) ? 1.0f : 0.0f;
+				digitalPinUpdated[i] = (lastValue != digitalData[source][i]);
 			}
 			break;
 		case 2: // A0 - A7
 			break;
 		default:
 			break;
+		}
+
+		for (int j = 0; j < dinPinChunks.size(); j++) {
+			boolean needToReport = false;
+			PortRange range = dinPinChunks.get(j);
+			for (int pin = range.getMin(); pin <= range.getMax(); pin++) {
+				if (digitalPinUpdated[pin]) {
+					needToReport = true;
+				}
+			}
+			if (needToReport) {
+				notifyUpdate(source, range.getMin(), range.getCounts());
+			}
 		}
 	}
 
