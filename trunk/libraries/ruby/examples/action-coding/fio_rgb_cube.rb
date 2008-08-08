@@ -38,13 +38,13 @@ def setup
   @fio = @system.io_module nodes.first
   
   f1 = [
-    Convolution.new Convolution::MOVING_AVERAGE,
-    Scaler.new 0.30, 0.70, -1, 1
+    Convolution.new(Convolution::MOVING_AVERAGE),
+    Scaler.new(0.30, 0.70, -1, 1)
   ]
   
   f2 = [
-    Convolution.new Convolution::MOVING_AVERAGE,
-    Scaler.new 0.30, 0.70, -1, 1
+    Convolution.new(Convolution::MOVING_AVERAGE),
+    Scaler.new(0.30, 0.70, -1, 1)
   ]
   
   @fio.a(X).filters = f1
