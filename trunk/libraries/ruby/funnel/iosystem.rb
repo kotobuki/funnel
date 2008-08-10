@@ -177,10 +177,15 @@ module Funnel
       @command_port.flush
       if synchronized then
         reply = nil
-        # NOTE: Timeout might not occur
-        timeout(time_limit) {
-          reply = @command_queue.pop
-        }
+        start_time = Time.now.to_f
+        while reply == nil do
+          begin
+            reply = @command_queue.pop(true)
+          rescue ThreadError
+            sleep 0.1
+            raise TimeoutError, "Got no reply for #{command.address}" if (Time.now.to_f - start_time) > time_limit
+          end
+        end
         raise RuntimeError, "Expected reply was #{command.address}, but is #{reply.address}" if command.address != reply.address
       end
     end
