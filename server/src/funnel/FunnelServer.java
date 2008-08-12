@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 008 (r417) [EXPERIMENTAL]";
+	private static final String buildName = "Funnel 008 (r421) [EXPERIMENTAL]";
 
 	private CommandPortServer server;
 	private IOModule ioModule = null;
@@ -34,7 +34,7 @@ public class FunnelServer extends Frame {
 	private final int width = 480;
 	private final int height = 270;
 
-	public FunnelServer() {
+	public FunnelServer(String configFileName) {
 		super();
 
 		// Close the I/O module when the window is closed
@@ -67,7 +67,7 @@ public class FunnelServer extends Frame {
 		int baudRate = -1;
 
 		try {
-			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader("settings.yaml")); //$NON-NLS-1$
+			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader(configFileName)); //$NON-NLS-1$
 			Map<?, ?> serverSettings = (Map<?, ?>) settings.get("server"); //$NON-NLS-1$
 			if (serverSettings.get("port") == null) { //$NON-NLS-1$
 				networkPort = "9000"; //$NON-NLS-1$
@@ -174,6 +174,18 @@ public class FunnelServer extends Frame {
 		System.out.println("current directory: " //$NON-NLS-1$
 				+ new File(".").getAbsolutePath()); //$NON-NLS-1$
 
-		new FunnelServer();
+		String configFileName = "settings.yaml";
+		if ((args.length > 0) && (args[0] != null)) {
+			String fileNameToTest = "settings." + args[0].substring(1) + ".yaml";
+			File file = new File(fileNameToTest);
+			if (file.exists()) {
+				configFileName = fileNameToTest;
+			} else {
+				System.out.println("Warning: " + fileNameToTest + " was not found");
+				System.out.println("Usage: java -jar funnel_server.jar -[gainer|arduino|xbee|fio]");
+			}
+		}
+
+		new FunnelServer(configFileName);
 	}
 }
