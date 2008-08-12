@@ -183,6 +183,7 @@ module Funnel
       @start_time = 0.0
       @auto_update = false
       @listener = nil
+      @last_val = 0.99
 
       if @@service_thread == nil then
         @@service_thread = Thread.new do
@@ -212,6 +213,7 @@ module Funnel
     def reset
       @time = 0
       @start_time = Time.now.to_f
+      @last_val = 0.99
     end
 
     def set_listener(&proc)
@@ -233,32 +235,36 @@ module Funnel
         @@listeners.delete(self)
         @time = @times / @frequency
       else
-        @value = @amplitude * @wave_func.call(@frequency * (@time + @phase)) + @offset
+        val = @frequency * (@time + @phase)
+        @value = @amplitude * @wave_func.call(val, @last_val) + @offset
+        @last_val = val
         @listener.call(@value) if @listener
       end
     end
 
     # NOTE: 1/4 phase shifted sin wave
-    SIN = lambda { |val|
+    SIN = lambda { |val, last_val|
       return 0.5 * (1 + Math.sin(2 * Math::PI * (val - 0.25)))
     }
 
-    SQUARE = lambda { |val|
+    SQUARE = lambda { |val, last_val|
       return (val % 1 <= 0.5) ? 1.0 : 0.0
     }
 
     # NOTE: 1/4 phase shifted triangle wave
-    TRIANGLE = lambda { |val|
+    TRIANGLE = lambda { |val, last_val|
       val %= 1
       return (val <= 0.5) ? (2 * val) : (2 - 2 * val)
     }
 
-    SAW = lambda { |val|
+    SAW = lambda { |val, last_val|
       return 1 - (val % 1)
     }
 
-    IMPULSE = lambda { |val|
-      return (val < 1) ? 1.0 : 0.0
+    IMPULSE = lambda { |val, last_val|
+      val %= 1
+      last_val %= 1
+      return (val < last_val) ? 1.0 : 0.0
     }
   end
 
