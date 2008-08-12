@@ -4,7 +4,7 @@ server:
 io:
   type: Fio
   port: 
-  baudrate: 57600
+  baudrate: 19200
 
 ...
 # Just as a reference. The following lines after '...' will be ignored.
