@@ -1,12 +1,14 @@
 /*
 Arduino 
-digital in (13pin)
+digital in (digital 13pin)
 */
 
 import processing.funnel.*;
 
 Arduino arduino;
 PFont myFont;
+
+int ledPin = 13;
 
 void setup()
 {
@@ -16,7 +18,10 @@ void setup()
   myFont = loadFont("CourierNewPSMT-24.vlw");
   textFont(myFont, 24);
   
-  arduino = new Arduino(this,Arduino.FIRMATA);
+  Configuration config = Arduino.FIRMATA;
+  config.setDigitalPinMode(ledPin,Arduino.IN);
+  
+  arduino = new Arduino(this,config);
  
 }
 

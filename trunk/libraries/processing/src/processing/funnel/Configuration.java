@@ -13,7 +13,7 @@ public final class Configuration{
 	final int moduleID;
 	final String moduleName;
 	
-	Vector outputPorts = new Vector();
+	public Vector outputPorts = new Vector();
 	
 	public Configuration(int moduleID, int[] config,String moduleName){
 		this.moduleID = moduleID;
@@ -39,9 +39,10 @@ public final class Configuration{
 	 * ARDUINOÇÃDigitalPinÇê›íËÇ∑ÇÈ
 	 * ÅiIOSystemçÏê¨å„çƒê›íËÇÕÇ≈Ç´Ç‹ÇπÇÒÅj
 	 */
+	
 	public boolean setDigitalPinMode(int n,int digitalType){
-		if(moduleName.equalsIgnoreCase(Arduino.moduleName)){
-			portStatus[Arduino._digitalPin[n]] = digitalType;
+		if(moduleName.equalsIgnoreCase(Arduino.moduleName) || moduleName.equalsIgnoreCase(Fio.moduleName)){
+			portStatus[n] = digitalType;
 			return true;
 		}
 		return false;

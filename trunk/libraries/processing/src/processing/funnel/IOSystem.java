@@ -34,7 +34,7 @@ public class IOSystem implements Runnable{
 	/**
 	 * autoUpdate=trueの送信時の更新間隔
 	 */
-	private int updateInterval = 30;	
+	private int updateInterval = 33;	
 
 	private Thread thread=null;
 	private boolean isWorking = false;
@@ -105,6 +105,7 @@ public class IOSystem implements Runnable{
 		while(isWorking){
 			long processMillis = System.currentTimeMillis() - updateTickMillis;
 
+			
 			if((processMillis > updateInterval) && autoUpdate){
 				//OUTPUTのポートの処理
 				//System.out.println("update " + processMillis);
@@ -127,7 +128,7 @@ public class IOSystem implements Runnable{
 	
 	public void dispose(){
 
-		//endPolling();
+		endPolling();
 		reboot();
 	
 
@@ -193,16 +194,27 @@ public class IOSystem implements Runnable{
 		}
 
 		if(message.getAddress().equals("/configure")){
-			for(int i=0;i<message.getArguments().length;i++){
-				int returnCode = ((Integer)message.getArguments()[i]).intValue();
-				if( returnCode == NO_ERROR){
-					System.out.println("configureation NO_ERROR");
-				}else if( returnCode == CONFIGURATION_ERROR){	
-					System.out.println("configureation CONFIGURATION_ERROR");
-				}else{
-					System.out.println("configureation ERROR");
-				}
+
+			int returnCode = ((Integer)message.getArguments()[0]).intValue();
+			if( returnCode == NO_ERROR){
+				System.out.println("configureation OK ");
+			}else if( returnCode == CONFIGURATION_ERROR){
+				System.out.println("Configuration error! ");
+				errorMessage((String)message.getArguments()[1]);
+			}else{
+				errorMessage((String)message.getArguments()[1]);
 			}
+		}
+		
+		if(message.getAddress().equals("/reset")){
+			int returnCode = ((Integer)message.getArguments()[0]).intValue();
+			if( returnCode == NO_ERROR){
+				System.out.println("reboot OK ");
+			}else if( returnCode == REBOOT_ERROR){
+				errorMessage((String)message.getArguments()[1]);
+			}else{
+				errorMessage((String)message.getArguments()[1]);
+			}			
 		}
 }
 
@@ -245,19 +257,14 @@ public class IOSystem implements Runnable{
 		return true;
 	}
 	
-	public boolean initialize(int moduleID,Configuration config){
-
-
+	protected boolean initialize(int moduleID,Configuration config){
 		
 		reboot();
 
 		if(!configuration(moduleID,config.getPortStatus())){
 			return false;
 		}
-		
-		if(!addModule(moduleID,config,config.getModuleName())){
-			return false;
-		}
+
 		setSamplingInterval(samplingInterval);
 	
 		
@@ -265,7 +272,7 @@ public class IOSystem implements Runnable{
 		return true;
 	}
 	
-	public boolean startIOSystem(){
+	protected boolean startIOSystem(){
 			
 		beginPolling();
 		
@@ -280,6 +287,7 @@ public class IOSystem implements Runnable{
 	
 	
 	private void reboot(){
+
 		execCode("/reset",true);
 
 	}
@@ -351,8 +359,13 @@ public class IOSystem implements Runnable{
 		for(int n=0;n<nPort;n++){
 			args[n+2] = new Float(io.port(startPort+n).value);
 		}
-		execCode("/out",args,true);
+		execCode("/out",args,false);
 
+//		System.out.print("/out ");
+//		for(int i=0;i<args.length;i++){
+//			System.out.print( " " + args[i]);
+//		}
+//		System.out.println();
 	}
 	
 	public void update(){
@@ -397,14 +410,15 @@ public class IOSystem implements Runnable{
 	
 
 	
-	public boolean addModule(int id,Configuration config,String name){
+	protected boolean addModule(int id,Configuration config,String name){
 
 		Set key = iomodules.entrySet();
 		if(!key.contains(new Integer(id))){
 			iomodules.put(new Integer(id), new IOModule(parent,id,config,name));
+			System.out.println(" add module " + name);
 			return true;
 		}
-		
+		System.out.println("add module error !" + name);
 		return false;
 	}
 	

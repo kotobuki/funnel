@@ -1,6 +1,6 @@
 /*
 Arduino 
-digital out (13pin)
+digital out (digital 13pin)
 */
 
 import processing.funnel.*;

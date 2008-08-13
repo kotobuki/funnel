@@ -21,9 +21,9 @@ public final class Arduino extends IOSystem{
 	
 	
 	private static final int[] firmata = {
-		PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,PORT_AIN, PORT_AIN,//analog in[0 - 5]
-		PORT_DIN, PORT_DIN,PORT_DIN, PORT_DIN,PORT_DIN, PORT_DIN,PORT_DIN, PORT_DIN,
-		PORT_DIN, PORT_DIN,PORT_DIN, PORT_DIN,PORT_DIN, PORT_DIN,//digital [0 - 13]
+		PORT_DOUT,PORT_DOUT,PORT_DOUT,PORT_AOUT,PORT_DOUT,PORT_AOUT,PORT_AOUT,
+		PORT_DOUT,PORT_DOUT,PORT_AOUT,PORT_AOUT,PORT_AOUT,PORT_DOUT,PORT_DOUT,
+		PORT_AIN,PORT_AIN,PORT_AIN,PORT_AIN,PORT_AIN,PORT_AIN,PORT_AIN,PORT_AIN,
 	};
 	public static final Configuration FIRMATA = new Configuration(moduleID,firmata,moduleName);
 
@@ -32,15 +32,12 @@ public final class Arduino extends IOSystem{
 	private int analogPin[];
 	private int digitalPin[];
 	
-	/**
-	 * arduinoのデジタルポート番号からfunnelのポート番号への変換
-	 */
-	public static final int[] _digitalPin = {6,7,8,9,10,11,12,13,14,15,16,17,18,19};
 
-	static int[] _ain = {0,1,2,3,4,5};
-	static int[] _din = _digitalPin;
-	static int[] _dout = {};
-	static int[] _pwm = {};
+	/**
+	 * arduinoのポート番号からfunnelのポート番号への変換
+	 */
+	static int[] _a = {14,15,16,17,18,19,20,21};
+	static int[] _d = {0,1,2,3,4,5,6,7,8,9,10,11,12,13};
 	
 
 	public Arduino(PApplet parent, String hostName,
@@ -50,6 +47,8 @@ public final class Arduino extends IOSystem{
 		if(!initialize(moduleID,config)){
 			errorMessage("Funnel configuration error!");
 		}
+		addModule(moduleID,config,config.getModuleName());
+		
 		initPorts(config.portStatus);
 		
 		startIOSystem();
@@ -78,8 +77,8 @@ public final class Arduino extends IOSystem{
 //ポートの機能(参照する名前)を割り当てる
 	private void initPorts(int[] conf){
 		
-		analogPin = _ain;
-		digitalPin = _digitalPin;
+		analogPin = _a;
+		digitalPin = _d;
 
 	}
 	

@@ -30,7 +30,7 @@ public final class XBee extends IOSystem{
 			errorMessage("Funnel configuration error!");
 		}
 		for(int i=0;i<IDs.length;i++){
-			String name = "Fio." + i;
+			String name = "xbee." + i;
 			addModule(IDs[i],config,name);
 		}
 		startIOSystem();

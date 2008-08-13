@@ -1,6 +1,6 @@
 /*
 Fio
-analog out (aout0)
+analog out 
 */
 
 import processing.funnel.*;
@@ -12,9 +12,13 @@ void setup()
   size(200,200);
   frameRate(25);
   
-  int[] moduleIDs = {2};
-  fio = new Fio(this,moduleIDs);
+  Configuration config = Fio.FIRMATA;
+  config.setDigitalPinMode(10,Fio.PWM);
+  
+  int[] nodeIDs = {1};
+  fio = new Fio(this,nodeIDs,config);
   fio.autoUpdate = true;
+
 }
 
 void draw()
@@ -22,7 +26,7 @@ void draw()
   background(170);
   
   float val = float(mouseX)/width;
-  fio.iomodule(0xFFFF).port(10).value = val;
+  fio.iomodule(1).port(10).value = val;
 }
   
 

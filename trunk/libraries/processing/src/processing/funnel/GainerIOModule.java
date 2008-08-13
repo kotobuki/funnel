@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
  * @version 1.0
  * 
  */
+//button event ‚Â‚¯‚é‚½‚ß
 public class GainerIOModule extends IOModule{
 	
 	Method gainerButtonEventMethod = null;
