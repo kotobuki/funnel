@@ -24,18 +24,15 @@ void setup()
 
 void draw()
 {
+  translate(0,10);
+  
   float oldValue = osc.value;
   osc.update();  //update wave
   float rate = 200;
-  line(150,rate*oldValue,150,rate*osc.value);
+  line(width/2,rate*oldValue,width/2,rate*osc.value);
     
-  //Shift screen
-  for(int y=0; y<256; y++){
-    for(int x=0; x<255; x++){
-      color col = get(x+1,y);
-      set(x,y,col);
-    }
-  }
+  //shift screen
+  copy(0,0,width,height,-1,0,width,height);
   
 }
 

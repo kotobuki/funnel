@@ -17,15 +17,16 @@ void setup()
   myFont = loadFont("CourierNewPSMT-24.vlw");
   textFont(myFont, 24);
   
-  int[] moduleIDs = {2};
-  fio = new Fio(this,moduleIDs);
+  int[] moduleIDs = {1};
+  
+  fio = new Fio(this,moduleIDs,Fio.FIRMATA);
  
 }
 
 void draw()
 {
   background(0);
-  text("analogInput[0]: " + fio.iomodule(2).port(0).value,10,80);  
+  text("analogInput[0]: " + fio.iomodule(1).port(14).value,10,80);  
 }
   
 

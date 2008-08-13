@@ -20,10 +20,12 @@ void setup()
   osc.addEventListener(Osc.UPDATE,"oscUpdated");
   osc.start();
 
+  smooth();
 }
 
 void draw()
 {
+ 
 }
 
 
@@ -31,15 +33,13 @@ float oldValue;
 
 void oscUpdated(Osc osc)
 {
+
+  
   float rate=150;
-  line(150,rate*oldValue,150,rate*osc.value);
-  //Shift screen
-  for(int y=0; y<256; y++){
-    for(int x=0; x<255; x++){
-      color col = get(x+1,y);
-      set(x,y,col);
-    }
-  }
+  line(width/2,rate*oldValue,width/2,rate*osc.value);
+  //shift screen
+  copy(0,0,width,height,-1,0,width,height);
+  
   oldValue = osc.value;
 }
 

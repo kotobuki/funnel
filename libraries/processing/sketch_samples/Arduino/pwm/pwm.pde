@@ -1,6 +1,6 @@
 /*
 Arduino 
-pwm (9pin)
+pwm (digital 9pin)
 */
 
 import processing.funnel.*;

@@ -127,6 +127,9 @@ public final class Gainer extends IOSystem{
 		if(!initialize(moduleID,config)){
 			errorMessage("Funnel configuration error!");
 		}
+		
+		addModule(moduleID,config,config.getModuleName());
+		
 		initPorts(config.portStatus);
 		
 		startIOSystem();
@@ -270,9 +273,10 @@ public final class Gainer extends IOSystem{
 	}
 
 	
-	public boolean addModule(int id,Configuration config,String name){
+	protected boolean addModule(int id,Configuration config,String name){
 
-		//System.out.println("addmodule() Gainer");
+		System.out.println("addmodule() Gainer");
+		
 		Set key = iomodules.entrySet();
 		if(!key.contains(new Integer(id))){
 			iomodules.put(new Integer(id), new GainerIOModule(parent,id,config,name));
@@ -281,6 +285,7 @@ public final class Gainer extends IOSystem{
 		
 		return false;
 	}
+	
 	
 	//Gainerショートカット
 	public IOModule.Port analogOutput(int nPort){

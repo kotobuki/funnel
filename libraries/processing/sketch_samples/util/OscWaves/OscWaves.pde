@@ -54,7 +54,6 @@ void setup()
 
 void draw()
 {
-  
   image(pg,0,0);
 }
 
@@ -70,14 +69,14 @@ void oscUpdated(Osc osc)
   switch(osc.wave){
     case Osc.SIN:
      drawWaves(10,osc.value,color(200,30,30));
-
     break;
+    
     case Osc.SQUARE:
      drawWaves(130,osc.value,color(30,30,200));
     break;
+    
    case Osc.SAW:
      drawWaves(250,osc.value,color(30,100,30));
-
     break;
     
    case Osc.TRIANGLE:
