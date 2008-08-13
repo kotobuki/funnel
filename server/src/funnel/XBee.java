@@ -18,16 +18,24 @@ public class XBee {
 	private static final int IDX_IO_ENABLE_LSB = 10;
 	private static final int IDX_IO_STATUS_START = 11;
 	private static final int IDX_PACKET_OPTIONS = 7;
+	private static final int IDX_ZNET_16BIT_ADDRESS_MSB = 12;
+	private static final int IDX_ZNET_16BIT_ADDRESS_LSB = 13;
+	// private static final int IDX_ZNET_OPTIONS = 14;
+	private static final int IDX_ZNET_SAMPLES = 15;
+	private static final int IDX_ZNET_DIGITAL_CH_MASK_MSB = 16;
+	private static final int IDX_ZNET_DIGITAL_CH_MASK_LSB = 17;
+	private static final int IDX_ZNET_ANALOG_CH_MASK = 18;
+	private static final int IDX_ZNET_IO_STATUS_START = 19;
 	// private static final int IDX_PACKET_RF_DATA = 8;
 	private static final int RX_PACKET_16BIT = 0x81;
 	private static final int RX_IO_STATUS_16BIT = 0x83;
 	private static final int AT_COMMAND_RESPONSE = 0x88;
 	private static final int TX_STATUS_MESSAGE = 0x89;
 	private static final int MODEM_STATUS = 0x8A;
+	private static final int RX_IO_STATUS_ZNET = 0x92;
 	private static final int MAX_FRAME_SIZE = 100;
 
-	// TODO: update this portion to support XBS2
-	private static final int MAX_IO_PORT = 9;
+	private static final int XBEE_MULTIPOINT_MAX_IO_PORT = 9;
 
 	XBeeEventListener listener;
 	private OutputStream output;
@@ -68,13 +76,6 @@ public class XBee {
 				rxBytesToReceive = (rxData[1] << 8) + rxData[2] + 4;
 			} else if (rxIndex == (rxBytesToReceive - 1)) {
 				if ((rxSum & 0xFF) + rxData[rxBytesToReceive - 1] == 0xFF) {
-					// if (false) {
-					// String s = "DATA:";
-					// for (int i = 0; i < rxBytesToReceive; i++) {
-					// s += " " + Integer.toHexString(rxData[i]);
-					// }
-					// parent.printMessage(s);
-					// }
 					parseData(rxData, rxBytesToReceive);
 				}
 			} else if (rxIndex > 2) {
@@ -86,10 +87,8 @@ public class XBee {
 	private void parseData(int[] data, int bytes) {
 		switch ((int) data[IDX_API_IDENTIFIER]) {
 		case RX_PACKET_16BIT: {
-			// {Source Address(MSB)}+{Source Address: LSB}+{RSSI}+{Options}+{RF
-			// Data}
-			int source = (data[IDX_SOURCE_ADDRESS_MSB] << 8)
-					+ data[IDX_SOURCE_ADDRESS_LSB];
+			// {Source (MSB)}+{Source (LSB)}+{RSSI}+{Options}+{RF Data}
+			int source = (data[IDX_SOURCE_ADDRESS_MSB] << 8) + data[IDX_SOURCE_ADDRESS_LSB];
 			int rssi = data[IDX_RSSI] * -1;
 			int options = data[IDX_PACKET_OPTIONS];
 			int[] rxData = new int[bytes - 9];
@@ -100,45 +99,87 @@ public class XBee {
 		}
 			break;
 		case RX_IO_STATUS_16BIT: {
-			int source = (data[IDX_SOURCE_ADDRESS_MSB] << 8)
-					+ data[IDX_SOURCE_ADDRESS_LSB];
+			int source = (data[IDX_SOURCE_ADDRESS_MSB] << 8) + data[IDX_SOURCE_ADDRESS_LSB];
 			int rssi = data[IDX_RSSI] * -1;
 			int samples = data[IDX_SAMPLES];
-			int ioEnable = (data[IDX_IO_ENABLE_MSB] << 8)
-					+ data[IDX_IO_ENABLE_LSB];
+			int ioEnable = (data[IDX_IO_ENABLE_MSB] << 8) + data[IDX_IO_ENABLE_LSB];
 			boolean hasDigitalData = (ioEnable & 0x1FF) > 0;
 			boolean hasAnalogData = (ioEnable & 0x7E00) > 0;
 			int idx = IDX_IO_STATUS_START;
 			int dinStatus = 0x0000;
-			float[] analogData = new float[6];
+			float[] inputData = { -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 			for (int sample = 0; sample < samples; sample++) {
 				if (hasDigitalData) {
 					dinStatus = data[idx] << 8;
 					idx++;
 					dinStatus += data[idx];
 					idx++;
+					for (int i = 0; i < 9; i++) {
+						int bitMask = 1 << i;
+						if ((ioEnable & bitMask) != 0) {
+							inputData[i] = ((dinStatus & bitMask) != 0) ? 1.0f : 0.0f;
+						}
+					}
 				}
 				if (hasAnalogData) {
 					for (int i = 0; i < 6; i++) {
-						// TODO: update here to support XBS2
-						int bitMask = 1 << (i + MAX_IO_PORT);
+						int bitMask = 1 << (i + XBEE_MULTIPOINT_MAX_IO_PORT);
 
 						if ((ioEnable & bitMask) != 0) {
 							int ainData = data[idx] << 8;
 							idx++;
 							ainData += data[idx];
 							idx++;
-							analogData[i] = (float) ainData / 1023.0f;
-							// parent.printMessage(new String("AIN" + i + ":"
-							// + inputData[source][i]));
+							inputData[i] = (float) ainData / 1023.0f;
 						}
 					}
 				}
 			}
-			listener.rxIOStatusEvent(source, rssi, ioEnable, hasDigitalData,
-					hasAnalogData, dinStatus, analogData);
-			// parent.printMessage(new String("SOURCE:" + source + ", RSSI:"
-			// + rssi[source] + "dB"));
+			listener.rxIOStatusEvent(source, rssi, inputData);
+		}
+			break;
+		case RX_IO_STATUS_ZNET: {
+			int source = (data[IDX_ZNET_16BIT_ADDRESS_MSB] << 8) + data[IDX_ZNET_16BIT_ADDRESS_LSB];
+			int rssi = 0;
+			// int options = data[IDX_ZNET_OPTIONS];
+			int samples = data[IDX_ZNET_SAMPLES];
+			int digitalChannelMask = (data[IDX_ZNET_DIGITAL_CH_MASK_MSB] << 8)
+					+ data[IDX_ZNET_DIGITAL_CH_MASK_LSB];
+			int analogChannelMask = data[IDX_ZNET_ANALOG_CH_MASK];
+			boolean hasDigitalData = (digitalChannelMask & 0x1FFF) > 0;
+			boolean hasAnalogData = (analogChannelMask & 0x0F) > 0;
+			int idx = IDX_ZNET_IO_STATUS_START;
+			int dinStatus = 0x0000;
+			float[] inputData = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+			for (int sample = 0; sample < samples; sample++) {
+				if (hasDigitalData) {
+					dinStatus = data[idx] << 8;
+					idx++;
+					dinStatus += data[idx];
+					idx++;
+					for (int i = 0; i < 13; i++) {
+						int bitMask = 1 << i;
+
+						if ((digitalChannelMask & bitMask) != 0) {
+							inputData[i] = ((dinStatus & bitMask) != 0) ? 1.0f : 0.0f;
+						}
+					}
+				}
+				if (hasAnalogData) {
+					for (int i = 0; i < 4; i++) {
+						int bitMask = 1 << i;
+
+						if ((analogChannelMask & bitMask) != 0) {
+							int ainData = data[idx] << 8;
+							idx++;
+							ainData += data[idx];
+							idx++;
+							inputData[i] = (float) ainData / 1023.0f;
+						}
+					}
+				}
+			}
+			listener.rxIOStatusEvent(source, rssi, inputData);
 		}
 			break;
 		case AT_COMMAND_RESPONSE:
@@ -231,8 +272,7 @@ public class XBee {
 		sendCommand(outData);
 	}
 
-	public void sendTransmitRequest(int destAddress, byte[] rfData,
-			int rfDataLength) {
+	public void sendTransmitRequest(int destAddress, byte[] rfData, int rfDataLength) {
 		byte[] outData = new byte[5 + rfDataLength];
 		outData[0] = 0x01; // Transmit Request
 		outData[1] = 0x00; // Frame ID (0x00 means no ACK)

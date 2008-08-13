@@ -15,8 +15,7 @@ import gnu.io.SerialPortEventListener;
 
 public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEventListener {
 
-	// TODO: update this portion to support XBS2
-	private static final int MAX_IO_PORT = 9;
+	private static final int MAX_IO_PORT = 13;
 	private static final int MAX_NODES = 65535;
 
 	private float[][] inputData = new float[MAX_NODES][MAX_IO_PORT];
@@ -189,20 +188,11 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 		this.rssi[source] = rssi;
 	}
 
-	public void rxIOStatusEvent(int source, int rssi, int ioEnable, boolean hasDigitalData,
-			boolean hasAnalogData, int dinStatus, float[] analogData) {
+	public void rxIOStatusEvent(int source, int rssi, float[] inData) {
 		this.rssi[source] = rssi;
-		if (hasDigitalData) {
-			for (int i = 0; i < MAX_IO_PORT; i++) {
-				int bitMask = 1 << i;
-				if ((ioEnable & bitMask) != 0) {
-					inputData[source][i] = ((dinStatus & bitMask) != 0) ? 1.0f : 0.0f;
-				}
-			}
-		}
-		if (hasAnalogData) {
-			for (int i = 0; i < 6; i++) {
-				inputData[source][i] = analogData[i];
+		for (int i = 0; i < inputData.length; i++) {
+			if (inData[i] >= 0) {
+				inputData[source][i] = inData[0];
 			}
 		}
 	}

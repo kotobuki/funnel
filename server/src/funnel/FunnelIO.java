@@ -132,8 +132,7 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		parent.printMessage(panId);
 	}
 
-	public void rxIOStatusEvent(int source, int rssi, int ioEnable, boolean hasDigitalData,
-			boolean hasAnalogData, int dinStatus, float[] analogData) {
+	public void rxIOStatusEvent(int source, int rssi, float[] inData) {
 		// NOTE: Funnel I/O doesn't use RX_IO_STATUS_16BIT
 	}
 
