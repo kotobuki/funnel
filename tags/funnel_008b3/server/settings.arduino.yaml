@@ -1,0 +1,20 @@
+server:
+  port: 9000
+
+io:
+  type: Arduino
+  port: 
+  baudrate: 115200
+
+...
+# Just as a reference. The following lines after '...' will be ignored.
+server:
+  port: 9000
+
+# type: {Fio, Gainer, Arduino, XBee}
+# com: e.g. COM3 (on Windows XP)
+# com: e.g. /dev/cu.usbserial-******** (on Mac OS X)
+io:
+  type: Arduino
+  port: COM3
+  baudrate: 115200
