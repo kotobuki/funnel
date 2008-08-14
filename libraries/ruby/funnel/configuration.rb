@@ -148,7 +148,7 @@ module Funnel
         @aout_ports = nil
         @dout_ports = nil
         @analog_pins = [14, 15, 16, 17, 18, 19, 20, 21]
-        @digital_pins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        @digital_pins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
         @button = nil
         @led = nil
       when XBEE
@@ -185,7 +185,7 @@ module Funnel
         @aout_ports = nil
         @dout_ports = nil
         @analog_pins = [14, 15, 16, 17, 18, 19, 20, 21]
-        @digital_pins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        @digital_pins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
         @button = nil
         @led = nil
       end
