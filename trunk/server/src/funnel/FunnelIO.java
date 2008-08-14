@@ -10,7 +10,7 @@ import gnu.io.SerialPortEvent;
 public class FunnelIO extends FirmataIO implements XBeeEventListener {
 
 	private static final int TOTAL_ANALOG_PINS = 8;
-	private static final int TOTAL_DIGITAL_PINS = 14;
+	private static final int TOTAL_DIGITAL_PINS = 22;
 	private static final int[] PWM_CAPABLE_PINS = new int[] { 3, 5, 6, 9, 10, 11 };
 
 	private int[] rssi = new int[MAX_NODES];
