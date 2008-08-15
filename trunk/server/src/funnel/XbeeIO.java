@@ -77,7 +77,21 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 		if (port == null) {
 			printMessage(Messages.getString("IOModule.PortNotFoundError")); //$NON-NLS-1$
 		} else {
+			parent.printMessage("Configuring the XBee module...");
+			byte[] command = new byte[] { '+', '+', '+' };
+			byte[] apiModeCommand = new byte[] { 'A', 'T', 'A', 'P', '2', ',', ' ', 'C', 'N', 13 };
+			try {
+				output.write(command);
+				sleep(1500);
+				output.write(apiModeCommand);
+				sleep(100);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			xbee = new XBee(this, output);
+			xbee.sendATCommand("AP");
 			xbee.sendATCommand("VR");
 			xbee.sendATCommand("MY");
 			xbee.sendATCommand("ID");
@@ -190,7 +204,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 
 	public void rxIOStatusEvent(int source, int rssi, float[] inData) {
 		this.rssi[source] = rssi;
-		for (int i = 0; i < inputData.length; i++) {
+		for (int i = 0; i < inData.length; i++) {
 			if (inData[i] >= 0) {
 				inputData[source][i] = inData[0];
 			}
@@ -221,6 +235,10 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 
 	public void panIdEvent(String panId) {
 		parent.printMessage(panId);
+	}
+
+	public void apiModeEvent(String apiMode) {
+		parent.printMessage(apiMode);
 	}
 
 	public void txStatusMessageEvent(int status) {

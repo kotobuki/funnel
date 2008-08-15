@@ -13,6 +13,8 @@ public interface XBeeEventListener {
 
 	void panIdEvent(String panId);
 
+	void apiModeEvent(String apiMode);
+
 	void txStatusMessageEvent(int status);
 
 	void modemStatusEvent(int status);
