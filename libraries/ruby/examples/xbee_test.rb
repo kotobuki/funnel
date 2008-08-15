@@ -21,7 +21,7 @@ config = XBee.MULTIPOINT
 nodes = [1]
 xbee = XBee.new :config => config, :nodes => nodes
 
-xbee.all_iomodules.each do |io|
+xbee.all_io_modules.each do |io|
   puts "xbee: id: #{io.id}, name: #{io.name}"
 
   io.port(0).on CHANGE do |event|

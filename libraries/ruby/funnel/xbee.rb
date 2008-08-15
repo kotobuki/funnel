@@ -38,8 +38,8 @@ module Funnel
       end
     end
     
-    def register_node(id, ni)
-      add_module(id, @config, ni)
+    def register_node(id, ni = "")
+      add_io_module(id, @config, ni, false)
     end
   end
 end
