@@ -106,9 +106,11 @@ public class XBee {
 			boolean hasDigitalData = (ioEnable & 0x1FF) > 0;
 			boolean hasAnalogData = (ioEnable & 0x7E00) > 0;
 			int idx = IDX_IO_STATUS_START;
-			int dinStatus = 0x0000;
-			float[] inputData = { -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+
 			for (int sample = 0; sample < samples; sample++) {
+				int dinStatus = 0x0000;
+				float[] inputData = { -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+
 				if (hasDigitalData) {
 					dinStatus = data[idx] << 8;
 					idx++;
@@ -134,8 +136,8 @@ public class XBee {
 						}
 					}
 				}
+				listener.rxIOStatusEvent(source, rssi, inputData);
 			}
-			listener.rxIOStatusEvent(source, rssi, inputData);
 		}
 			break;
 		case RX_IO_STATUS_ZNET: {
@@ -149,9 +151,11 @@ public class XBee {
 			boolean hasDigitalData = (digitalChannelMask & 0x1FFF) > 0;
 			boolean hasAnalogData = (analogChannelMask & 0x0F) > 0;
 			int idx = IDX_ZNET_IO_STATUS_START;
-			int dinStatus = 0x0000;
-			float[] inputData = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+
 			for (int sample = 0; sample < samples; sample++) {
+				int dinStatus = 0x0000;
+				float[] inputData = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+
 				if (hasDigitalData) {
 					dinStatus = data[idx] << 8;
 					idx++;
@@ -178,8 +182,8 @@ public class XBee {
 						}
 					}
 				}
+				listener.rxIOStatusEvent(source, rssi, inputData);
 			}
-			listener.rxIOStatusEvent(source, rssi, inputData);
 		}
 			break;
 		case AT_COMMAND_RESPONSE:
@@ -226,6 +230,11 @@ public class XBee {
 				info += Integer.toHexString(data[8]);
 				info += Integer.toHexString(data[9]);
 				listener.panIdEvent(info);
+			} else if (data[5] == 'A' && data[6] == 'P') {
+				String info = "API MODE: ";
+				info += Integer.toHexString(data[8]);
+				// info += Integer.toHexString(data[9]);
+				listener.apiModeEvent(info);
 			}
 			break;
 		case TX_STATUS_MESSAGE:

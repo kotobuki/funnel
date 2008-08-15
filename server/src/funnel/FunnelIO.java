@@ -30,14 +30,13 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 			sleep(1500);
 			output.write(apiModeCommand);
 			sleep(100);
-			parent.printMessage("XBee API Mode: 2");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		xbee = new XBee(this, output);
-
+		xbee.sendATCommand("AP");
 		xbee.sendATCommand("VR");
 		xbee.sendATCommand("MY");
 		xbee.sendATCommand("ID");
@@ -130,6 +129,10 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 
 	public void panIdEvent(String panId) {
 		parent.printMessage(panId);
+	}
+
+	public void apiModeEvent(String apiMode) {
+		parent.printMessage(apiMode);
 	}
 
 	public void rxIOStatusEvent(int source, int rssi, float[] inData) {
