@@ -37,13 +37,13 @@ def setup
 
   nodes = [1]
   @fio = Fio.new :applet => self, :config => config, :nodes => nodes
-  @osc_r = Osc.new Osc::SIN, 0.5, 1, 0, 0, 0
-  @osc_g = Osc.new Osc::SIN, 0.5, 1, 0, 0.33, 0
-  @osc_b = Osc.new Osc::SIN, 0.5, 1, 0, 0.66, 0
+  @osc_r = Osc.new Osc::SIN, 0.5, 1, 0, 0, 5
+  @osc_g = Osc.new Osc::SIN, 0.5, 1, 0, 0.33, 5
+  @osc_b = Osc.new Osc::SIN, 0.5, 1, 0, 0.66, 5
 
-  @fio.io_module(ALL).port(R).filters = [@osc_r]
-  @fio.io_module(ALL).port(G).filters = [@osc_g]
-  @fio.io_module(ALL).port(B).filters = [@osc_b]
+  @fio.io_module(ALL).port(R).filters = [@osc_r, Scaler.new(0, 1, 1, 0)]
+  @fio.io_module(ALL).port(G).filters = [@osc_g, Scaler.new(0, 1, 1, 0)]
+  @fio.io_module(ALL).port(B).filters = [@osc_b, Scaler.new(0, 1, 1, 0)]
   @osc_r.start
   @osc_g.start
   @osc_b.start

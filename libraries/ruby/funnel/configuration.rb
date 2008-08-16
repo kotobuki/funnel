@@ -153,13 +153,13 @@ module Funnel
         @led = nil
       when XBEE
         case mode
-        when MULTIPOINT # was XBee Series 1
+        when MULTIPOINT # was XBee Series 1, is 802.15.4
           # 8 digital I/O (including 6 ADC inputs)
           @config = [
             Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
             Port::DIN, Port::DIN
           ]
-        when ZNET # was XBee Series 2
+        when ZB # was XBee Series 2 or ZNet 2.5, is ZB
           # 10 digital I/O (including 4 ADC inputs)
           @config = [
             Port::AIN, Port::AIN, Port::AIN, Port::AIN, 
