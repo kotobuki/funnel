@@ -1,10 +1,10 @@
 /**
- * I/Oƒ‚ƒWƒ…[ƒ‹‚Ìƒ{ƒ^ƒ“‚ğ‰Ÿ‚·‚ÆLED‚ª“_–Å‚µ‚Ü‚·
+ * I/Oãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã¨LEDãŒç‚¹æ»…ã—ã¾ã™
  * 
- * ƒXƒeƒbƒvF
- * 1) I/Oƒ‚ƒWƒ…[ƒ‹ã‚ÌLED‚ğƒ`ƒJƒ`ƒJ“_–Å‚³‚¹‚é
- * 2) aout 0‚ÉÚ‘±‚µ‚½LED‚ğƒ`ƒJƒ`ƒJ“_–Å‚³‚¹‚é
- * 3) aout 0‚ÉÚ‘±‚µ‚½LED‚ğ‚Ó‚í‚Ó‚í“_–Å‚³‚¹‚é
+ * ã‚¹ãƒ†ãƒƒãƒ—ï¼š
+ * 1) I/Oãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ä¸Šã®LEDã‚’ãƒã‚«ãƒã‚«ç‚¹æ»…ã•ã›ã‚‹
+ * 2) aout 0ã«æ¥ç¶šã—ãŸLEDã‚’ãƒã‚«ãƒã‚«ç‚¹æ»…ã•ã›ã‚‹
+ * 3) aout 0ã«æ¥ç¶šã—ãŸLEDã‚’ãµã‚ãµã‚ç‚¹æ»…ã•ã›ã‚‹
  */
 
 import processing.funnel.*;
@@ -21,7 +21,7 @@ void setup()
   gainer.autoUpdate = true;
 
   osc = new Osc(this, Osc.SQUARE, 1.0, 0);
-  osc.serviceInterval = 30;
+  osc.serviceInterval = 33;
   osc.addEventListener(Osc.UPDATE, "oscUpdated");
 }
 
@@ -43,5 +43,8 @@ void gainerButtonEvent(boolean pressed)
     osc.start();
   } else {
     osc.stop();
+    gainer.led().value = 0.0;
+//    gainer.analogOutput(0).value = 0.0;
   }
 }
+

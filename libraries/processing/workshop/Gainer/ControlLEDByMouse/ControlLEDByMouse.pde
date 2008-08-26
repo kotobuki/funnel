@@ -2,7 +2,7 @@
  * Control the LED by the button on your Gainer I/O module
  * 
  * Click on the window to turn on the LED
- * ƒEƒBƒ“ƒhƒEã‚ÅƒNƒŠƒbƒN‚·‚é‚ÆLED‚ª“_“”‚µ‚Ü‚·
+ * ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ä¸Šã§ã‚¯ãƒªãƒƒã‚¯ã™ã‚‹ã¨LEDãŒç‚¹ç¯ã—ã¾ã™
  */
 
 import processing.funnel.*;
@@ -31,3 +31,4 @@ void mouseReleased()
 {
   gainer.led().value = 0.0;
 }
+

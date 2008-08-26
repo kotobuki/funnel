@@ -1,7 +1,7 @@
 /**
  * Delay
  * A very simple delay
- * とてもシンプルなディレイ
+ * 縺ｨ縺ｦ繧ゅす繝ｳ繝励Ν縺ｪ繝�繧｣繝ｬ繧､
  */ 
 
 class Delay {
@@ -28,3 +28,4 @@ class Delay {
     return out;
   }
 }
+

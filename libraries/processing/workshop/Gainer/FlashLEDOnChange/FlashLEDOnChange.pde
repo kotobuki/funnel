@@ -2,7 +2,7 @@
  * Flash a LED on change
  * 
  * Flash a LED on changes of the ain 0
- * ain 0‚Ì’l‚ª•Ï‰»‚µ‚½‚Æ‚«‚ÉLED‚ğˆêu“_“”‚³‚¹‚é
+ * ain 0ã®å€¤ãŒå¤‰åŒ–ã—ãŸã¨ãã«LEDã‚’ä¸€ç¬ç‚¹ç¯ã•ã›ã‚‹
  * 
  * input: a photocell (connect to the ain 0)
  * output: LED (connect to the aout 0)
@@ -11,7 +11,7 @@
 import processing.funnel.*;
 
 Gainer gio;
-boolean changed = false;
+Osc flasher;
 
 void setup()
 {
@@ -19,46 +19,49 @@ void setup()
   frameRate(30);
 
   gio = new Gainer(this, Gainer.MODE1);
+  gio.autoUpdate = true;
 
   Filter filters[] = {
-    new SetPoint(0.65, 0.05)
+    new SetPoint(0.50, 0.05)
   };
   gio.analogInput(0).filters = filters;
+
+  flasher = new Osc(this, Osc.IMPULSE, 1.0, 1);
+  Osc.serviceInterval = 30;
+  flasher.addEventListener(Osc.UPDATE, "oscUpdated");
 }
 
 void draw()
 {
-  if (changed) {
-    gio.analogOutput(0).value = 1;
-    changed = false;
-  } else {
-    gio.analogOutput(0).value = 0;
-  }
 
-  // NOTE: Do update manually, or a flash might be ignored depends on 
-  // the timing of auto update
-  // ’ˆÓFè“®‚ÅXV‚·‚é‚±‚ÆB‚»‚¤‚µ‚È‚¢‚Æ–€XV‚Ìƒ^ƒCƒ~ƒ“ƒOŸ‘æ‚Å–³‹‚³‚ê‚Ä‚µ‚Ü‚¤B
-  gio.update();
+}
+
+void oscUpdated(Osc o)
+{
+  gio.led().value = flasher.value;
 }
 
 // The event handler for SetPoint filters to input ports
 // (from zero to non-zero)
-// SetPointƒtƒBƒ‹ƒ^“K—pŒã‚Ì’l‚ª0‚©‚ç0ˆÈŠO‚É•Ï‰»‚µ‚½‚ÉŒÄ‚Î‚ê‚éƒCƒxƒ“ƒgƒnƒ“ƒhƒ‰
+// SetPointãƒ•ã‚£ãƒ«ã‚¿é©ç”¨å¾Œã®å€¤ãŒ0ã‹ã‚‰0ä»¥å¤–ã«å¤‰åŒ–ã—ãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©
 void risingEdge(PortEvent e)
 {
   if (e.target.number == gio.analogInput[0]) {
-    println("0 > 1");
-    changed = true;
+    println("0 to 1");
+    flasher.reset();
+    flasher.start();
   }
 }
 
 // The event handler for SetPoint filters to input ports
 // (from non-zero to zero)
-// SetPointƒtƒBƒ‹ƒ^“K—pŒã‚Ì’l‚ª0‚©‚ç0ˆÈŠO‚É•Ï‰»‚µ‚½‚ÉŒÄ‚Î‚ê‚éƒCƒxƒ“ƒgƒnƒ“ƒhƒ‰
+// SetPointãƒ•ã‚£ãƒ«ã‚¿é©ç”¨å¾Œã®å€¤ãŒ0ã‹ã‚‰0ä»¥å¤–ã«å¤‰åŒ–ã—ãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©
 void fallingEdge(PortEvent e)
 {
   if (e.target.number == gio.analogInput[0]) {
-    println("0 < 1");
-    changed = true;
+    println("1 to 0");
+    flasher.reset();
+    flasher.start();
   }
 }
+

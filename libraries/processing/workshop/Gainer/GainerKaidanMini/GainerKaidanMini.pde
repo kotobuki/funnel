@@ -15,43 +15,43 @@ boolean[] interrupted;
 void setup()
 {
   // Set the frame rate high to control in draw()
-  // o—Í‚ÌƒRƒ“ƒgƒ[ƒ‹‚ğdraw()“à‚Ås‚¤ŠÖŒW‚ÅƒtƒŒ[ƒ€ƒŒ[ƒg‚ğ‚‚ß‚Éİ’è‚·‚é
+  // å‡ºåŠ›ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã‚’draw()å†…ã§è¡Œã†é–¢ä¿‚ã§ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆã‚’é«˜ã‚ã«è¨­å®šã™ã‚‹
   frameRate(50);
 
   // Use mode 4: 8 analog inputs and 8 analog outputs
-  // ƒAƒiƒƒO“ü—Í8ŒÂAƒAƒiƒƒOo—Í8ŒÂ‚ğ—˜—p‚Å‚«‚éƒ‚[ƒh4‚ğg—p‚·‚é
+  // ã‚¢ãƒŠãƒ­ã‚°å…¥åŠ›8å€‹ã€ã‚¢ãƒŠãƒ­ã‚°å‡ºåŠ›8å€‹ã‚’åˆ©ç”¨ã§ãã‚‹ãƒ¢ãƒ¼ãƒ‰4ã‚’ä½¿ç”¨ã™ã‚‹
   gio = new Gainer(this, Gainer.MODE4);
 
   // A worksround to enable delay() in setup()
-  // Processing‚Ìd—l‚Åsetup()’†‚Å‚Ídelay()‚ªg‚¦‚È‚¢‚Ì‚É‘Î‚·‚é‰ñ”ğô
+  // Processingã®ä»•æ§˜ã§setup()ä¸­ã§ã¯delay()ãŒä½¿ãˆãªã„ã®ã«å¯¾ã™ã‚‹å›é¿ç­–
   frameCount = 1;
 
   // Wait for a while to measure baseline levels
-  // ˆê’èŠÔ‘Ò‚Á‚Ä‚»‚ÌŠÔ‚ÌŠe“ü—Íƒ|[ƒg‚Ì’l‚ğƒx[ƒXƒ‰ƒCƒ“‚Æ‚µ‚Ä—p‚¢‚é
+  // ä¸€å®šæ™‚é–“å¾…ã£ã¦ãã®é–“ã®å„å…¥åŠ›ãƒãƒ¼ãƒˆã®å€¤ã‚’ãƒ™ãƒ¼ã‚¹ãƒ©ã‚¤ãƒ³ã¨ã—ã¦ç”¨ã„ã‚‹
   println("waiting...");
   delay(1000);
   println("done!");
 
   // Instantiate 8 pairs of a flag and a Delay
-  // ƒXƒeƒbƒv‚ğ“¥‚Ü‚ê‚½‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO‚ÆƒfƒBƒŒƒC‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ¶¬
+  // ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¸ã¾ã‚ŒãŸã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°ã¨ãƒ‡ã‚£ãƒ¬ã‚¤ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç”Ÿæˆ
   interrupted = new boolean[8];
   delayLine = new Delay[8];
 
   for (int i = 0; i < 8; i++) {
     // Read an average value of the input port
-    // Šeƒ|[ƒg‚Ì•½‹Ï’l‚ğ“Ç‚İæ‚é
+    // å„ãƒãƒ¼ãƒˆã®å¹³å‡å€¤ã‚’èª­ã¿å–ã‚‹
     println("avg[" + i + "]: " + gio.analogInput(i).average);
 
     // Set a threshold according to the average value,
     // then set a SetPoint filter to the input port
-    // ‚»‚ê‚ğŒ³‚É‚µ‚«‚¢’l‚ğİ’è‚µ‚ÄƒtƒBƒ‹ƒ^‚Æ‚µ‚ÄŠeƒ|[ƒg‚ÉƒZƒbƒg‚·‚é
+    // ãã‚Œã‚’å…ƒã«ã—ãã„å€¤ã‚’è¨­å®šã—ã¦ãƒ•ã‚£ãƒ«ã‚¿ã¨ã—ã¦å„ãƒãƒ¼ãƒˆã«ã‚»ãƒƒãƒˆã™ã‚‹
     Filter[] f = {
       new SetPoint(gio.analogInput(i).average - 0.1, 0.05)
     };
     gio.analogInput(i).filters = f;
 
     // Initialize flags and Delay objects
-    // ƒtƒ‰ƒO‚ÆƒfƒBƒŒƒC‚ğ‰Šú‰»
+    // ãƒ•ãƒ©ã‚°ã¨ãƒ‡ã‚£ãƒ¬ã‚¤ã‚’åˆæœŸåŒ–
     interrupted[i] = false;
     delayLine[i] = new Delay(25);
   }
@@ -61,35 +61,35 @@ void draw()
 {
   for (int i = 0; i < 8; i++) {
     // Read from the delay line
-    // ƒfƒBƒŒƒC‚©‚ç’l‚ğæ‚èo‚·
+    // ãƒ‡ã‚£ãƒ¬ã‚¤ã‹ã‚‰å€¤ã‚’å–ã‚Šå‡ºã™
     gio.analogOutput(i).value = delayLine[i].getOutput();
 
     if (interrupted[i]) {
       // If the step is stepped, put 1 to the delay line
-      // ‚à‚µƒXƒeƒbƒv‚ğ“¥‚Ü‚ê‚Ä‚¢‚½‚çƒfƒBƒŒƒC‚É1‚ğ“ü—Í‚·‚é
+      // ã‚‚ã—ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¸ã¾ã‚Œã¦ã„ãŸã‚‰ãƒ‡ã‚£ãƒ¬ã‚¤ã«1ã‚’å…¥åŠ›ã™ã‚‹
       delayLine[i].setInput(1);
 
       // Overwrite the output port with 1
-      // o—Í‚·‚é’l‚ğ1‚Åã‘‚«‚·‚é
+      // å‡ºåŠ›ã™ã‚‹å€¤ã‚’1ã§ä¸Šæ›¸ãã™ã‚‹
       gio.analogOutput(i).value = 1.0;
       
       // Clear the flag
-      // ƒXƒeƒbƒv‚ğ“¥‚Ü‚ê‚½‚±‚Æ‚ğ¦‚·ƒtƒ‰ƒO‚ğƒNƒŠƒA‚·‚é
+      // ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¸ã¾ã‚ŒãŸã“ã¨ã‚’ç¤ºã™ãƒ•ãƒ©ã‚°ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
       interrupted[i] = false;
     } else {
       // If the step is not stepped, put 0 to the delay line
-      // ‚à‚µƒXƒeƒbƒv‚ğ“¥‚Ü‚ê‚Ä‚¢‚È‚¯‚ê‚ÎƒfƒBƒŒƒC‚É0‚ğ“ü—Í‚·‚é
+      // ã‚‚ã—ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¸ã¾ã‚Œã¦ã„ãªã‘ã‚Œã°ãƒ‡ã‚£ãƒ¬ã‚¤ã«0ã‚’å…¥åŠ›ã™ã‚‹
       delayLine[i].setInput(0);
     }
   }
 
   // Update all output ports at once
-  // ‚·‚×‚Ä‚Ìƒ|[ƒg‚Ìó‘Ô‚ğ‚Ü‚Æ‚ß‚Äo—Í‚·‚é
+  // ã™ã¹ã¦ã®ãƒãƒ¼ãƒˆã®çŠ¶æ…‹ã‚’ã¾ã¨ã‚ã¦å‡ºåŠ›ã™ã‚‹
   gio.update();  
 }
 
 // The event handler to handle falling edge (from non zero to 0) events
-// 1¨0‚É•Ï‰»‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚éƒCƒxƒ“ƒgƒnƒ“ƒhƒ‰
+// 1â†’0ã«å¤‰åŒ–ã—ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©
 void fallingEdge(PortEvent e)
 {
   switch (e.target.number) {
@@ -102,7 +102,7 @@ void fallingEdge(PortEvent e)
   case 6:
   case 7:
     // Set the according flag to true
-    // ‘Î‰‚·‚éƒtƒ‰ƒO‚ğƒZƒbƒg‚·‚é
+    // å¯¾å¿œã™ã‚‹ãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
     interrupted[e.target.number] = true;
     break;
 
@@ -110,3 +110,4 @@ void fallingEdge(PortEvent e)
     break;
   }
 }
+

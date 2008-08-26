@@ -3,7 +3,7 @@
  * 
  * Control the brightness of the background according to the value of the 
  * analog input 0
- * ain 0‚Ì’l‚É‰‚¶‚Ä”wŒi‚Ì–¾‚é‚³‚ğ•Ï‰»‚³‚¹‚é
+ * ain 0ã®å€¤ã«å¿œã˜ã¦èƒŒæ™¯ã®æ˜ã‚‹ã•ã‚’å¤‰åŒ–ã•ã›ã‚‹
  * 
  * input: a photocell or a potentiometer
  * output: screen
@@ -23,10 +23,10 @@ void setup()
   gio.autoUpdate = true;
 
   // Uncomment the following section to set a SetPoint filter
-  // SetPointƒtƒBƒ‹ƒ^‚ğƒZƒbƒg‚·‚é‚É‚ÍŸ‚Ìƒp[ƒg‚ğ”ñƒRƒƒ“ƒg‰»‚·‚é
+  // SetPointãƒ•ã‚£ãƒ«ã‚¿ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã«ã¯æ¬¡ã®ãƒ‘ãƒ¼ãƒˆã‚’éã‚³ãƒ¡ãƒ³ãƒˆåŒ–ã™ã‚‹
 /*
   Filter filters[] = {
-    // ‚µ‚«‚¢’l‚ª0.5AƒqƒXƒeƒŠƒVƒX‚ª0.1
+    // ã—ãã„å€¤ãŒ0.5ã€ãƒ’ã‚¹ãƒ†ãƒªã‚·ã‚¹ãŒ0.1
     new SetPoint(0.5, 0.1)
   };
   gio.analogInput(0).filters = filters;
@@ -35,6 +35,7 @@ void setup()
 
 void draw()
 {
-  // ain 0‚Ì’l‚É‰‚¶‚Ä”wŒi‚Ì–¾‚é‚³‚ğ•Ï‰»‚³‚¹‚é
+  // ain 0ã®å€¤ã«å¿œã˜ã¦èƒŒæ™¯ã®æ˜ã‚‹ã•ã‚’å¤‰åŒ–ã•ã›ã‚‹
   background(255 * gio.analogInput(0).value);
 }
+

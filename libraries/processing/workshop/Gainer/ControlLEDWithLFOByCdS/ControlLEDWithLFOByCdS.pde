@@ -1,6 +1,6 @@
 /**
- * ain 0に接続したCdSの値が一定値よりも低くなる（暗くなる）と
- * LEDが点滅する
+ * ain 0縺ｫ謗･邯壹＠縺櫃dS縺ｮ蛟､縺御ｸ螳壼､繧医ｊ繧ゆｽ弱￥縺ｪ繧具ｼ域囓縺上↑繧具ｼ峨→
+ * LED縺檎せ貊�縺吶ｋ
  */
 
 import processing.funnel.*;
@@ -51,3 +51,4 @@ void fallingEdge(PortEvent e)
     osc.start();
   }
 }
+
