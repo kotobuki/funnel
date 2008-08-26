@@ -1,6 +1,6 @@
 /*
- * Gainer—p‚ÌProcessingƒ‰ƒCƒuƒ‰ƒŠ‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚éƒTƒ“ƒvƒ‹‚ğ
- * Funnel—p‚É•ÏX‚µ‚½‚à‚Ì
+ * Gainerç”¨ã®Processingãƒ©ã‚¤ãƒ–ãƒ©ãƒªã«å«ã¾ã‚Œã¦ã„ã‚‹ã‚µãƒ³ãƒ—ãƒ«ã‚’
+ * Funnelç”¨ã«å¤‰æ›´ã—ãŸã‚‚ã®
  */
 
 import processing.funnel.*;
@@ -60,3 +60,4 @@ void draw()
   bar1.display();
   bar2.display();
 }
+

@@ -1,5 +1,5 @@
 /**
- * •Ï‰»‚ª‹N‚«‚éŠÔŠu‚ğŒv‘ª‚·‚é
+ * å¤‰åŒ–ãŒèµ·ãã‚‹é–“éš”ã‚’è¨ˆæ¸¬ã™ã‚‹
  */
 
 import processing.funnel.*;
@@ -37,3 +37,4 @@ void fallingEdge(PortEvent e)
     last = now;
   }
 }
+

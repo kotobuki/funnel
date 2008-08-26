@@ -2,7 +2,7 @@
  * Control the LED by the button on your Gainer I/O module
  * 
  * Press the button on the I/O module to turn on the LED
- * I/Oƒ‚ƒWƒ…[ƒ‹‚Ìƒ{ƒ^ƒ“‚ğ‰Ÿ‚·‚ÆLED‚ª“_“”‚µ‚Ü‚·
+ * I/Oãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ãƒœã‚¿ãƒ³ã‚’æŠ¼ã™ã¨LEDãŒç‚¹ç¯ã—ã¾ã™
  */
 
 import processing.funnel.*;
@@ -15,11 +15,6 @@ void setup()
   frameRate(30);
   gainer= new Gainer(this, Gainer.MODE1);
   gainer.autoUpdate = true;
-
-  Filter filters[] = {
-    new SetPoint(0.5, 0.0)
-  };
-  gainer.button().filters = filters;
 }
 
 void draw()
@@ -36,30 +31,3 @@ void gainerButtonEvent(boolean pressed)
   }
 }
 
-/*
-// change‚ğg‚Á‚½‘‚«•û
-void change(PortEvent e)
-{
-  if (e.target.number == Gainer.button) {
-    gainer.led().value = e.target.value;
-    println("change: " + e.target.value);
-  }
-}
-*/
-
-/*
-// risingEdge‚ÆfallingEdge‚ğg‚Á‚½‘‚«•û
-void risingEdge(PortEvent e)
-{
-  if (e.target.number == Gainer.button) {
-    gainer.led().value = 1.0;
-  }
-}
-
-void fallingEdge(PortEvent e)
-{
-  if (e.target.number == Gainer.button) {
-    gainer.led().value = 0.0;
-  }
-}
-*/
