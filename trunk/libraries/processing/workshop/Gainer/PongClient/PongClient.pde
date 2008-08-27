@@ -7,11 +7,6 @@ import processing.net.*;
 
 Client c;
 
-final int IDLE = 0;
-final int CONNECTED = 1;
-
-int state = IDLE;
-
 void setup() 
 {
   size(450, 255);
@@ -25,16 +20,7 @@ void setup()
 
 void draw() 
 {
-  switch (state) {
-  case IDLE:
-    background(10);
-    break;
-  case CONNECTED:
-    background(250);
-    break;
-  default:
-    break;
-  }
+
 }
 
 void clientEvent(Client someClient) {
@@ -42,49 +28,59 @@ void clientEvent(Client someClient) {
   if (reply == null) {
     return;
   }
-
   print("server says: " + reply);
+
   if (reply.equals("hi\r\n")) {
     println("connected");
-    state = CONNECTED;
   } 
   else if (reply.equals("bye\r\n")) {
     println("disconnected");
-    state = IDLE;
   }
   else if (reply.equals("win\r\n")) {
     println("You win!");
   }
-  else if (reply.equals("hit\r\n")) {
-    println("Hit!");
-  }
   else if (reply.equals("lose\r\n")) {
     println("You lose...");
   }
+  else if (reply.equals("hit\r\n")) {
+    println("Hit!");
+  }
 }
 
+// send the new relative position of the paddle
+// パドルの新しい相対位置を送信
 void keyPressed()
 {
   switch (keyCode) {
   case LEFT:
     // send "l" to move the paddle left
     // パドルを左に動かすには"l"を送信する
-    c.write("l");
+    c.write("l\r\n");
     break;
   case RIGHT:
     // send "r" to move the paddle left
     // パドルを右に動かすには"l"を送信する
-    c.write("r");
+    c.write("r\r\n");
     break;
   default:
     break;
   }
 }
 
+/*
+// send the new absolute position of the paddle
+// パドルの新しい絶対位置を送信
+void mouseMoved()
+{
+  float position = (float)mouseX / (float)(width - 1);
+  c.write(str(position) + "\r\n");
+}
+*/
+
 void stop()
 {
   // send "x" to disconnect from the server
-  // サーバとの接続を切るには"x"を送信する
-//  c.write("x");
-//  delay(100);
+  // サーバとの接続を切るには"x"を送信する（※Escキーで終了しない場合にはこのメソッドは呼ばれません）
+  c.write("x\r");
 }
+
