@@ -42,7 +42,7 @@ int nextTopPaddleV;            // paddle positions for the next player
 int nextBottomPaddleV;
 
 boolean gameOver = false;           // whether or not a game is in progress
-long delayCounter;                  // a counter for the delay after 
+long delayCounter;                  // a counter for the delay after
                                     // a game is over
 long gameOverDelay = 4000;          // pause after each game
 long pointDelay = 2000;             // pause after each point
@@ -189,33 +189,46 @@ void listenToClients() {
 
   // read what the client sent:
   if (speakingPlayer != null) {
-    int whatClientSaid = speakingPlayer.client.read();
+    String readString = speakingPlayer.client.readString();
+    String[] whatClientSaid = split(readString, "\r\n");
+    for (int i = 0; i < whatClientSaid.length; i++) {
+      if ((whatClientSaid[i] == null) || (whatClientSaid[i].length() < 1))  {
+        continue;
+      }
 
-/*
-  There a number of things it might have said that we care about:
-     x = exit
-     l = move left
-     r = move right
-*/
-    switch (whatClientSaid) {
-      // If the client says "exit", disconnect it
-    case 'x':
-      // say goodbye to the client:
-      speakingPlayer.client.write("bye\r\n");
-      // disconnect the client from the server:
-      println(speakingPlayer.client.ip() + "\t left");
-      myServer.disconnect(speakingPlayer.client);
-      // remove the client's Player from the playerList:
-      playerList.remove(speakingPlayer);
-      break;
-    case 'l':
-      // if the client sends an "l", move the paddle left
-      speakingPlayer.movePaddle(-10);
-      break;
-    case'r':
-      // if the client sends a "r", move the paddle right
-      speakingPlayer.movePaddle(10);
-      break;
+      /*
+        There a number of things it might have said that we care about:
+        x = exit
+        l = move left
+        r = move right
+      */
+      int command = whatClientSaid[i].charAt(0);
+      switch (command) {
+        // If the client says "exit", disconnect it
+        case 'x':
+          // say goodbye to the client:
+          speakingPlayer.client.write("bye\r\n");
+          // disconnect the client from the server:
+          println(speakingPlayer.client.ip() + "\t left");
+          myServer.disconnect(speakingPlayer.client);
+          // remove the client's Player from the playerList:
+          playerList.remove(speakingPlayer);
+          break;
+        case 'l':
+          // if the client sends an "l", move the paddle left
+          speakingPlayer.movePaddle(-10);
+          break;
+        case'r':
+          // if the client sends a "r", move the paddle right
+          speakingPlayer.movePaddle(10);
+          break;
+        default:
+          {
+            float position = float(whatClientSaid[i]);
+            speakingPlayer.movePaddleTo(position);
+          }
+          break;
+      }
     }
   }
 }
@@ -386,6 +399,12 @@ public class Player {
 
   public void movePaddle(float howMuch) {
     float newPosition = paddleH + howMuch;
+    // constrain the paddle’s position to the width of the window:
+    paddleH = constrain(newPosition, 0, width);
+  }
+
+  public void movePaddleTo(float to) {
+    float newPosition = to * width;
     // constrain the paddle’s position to the width of the window:
     paddleH = constrain(newPosition, 0, width);
   }
