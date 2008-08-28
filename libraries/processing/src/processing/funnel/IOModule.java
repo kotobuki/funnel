@@ -43,7 +43,7 @@ public class IOModule{
 		for(int i=0;i<port.length;i++){
 			port[i] = new Port(parent,conf[i],i);
 		}
-		
+
 //		System.out.println("conf");
 //		for(int i=0;i<conf.length;i++){
 //			System.out.print(conf[i] + " " );
@@ -254,6 +254,23 @@ public class IOModule{
 					}
 				}
 			}
+		}
+		
+		//フィルターを追加する
+		public void addFilters(Filter[] newFilters){
+			
+			int filterSize = filters.length + newFilters.length;
+			
+			Filter[] f = new Filter[filterSize];
+			int c=0;
+			for(int i=0;i<filters.length;i++){
+				f[c++] = filters[i];
+			}
+			for(int i=0;i<newFilters.length;i++){
+				f[c++] = newFilters[i];
+			}
+			
+			filters = f;
 		}
 		
 		

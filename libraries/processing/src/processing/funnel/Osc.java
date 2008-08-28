@@ -165,7 +165,7 @@ public class Osc{
 			}catch(Exception e){
 				e.printStackTrace();
 				onUpdate = null;
-//				errorMessage("onRisingEdge handler error !!");
+//				errorMessage("on handler error !!");
 			}
 		}
 	}
@@ -253,8 +253,9 @@ public class Osc{
 	}
 	
 	interface OscFunction {
-		
+
 		public float calculate(float val);
+
 	}
 	
 	class OscFunctionSIN implements OscFunction{
@@ -274,7 +275,7 @@ public class Osc{
 	}
 	
 	class OscFunctionTRIANGLE implements OscFunction{
-		
+
 		public float calculate(float val){
 
 			val %= 1.0f;
@@ -283,7 +284,7 @@ public class Osc{
 	}
 	
 	class OscFunctionSAW implements OscFunction{
-		
+
 		public float calculate(float val){
 			
 			return 1-(val %1.0f);
@@ -291,9 +292,12 @@ public class Osc{
 	}
 	
 	class OscFunctionIMPULSE implements OscFunction{
+		private float lastValue = 0.99f;
 		
 		public float calculate(float val){
-			return val<1.0f ? 1.0f :0.0f ;
+			float r = (val%1.0f < lastValue%1.0f) ? 1.0f:0.0f;
+			lastValue = val;
+			return r;
 		}
 	}
 	
