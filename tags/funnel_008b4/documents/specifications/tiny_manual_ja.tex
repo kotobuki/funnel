@@ -1,0 +1,188 @@
+%http://tex.dante.jp/typo/index.php?Listings
+\documentclass[9pt]{jsarticle}
+\usepackage{listings, jlisting, color}
+\usepackage[dvipdfm]{graphicx}
+\usepackage{mediabb}
+
+\lstset{
+basicstyle={\small\ttfamily},
+columns=[l]{fullflexible},
+frame={single},
+tabsize={4},
+lineskip={-2pt}
+}
+
+\def\lstlistingname{リスト}
+
+\begin{document}
+
+\begin{center}
+{\LARGE Funnel簡易マニュアル（ビルド007用）}
+\end{center}
+
+%\title{Funnel簡易マニュアル（ビルド006用）}
+%\author{開発者：小林茂\\共同開発者：遠藤孝則＋増田一太郎}
+
+%\maketitle
+
+\section{動作環境}
+\begin{itemize}
+\item OS
+	\begin{itemize}
+	\item Windows XP SP2またはVista
+	\item Mac OS X Tiger 10.4またはLeopard 10.5
+	\end{itemize}
+\item ソフトウェア
+	\begin{itemize}
+	\item Java実行環境（1.4.2以上）
+	\item Flash Professional CS3\footnote{http://www.adobe.com/jp/products/flash/}・Flex Builder 2/3\footnote{http://www.adobe.com/jp/products/flex/}・Flex 2/3 SDK\footnote{http://www.adobe.com/jp/products/flex/sdk/}
+	\item Processing（0135 BETA以上）\footnote{http://processing.org/download/index.html}
+	\item Ruby（1.8.6以上）\footnote{http://www.ruby-lang.org/ja/downloads/}＋OSCライブラリ\footnote{http://raa.ruby-lang.org/project/osc/}
+	\end{itemize}
+\item ハードウェア
+	\begin{itemize}
+	\item Gainer I/Oモジュール v1.0\footnote{http://www.triggerdevice.com/items/}またはv1.3\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8480}
+	\item Arduino USB/NG/Diecimila\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=666}またはBoarduinoなどのArduinoクローン
+	\item XBee 802.15.4 OEM RFモジュール\footnote{http://www.digi-intl.co.jp/digi/wireless/zigbee/xbee-series1-module.html}
+	\item Funnel I/O 4$\times$4\footnote{Funnelの配布パッケージの一部として回路図及び基板レイアウトデータを公開}
+	\end{itemize}
+\end{itemize}
+
+\section{配布パッケージのディレクトリ構成}
+\begin{itemize}
+\item \texttt{documents/}：仕様書など
+\item \texttt{hardware/}：ハードウェア及びファームウェア
+\item \texttt{libraries/}：各ソフトウェアライブラリ
+	\begin{itemize}
+	\item \texttt{actionscript3/}：AS3用ライブラリ・サンプル・ソースコード
+	\item \texttt{processing/}：Processing用ライブラリ・サンプル・ソースコード
+	\item \texttt{ruby/}：Ruby用ライブラリ・サンプル・ソースコード
+	\end{itemize}
+\item \texttt{LICENSE.txt}：ライセンス条項
+\item \texttt{README\_en.txt}：概要説明（英語版）
+\item \texttt{README\_ja.txt}：概要説明（日本語版）
+\item \texttt{server/}：Funnel Server
+	\begin{itemize}
+	\item \texttt{funnel\_server.jar}：Funnel Server本体
+	\item \texttt{settings.yaml}：Funnel Serverの設定ファイル
+	\end{itemize}
+\item \texttt{sketchbook/}：その他のファイル
+	\begin{itemize}
+	\item \texttt{xbee\_*.pro}：ベース用（base）とリモート用（remote）XBeeの設定ファイル（X-CTU\footnote{http://ftp1.digi.com/support/utilities/setup\_xctu\_5100.exe}用）
+	\end{itemize}
+\end{itemize}
+
+\section{ドライバのインストール}
+
+\subsection{WIndows XP/Vistaの場合（ハードウェアが必要です）}
+まず最初にドライバをダウンロードします。ウェブブラウザで次のURLにアクセスし、Operating System（オペレーティング・システム）の欄がWindows XPと書かれているドライバをダウンロードします。
+
+\vspace{8pt}
+http://www.ftdichip.com/Drivers/VCP.htm
+\vspace{8pt}
+
+ドライバのダウンロードが終わったら、ZIPファイルを展開（右クリックして表示されるメニューから「全て展開…」を実行）します。展開が終わったら、I/OモジュールにUSBケーブルの片方のコネクタを接続し、もう片方のコネクタをPC側に接続します。数秒後、ドライバのインストールを要求するダイアログが表示されますので、ダイアログにしたがってドライバのインストールを行います。
+
+\begin{itemize}
+\item ソフトウェア検索のため、Windows Updateに接続しますか？\\→「いいえ、今回は接続しません。」選択します
+\item インストール方法を選んでください\\→「一覧または特定の場所からインストールする（詳細）」を選択します
+\item 次の場所で最適のドライバを検索する\\→「次の場所を含める」をチェックし、先ほどドライバを展開したフォルダを指定します
+\end{itemize}
+
+同じような操作を2回要求されますので、2回目も1回目と同様にドライバを展開したフォルダを指定します。 
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.0cm, clip]{driver_win_1.pdf}
+\includegraphics[mediaboxonly, height=5.0cm, clip]{driver_win_2.pdf}
+
+\vspace{3pt}
+
+\includegraphics[mediaboxonly, height=5.0cm, clip]{driver_win_3.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{ドライバーインストール時の画面例（Windows XP SP2）}
+\label{default}
+\end{center}
+\end{figure}
+
+\subsection{Mac OS Xの場合（ハードウェア無しでもインストールできます）}
+まず最初にドライバをダウンロードします。ウェブブラウザで次のURLにアクセスし、Operating System（オペレーティング・システム）の欄がMac OS Xと書かれているドライバをダウンロードします。
+
+\vspace{8pt}
+http://www.ftdichip.com/Drivers/VCP.htm
+\vspace{8pt}
+
+ドライバのダウンロードが終わると、自動的にディスクイメージファイル（拡張子はdmg）がマウントされます。もし自動的にマウントされない場合には、ファイルをダブルクリックしてマウントします。マウントが終わると、自動的にドライバのインストーラが起動します。インストーラが起動したら、インストーラの指示に従ってドライバをインストールします。途中で管理者のパスワードを入力するように求められますので、パスワードを入力します。インストール終了時には、指示に従って再起動してください。
+
+\section{Funnel Serverの設定と起動}
+\subsection{設定（Gainer I/Oモジュール以外の場合）}
+Gainer I/Oモジュール以外のI/Oモジュールを使用する場合には、ハードウェアに合わせてFunnel Serverの設定ファイル（settings.yaml）を変更して下さい。Funnel Serverでは2つのネットワークポートを利用し、デフォルト値は9000番と9001番です。他のアプリケーションがこれらのポートを使用している場合には、競合しない番号に変更して下さい。comポートを指定しない場合には、自動検出を試みますので、1台のみI/Oモジュールを接続する場合には設定不要です。
+\begin{lstlisting}[caption={Gainer I/Oモジュール用のsettings.yamlの設定例},label=useless]
+server:
+  command port: 9000
+  notification port: 9001
+
+io:
+  type: Gainer
+  com: 
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Arduino I/Oボード用のsettings.yamlの設定例},label=useless]
+server:
+  command port: 9000
+  notification port: 9001
+
+io:
+  type: Arduino
+  com: 
+\end{lstlisting}
+
+\subsection{起動}
+設定が終わったら、\texttt{funnel\_server.jar}をダブルクリックしてFunnel Serverを起動してください。正常に起動した場合には次のような画面が表示されます。何らかのエラーメッセージが表示される場合には、メッセージを参考に設定ファイルやハードウェアを確認してください。
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{funnel_server_launch_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{Gainer I/Oモジュールに接続したFunnel Serverが正常に起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+I/Oモジュールを接続しないで起動した場合、あるいは間違ってタイプを設定した場合には、次のようなメッセージが表示されます。この場合には、USBケーブルがきちんと接続されているか、I/OモジュールのLEDが点灯しているか、設定ファイルで別のタイプを設定していないかを確認してください。
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{funnel_server_launch_unconnected_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{Gainer I/Oモジュールを接続しないでFunnel Serverを起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+\section{各ライブラリごとの準備と使用方法}
+
+\subsection{ActionScript 3}
+\subsubsection{準備}
+\texttt{libraries/actionscript3/src/funnel/}がライブラリのフォルダになりますので、それぞれの環境に合わせて設定して下さい。\texttt{libraries/actionscript3/src/}にGainerとArduino用のサンプルがあります。
+
+\subsubsection{動作確認}
+\texttt{libraries/actionscript3/src/GainerTest.as}をパブリッシュし、Flash Playerで再生してください。Gainer I/Oモジュールのボタンを押すとLEDが点灯し、離すと消灯すれば正常に動作しています。
+
+\newpage
+\subsection{Processing}
+\subsubsection{準備}
+\begin{enumerate}
+\item Processingをまだインストールしていない場合には次のウェブページから使用するプラットホームのファイルをダウンロードし、ダウンロードが完了したらデスクトップなどに解凍してください。\\http://processing.org/download/
+\item \texttt{funnel\_007/libraries/processing/library/}を\texttt{Processing 0135/libraries/funnel/library/}としてコピーしてください。
+\item この状態で一度Processingを起動し、「Sketch→Import Library...」のメニュー項目として「funnel」が表示されるのを確認してください。確認が終わったらProcessingを終了してください。
+\item ドキュメントフォルダが自動生成されますので（Windowsの場合にはマイドキュメント/Processing、OS Xの場合には書類/Processing）、その中に\texttt{libraries/processing/sketch\_samples/}と\texttt{libraries/processing/workshop/}をコピーしてください。
+\end{enumerate}
+
+\subsubsection{動作確認}
+Processingを起動し、「File→Sketchbook→workshop→ControlLEDByButton」を選択し、「Sketch→Run」を選択して実行してください。この状態でI/Oモジュール上のボタンを押すとLEDが点灯し、ボタンを離すとLEDが消灯することを確認してください。以上が正常に動作すれば、ProcessingはFunnel Serverと正常に通信できていることになります。
+
+\subsection{Ruby}
+\texttt{libraries/ruby/}にGainer、Arduino、XBee、Funnel I/O用のサンプルがあります。
+
+\end{document}
