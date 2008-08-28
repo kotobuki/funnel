@@ -5,8 +5,8 @@
 	
 	<property name="build" location="." />
 	<!-- processing directory -->
-	<property name="dest" location="C:\processing-0135\libraries\funnel\library" />
-	<property name="code" location="C:\processing-0135\libraries\funnel\code" />
+	<property name="dest" location="C:\processing-0148\libraries\funnel\library" />
+	<property name="code" location="C:\processing-0148\libraries\funnel\code" />
 
 	<target name="compile" description = "Compile the source">
 		<javac srcdir="./" destdir="./" source="1.3">

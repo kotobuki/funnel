@@ -127,10 +127,9 @@ public class IOSystem implements Runnable{
 	}
 	
 	public void dispose(){
-
+		System.out.println("dispose funnel");
 		endPolling();
 		reboot();
-	
 
 		isWorking = false;
 
@@ -330,7 +329,7 @@ public class IOSystem implements Runnable{
 		Object args[] = new Object[1];
 		args[0] = new Integer(0);
 		
-		execCode("/polling",args,true);	
+		execCode("/polling",args,false);	
 
 	}
 	
@@ -412,10 +411,23 @@ public class IOSystem implements Runnable{
 	
 	protected boolean addModule(int id,Configuration config,String name){
 
+		
 		Set key = iomodules.entrySet();
 		if(!key.contains(new Integer(id))){
-			iomodules.put(new Integer(id), new IOModule(parent,id,config,name));
-			System.out.println(" add module " + name);
+			IOModule io =  new IOModule(parent,id,config,name);
+			iomodules.put(new Integer(id), io);
+			
+			System.out.println(" addModule() " + name);
+			
+			//din‚ÉSetPoint‚ðŽ©“®‚Å‚Â‚¯‚é
+			int[] portStatus = config.getPortStatus();
+			for(int i=0;i<portStatus.length;i++){
+				if(portStatus[i] == PORT_DIN){
+					System.out.println();
+					Filter[] filters ={ new SetPoint(0.5f,0)};
+					io.port(i).filters = filters;
+				}
+			}
 			return true;
 		}
 		System.out.println("add module error !" + name);

@@ -272,14 +272,26 @@ public final class Gainer extends IOSystem{
 
 	}
 
-	
+	//Gainer‚Í“ÁŽê  GainerIOModule(ButtonEvent)‚Ì‚½‚ß
 	protected boolean addModule(int id,Configuration config,String name){
 
 		System.out.println("addmodule() Gainer");
 		
 		Set key = iomodules.entrySet();
 		if(!key.contains(new Integer(id))){
-			iomodules.put(new Integer(id), new GainerIOModule(parent,id,config,name));
+			IOModule io =  new GainerIOModule(parent,id,config,name);
+			iomodules.put(new Integer(id),io);
+			
+			//din‚ÉSetPoint‚ðŽ©“®‚Å‚Â‚¯‚é
+			int[] portStatus = config.getPortStatus();
+			for(int i=0;i<portStatus.length;i++){
+				if(portStatus[i] == PORT_DIN){
+					System.out.println();
+					Filter[] filters ={ new SetPoint(0.5f,0)};
+					io.port(i).filters = filters;
+				}
+			}
+			
 			return true;
 		}
 		
