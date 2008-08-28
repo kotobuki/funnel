@@ -19,7 +19,7 @@ void setup()
   size(200, 200);
   frameRate(30);
 
-  gio= new Gainer(this, Gainer.MODE1);
+  gio = new Gainer(this, Gainer.MODE1);
   gio.autoUpdate = true;
 
   // Uncomment the following section to set a SetPoint filter

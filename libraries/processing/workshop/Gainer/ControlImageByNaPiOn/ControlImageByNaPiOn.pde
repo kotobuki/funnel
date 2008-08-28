@@ -1,5 +1,5 @@
 /**
- * din 0‚ÉÚ‘±‚µ‚½Å“dƒZƒ“ƒT‚Ìo—Í‚ÅÃ~‰æ‚ğƒRƒ“ƒgƒ[ƒ‹‚µ‚Ü‚·
+ * din 0ã«æ¥ç¶šã—ãŸç„¦é›»ã‚»ãƒ³ã‚µã®å‡ºåŠ›ã§é™æ­¢ç”»ã‚’ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã—ã¾ã™
  */
 
 import processing.funnel.*;
@@ -68,3 +68,4 @@ void fallingEdge(PortEvent e)
     gainer.led().value = 0.0;
   }
 }
+
