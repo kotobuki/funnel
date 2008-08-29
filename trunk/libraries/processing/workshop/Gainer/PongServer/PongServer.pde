@@ -48,6 +48,7 @@ long gameOverDelay = 4000;          // pause after each game
 long pointDelay = 2000;             // pause after each point
 
 boolean hasReported = false;
+boolean singlePlayerMode = false;
 
 void setup()  {
 
@@ -225,7 +226,9 @@ void listenToClients() {
         default:
           {
             float position = float(whatClientSaid[i]);
-            speakingPlayer.movePaddleTo(position);
+            if (!Float.isNaN(position) && (0 <= position) && (position <= 1)) {
+              speakingPlayer.movePaddleTo(position);
+            }
           }
           break;
       }
@@ -295,14 +298,26 @@ void pongDraw() {
   }
   // pause after each point:
   if (!gameOver && !ballInMotion && (millis() > delayCounter + pointDelay)) {
-    // make sure there are at least two players:
-    if (playerList.size() >=2) {
-      ballInMotion = true;
-    }
-    else {
-      ballInMotion = false;
-      textSize(24);
-      text("Waiting for two players", width/2, height/2 - 30);
+    if (!singlePlayerMode) {
+      // make sure there are at least two players:
+      if (playerList.size() >=2) {
+        ballInMotion = true;
+      }
+      else {
+        ballInMotion = false;
+        textSize(24);
+        text("Waiting for two players", width/2, height/2 - 30);
+      }
+    } else {
+      // make sure there is a player:
+      if (playerList.size() > 0) {
+        ballInMotion = true;
+      }
+      else {
+        ballInMotion = false;
+        textSize(24);
+        text("Waiting for a player", width/2, height/2 - 30);
+      }
     }
   }
 }
@@ -333,17 +348,23 @@ void moveBall() {
     }
   }
 
-  // if the ball goes off the screen top:
-  if (ballPosV < 0) {
-    bottomScore++;
-    ballDirectionV = int(random(2) + 1) * -1;
-    resetBall();
-  }
-  // if the ball goes off the screen bottom:
-  if (ballPosV > height) {
-    topScore++;
-    ballDirectionV = int(random(2) + 1);
-    resetBall();
+  if (!singlePlayerMode) {
+    // if the ball goes off the screen top:
+    if (ballPosV < 0) {
+      bottomScore++;
+      ballDirectionV = int(random(2) + 1) * -1;
+      resetBall();
+    }
+    // if the ball goes off the screen bottom:
+    if (ballPosV > height) {
+      topScore++;
+      ballDirectionV = int(random(2) + 1);
+      resetBall();
+    }
+  } else {
+    if ((ballPosV - ballSize/2 <= 0) || (ballPosV +ballSize/2 >= height)) {
+      ballDirectionV = -ballDirectionV;
+    }
   }
 
   // if any team goes over 5 points, the other team loses:
