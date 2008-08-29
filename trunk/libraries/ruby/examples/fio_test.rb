@@ -43,9 +43,9 @@ end
 @osc_g = Osc.new Osc::SIN, 0.5, 1, 0, 0.33, 0
 @osc_b = Osc.new Osc::SIN, 0.5, 1, 0, 0.66, 0
 
-@fio.io_module(ALL).d(R).filters = [@osc_r]
-@fio.io_module(ALL).d(G).filters = [@osc_g]
-@fio.io_module(ALL).d(B).filters = [@osc_b]
+@fio.io_module(ALL).d(R).filters = [@osc_r, Scaler.new(0, 1, 1, 0)]
+@fio.io_module(ALL).d(G).filters = [@osc_g, Scaler.new(0, 1, 1, 0)]
+@fio.io_module(ALL).d(B).filters = [@osc_b, Scaler.new(0, 1, 1, 0)]
 @osc_r.start
 @osc_g.start
 @osc_b.start
