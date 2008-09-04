@@ -1,6 +1,10 @@
 package processing.funnel;
 
 import java.text.NumberFormat;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+
 import processing.core.PApplet;
 
 /**
@@ -28,17 +32,13 @@ public final class Fio extends IOSystem{
 	};
 	public static final Configuration FIRMATA = new Configuration(moduleID,fio,moduleName);
 	
-	//ポートの機能(参照する名前)
-	private int analogPin[];
-	private int digitalPin[];
-	
+
 	/**
 	 * Fio ポート番号からfunnelのポート番号への変換
 	 */
-	static int[] _a = {14,15,16,17,18,19,20,21};
-	static int[] _d = {0,1,2,3,4,5,6,7,8,9,10,11,12,13};
-//	static int[] _dout = {};
-
+	static final int[] _a = {14,15,16,17,18,19,20,21};
+	static final int[] _d = {0,1,2,3,4,5,6,7,8,9,10,11,12,13};
+	
 
 	public Fio(PApplet parent, String hostName,
 			int commandPortNumber,int samplingInterval,int[] IDs,Configuration config){
@@ -51,10 +51,8 @@ public final class Fio extends IOSystem{
 		}
 
 		
-		
-		initPorts(config.portStatus);
-		
-		
+		initPorts(_a,_d);
+
 		startIOSystem();
 	}
 	
@@ -77,6 +75,7 @@ public final class Fio extends IOSystem{
 				samplingInterval,IDs,config);
 	}
 
+	
 	private void regModule(int[] IDs,Configuration config){
 		System.out.println("regModule() Fio");
 		NumberFormat nf = NumberFormat.getInstance();
@@ -89,17 +88,7 @@ public final class Fio extends IOSystem{
 		}
 	}
 	
-	//ポートの機能(参照する名前)を割り当てる
-	private void initPorts(int[] conf){
-		
-		analogPin = _a;
-		digitalPin = _d;
 
-	}
 
-//	public FioIOModule iomodule(int id){
-//		FioIOModule io = (FioIOModule)iomodules.get(new Integer(id)); 
-//		return io;
-//	}
-//	
+	
 }

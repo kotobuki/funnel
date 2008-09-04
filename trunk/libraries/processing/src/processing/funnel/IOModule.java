@@ -22,8 +22,14 @@ public class IOModule{
 
 	protected Port port[];
 	protected int id;
-	public String name;
 	protected Configuration config;
+	
+	public String name;
+	
+	//ポートの機能(参照する名前)
+	private int analogPin[];
+	private int digitalPin[];
+	
 	
 	protected void errorMessage(String message){
 		System.out.println(message);
@@ -76,6 +82,19 @@ public class IOModule{
 		}	
 	}
 	
+	protected void setPinAD(int[] _a,int[] _d){
+		analogPin = _a;
+		digitalPin = _d;
+	}
+	
+	public Port analogPin(int nPort){
+		return port(analogPin[nPort]);
+	}
+	
+	public Port digitalPin(int nPort){
+		return port(digitalPin[nPort]);
+	}
+	
 	
 	//Portそのものを返す
 	public Port port(int nPort){
@@ -108,10 +127,7 @@ public class IOModule{
 
 		PApplet parent;
 		
-		public final static int AIN = 0x1000;
-		public final static int DIN = 0x1100;
-		public final static int AOUT = 0x0001;
-		public final static int DOUT = 0x0011;
+
 
 		public final int number;//ポート通し番号
 		
@@ -272,6 +288,8 @@ public class IOModule{
 			
 			filters = f;
 		}
+		
+		
 		
 		
 	}

@@ -286,7 +286,6 @@ public final class Gainer extends IOSystem{
 			int[] portStatus = config.getPortStatus();
 			for(int i=0;i<portStatus.length;i++){
 				if(portStatus[i] == PORT_DIN){
-					System.out.println();
 					Filter[] filters ={ new SetPoint(0.5f,0)};
 					io.port(i).filters = filters;
 				}

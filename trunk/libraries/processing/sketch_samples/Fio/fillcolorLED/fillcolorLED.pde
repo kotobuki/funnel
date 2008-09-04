@@ -1,6 +1,7 @@
 /*
 Fio 
-analog in
+ control fill color LED
+  (d3,d10,d11)
 */
 
 import processing.funnel.*;
@@ -54,13 +55,9 @@ void setup()
 
 void oscUpdated(Osc osc)
 {
-//  fio.iomodule(1).digitalPin(R).value = osc_r.value;
-//  fio.iomodule(1).digitalPin(G).value = osc_g.value;
-//  fio.iomodule(1).digitalPin(B).value = osc_b.value;
-  fio.iomodule(1).port(R).value = osc_r.value;
-  fio.iomodule(1).port(G).value = osc_g.value;
-  fio.iomodule(1).port(B).value = osc_b.value;
-
+  fio.iomodule(1).digitalPin(R).value = osc_r.value;
+  fio.iomodule(1).digitalPin(G).value = osc_g.value;
+  fio.iomodule(1).digitalPin(B).value = osc_b.value;
   //println(osc_r.value + " " + osc_g.value + " " + osc_b.value);
 }
 

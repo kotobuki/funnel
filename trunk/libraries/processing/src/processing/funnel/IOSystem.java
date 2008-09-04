@@ -1,6 +1,7 @@
 package processing.funnel;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -420,14 +421,13 @@ public class IOSystem implements Runnable{
 			System.out.println(" addModule() " + name);
 			
 			//dinにSetPointを自動でつける
-			int[] portStatus = config.getPortStatus();
-			for(int i=0;i<portStatus.length;i++){
-				if(portStatus[i] == PORT_DIN){
-					System.out.println();
-					Filter[] filters ={ new SetPoint(0.5f,0)};
-					io.port(i).filters = filters;
-				}
-			}
+//			int[] portStatus = config.getPortStatus();
+//			for(int i=0;i<portStatus.length;i++){
+//				if(portStatus[i] == PORT_DIN){
+//					Filter[] filters ={ new SetPoint(0.5f,0)};
+//					io.port(i).filters = filters;
+//				}
+//			}
 			return true;
 		}
 		System.out.println("add module error !" + name);
@@ -441,7 +441,18 @@ public class IOSystem implements Runnable{
 
 	
 	
-	
+	//ポートの機能(参照する名前)を割り当てる
+	protected void initPorts(int[] _a,int[] _d){
+		
+		Collection c = iomodules.values();
+		Iterator it = c.iterator();
+		while(it.hasNext()){
+			IOModule io = (IOModule)it.next();
+			io.setPinAD(_a, _d);
+		}
+		
+
+	}
 
 
 

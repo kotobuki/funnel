@@ -41,8 +41,11 @@ public final class Configuration{
 	 */
 	
 	public boolean setDigitalPinMode(int n,int digitalType){
+		
 		if(moduleName.equalsIgnoreCase(Arduino.moduleName) || moduleName.equalsIgnoreCase(Fio.moduleName)){
+			System.out.println("portStatus[]" + n + " type " + digitalType );
 			portStatus[n] = digitalType;
+			
 			return true;
 		}
 		return false;

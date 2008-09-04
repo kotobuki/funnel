@@ -28,7 +28,7 @@ void setup()
 void draw()
 {
   background(0);
-  text("digitalInput[13]: " + arduino.digitalPin(13).value,10,80); 
+  text("digitalInput["+ledPin+"]: " + arduino.digitalPin(ledPin).value,10,80); 
 }
   
 
