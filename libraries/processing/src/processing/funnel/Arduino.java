@@ -28,16 +28,12 @@ public final class Arduino extends IOSystem{
 	public static final Configuration FIRMATA = new Configuration(moduleID,firmata,moduleName);
 
 	
-	//ポートの機能(参照する名前)
-	private int analogPin[];
-	private int digitalPin[];
-	
 
 	/**
 	 * arduinoのポート番号からfunnelのポート番号への変換
 	 */
-	static int[] _a = {14,15,16,17,18,19,20,21};
-	static int[] _d = {0,1,2,3,4,5,6,7,8,9,10,11,12,13};
+	static final int[] _a = {14,15,16,17,18,19,20,21};
+	static final int[] _d = {0,1,2,3,4,5,6,7,8,9,10,11,12,13};
 	
 
 	public Arduino(PApplet parent, String hostName,
@@ -49,7 +45,7 @@ public final class Arduino extends IOSystem{
 		}
 		addModule(moduleID,config,config.getModuleName());
 		
-		initPorts(config.portStatus);
+		initPorts(_a,_d);
 		
 		startIOSystem();
 	}
@@ -74,22 +70,13 @@ public final class Arduino extends IOSystem{
 	}
 	
 	
-//ポートの機能(参照する名前)を割り当てる
-	private void initPorts(int[] conf){
-		
-		analogPin = _a;
-		digitalPin = _d;
-
-	}
-	
- 
 	//Arduinoショートカット
 	public IOModule.Port analogPin(int nPort){
-		return iomodule(0).port(analogPin[nPort]);
+		return iomodule(0).analogPin(nPort);
 	}
 	
 	public IOModule.Port digitalPin(int nPort){
-		return iomodule(0).port(digitalPin[nPort]);
+		return iomodule(0).digitalPin(nPort);
 	} 
 }
 

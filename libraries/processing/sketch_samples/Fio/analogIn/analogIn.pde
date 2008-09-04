@@ -26,7 +26,7 @@ void setup()
 void draw()
 {
   background(0);
-  text("analogInput[0]: " + fio.iomodule(1).port(14).value,10,80);  
+  text("analogInput[0]: " + fio.iomodule(1).analogPin(0).value,10,80);  
 }
   
 

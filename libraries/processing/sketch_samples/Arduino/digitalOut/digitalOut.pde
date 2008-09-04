@@ -16,6 +16,7 @@ void setup()
   
   Configuration config = Arduino.FIRMATA;
   config.setDigitalPinMode(ledPin,Arduino.OUT);
+
   arduino = new Arduino(this,config);
   arduino.autoUpdate = true;
 
