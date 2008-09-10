@@ -18,21 +18,23 @@ public class XBee {
 	private static final int IDX_IO_ENABLE_LSB = 10;
 	private static final int IDX_IO_STATUS_START = 11;
 	private static final int IDX_PACKET_OPTIONS = 7;
-	private static final int IDX_ZNET_16BIT_ADDRESS_MSB = 12;
-	private static final int IDX_ZNET_16BIT_ADDRESS_LSB = 13;
-	// private static final int IDX_ZNET_OPTIONS = 14;
-	private static final int IDX_ZNET_SAMPLES = 15;
-	private static final int IDX_ZNET_DIGITAL_CH_MASK_MSB = 16;
-	private static final int IDX_ZNET_DIGITAL_CH_MASK_LSB = 17;
-	private static final int IDX_ZNET_ANALOG_CH_MASK = 18;
-	private static final int IDX_ZNET_IO_STATUS_START = 19;
+	private static final int IDX_ZB_16BIT_ADDRESS_MSB = 12;
+	private static final int IDX_ZB_16BIT_ADDRESS_LSB = 13;
+	// private static final int IDX_ZB_OPTIONS = 14;
+	private static final int IDX_ZB_SAMPLES = 15;
+	private static final int IDX_ZB_DIGITAL_CH_MASK_MSB = 16;
+	private static final int IDX_ZB_DIGITAL_CH_MASK_LSB = 17;
+	private static final int IDX_ZB_ANALOG_CH_MASK = 18;
+	private static final int IDX_ZB_IO_STATUS_START = 19;
 	// private static final int IDX_PACKET_RF_DATA = 8;
 	private static final int RX_PACKET_16BIT = 0x81;
 	private static final int RX_IO_STATUS_16BIT = 0x83;
 	private static final int AT_COMMAND_RESPONSE = 0x88;
 	private static final int TX_STATUS_MESSAGE = 0x89;
 	private static final int MODEM_STATUS = 0x8A;
-	private static final int RX_IO_STATUS_ZNET = 0x92;
+	private static final int RX_IO_STATUS_ZB = 0x92;
+	// private static final int NODE_IDENTIFICATION = 0x95;
+	private static final int REMOTE_COMMAND_RESPONSE = 0x97;
 	private static final int MAX_FRAME_SIZE = 100;
 
 	private static final int XBEE_MULTIPOINT_MAX_IO_PORT = 9;
@@ -50,9 +52,13 @@ public class XBee {
 	private byte[] txData = new byte[MAX_FRAME_SIZE];
 	private int txDataIdx = 0;
 
+	private boolean isZigBeeModel = true;
+	private long[] destinationAddress = new long[65536];
+
 	public XBee(XBeeEventListener listener, OutputStream output) {
 		this.listener = listener;
 		this.output = output;
+		destinationAddress[0xFFFF] = 0x000000000000FFFFL;
 	}
 
 	public void processInput(int inputData) {
@@ -80,6 +86,31 @@ public class XBee {
 				}
 			} else if (rxIndex > 2) {
 				rxSum += rxData[rxIndex];
+			}
+		}
+	}
+
+	public void setDIOConfiguration(int networkAddress, int number, int mode) {
+		if (isZigBeeModel) {
+			switch (number) {
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 7:
+				sendRemoteATCommand(destinationAddress[networkAddress], "D"
+						+ Integer.toString(number), new byte[] { (byte) mode });
+				break;
+			case 10:
+			case 11:
+			case 12:
+				sendRemoteATCommand(destinationAddress[networkAddress], "P"
+						+ Integer.toString(number - 10), new byte[] { (byte) mode });
+				break;
+			default:
+				break;
 			}
 		}
 	}
@@ -140,17 +171,17 @@ public class XBee {
 			}
 		}
 			break;
-		case RX_IO_STATUS_ZNET: {
-			int source = (data[IDX_ZNET_16BIT_ADDRESS_MSB] << 8) + data[IDX_ZNET_16BIT_ADDRESS_LSB];
+		case RX_IO_STATUS_ZB: {
+			int source = (data[IDX_ZB_16BIT_ADDRESS_MSB] << 8) + data[IDX_ZB_16BIT_ADDRESS_LSB];
 			int rssi = 0;
 			// int options = data[IDX_ZNET_OPTIONS];
-			int samples = data[IDX_ZNET_SAMPLES];
-			int digitalChannelMask = (data[IDX_ZNET_DIGITAL_CH_MASK_MSB] << 8)
-					+ data[IDX_ZNET_DIGITAL_CH_MASK_LSB];
-			int analogChannelMask = data[IDX_ZNET_ANALOG_CH_MASK];
+			int samples = data[IDX_ZB_SAMPLES];
+			int digitalChannelMask = (data[IDX_ZB_DIGITAL_CH_MASK_MSB] << 8)
+					+ data[IDX_ZB_DIGITAL_CH_MASK_LSB];
+			int analogChannelMask = data[IDX_ZB_ANALOG_CH_MASK];
 			boolean hasDigitalData = (digitalChannelMask & 0x1FFF) > 0;
 			boolean hasAnalogData = (analogChannelMask & 0x0F) > 0;
-			int idx = IDX_ZNET_IO_STATUS_START;
+			int idx = IDX_ZB_IO_STATUS_START;
 
 			for (int sample = 0; sample < samples; sample++) {
 				int dinStatus = 0x0000;
@@ -189,36 +220,89 @@ public class XBee {
 		case AT_COMMAND_RESPONSE:
 			// Networking Identification Command (ND)
 			if ((data[5] == 'N' && data[6] == 'D') && (bytes > 9)) {
-				if (data[7] == 0) {
-					// [--MY--][------SH------][------SL------][dB][NI ...
-					// [08][09][10][11][12][13][14][15][16][17][18][19]...
-					int my = (data[8] << 8) + data[9];
-					int sh = data[10] << 24;
-					sh += data[11] << 16;
-					sh += data[12] << 8;
-					sh += data[13];
-					int sl = data[14] << 24;
-					sl += data[15] << 16;
-					sl += data[16] << 8;
-					sl += data[17];
-					int db = data[18];
-					byte[] nibytes = new byte[20];
-					int count = 0;
-					for (int i = 0; i < 20; i++) {
-						if (data[19 + i] == 0) {
-							break;
-						} else {
-							nibytes[i] = (byte) data[19 + i];
-							count++;
+				if (!isZigBeeModel) {
+					if (data[7] == 0) {
+						// [--MY--][------SH------][------SL------][dB][NI ...
+						// [08][09][10][11][12][13][14][15][16][17][18][19]...
+						int my = (data[8] << 8) + data[9];
+						int sh = data[10] << 24;
+						sh += data[11] << 16;
+						sh += data[12] << 8;
+						sh += data[13];
+						int sl = data[14] << 24;
+						sl += data[15] << 16;
+						sl += data[16] << 8;
+						sl += data[17];
+						int db = data[18];
+						int count = 0;
+						for (int i = 0; i < 20; i++) {
+							if (data[19 + i] == 0) {
+								break;
+							} else {
+								count++;
+							}
 						}
+						String ni = new String(data, 19, count);
+						listener.networkingIdentificationEvent(my, sh, sl, db, ni);
 					}
-					String ni = new String(nibytes, 0, count);
-					listener.networkingIdentificationEvent(my, sh, sl, db, ni);
+				} else {
+					if (data[7] == 0) {
+						// [--MY--][------SH------][------SL------][NI ...
+						// [08][09][10][11][12][13][14][15][16][17][18]...
+						// 
+						// [Parent Network Address][Device Type]
+						int idx = 8;
+						int my = (data[idx++] << 8) + data[idx++];
+						int sh = data[idx++] << 24;
+						sh += data[idx++] << 16;
+						sh += data[idx++] << 8;
+						sh += data[idx++];
+						int sl = data[idx++] << 24;
+						sl += data[idx++] << 16;
+						sl += data[idx++] << 8;
+						sl += data[idx++];
+						destinationAddress[my] = ((long) sh << 32) + (long) sl;
+
+						int count = 0;
+						for (int i = 0; i < 20; i++) {
+							int c = data[idx++];
+							if (c == 0) {
+								break;
+							} else {
+								count++;
+							}
+						}
+						String ni = new String(data, 18, count);
+
+						int parentNetworkAddress = data[idx++] << 8;
+						parentNetworkAddress += data[idx++];
+						int deviceType = data[idx++];
+						switch (deviceType) {
+						case 0:
+							ni += " (coordinator)";
+							break;
+						case 1:
+							ni += " (router)";
+							break;
+						case 2:
+							ni += " (end device)";
+							break;
+						}
+
+						listener.networkingIdentificationEvent(my, sh, sl, 0, ni);
+					}
 				}
 			} else if (data[5] == 'V' && data[6] == 'R') {
 				String info = "FIRMWARE VERSION: ";
 				info += Integer.toHexString(data[8]);
 				info += Integer.toHexString(data[9]);
+				if ((data[8] >> 4) == 2) {
+					info += " (XBee ZNet or ZB)";
+					isZigBeeModel = true;
+				} else {
+					info += " (XBee 802.15.4)";
+					isZigBeeModel = false;
+				}
 				listener.firmwareVersionEvent(info);
 			} else if (data[5] == 'M' && data[6] == 'Y') {
 				String info = "SOURCE ADDRESS: ";
@@ -236,6 +320,11 @@ public class XBee {
 				// info += Integer.toHexString(data[9]);
 				listener.apiModeEvent(info);
 			}
+			break;
+		case REMOTE_COMMAND_RESPONSE:
+			String response = "REMOTE_COMMAND_RESPONSE: ";
+			response += Integer.toHexString(data[17]);
+			listener.unsupportedApiEvent(response);
 			break;
 		case TX_STATUS_MESSAGE:
 			// {0x7E}+{0x00+0x03}+{0x89}+{Frame ID}+{Status}+{Checksum}
@@ -277,6 +366,32 @@ public class XBee {
 		outData[1] = 0x01; // Frame ID
 		for (int i = 0; i < command.length(); i++) {
 			outData[2 + i] = (byte) command.charAt(i);
+		}
+		sendCommand(outData);
+	}
+
+	public void sendRemoteATCommand(long destAddress, String commandName, byte[] commandData) {
+		// System.out.println("dest: " + Long.toHexString(destAddress) +
+		// commandName + commandData[0]);
+		byte[] outData = new byte[13 + commandName.length() + commandData.length];
+		outData[0] = (byte) 0x17; // Remote AT Command Request
+		outData[1] = (byte) 0x01; // Frame ID
+		outData[2] = (byte) (destAddress >> 56);
+		outData[3] = (byte) (destAddress >> 48);
+		outData[4] = (byte) (destAddress >> 40);
+		outData[5] = (byte) (destAddress >> 32);
+		outData[6] = (byte) (destAddress >> 24);
+		outData[7] = (byte) (destAddress >> 16);
+		outData[8] = (byte) (destAddress >> 8);
+		outData[9] = (byte) (destAddress & 0xFF);
+		outData[10] = (byte) 0xFF;
+		outData[11] = (byte) 0xFE;
+		outData[12] = (byte) 0x02; // Apply changes on remote
+		for (int i = 0; i < commandName.length(); i++) {
+			outData[13 + i] = (byte) commandName.charAt(i);
+		}
+		for (int i = 0; i < commandData.length; i++) {
+			outData[13 + commandName.length() + i] = commandData[i];
 		}
 		sendCommand(outData);
 	}

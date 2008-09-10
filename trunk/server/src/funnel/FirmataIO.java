@@ -57,7 +57,6 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected funnel.PortRange digitalPinRange;
 	protected Vector<PortRange> dinPinChunks;
 	protected int rearmostAnalogInputPin = -1;
-	protected final Float FLOAT_ZERO = new Float(0.0f);
 	protected BlockingQueue<String> firmwareVersionQueue;
 
 	public FirmataIO(int analogPins, int digitalPins, int[] pwmPins) {

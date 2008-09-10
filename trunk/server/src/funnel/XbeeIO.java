@@ -16,7 +16,7 @@ import gnu.io.SerialPortEventListener;
 public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEventListener {
 
 	private static final int MAX_IO_PORT = 13;
-	private static final int MAX_NODES = 65535;
+	private static final int MAX_NODES = 65536;
 
 	private float[][] inputData = new float[MAX_NODES][MAX_IO_PORT];
 	private int[] rssi = new int[MAX_NODES];
@@ -78,6 +78,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 			printMessage(Messages.getString("IOModule.PortNotFoundError")); //$NON-NLS-1$
 		} else {
 			parent.printMessage("Configuring the XBee module...");
+			// NOTE: the following procedure is only valid for XBee 802.15.4
 			byte[] command = new byte[] { '+', '+', '+' };
 			byte[] apiModeCommand = new byte[] { 'A', 'T', 'A', 'P', '2', ',', ' ', 'C', 'N', 13 };
 			try {
@@ -91,11 +92,16 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 			}
 
 			xbee = new XBee(this, output);
+			// xbee.setDIOConfiguration(0x0013a200405220e3L, 5, 5);
+			// xbee.setDIOConfiguration(0x0013a200405220e7L, 5, 5);
+			// xbee.setDIOConfiguration(0xFFFF, 5, 1);
+			// xbee.setDIOConfiguration(0xFFFF, 5, 1);
+			xbee.sendATCommand("VR"); // TODO: wait a response here
 			xbee.sendATCommand("AP");
-			xbee.sendATCommand("VR");
 			xbee.sendATCommand("MY");
 			xbee.sendATCommand("ID");
 			xbee.sendATCommand("ND");
+			sleep(100);
 		}
 	}
 
@@ -168,7 +174,13 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 	}
 
 	public void setOutput(Object[] arguments) {
-		return;
+		int moduleId = ((Integer) arguments[0]).intValue();
+		int start = ((Integer) arguments[1]).intValue();
+		for (int i = 0; i < (arguments.length - 2); i++) {
+			int port = start + i;
+			int index = 2 + i;
+			xbee.setDIOConfiguration(moduleId, port, FLOAT_ZERO.equals(arguments[index]) ? 4 : 5);
+		}
 	}
 
 	public void setPolling(Object[] arguments) {
@@ -212,8 +224,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 	}
 
 	public void networkingIdentificationEvent(int my, int sh, int sl, int db, String ni) {
-		String info = "NODE: MY=" + my + ", SH=" + Integer.toHexString(sh) + ", SL="
-				+ Integer.toHexString(sl) + ", dB=" + db + ", NI=\'" + ni + "\'";
+		String info = "NODE: MY=" + Integer.toHexString(my) + ", SH=" + Integer.toHexString(sh)
+				+ ", SL=" + Integer.toHexString(sl) + ", dB=" + db + ", NI=\'" + ni + "\'";
 		parent.printMessage(info);
 		OSCMessage message = new OSCMessage("/node");
 		message.addArgument(new Integer(my));
