@@ -21,6 +21,7 @@ public abstract class IOModule {
 
 	protected FunnelServer parent;
 	protected boolean isPolling = false;
+	protected final Float FLOAT_ZERO = new Float(0.0f);
 
 	/**
 	 * Get the name of the first I/O module
