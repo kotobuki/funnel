@@ -6,7 +6,7 @@ module Funnel
   class Configuration
     (GAINER, ARDUINO, XBEE, FIO) = Array(0..3)
     (MODE1, MODE2, MODE3, MODE4, MODE5, MODE6, MODE7) = Array(1..7)
-    (MULTIPOINT, ZNET) = Array(0..1)
+    (MULTIPOINT, ZB) = Array(0..1)
 
     attr_reader :ain_ports
     attr_reader :din_ports
@@ -159,19 +159,22 @@ module Funnel
             Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
             Port::DIN, Port::DIN
           ]
+          @analog_pins = [0, 1, 2, 3, 4, 5]
+          @digital_pins = [6, 7]
         when ZB # was XBee Series 2 or ZNet 2.5, is ZB
-          # 10 digital I/O (including 4 ADC inputs)
+          # 13 digital I/O (including 4 ADC inputs)
+          # NOTE: D6, D8 and D9 are not accessible
           @config = [
-            Port::AIN, Port::AIN, Port::AIN, Port::AIN, 
-            Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN
+            Port::AIN, Port::AIN, Port::AIN, Port::AIN,
+            Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN
           ]
+          @analog_pins = [0, 1, 2, 3]
+          @digital_pins = [4, 5, 6, 7, 8, 9, 10, 11, 12]
         end
         @ain_ports = nil
         @din_ports = nil
         @aout_ports = nil
         @dout_ports = nil
-        @analog_pins = nil
-        @digital_pins = nil
         @button = nil
         @led = nil
       when FIO
@@ -190,7 +193,7 @@ module Funnel
         @led = nil
       end
     end
-    
+
     def set_digital_pin_mode(pin, mode)
       raise ArgumentError, "digital pins are not available" if @digital_pins == nil
       raise ArgumentError, "digital pin is not available at #{pin}" if @digital_pins.at(pin) == nil
