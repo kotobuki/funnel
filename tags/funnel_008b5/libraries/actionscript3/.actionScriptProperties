@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actionScriptProperties mainApplicationPath="GainerTest.as" version="1">
+<compiler additionalCompilerArguments="-default-background-color=0xCCCCCC -default-frame-rate 30 -default-size 500 500" copyDependentFiles="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="true" htmlPlayerVersion="9.0.0" htmlPlayerVersionCheck="true" outputFolderPath="bin" sourceFolderPath="src" strict="true" warn="true">
+<compilerSourcePath/>
+<libraryPath>
+<libraryPathEntry kind="3" linkType="2" path="${FRAMEWORKS}/libs/playerglobal.swc"/>
+<libraryPathEntry kind="3" linkType="1" path="${FRAMEWORKS}/libs/utilities.swc"/>
+<libraryPathEntry kind="3" linkType="1" path="${FRAMEWORKS}/libs/flex.swc" sourcepath="${FRAMEWORKS}/source"/>
+</libraryPath>
+<sourceAttachmentPath>
+<sourceAttachmentPathEntry kind="3" linkType="1" path="${FRAMEWORKS}/libs/flex.swc" sourcepath="${FRAMEWORKS}/source"/>
+</sourceAttachmentPath>
+</compiler>
+<applications>
+<application path="GainerTest.as"/>
+<application path="src/GainerTest.as"/>
+<application path="src/GainerMatrixLEDTest.as"/>
+<application path="FioTest.as"/>
+<application path="src/ButtonAndLED.as"/>
+</applications>
+<buildCSSFiles/>
+</actionScriptProperties>
