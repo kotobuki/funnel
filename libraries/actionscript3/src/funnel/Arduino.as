@@ -19,8 +19,8 @@ package funnel
 		public static function get FIRMATA():Configuration {
 			var k:Configuration = new Configuration();
 			k.config = [
-				DIN, DIN, DIN, DIN, DIN, DIN, DIN,
-				DIN, DIN, DIN, DIN, DIN, DIN, DIN,
+				DOUT, DOUT, DOUT, DOUT, DOUT, DOUT, DOUT,
+				DOUT, DOUT, DOUT, DOUT, DOUT, DOUT, DOUT,
 				AIN, AIN, AIN, AIN, AIN, AIN, AIN, AIN
 			];
 			k.analogPins = [14, 15, 16, 17, 18, 19, 20, 21];

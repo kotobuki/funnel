@@ -1,3 +1,9 @@
+/**
+ * An example of Gainer I/O MODE 7 to control a matrix LED.
+ *
+ * Gainer I/O MODE7を使用してマトリクスLEDをコントロールするサンプルです。
+ */
+
 package
 {
 	import flash.display.*;
@@ -5,10 +11,6 @@ package
 	import flash.geom.Point;
 	import funnel.*;
 
-	/**
-	 * GAINERを使用してマトリクスLEDをコントロールするサンプルです。
-	 * 
-	 */	
 	public class GainerMatrixLEDTest extends Sprite
 	{
 		public function GainerMatrixLEDTest() {
@@ -16,7 +18,7 @@ package
 			var data:BitmapData = new BitmapData(8, 8);
 			addChild(new Bitmap(data));
 			width = height = 500;
-			
+
 			var p:Point = new Point();
 			addEventListener(Event.ENTER_FRAME, function(e:Event):void {
 				p.x++;
@@ -25,6 +27,5 @@ package
 				mat.scanMatrix(data);
 			});
 		}
-		
 	}
 }
