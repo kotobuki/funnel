@@ -163,6 +163,18 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 		return results;
 	}
 
+	public void notifyUpdate(int source, int from, int counts) {
+		Object[] results = new Object[2 + counts];
+		results[0] = new Integer(source);
+		results[1] = new Integer(from);
+		for (int i = 0; i < counts; i++) {
+			results[2 + i] = new Float(inputData[source][from + i]);
+		}
+
+		OSCMessage message = new OSCMessage("/in", results);
+		parent.getCommandPortServer().sendMessageToClients(message);
+	}
+
 	public void reboot() {
 		nodes.clear();
 		xbee.sendATCommand("ND");
@@ -218,9 +230,10 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 		this.rssi[source] = rssi;
 		for (int i = 0; i < inData.length; i++) {
 			if (inData[i] >= 0) {
-				inputData[source][i] = inData[0];
+				inputData[source][i] = inData[i];
 			}
 		}
+		notifyUpdate(source, 0, inData.length);
 	}
 
 	public void networkingIdentificationEvent(int my, int sh, int sl, int db, String ni) {
