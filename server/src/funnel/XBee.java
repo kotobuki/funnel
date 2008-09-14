@@ -140,14 +140,14 @@ public class XBee {
 
 			for (int sample = 0; sample < samples; sample++) {
 				int dinStatus = 0x0000;
-				float[] inputData = { -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+				float[] inputData = { -1, -1, -1, -1, -1, -1, -1, -1 };
 
 				if (hasDigitalData) {
 					dinStatus = data[idx] << 8;
 					idx++;
 					dinStatus += data[idx];
 					idx++;
-					for (int i = 0; i < 9; i++) {
+					for (int i = 0; i < inputData.length; i++) {
 						int bitMask = 1 << i;
 						if ((ioEnable & bitMask) != 0) {
 							inputData[i] = ((dinStatus & bitMask) != 0) ? 1.0f : 0.0f;
@@ -297,7 +297,7 @@ public class XBee {
 				info += Integer.toHexString(data[8]);
 				info += Integer.toHexString(data[9]);
 				if ((data[8] >> 4) == 2) {
-					info += " (XBee ZNet or ZB)";
+					info += " (XBee ZB ZigBee PRO or ZNet 2.5)";
 					isZigBeeModel = true;
 				} else {
 					info += " (XBee 802.15.4)";
