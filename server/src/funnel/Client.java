@@ -26,8 +26,7 @@ public abstract class Client extends TcpOSCPort {
 		this.ip = this.socket.getInetAddress().getHostAddress();
 		this.in = this.socket.getInputStream();
 		this.out = this.socket.getOutputStream();
-		this.bufferedOut = new BufferedOutputStream(this.socket
-				.getOutputStream(), 4096);
+		this.bufferedOut = new BufferedOutputStream(this.socket.getOutputStream(), 4096);
 		// this.socket.setTcpNoDelay(true);
 	}
 
@@ -76,9 +75,18 @@ public abstract class Client extends TcpOSCPort {
 	 * @param aPacket
 	 *            OSCPacket
 	 */
-	public void send(OSCPacket aPacket) throws IOException {
+	synchronized public void send(OSCPacket aPacket) throws IOException {
 		byte[] byteArray = aPacket.getByteArray();
 		byte[] packetSize = new byte[4];
+
+		if (aPacket == null)
+			System.out.println("NULL");
+
+		if (byteArray.length == 0)
+			System.out.println("ZERO");
+
+		if (byteArray.length == 1000)
+			System.out.println("OVER");
 
 		// Reference: http://opensoundcontrol.org/spec-1_0
 		// The first 4 bytes should be a packet size in int32 (big-endian)
