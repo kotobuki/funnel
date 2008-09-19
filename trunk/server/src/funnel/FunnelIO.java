@@ -173,6 +173,10 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		parent.printMessage(apiIdentifier);
 	}
 
+	public void stringMessageEvent(String errorMessage) {
+		parent.printMessage(errorMessage);
+	}
+
 	synchronized public void serialEvent(SerialPortEvent serialEvent) {
 		if (serialEvent.getEventType() != SerialPortEvent.DATA_AVAILABLE) {
 			return;
