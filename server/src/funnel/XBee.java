@@ -58,6 +58,9 @@ public class XBee {
 	public XBee(XBeeEventListener listener, OutputStream output) {
 		this.listener = listener;
 		this.output = output;
+		for (int i = 0; i < destinationAddress.length; i++) {
+			destinationAddress[i] = 0;
+		}
 		destinationAddress[0xFFFF] = 0x000000000000FFFFL;
 	}
 
@@ -91,6 +94,12 @@ public class XBee {
 	}
 
 	public void setDIOConfiguration(int networkAddress, int number, int mode) {
+		if (destinationAddress[networkAddress] == 0) {
+			listener.stringMessageEvent("ERROR: Unregistered network address (" + networkAddress
+					+ ")");
+			return;
+		}
+
 		if (isZigBeeModel) {
 			switch (number) {
 			case 0:
@@ -108,6 +117,22 @@ public class XBee {
 			case 12:
 				sendRemoteATCommand(destinationAddress[networkAddress], "P"
 						+ Integer.toString(number - 10), new byte[] { (byte) mode });
+				break;
+			default:
+				break;
+			}
+		} else {
+			switch (number) {
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+				sendRemoteATCommand(destinationAddress[networkAddress], "D"
+						+ Integer.toString(number), new byte[] { (byte) mode });
 				break;
 			default:
 				break;
@@ -233,7 +258,9 @@ public class XBee {
 						sl += data[15] << 16;
 						sl += data[16] << 8;
 						sl += data[17];
+						destinationAddress[my] = ((long) sh << 32) + (long) sl;
 						int db = data[18];
+
 						int count = 0;
 						for (int i = 0; i < 20; i++) {
 							if (data[19 + i] == 0) {
@@ -322,9 +349,11 @@ public class XBee {
 			}
 			break;
 		case REMOTE_COMMAND_RESPONSE:
-			String response = "REMOTE_COMMAND_RESPONSE: ";
-			response += Integer.toHexString(data[17]);
-			listener.unsupportedApiEvent(response);
+			if (data[17] != 0) {
+				String response = "ERROR: REMOTE COMMAND RESPONSE: ";
+				response += Integer.toHexString(data[17]);
+				listener.stringMessageEvent(response);
+			}
 			break;
 		case TX_STATUS_MESSAGE:
 			// {0x7E}+{0x00+0x03}+{0x89}+{Frame ID}+{Status}+{Checksum}

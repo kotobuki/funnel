@@ -317,4 +317,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 		parent.printMessage(apiIdentifier);
 	}
 
+	public void stringMessageEvent(String errorMessage) {
+		parent.printMessage(errorMessage);
+	}
 }

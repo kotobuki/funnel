@@ -20,4 +20,6 @@ public interface XBeeEventListener {
 	void modemStatusEvent(int status);
 
 	void unsupportedApiEvent(String apiIdentifier);
+
+	void stringMessageEvent(String errorMessage);
 }
