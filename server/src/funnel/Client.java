@@ -79,15 +79,6 @@ public abstract class Client extends TcpOSCPort {
 		byte[] byteArray = aPacket.getByteArray();
 		byte[] packetSize = new byte[4];
 
-		if (aPacket == null)
-			System.out.println("NULL");
-
-		if (byteArray.length == 0)
-			System.out.println("ZERO");
-
-		if (byteArray.length == 1000)
-			System.out.println("OVER");
-
 		// Reference: http://opensoundcontrol.org/spec-1_0
 		// The first 4 bytes should be a packet size in int32 (big-endian)
 		packetSize[0] = (byte) ((byteArray.length >>> 24) & 0xFF);
