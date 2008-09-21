@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 008 BETA (r471)";
+	private static final String buildName = "Funnel 008 BETA (r477)";
 
 	private CommandPortServer server;
 	private IOModule ioModule = null;
@@ -174,9 +174,9 @@ public class FunnelServer extends Frame {
 		System.out.println("current directory: " //$NON-NLS-1$
 				+ new File(".").getAbsolutePath()); //$NON-NLS-1$
 
-		String configFileName = "settings.yaml";
+		String configFileName = "settings.txt";
 		if ((args.length > 0) && (args[0] != null)) {
-			String fileNameToTest = "settings." + args[0].substring(1) + ".yaml";
+			String fileNameToTest = "settings." + args[0].substring(1) + ".txt";
 			File file = new File(fileNameToTest);
 			if (file.exists()) {
 				configFileName = fileNameToTest;
