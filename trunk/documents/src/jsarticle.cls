@@ -1318,8 +1318,8 @@
 \newlength\belowcaptionskip
 \setlength\abovecaptionskip{5\p@} % 元: 10\p@
 \setlength\belowcaptionskip{5\p@} % 元: 0\p@
-%\long\def\@makecaption#1#2{{\small
-\long\def\@makecaption#1#2{{\tiny
+\long\def\@makecaption#1#2{{\small
+%\long\def\@makecaption#1#2{{\tiny
   \advance\leftskip .0628\linewidth
   \advance\rightskip .0628\linewidth
   \vskip\abovecaptionskip
