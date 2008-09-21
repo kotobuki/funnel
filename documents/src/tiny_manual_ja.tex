@@ -15,16 +15,13 @@ lineskip={-2pt}
 \def\lstlistingname{リスト}
 
 \begin{document}
+\hspace{-8.5pt}\includegraphics[cropboxonly, height=1.5cm, clip]{funnel_logo.pdf}
 
-\hspace{-8.5pt}{\LARGE \textsf{Funnel簡易マニュアル（ビルド008用）}}
+\vspace{16pt}
 
-\vspace{12pt}
+\hspace{-8.5pt}{\Large \textsf{簡易マニュアル（ビルド008用）／開発者：小林茂＋遠藤孝則＋増田一太郎}}
 
-\hspace{-8.5pt}開発者：小林茂＋遠藤孝則＋増田一太郎
-
-\hspace{-8.5pt}http://funnel.cc/
-
-\vspace{12pt}
+\vspace{16pt}
 
 \section{動作環境}
 \begin{itemize}
@@ -36,7 +33,7 @@ lineskip={-2pt}
 \item ソフトウェア
 	\begin{itemize}
 	\item Java実行環境（J2SE 5.0以上）
-	\item Flash Professional CS3\footnote{http://www.adobe.com/jp/products/flash/}・Flex Builder 2/3\footnote{http://www.adobe.com/jp/products/flex/}・Flex 2/3 SDK\footnote{http://www.adobe.com/jp/products/flex/sdk/}
+	\item Flash Professional CS3・Flex Builder 3・Flex 2/3 SDK\footnote{http://www.adobe.com/jp/products/flex/sdk/}
 	\item Processing（0148 BETA以上）\footnote{http://processing.org/download/index.html}
 	\item Ruby（1.8.6系列・1.9系列での動作は未確認）\footnote{http://www.ruby-lang.org/ja/downloads/}＋OSCライブラリ\footnote{http://raa.ruby-lang.org/project/osc/}
 	\end{itemize}
@@ -66,12 +63,12 @@ lineskip={-2pt}
 \item \texttt{server/}：Funnel Server
 	\begin{itemize}
 	\item \texttt{funnel\_server.jar}：Funnel Server本体
-	\item \texttt{settings.yaml}：Funnel Serverの設定ファイル
+	\item \texttt{settings.txt}：Funnel Serverの設定ファイル
 	\end{itemize}
 \end{itemize}
 
 \section{ドライバのインストール}
-Gainer I/Oモジュール、Arduino I/Oボード、およびXBeeやFioとの接続に使用するUSB⇔XBee変換モジュール\footnote{SparkFun ElectronicsのXBee Explorer USB（パーツナンバーWRL-08687）など}のほとんどはFTDI社のUSB-to-UART変換ブリッジチップFT232Rシリーズを搭載しています。このため、最初にこのドライバをセットアップしておくことでほとんどの全てのハードウェアを利用できます。
+Gainer I/Oモジュール、Arduino I/Oボード、およびXBeeやFioとの接続に使用するUSB⇔XBee変換モジュール\footnote{SparkFun ElectronicsのXBee Explorer USB（パーツナンバーWRL-08687）など}のほとんどはFTDI社のUSB-to-UART変換ブリッジチップFT232Rシリーズを搭載しています。このため、最初にこのドライバをセットアップしておくことでほとんどの全てのハードウェアを利用できます\footnote{Arduinoを使用する場合には配布パッケージのdriversフォルダ（例：\texttt{arduino-0012/drivers}）にも含まれています。}。
 
 \subsection{WIndows XP/Vistaの場合}
 まず最初にドライバをダウンロードします。ウェブブラウザで次のURLにアクセスし、Operating System（オペレーティング・システム）の欄がWindows XPと書かれているドライバをダウンロードします。
@@ -92,18 +89,19 @@ http://www.ftdichip.com/Drivers/VCP.htm
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[mediaboxonly, height=4.5cm, clip]{driver_win_1.pdf}
-\includegraphics[mediaboxonly, height=4.5cm, clip]{driver_win_2.pdf}
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_win_1.pdf}
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_win_2.pdf}
 
 \vspace{3pt}
 
-\includegraphics[mediaboxonly, height=4.5cm, clip]{driver_win_3.pdf}
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_win_3.pdf}
 \vskip -\lastskip \vskip -3pt
 \caption{ドライバーインストール時の画面例（Windows XP SP2）}
 \label{default}
 \end{center}
 \end{figure}
 
+\newpage
 \subsection{Mac OS Xの場合}
 まず最初にドライバをダウンロードします。ウェブブラウザで次のURLにアクセスし、Operating System（オペレーティング・システム）の欄がMac OS Xと書かれているドライバをダウンロードします。
 
@@ -136,7 +134,7 @@ Arduino 0012をウェブサイト\footnote{http://arduino.cc}からダウンロードし、以下の
 %XBee無線モジュールには802.15.4とZB ZigBee PROの2つのシリーズがあります。それぞれ、同じXBeeでも機能が異なりますので、よく理解した上で設定するようにしてください。
 
 \subsubsection{802.15.4シリーズの場合}
-hardware/xbee/multipointに入っているcoordinator.proをPCに接続するコーディネータに、enddevice.proをセンサなどに接続するエンドデバイスに（必要に応じて設定を変更した上で）それぞれ書き込んでください。書き込むためのツールとして、Windowsの場合にはDigiが提供するX-CTU\footnote{http://www.digi.com/support/productdetl.jsp?pid=3352\&osvid=57\&tp=4\&s=316}がそのまま利用できます。Mac OS Xの場合には、Tom IgoeがMaking Things Talkのサンプルとして公開しているXBee Terminal\footnote{http://www.makingthingstalk.com/chapter6/31/}を利用して必要なコマンドを手動で入力することにより、設定を行うことができます\footnote{現時点ではファームウェアのアップデートにはX-CTUが必要となるため、Boot Campなどを利用してWindowsを利用できる状態にしておくことをおすすめします。}。表1にコーディネータとエンドデバイスの設定例を示します。
+hardware/xbee/multipointに入っているcoordinator.proをPCに接続するコーディネータに、enddevice.proをセンサなどに接続するエンドデバイスに（必要に応じて設定を変更した上で）それぞれ書き込んでください。書き込むためのツールとして、Windowsの場合にはDigiが提供するX-CTU\footnote{http://www.digi.com/support/productdetl.jsp?pid=3352\&osvid=57\&tp=4\&s=316}がそのまま利用できます。Mac OS Xの場合には、Tom IgoeがMaking Things Talkのサンプルとして公開しているXBee Terminal\footnote{http://www.makingthingstalk.com/chapter6/31/}を利用して必要なコマンドを手動で入力することにより、設定を行うことができます\footnote{現時点ではファームウェアのアップデートにはX-CTUが必要となるため、Boot Campなどを利用してWindowsを利用できる状態にしておくことをおすすめします。}。表1にコーディネータとエンドデバイスの設定例を示します。なお、出力側も利用するためにはファームウェア1.0.C.5が必要になります。
 
 \begin{table}[htdp]
 \begin{center}
@@ -227,16 +225,16 @@ Arduino 0012をウェブサイト\footnote{http://arduino.cc}からダウンロードし、以下の
 \clearpage
 \section{Funnel Serverの設定と起動}
 \subsection{設定（Gainer I/Oモジュール以外の場合）}
-Funnel ServerはデフォルトでGainer I/Oモジュールを使用する設定になっています。このため、Gainer I/Oモジュール以外のI/Oモジュールを使用する場合には、ハードウェアに合わせてFunnel Serverの設定ファイル（settings.yaml）を変更して下さい。サンプルとして以下の設定ファイルも配布パッケージに含まれています。
+Funnel ServerはデフォルトでGainer I/Oモジュールを使用する設定になっています。このため、Gainer I/Oモジュール以外のI/Oモジュールを使用する場合には、ハードウェアに合わせてFunnel Serverの設定ファイル（settings.txt）を変更して下さい\footnote{Windowsの場合、ノートパッドでファイルを開くと改行コードの関係で全てが1行に表示されてしまうかもしれません。ワードパッドであれば問題なく編集できます。}。サンプルとして以下の設定ファイルも配布パッケージに含まれています。
 \begin{itemize}
-\item settings.arduino.yaml：Arduino I/Oボード用の設定ファイル
-\item settings.fio.yaml：Fio用の設定ファイル
-\item settings.gainer.yaml：Gainer I/Oモジュール用の設定ファイル
-\item settings.xbee.yaml：XBee用の設定ファイル
+\item settings.arduino.txt：Arduino I/Oボード用の設定ファイル
+\item settings.fio.txt：Fio用の設定ファイル
+\item settings.gainer.txt：Gainer I/Oモジュール用の設定ファイル
+\item settings.xbee.txt：XBee用の設定ファイル
 \end{itemize}
 Funnel Serverは1つのネットワークポートを利用し、デフォルト値は9000番です。他のアプリケーションがこれらのポートを使用している場合には、競合しない番号に変更して下さい。Gainer I/Oモジュールの場合は、シリアルポートを指定しないと自動検出を試みますので、1台のみI/Oモジュールを接続するときには設定不要です。Mac OS Xの場合は、FTDIのUSB-to-UARTブリッジを使用している場合には自動での接続を試みますので、多くの場合にはArduinoなどもシリアルポートの指定無しで接続できるはずです。
 
-\begin{lstlisting}[caption={Gainer I/Oモジュール用のsettings.yamlの設定例},label=useless]
+\begin{lstlisting}[caption={Gainer I/Oモジュール用のsettings.txtの設定例},label=useless]
 server:
   port: 9000
 
@@ -246,7 +244,7 @@ io:
   baudrate: 
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Arduino I/Oボード用のsettings.yamlの設定例（Mac OS X）},label=useless]
+\begin{lstlisting}[caption={Arduino I/Oボード用のsettings.txtの設定例（Mac OS X）},label=useless]
 server:
   port: 9000
 
@@ -256,7 +254,7 @@ io:
   baudrate: 115200
 \end{lstlisting}
 
-\begin{lstlisting}[caption={Arduino I/Oボード用のsettings.yamlの設定例（Windows）},label=useless]
+\begin{lstlisting}[caption={Arduino I/Oボード用のsettings.txtの設定例（Windows）},label=useless]
 server:
   port: 9000
 
@@ -429,6 +427,5 @@ Openボタンをクリックし、\texttt{sketch\_samples}フォルダの中からそれぞれのハード
 \subsubsection{動作確認}
 Rubyから\texttt{libraries/ruby/examples/}フォルダの中からそれぞれのハードウェアのスクリプトを開いて実行してください。それぞれのサンプルで実装されている内容に関しては、スクリプト中のコメントを参照してください。
 
-\section{参考書籍}
 
 \end{document}
