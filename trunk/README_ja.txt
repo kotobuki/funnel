@@ -14,25 +14,30 @@ http://funnel.cc
 
 ■動作環境
 □OS
-・Windows XP SP2またはVista
+・Windows XP SP2/3またはVista
 ・Mac OS X 10.4または10.5
 
 □ライブラリの動作環境
 ・Flash CS3、Flex Builder 2/3、Flex 2/3 SDKなどActionScript 3で
 　プログラミングできる環境
-・Processing 0135
-・Ruby 1.8.2（1.9では未確認）＋ふなばただよしさんのOSCライブラリ
+・Processing 0148
+・Ruby 1.8.*（1.9では未確認）＋ふなばただよしさんのOSCライブラリ
 　http://raa.ruby-lang.org/project/osc/
 
 □Funnel Serverの動作環境
-・Javaランタイム実行環境1.4.2以上
+・Javaランタイム実行環境1.5以上
 
 □ハードウェア
-・Gainer I/Oモジュールv1.0
-・Arduino USB/NG/Diecimila＋Firmata v1.0のファームウェア
-　Standard_Firmata_334（またはFirmataライブラリを使用したスケッチ）
+・Gainer I/Oモジュール
+・Arduinoまたは互換機＋Firmata v2
 　http://www.arduino.cc/playground/Interfacing/Firmata
+・XBee 802.15.4またはZB ZigBee PRO
+・Fio（Funnel I/O）モジュール
 
+□オプションの環境
+・Arduino 0012（ArduinoまたはFioを使用する場合）
+・action-coding
+　http://code.google.com/p/action-coding/
 
 ■バグレポートや要望など
 バグレポートや要望は、Google CodeのIssuesシステムを利用して下さい。
@@ -58,6 +63,15 @@ Keane Jarvi氏によるRXTXを使用しています。
 
 
 ■更新履歴
+Funnel  008（2008.09.25）
+・Fio（Funnel I/O）を追加
+・Funnel Serverが使用するネットワークポートが1つのみに
+・各ハードウェア用のサンプルを追加
+・XBee ZB ZigBee PROのサポートを追加
+・XBee 802.15.4の出力側コントロールを追加
+・インストールマニュアルを追加
+・さまざまなバグ修正とパフォーマンスの改善
+
 Funnel 007（2008.04.21）
 ・Processing用ライブラリの改良とバグ修正
 　・Make: Tokyo MeetingでのGainerワークショップ用に作成したサンプルを追加
@@ -116,8 +130,9 @@ Funnel 000（2007.09.24）
 
 ■謝辞
 FunnelはIPA（情報処理推進機構）未踏ソフトウェア創造事業（2007年第I期）
-の支援を受けて開発されました（テーマ名：プロトタイピングのためのツール
-キット「Funnel」の開発）。
+の支援を受けて開発されました。
+テーマ名：プロトタイピングのためのツールキット「Funnel」の開発
 
 Funnelの開発に関して以下の方々に感謝いたします：
+・美馬義亮（未踏ソフトウェア創造事業プロジェクトマネージャ）
 ・David A. Mellis（RXTXライブラリのバイナリ）
