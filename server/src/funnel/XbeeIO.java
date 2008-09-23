@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.illposed.osc.OSCMessage;
 
@@ -14,6 +17,20 @@ import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
 public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEventListener {
+	class NodeDiscoveryTask implements Runnable {
+		NodeDiscoveryTask(FunnelServer server, XBee xbee) {
+			this.server = server;
+			this.xbee = xbee;
+		}
+
+		public void run() {
+			xbee.sendATCommand("ND");
+			server.printMessage("Discovering nodes...");
+		}
+
+		private FunnelServer server;
+		private XBee xbee;
+	}
 
 	private static final int MAX_IO_PORT = 13;
 	private static final int MAX_NODES = 65536;
@@ -32,6 +49,9 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 
 	private Hashtable<Integer, String> nodes;
 	private XBee xbee;
+
+	private Runnable nodeDiscoveryTask;
+	private ScheduledExecutorService scheduler;
 
 	public XbeeIO(FunnelServer server, String serialPortName, int baudRate) {
 		this.parent = server;
@@ -92,16 +112,16 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 			}
 
 			xbee = new XBee(this, output);
-			// xbee.setDIOConfiguration(0x0013a200405220e3L, 5, 5);
-			// xbee.setDIOConfiguration(0x0013a200405220e7L, 5, 5);
-			// xbee.setDIOConfiguration(0xFFFF, 5, 1);
-			// xbee.setDIOConfiguration(0xFFFF, 5, 1);
 			xbee.sendATCommand("VR"); // TODO: wait a response here
 			xbee.sendATCommand("AP");
 			xbee.sendATCommand("MY");
 			xbee.sendATCommand("ID");
-			xbee.sendATCommand("ND");
-			sleep(100);
+
+			nodeDiscoveryTask = new NodeDiscoveryTask(parent, xbee);
+			scheduler = Executors.newSingleThreadScheduledExecutor();
+			scheduler.schedule(nodeDiscoveryTask, 1, TimeUnit.SECONDS);
+			scheduler.schedule(nodeDiscoveryTask, 4, TimeUnit.SECONDS);
+			scheduler.schedule(nodeDiscoveryTask, 7, TimeUnit.SECONDS);
 		}
 	}
 
@@ -176,8 +196,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 	}
 
 	public void reboot() {
-		nodes.clear();
-		xbee.sendATCommand("ND");
 		return;
 	}
 
@@ -239,15 +257,14 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 	public void networkingIdentificationEvent(int my, int sh, int sl, int db, String ni) {
 		String info = "NODE: MY=" + Integer.toHexString(my) + ", SH=" + Integer.toHexString(sh)
 				+ ", SL=" + Integer.toHexString(sl) + ", dB=" + db + ", NI=\'" + ni + "\'";
-		parent.printMessage(info);
 		OSCMessage message = new OSCMessage("/node");
 		message.addArgument(new Integer(my));
 		message.addArgument(new String(ni));
 		parent.getCommandPortServer().sendMessageToClients(message);
-		if (nodes.containsKey(new Integer(my))) {
-			nodes.remove(new Integer(my));
+		if (!nodes.containsKey(new Integer(my))) {
+			nodes.put(new Integer(my), ni);
+			parent.printMessage(info);
 		}
-		nodes.put(new Integer(my), ni);
 	}
 
 	public void firmwareVersionEvent(String version) {
