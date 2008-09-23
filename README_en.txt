@@ -12,22 +12,25 @@ http://funnel.cc
 
 REQUIREMENTS
 * OS
-  * Windows XP SP2 or Vista
+  * Windows XP SP2/3 or Vista
   * Mac OS X 10.4 or 10.5
 * Runtime environments for software libraries
   * Various programming environments for ActionScript 3 (e.g. 
     Flash CS3, Flex Builder 2/3, Flex SDK 2/3)
-  * Processing 0135
-  * Ruby 1.8.2 with OSC library by Tadayoshi Funaba
+  * Processing 0148
+  * Ruby 1.8.* with OSC library by Tadayoshi Funaba
     http://raa.ruby-lang.org/project/osc/
 * Runtime environments for the Funnel Server
-  * Java Runtime Environment 1.4.2 or higher
+  * Java Runtime Environment 1.5 or higher
 * Hardware
-  * Arduino USB/NG/Diecimila with Firmara firmware v1.0
+  * Arduino or clones with Firmara firmware v2
     Standard_Firmata_334 (or sketches with Firmata library)
     http://www.arduino.cc/playground/Interfacing/Firmata
   * Gainer I/O module v1.0
-
+* Optional environments
+  * Arduino 0012 (required for Arduino and Fio)
+  * action-coding
+    http://code.google.com/p/action-coding/
 
 BUG REPORTS AND REQUESTS
 Please file your bug reports or requests via Google Code's 
@@ -58,6 +61,15 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
+Funnel 008 (2008.09.25)
+* added Fio (Funnel I/O)
+* Funnel Server now requires only one network port
+* added more samples for each hardware
+* XBee ZB ZigBee PRO is supported
+* output side control for XBee 802.15.4 is supported
+* added the installation instructions
+* fixed various bugs and improved performace
+
 Funnel 007 (2008.04.21)
 * fixed bugs and added new features in the Processing library
   * added examples for Gainer (created for the workshop at 
@@ -122,4 +134,5 @@ Promotion Agency).
 
 We would like to acknowledge the following people for assisting us in 
 creating Funnel:
+* Yoshiaki Mima (was the project manager of the project)
 * David A. Mellis (for the binary files of the RXTX library)
