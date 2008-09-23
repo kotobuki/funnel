@@ -2,12 +2,29 @@ package funnel;
 
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.illposed.osc.OSCMessage;
 
 import gnu.io.SerialPortEvent;
 
 public class FunnelIO extends FirmataIO implements XBeeEventListener {
+	class NodeDiscoveryTask implements Runnable {
+		NodeDiscoveryTask(FunnelServer server, XBee xbee) {
+			this.server = server;
+			this.xbee = xbee;
+		}
+
+		public void run() {
+			xbee.sendATCommand("ND");
+			server.printMessage("Discovering nodes...");
+		}
+
+		private FunnelServer server;
+		private XBee xbee;
+	}
 
 	private static final int TOTAL_ANALOG_PINS = 8;
 	private static final int TOTAL_DIGITAL_PINS = 22;
@@ -17,6 +34,8 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	private Hashtable<Integer, String> nodes;
 
 	private XBee xbee;
+	private Runnable nodeDiscoveryTask;
+	private ScheduledExecutorService scheduler;
 
 	public FunnelIO(FunnelServer server, String serialPortName, int baudRate) {
 		super(TOTAL_ANALOG_PINS, TOTAL_DIGITAL_PINS, PWM_CAPABLE_PINS);
@@ -40,9 +59,14 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		xbee.sendATCommand("VR");
 		xbee.sendATCommand("MY");
 		xbee.sendATCommand("ID");
-		xbee.sendATCommand("ND");
 
 		nodes = new Hashtable<Integer, String>();
+
+		nodeDiscoveryTask = new NodeDiscoveryTask(parent, xbee);
+		scheduler = Executors.newSingleThreadScheduledExecutor();
+		scheduler.schedule(nodeDiscoveryTask, 1, TimeUnit.SECONDS);
+		scheduler.schedule(nodeDiscoveryTask, 4, TimeUnit.SECONDS);
+		scheduler.schedule(nodeDiscoveryTask, 7, TimeUnit.SECONDS);
 	}
 
 	void writeByte(int data) {
@@ -54,7 +78,7 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	}
 
 	public void reboot() {
-		// xbee.sendATCommand("ND");
+		return;
 	}
 
 	public void setOutput(Object[] arguments) {
@@ -112,19 +136,19 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	public void networkingIdentificationEvent(int my, int sh, int sl, int db, String ni) {
 		String info = "NODE: MY=" + my + ", SH=" + Integer.toHexString(sh) + ", SL="
 				+ Integer.toHexString(sl) + ", dB=" + db + ", NI=\'" + ni + "\'";
-		parent.printMessage(info);
+
 		OSCMessage message = new OSCMessage("/node");
 		message.addArgument(new Integer(my));
 		message.addArgument(new String(ni));
 		parent.getCommandPortServer().sendMessageToClients(message);
-		if (nodes.containsKey(new Integer(my))) {
-			nodes.remove(new Integer(my));
-		}
-		nodes.put(new Integer(my), ni);
 
-		xbee.beginPacket(my);
-		xbee.writeToPacket(0xF9);
-		xbee.endPacket();
+		if (!nodes.containsKey(new Integer(my))) {
+			nodes.put(new Integer(my), ni);
+			parent.printMessage(info);
+			xbee.beginPacket(my);
+			xbee.writeToPacket(0xF9);
+			xbee.endPacket();
+		}
 	}
 
 	public void panIdEvent(String panId) {

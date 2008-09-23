@@ -321,8 +321,8 @@ public class XBee {
 				}
 			} else if (data[5] == 'V' && data[6] == 'R') {
 				String info = "FIRMWARE VERSION: ";
-				info += Integer.toHexString(data[8]);
-				info += Integer.toHexString(data[9]);
+				info += Integer.toHexString(data[8]).toUpperCase();
+				info += Integer.toHexString(data[9]).toUpperCase();
 				if ((data[8] >> 4) == 2) {
 					info += " (XBee ZB ZigBee PRO or ZNet 2.5)";
 					isZigBeeModel = true;
