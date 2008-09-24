@@ -1,9 +1,9 @@
 /*
  * Standard Firmata firmware for Funnel I/O modules
- * 
+ *
  * Written by Shigeru Kobayashi (kotobuki@yapan.org)
- * 
- * Reference: Standard_Firmata by Hans-Christoph Steiner <hans@eds.org>
+ *
+ * Reference: StandardFirmata by Hans-Christoph Steiner <hans@eds.org>
  */
 
 #include <Firmata.h>
@@ -11,9 +11,8 @@
 int analogInputsToReport = 0;  // bitwise array to store pin reporting
 byte reportPINs[TOTAL_PORTS];  // PIN == input port
 
-extern volatile unsigned long timer0_overflow_count; // timer0 from wiring.c
-unsigned long nextExecuteTime; // for comparison with timer0_overflow_count
-
+unsigned long currentMillis;     // store the current value from millis()
+unsigned long nextExecuteMillis; // for comparison with currentMillis
 
 void setPinModeCallback(byte pin, int mode) {
   if (pin < 2) {
@@ -44,7 +43,7 @@ void digitalWriteCallback(byte port, int value) {
     // 0xFF03 == B1111111100000011    0x03 == B00000011
     PORTD = (value &~ 0xFF03) | (PORTD & 0x03);
     break;
-  case 1: // pins 8-13 (14,15 are disabled for the crystal) 
+  case 1: // pins 8-13 (14,15 are disabled for the crystal)
     PORTB = (byte)value;
     break;
   case 2: // analog pins used as digital
@@ -57,7 +56,7 @@ void reportAnalogCallback(byte pin, int value) {
   if (value == 0) {
     analogInputsToReport = analogInputsToReport &~ (1 << pin);
     pinMode(14 + pin, OUTPUT);
-  } 
+  }
   else { // everything but 0 enables reporting of that pin
     analogInputsToReport = analogInputsToReport | (1 << pin);
     pinMode(14 + pin, INPUT);
@@ -105,16 +104,18 @@ void setup() {
   Firmata.begin(19200);
 }
 
-void loop() 
+void loop()
 {
   int analogPin = 0;
 
+  // process received data as soon as possible
   while (Firmata.available()) {
     Firmata.processInput();
   }
 
-  if (timer0_overflow_count > nextExecuteTime) {  
-    nextExecuteTime = timer0_overflow_count + 15; // run this every 33ms
+  currentMillis = millis();
+  if (currentMillis > nextExecuteMillis) {
+    nextExecuteMillis = currentMillis + 32; // run this every 33ms
 
     // report digital ports if requested
     if (reportPINs[0]) {
