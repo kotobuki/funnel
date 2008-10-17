@@ -106,6 +106,13 @@ public abstract class IOModule {
 	}
 
 	/**
+	 * Send system exclusive messages
+	 * 
+	 * @param arguments
+	 */
+	abstract public void sendSystemExclusiveMessage(Object[] arguments);
+
+	/**
 	 * @param msec
 	 *            sleep time in milliseconds
 	 */

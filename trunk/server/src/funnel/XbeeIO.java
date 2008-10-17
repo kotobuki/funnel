@@ -225,6 +225,10 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 		return;
 	}
 
+	public void sendSystemExclusiveMessage(Object[] arguments) {
+		return;
+	}
+
 	synchronized public void serialEvent(SerialPortEvent serialEvent) {
 		if (serialEvent.getEventType() != SerialPortEvent.DATA_AVAILABLE) {
 			return;
