@@ -523,6 +523,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		}
 	}
 
+	public void sendSystemExclusiveMessage(Object[] arguments) {
+		return;
+	}
+
 	private void clear() {
 		bufferLast = 0;
 		bufferIndex = 0;

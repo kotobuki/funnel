@@ -2,6 +2,7 @@ package funnel;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
@@ -27,6 +28,8 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	private static final int ARD_SET_DIGITAL_PIN_MODE = 0xF4;
 	protected static final int ARD_REPORT_VERSION = 0xF9;
 	protected static final int ARD_SYSTEM_RESET = 0xFF;
+	protected static final int ARD_SYSEX_START = 0xF0;
+	protected static final int ARD_SYSEX_END = 0xF7;
 	protected static final int ARD_PIN_MODE_IN = 0x00;
 	protected static final int ARD_PIN_MODE_OUT = 0x01;
 	protected static final int ARD_PIN_MODE_PWM = 0x02;
@@ -58,6 +61,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected Vector<PortRange> dinPinChunks;
 	protected int rearmostAnalogInputPin = -1;
 	protected BlockingQueue<String> firmwareVersionQueue;
+	protected ArrayList<ArrayList<Integer>> sysExDataList;
 
 	public FirmataIO(int analogPins, int digitalPins, int[] pwmPins) {
 		super();
@@ -70,6 +74,10 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		digitalData = new float[MAX_NODES][totalDigitalPins];
 		digitalPinUpdated = new boolean[totalDigitalPins];
 		firmwareVersionQueue = new LinkedBlockingQueue<String>(1);
+		sysExDataList = new ArrayList<ArrayList<Integer>>(MAX_NODES);
+		for (int i = 0; i < MAX_NODES; i++) {
+			sysExDataList.add(i, new ArrayList<Integer>(0));
+		}
 
 		digitalPinRange = new funnel.PortRange();
 		digitalPinRange.setRange(0, totalDigitalPins - 1);
@@ -369,6 +377,20 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		endPacketIfNeeded();
 	}
 
+	public void sendSystemExclusiveMessage(Object[] arguments) {
+		int moduleId = ((Integer) arguments[0]).intValue();
+		int sysExCommand = ((Integer) arguments[1]).intValue();
+
+		beginPacketIfNeeded(moduleId);
+		writeByte(ARD_SYSEX_START);
+		writeByte(sysExCommand);
+		for (int i = 2; i < arguments.length; i++) {
+			writeByte(((Integer) arguments[i]).intValue());
+		}
+		writeByte(ARD_SYSEX_END);
+		endPacketIfNeeded();
+	}
+
 	protected void begin(String serialPortName, int baudRate) {
 		printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 
@@ -448,6 +470,16 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				}
 
 			}
+		} else if (bytesToReceive[source] < 0) {
+			// We have SysEx command data
+			if (inputData == ARD_SYSEX_END) {
+				bytesToReceive[source] = 0;
+				processSystemExclusiveData(source);
+				sysExDataList.get(source).clear();
+			} else {
+				sysExDataList.get(source).add(inputData);
+			}
+
 		} else {
 			// We have a command
 			// remove channel info from command byte if less than
@@ -465,6 +497,11 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			case ARD_DIGITAL_MESSAGE:
 			case ARD_ANALOG_MESSAGE:
 				bytesToReceive[source] = 2; // 3 bytes needed
+				executeMultiByteCommand[source] = command;
+				break;
+			case ARD_SYSEX_START:
+				sysExDataList.get(source).clear();
+				bytesToReceive[source] = -1;
 				executeMultiByteCommand[source] = command;
 				break;
 			}
@@ -515,6 +552,20 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				notifyUpdate(source, range.getMin(), range.getCounts());
 			}
 		}
+	}
+
+	protected void processSystemExclusiveData(int source) {
+		int counts = sysExDataList.get(source).size() / 2;
+		Object[] sysExMessage = new Object[2 + counts];
+		sysExMessage[0] = new Integer(source);
+		for (int i = 0; i < counts; i++) {
+			int data = sysExDataList.get(source).get(i * 2) << 7;
+			data += sysExDataList.get(source).get(i * 2 + 1);
+			sysExMessage[1 + i] = data;
+		}
+
+		OSCMessage message = new OSCMessage("/sysex", sysExMessage);
+		parent.getCommandPortServer().sendMessageToClients(message);
 	}
 
 	protected void setAnalogPinReporting(int pin, int mode) {

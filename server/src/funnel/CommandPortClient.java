@@ -26,6 +26,7 @@ public class CommandPortClient extends Client implements Runnable {
 			client.addListener("/polling", this);
 			client.addListener("/samplingInterval", this);
 			client.addListener("/configure", this);
+			client.addListener("/sysex", this);
 		}
 
 		public void acceptMessage(java.util.Date time, OSCMessage message) {
@@ -115,6 +116,13 @@ public class CommandPortClient extends Client implements Runnable {
 				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			} catch (IllegalArgumentException e) {
 				sendSimpleReply(message.getAddress(), CONFIGURATION_ERROR, e.getMessage());
+			}
+		} else if (message.getAddress().equals("/sysex")) {
+			try {
+				server.getIOModule().sendSystemExclusiveMessage(message.getArguments());
+				sendSimpleReply(message.getAddress(), NO_ERROR, null);
+			} catch (Exception e) {
+				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
 			}
 		} else if (message.getAddress().equals("/quit")) {
 			sendSimpleReply(message.getAddress(), NO_ERROR, null);
