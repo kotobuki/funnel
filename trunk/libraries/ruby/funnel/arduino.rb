@@ -39,6 +39,10 @@ module Funnel
     def digital_pin(number)
       return @system.io_module(0).digital_pin(number)
     end
+
+    def send_sysex(command, message)
+      return @system.io_module(0).send_sysex(command, message)
+    end
     
     alias :a :analog_pin
     alias :d :digital_pin

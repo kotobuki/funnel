@@ -132,6 +132,10 @@ module Funnel
       @port[@config.digital_pins.at(number)]
     end
 
+    def send_sysex(command, message)
+      @parent.send_command(OSC::Message.new('/sysex', 'i' * (message.to_a.size + 2), @id, command, *message.to_a), false)
+    end
+
     alias :ain :analog_input
     alias :din :digital_input
     alias :aout :analog_output

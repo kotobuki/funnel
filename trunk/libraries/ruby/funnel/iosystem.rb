@@ -102,6 +102,8 @@ module Funnel
                   end
                 when '/out'
                   puts "ERROR: #{message.address}" if message.to_a[0] < FunnelErrorEvent::NO_ERROR
+                when '/sysex'
+                  p message.to_a
                 end
               end
             rescue EOFError
