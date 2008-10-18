@@ -379,13 +379,15 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 	public void sendSystemExclusiveMessage(Object[] arguments) {
 		int moduleId = ((Integer) arguments[0]).intValue();
-		int sysExCommand = ((Integer) arguments[1]).intValue();
+		int command = ((Integer) arguments[1]).intValue();
 
 		beginPacketIfNeeded(moduleId);
 		writeByte(ARD_SYSEX_START);
-		writeByte(sysExCommand);
+		writeByte(command);
 		for (int i = 2; i < arguments.length; i++) {
-			writeByte(((Integer) arguments[i]).intValue());
+			int value = ((Integer) arguments[i]).intValue();
+			writeByte(value & 0x7F); // LSB
+			writeByte((value >> 7) & 0x7F); // MSB
 		}
 		writeByte(ARD_SYSEX_END);
 		endPacketIfNeeded();
@@ -477,7 +479,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				processSystemExclusiveData(source);
 				sysExDataList.get(source).clear();
 			} else {
-				sysExDataList.get(source).add(inputData);
+				sysExDataList.get(source).add(inputData & 0x7F);
 			}
 
 		} else {
@@ -555,13 +557,16 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	}
 
 	protected void processSystemExclusiveData(int source) {
-		int counts = sysExDataList.get(source).size() / 2;
+		int counts = (sysExDataList.get(source).size() - 1) / 2;
 		Object[] sysExMessage = new Object[2 + counts];
+		int idx = 0;
+
 		sysExMessage[0] = new Integer(source);
+		sysExMessage[1] = sysExDataList.get(source).get(idx++);
 		for (int i = 0; i < counts; i++) {
-			int data = sysExDataList.get(source).get(i * 2) << 7;
-			data += sysExDataList.get(source).get(i * 2 + 1);
-			sysExMessage[1 + i] = data;
+			int data = sysExDataList.get(source).get(idx++);
+			data += sysExDataList.get(source).get(idx++) << 7;
+			sysExMessage[2 + i] = data;
 		}
 
 		OSCMessage message = new OSCMessage("/sysex", sysExMessage);
