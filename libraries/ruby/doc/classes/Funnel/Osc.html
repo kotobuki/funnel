@@ -88,14 +88,15 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000057">new</a>&nbsp;&nbsp;
-      <a href="#M000060">reset</a>&nbsp;&nbsp;
-      <a href="#M000055">service_interval</a>&nbsp;&nbsp;
-      <a href="#M000056">service_interval=</a>&nbsp;&nbsp;
-      <a href="#M000061">set_listener</a>&nbsp;&nbsp;
-      <a href="#M000058">start</a>&nbsp;&nbsp;
-      <a href="#M000059">stop</a>&nbsp;&nbsp;
-      <a href="#M000062">update</a>&nbsp;&nbsp;
+      <a href="#M000034">dispose</a>&nbsp;&nbsp;
+      <a href="#M000035">new</a>&nbsp;&nbsp;
+      <a href="#M000038">reset</a>&nbsp;&nbsp;
+      <a href="#M000032">service_interval</a>&nbsp;&nbsp;
+      <a href="#M000033">service_interval=</a>&nbsp;&nbsp;
+      <a href="#M000039">set_listener</a>&nbsp;&nbsp;
+      <a href="#M000036">start</a>&nbsp;&nbsp;
+      <a href="#M000037">stop</a>&nbsp;&nbsp;
+      <a href="#M000040">update</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -120,27 +121,37 @@
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">SIN</td>
           <td>=</td>
-          <td class="context-item-value">lambda { |val|       0.5 * (1 + Math.sin(2 * Math::PI * val))</td>
+          <td class="context-item-value">lambda { |val, last_val|       return 0.5 * (1 + Math.sin(2 * Math::PI * (val - 0.25)))</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+NOTE: 1/4 phase shifted sin wave
+
+</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">SQUARE</td>
           <td>=</td>
-          <td class="context-item-value">lambda { |val|       return (val % 1 &lt;= 0.5) ? 1.0 : 0.0</td>
+          <td class="context-item-value">lambda { |val, last_val|       return (val % 1 &lt;= 0.5) ? 1.0 : 0.0</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">TRIANGLE</td>
           <td>=</td>
-          <td class="context-item-value">lambda { |val|       val %= 1;</td>
+          <td class="context-item-value">lambda { |val, last_val|       val %= 1</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+NOTE: 1/4 phase shifted triangle wave
+
+</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">SAW</td>
           <td>=</td>
-          <td class="context-item-value">lambda { |val|       val %= 1;</td>
+          <td class="context-item-value">lambda { |val, last_val|       return 1 - (val % 1)</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">IMPULSE</td>
           <td>=</td>
-          <td class="context-item-value">lambda { |val|       if (val &lt;= 1) then return 1</td>
+          <td class="context-item-value">lambda { |val, last_val|       val %= 1</td>
         </tr>
         </table>
       </div>
@@ -173,21 +184,45 @@
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000057" class="method-detail">
-        <a name="M000057"></a>
+      <div id="method-M000034" class="method-detail">
+        <a name="M000034"></a>
 
         <div class="method-heading">
-          <a href="#M000057" class="method-signature">
+          <a href="#M000034" class="method-signature">
+          <span class="method-name">dispose</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000034-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000034-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/filter.rb, line 154</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">dispose</span>
+      <span class="ruby-ivar">@@service_thread</span>.<span class="ruby-identifier">join</span> <span class="ruby-value">1</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@@service_thread</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@@listeners</span> = []
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000035" class="method-detail">
+        <a name="M000035"></a>
+
+        <div class="method-heading">
+          <a href="#M000035" class="method-signature">
           <span class="method-name">new</span><span class="method-args">(wave_func, frequency, *args)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000057-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000057-source">
+            onclick="toggleCode('M000035-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000035-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/filter.rb, line 154</span>
+<span class="ruby-comment cmt"># File funnel/filter.rb, line 159</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">wave_func</span>, <span class="ruby-identifier">frequency</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
       <span class="ruby-ivar">@wave_func</span> = <span class="ruby-identifier">wave_func</span>
       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">frequency</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">then</span>
@@ -215,6 +250,7 @@
       <span class="ruby-ivar">@start_time</span> = <span class="ruby-value">0</span><span class="ruby-value">.0</span>
       <span class="ruby-ivar">@auto_update</span> = <span class="ruby-keyword kw">false</span>
       <span class="ruby-ivar">@listener</span> = <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@last_val</span> = <span class="ruby-value">0</span><span class="ruby-value">.99</span>
 
       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@@service_thread</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">then</span>
         <span class="ruby-ivar">@@service_thread</span> = <span class="ruby-constant">Thread</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">do</span>
@@ -232,19 +268,19 @@
         </div>
       </div>
 
-      <div id="method-M000055" class="method-detail">
-        <a name="M000055"></a>
+      <div id="method-M000032" class="method-detail">
+        <a name="M000032"></a>
 
         <div class="method-heading">
-          <a href="#M000055" class="method-signature">
+          <a href="#M000032" class="method-signature">
           <span class="method-name">service_interval</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000055-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000055-source">
+            onclick="toggleCode('M000032-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000032-source">
 <pre>
 <span class="ruby-comment cmt"># File funnel/filter.rb, line 145</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">service_interval</span>
@@ -255,19 +291,19 @@
         </div>
       </div>
 
-      <div id="method-M000056" class="method-detail">
-        <a name="M000056"></a>
+      <div id="method-M000033" class="method-detail">
+        <a name="M000033"></a>
 
         <div class="method-heading">
-          <a href="#M000056" class="method-signature">
+          <a href="#M000033" class="method-signature">
           <span class="method-name">service_interval=</span><span class="method-args">(new_interval)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000056-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000056-source">
+            onclick="toggleCode('M000033-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000033-source">
 <pre>
 <span class="ruby-comment cmt"># File funnel/filter.rb, line 149</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">service_interval=</span>(<span class="ruby-identifier">new_interval</span>)
@@ -281,45 +317,46 @@
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000060" class="method-detail">
-        <a name="M000060"></a>
+      <div id="method-M000038" class="method-detail">
+        <a name="M000038"></a>
 
         <div class="method-heading">
-          <a href="#M000060" class="method-signature">
+          <a href="#M000038" class="method-signature">
           <span class="method-name">reset</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000060-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000060-source">
+            onclick="toggleCode('M000038-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000038-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/filter.rb, line 206</span>
+<span class="ruby-comment cmt"># File funnel/filter.rb, line 213</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reset</span>
       <span class="ruby-ivar">@time</span> = <span class="ruby-value">0</span>
       <span class="ruby-ivar">@start_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">to_f</span>
+      <span class="ruby-ivar">@last_val</span> = <span class="ruby-value">0</span><span class="ruby-value">.99</span>
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000061" class="method-detail">
-        <a name="M000061"></a>
+      <div id="method-M000039" class="method-detail">
+        <a name="M000039"></a>
 
         <div class="method-heading">
-          <a href="#M000061" class="method-signature">
+          <a href="#M000039" class="method-signature">
           <span class="method-name">set_listener</span><span class="method-args">(&amp;proc)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000061-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000061-source">
+            onclick="toggleCode('M000039-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000039-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/filter.rb, line 211</span>
+<span class="ruby-comment cmt"># File funnel/filter.rb, line 219</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">set_listener</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">proc</span>)
       <span class="ruby-ivar">@listener</span> = <span class="ruby-identifier">proc</span>
     <span class="ruby-keyword kw">end</span>
@@ -328,22 +365,23 @@
         </div>
       </div>
 
-      <div id="method-M000058" class="method-detail">
-        <a name="M000058"></a>
+      <div id="method-M000036" class="method-detail">
+        <a name="M000036"></a>
 
         <div class="method-heading">
-          <a href="#M000058" class="method-signature">
+          <a href="#M000036" class="method-signature">
           <span class="method-name">start</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000058-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000058-source">
+            onclick="toggleCode('M000036-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000036-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/filter.rb, line 194</span>
+<span class="ruby-comment cmt"># File funnel/filter.rb, line 200</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">start</span>
+      <span class="ruby-identifier">reset</span>
       <span class="ruby-identifier">stop</span>
       <span class="ruby-ivar">@@listeners</span>.<span class="ruby-identifier">push</span>(<span class="ruby-keyword kw">self</span>)
       <span class="ruby-ivar">@auto_update</span> = <span class="ruby-keyword kw">true</span>
@@ -354,21 +392,21 @@
         </div>
       </div>
 
-      <div id="method-M000059" class="method-detail">
-        <a name="M000059"></a>
+      <div id="method-M000037" class="method-detail">
+        <a name="M000037"></a>
 
         <div class="method-heading">
-          <a href="#M000059" class="method-signature">
+          <a href="#M000037" class="method-signature">
           <span class="method-name">stop</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000059-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000059-source">
+            onclick="toggleCode('M000037-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000037-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/filter.rb, line 201</span>
+<span class="ruby-comment cmt"># File funnel/filter.rb, line 208</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">stop</span>
       <span class="ruby-ivar">@auto_update</span> = <span class="ruby-keyword kw">false</span>
       <span class="ruby-ivar">@@listeners</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-keyword kw">self</span>)
@@ -378,21 +416,21 @@
         </div>
       </div>
 
-      <div id="method-M000062" class="method-detail">
-        <a name="M000062"></a>
+      <div id="method-M000040" class="method-detail">
+        <a name="M000040"></a>
 
         <div class="method-heading">
-          <a href="#M000062" class="method-signature">
+          <a href="#M000040" class="method-signature">
           <span class="method-name">update</span><span class="method-args">(*args)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000062-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000062-source">
+            onclick="toggleCode('M000040-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000040-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/filter.rb, line 215</span>
+<span class="ruby-comment cmt"># File funnel/filter.rb, line 223</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span> <span class="ruby-keyword kw">then</span>
         <span class="ruby-ivar">@time</span> = <span class="ruby-ivar">@time</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>]
@@ -402,13 +440,17 @@
         <span class="ruby-ivar">@time</span> = <span class="ruby-ivar">@time</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@@interval</span>
       <span class="ruby-keyword kw">end</span>
 
-      <span class="ruby-keyword kw">if</span> (<span class="ruby-ivar">@times</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">and</span> <span class="ruby-ivar">@frequency</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@time</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@times</span>) <span class="ruby-keyword kw">then</span>
-        <span class="ruby-ivar">@@listeners</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">update</span>)
+      <span class="ruby-keyword kw">if</span> (<span class="ruby-ivar">@times</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">and</span> <span class="ruby-ivar">@frequency</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@time</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@times</span>) <span class="ruby-keyword kw">then</span>
+        <span class="ruby-ivar">@value</span> = <span class="ruby-ivar">@offset</span>
+        <span class="ruby-ivar">@listener</span>.<span class="ruby-identifier">call</span>(<span class="ruby-ivar">@value</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@listener</span>
+        <span class="ruby-ivar">@@listeners</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-keyword kw">self</span>)
         <span class="ruby-ivar">@time</span> = <span class="ruby-ivar">@times</span> <span class="ruby-operator">/</span> <span class="ruby-ivar">@frequency</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">val</span> = <span class="ruby-ivar">@frequency</span> <span class="ruby-operator">*</span> (<span class="ruby-ivar">@time</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@phase</span>)
+        <span class="ruby-ivar">@value</span> = <span class="ruby-ivar">@amplitude</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@wave_func</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">val</span>, <span class="ruby-ivar">@last_val</span>) <span class="ruby-operator">+</span> <span class="ruby-ivar">@offset</span>
+        <span class="ruby-ivar">@last_val</span> = <span class="ruby-identifier">val</span>
+        <span class="ruby-ivar">@listener</span>.<span class="ruby-identifier">call</span>(<span class="ruby-ivar">@value</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@listener</span>
       <span class="ruby-keyword kw">end</span>
-
-      <span class="ruby-ivar">@value</span> = <span class="ruby-ivar">@amplitude</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@wave_func</span>.<span class="ruby-identifier">call</span>(<span class="ruby-ivar">@frequency</span> <span class="ruby-operator">*</span> (<span class="ruby-ivar">@time</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@phase</span>)) <span class="ruby-operator">+</span> <span class="ruby-ivar">@offset</span>
-      <span class="ruby-ivar">@listener</span>.<span class="ruby-identifier">call</span>(<span class="ruby-ivar">@value</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@listener</span>
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
