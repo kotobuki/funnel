@@ -86,10 +86,25 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000046">init_ports</a>&nbsp;&nbsp;
-      <a href="#M000045">new</a>&nbsp;&nbsp;
-      <a href="#M000047">port</a>&nbsp;&nbsp;
-      <a href="#M000044">port_def_to_str</a>&nbsp;&nbsp;
+      <a href="#M000081">a</a>&nbsp;&nbsp;
+      <a href="#M000077">ain</a>&nbsp;&nbsp;
+      <a href="#M000068">analog_input</a>&nbsp;&nbsp;
+      <a href="#M000070">analog_output</a>&nbsp;&nbsp;
+      <a href="#M000074">analog_pin</a>&nbsp;&nbsp;
+      <a href="#M000079">aout</a>&nbsp;&nbsp;
+      <a href="#M000072">button</a>&nbsp;&nbsp;
+      <a href="#M000082">d</a>&nbsp;&nbsp;
+      <a href="#M000069">digital_input</a>&nbsp;&nbsp;
+      <a href="#M000071">digital_output</a>&nbsp;&nbsp;
+      <a href="#M000075">digital_pin</a>&nbsp;&nbsp;
+      <a href="#M000078">din</a>&nbsp;&nbsp;
+      <a href="#M000080">dout</a>&nbsp;&nbsp;
+      <a href="#M000066">init_ports</a>&nbsp;&nbsp;
+      <a href="#M000073">led</a>&nbsp;&nbsp;
+      <a href="#M000065">new</a>&nbsp;&nbsp;
+      <a href="#M000067">port</a>&nbsp;&nbsp;
+      <a href="#M000064">port_def_to_str</a>&nbsp;&nbsp;
+      <a href="#M000076">send_sysex</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -139,33 +154,42 @@
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000045" class="method-detail">
-        <a name="M000045"></a>
+      <div id="method-M000065" class="method-detail">
+        <a name="M000065"></a>
 
         <div class="method-heading">
-          <a href="#M000045" class="method-signature">
-          <span class="method-name">new</span><span class="method-args">(parent, id, config, name = &quot;&quot;)</span>
+          <a href="#M000065" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(parent, id, config, name = &quot;&quot;, do_configure = true)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000045-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000045-source">
+            onclick="toggleCode('M000065-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000065-source">
 <pre>
 <span class="ruby-comment cmt"># File funnel/iomodule.rb, line 29</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">parent</span>, <span class="ruby-identifier">id</span>, <span class="ruby-identifier">config</span>, <span class="ruby-identifier">name</span> = <span class="ruby-value str">&quot;&quot;</span>)
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">parent</span>, <span class="ruby-identifier">id</span>, <span class="ruby-identifier">config</span>, <span class="ruby-identifier">name</span> = <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-identifier">do_configure</span> = <span class="ruby-keyword kw">true</span>)
       <span class="ruby-ivar">@parent</span> = <span class="ruby-identifier">parent</span>
       <span class="ruby-ivar">@id</span> = <span class="ruby-identifier">id</span>
+      <span class="ruby-ivar">@config</span> = <span class="ruby-identifier">config</span>
       <span class="ruby-ivar">@port</span> = []
       <span class="ruby-ivar">@port_count</span> = <span class="ruby-value">0</span>
       <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
 
-      <span class="ruby-identifier">init_ports</span>(<span class="ruby-identifier">config</span>.<span class="ruby-identifier">to_a</span>)
+      <span class="ruby-identifier">init_ports</span>(<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">to_a</span>)
       <span class="ruby-ivar">@updated_port_indices</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@port_count</span>, <span class="ruby-keyword kw">false</span>)
       <span class="ruby-ivar">@auto_update</span> = <span class="ruby-keyword kw">true</span>
 
-      <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">send_command</span>(<span class="ruby-constant">OSC</span><span class="ruby-operator">::</span><span class="ruby-constant">Message</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'/configure'</span>, <span class="ruby-value str">'i'</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">config</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>), <span class="ruby-identifier">id</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">config</span>.<span class="ruby-identifier">to_a</span>))
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">do_configure</span>
+
+      <span class="ruby-keyword kw">begin</span>
+        <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">send_command</span>(<span class="ruby-constant">OSC</span><span class="ruby-operator">::</span><span class="ruby-constant">Message</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'/configure'</span>, <span class="ruby-value str">'i'</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">config</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>), <span class="ruby-identifier">id</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">config</span>.<span class="ruby-identifier">to_a</span>), <span class="ruby-keyword kw">true</span>)
+      <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">RuntimeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;RuntimeError occurred at configuration: #{e.message}&quot;</span>
+      <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">TimeoutError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;TimeoutError occurred at configuration: #{e.message}&quot;</span>
+      <span class="ruby-keyword kw">end</span>
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -174,25 +198,290 @@
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000046" class="method-detail">
-        <a name="M000046"></a>
+      <div id="method-M000081" class="method-detail">
+        <a name="M000081"></a>
 
         <div class="method-heading">
-          <a href="#M000046" class="method-signature">
+          <span class="method-name">a</span><span class="method-args">(number)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="IOModule.html#M000074">analog_pin</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000077" class="method-detail">
+        <a name="M000077"></a>
+
+        <div class="method-heading">
+          <span class="method-name">ain</span><span class="method-args">(number)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="IOModule.html#M000068">analog_input</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000068" class="method-detail">
+        <a name="M000068"></a>
+
+        <div class="method-heading">
+          <a href="#M000068" class="method-signature">
+          <span class="method-name">analog_input</span><span class="method-args">(number)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000068-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000068-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 79</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">analog_input</span>(<span class="ruby-identifier">number</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">ain_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;analog input is not availabe&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">ain_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;analog input is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">ain_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@port</span>[<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">ain_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>)]
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000070" class="method-detail">
+        <a name="M000070"></a>
+
+        <div class="method-heading">
+          <a href="#M000070" class="method-signature">
+          <span class="method-name">analog_output</span><span class="method-args">(number)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000070-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000070-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 93</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">analog_output</span>(<span class="ruby-identifier">number</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">aout_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;analog output is not availabe&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">aout_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;analog output is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">aout_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@port</span>[<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">aout_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>)]
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000074" class="method-detail">
+        <a name="M000074"></a>
+
+        <div class="method-heading">
+          <a href="#M000074" class="method-signature">
+          <span class="method-name">analog_pin</span><span class="method-args">(number)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000074-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000074-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 121</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">analog_pin</span>(<span class="ruby-identifier">number</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">analog_pins</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;analog pin is not availabe&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">analog_pins</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;analog pin is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">analog_pins</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@port</span>[<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">analog_pins</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>)]
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000079" class="method-detail">
+        <a name="M000079"></a>
+
+        <div class="method-heading">
+          <span class="method-name">aout</span><span class="method-args">(number)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="IOModule.html#M000070">analog_output</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000072" class="method-detail">
+        <a name="M000072"></a>
+
+        <div class="method-heading">
+          <a href="#M000072" class="method-signature">
+          <span class="method-name">button</span><span class="method-args">(number = 0)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000072-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000072-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 107</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">button</span>(<span class="ruby-identifier">number</span> = <span class="ruby-value">0</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">button</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;button is not availabe&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">button</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;button is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">button</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@port</span>[<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">button</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>)]
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000082" class="method-detail">
+        <a name="M000082"></a>
+
+        <div class="method-heading">
+          <span class="method-name">d</span><span class="method-args">(number)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="IOModule.html#M000075">digital_pin</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000069" class="method-detail">
+        <a name="M000069"></a>
+
+        <div class="method-heading">
+          <a href="#M000069" class="method-signature">
+          <span class="method-name">digital_input</span><span class="method-args">(number)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000069-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000069-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 86</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digital_input</span>(<span class="ruby-identifier">number</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">din_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;digital input is not availabe&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">din_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;digital input is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">din_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@port</span>[<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">din_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>)]
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000071" class="method-detail">
+        <a name="M000071"></a>
+
+        <div class="method-heading">
+          <a href="#M000071" class="method-signature">
+          <span class="method-name">digital_output</span><span class="method-args">(number)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000071-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000071-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 100</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digital_output</span>(<span class="ruby-identifier">number</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">dout_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;digital output is not availabe&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">dout_ports</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;digital output is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">dout_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@port</span>[<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">dout_ports</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>)]
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000075" class="method-detail">
+        <a name="M000075"></a>
+
+        <div class="method-heading">
+          <a href="#M000075" class="method-signature">
+          <span class="method-name">digital_pin</span><span class="method-args">(number)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000075-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000075-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 128</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">digital_pin</span>(<span class="ruby-identifier">number</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">digital_pins</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;digital pin is not availabe&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">digital_pins</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;digital pin is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">digital_pins</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@port</span>[<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">digital_pins</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>)]
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000078" class="method-detail">
+        <a name="M000078"></a>
+
+        <div class="method-heading">
+          <span class="method-name">din</span><span class="method-args">(number)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="IOModule.html#M000069">digital_input</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000080" class="method-detail">
+        <a name="M000080"></a>
+
+        <div class="method-heading">
+          <span class="method-name">dout</span><span class="method-args">(number)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="IOModule.html#M000071">digital_output</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000066" class="method-detail">
+        <a name="M000066"></a>
+
+        <div class="method-heading">
+          <a href="#M000066" class="method-signature">
           <span class="method-name">init_ports</span><span class="method-args">(config)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000046-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000046-source">
+            onclick="toggleCode('M000066-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000066-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 43</span>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 52</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">init_ports</span>(<span class="ruby-identifier">config</span>)
       <span class="ruby-ivar">@port</span>.<span class="ruby-identifier">clear</span>
       <span class="ruby-identifier">config</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">type</span><span class="ruby-operator">|</span>
-<span class="ruby-comment cmt">#        puts &quot;port(#{@port_count}): #{port_def_to_str(type)}&quot;</span>
         <span class="ruby-identifier">port</span> = <span class="ruby-constant">Port</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@port_count</span>, <span class="ruby-identifier">type</span>)
         <span class="ruby-ivar">@port</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">port</span>)
         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">port</span>.<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Port</span><span class="ruby-operator">::</span><span class="ruby-constant">AOUT</span> <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">port</span>.<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Port</span><span class="ruby-operator">::</span><span class="ruby-constant">DOUT</span> <span class="ruby-keyword kw">then</span>
@@ -213,21 +502,47 @@
         </div>
       </div>
 
-      <div id="method-M000047" class="method-detail">
-        <a name="M000047"></a>
+      <div id="method-M000073" class="method-detail">
+        <a name="M000073"></a>
 
         <div class="method-heading">
-          <a href="#M000047" class="method-signature">
+          <a href="#M000073" class="method-signature">
+          <span class="method-name">led</span><span class="method-args">(number = 0)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000073-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000073-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 114</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">led</span>(<span class="ruby-identifier">number</span> = <span class="ruby-value">0</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">led</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;LED is not availabe&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">led</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;LED is not availabe at #{number}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@config</span>.<span class="ruby-identifier">led</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>) <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@port</span>[<span class="ruby-ivar">@config</span>.<span class="ruby-identifier">led</span>.<span class="ruby-identifier">at</span>(<span class="ruby-identifier">number</span>)]
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000067" class="method-detail">
+        <a name="M000067"></a>
+
+        <div class="method-heading">
+          <a href="#M000067" class="method-signature">
           <span class="method-name">port</span><span class="method-args">(number)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000047-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000047-source">
+            onclick="toggleCode('M000067-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000067-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 63</span>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 71</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">port</span>(<span class="ruby-identifier">number</span>)
       <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">number</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">or</span> (<span class="ruby-identifier">number</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@max_port_number</span>) <span class="ruby-keyword kw">then</span>
         <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;port is not available at #{number}&quot;</span>
@@ -240,19 +555,19 @@
         </div>
       </div>
 
-      <div id="method-M000044" class="method-detail">
-        <a name="M000044"></a>
+      <div id="method-M000064" class="method-detail">
+        <a name="M000064"></a>
 
         <div class="method-heading">
-          <a href="#M000044" class="method-signature">
+          <a href="#M000064" class="method-signature">
           <span class="method-name">port_def_to_str</span><span class="method-args">(type)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000044-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000044-source">
+            onclick="toggleCode('M000064-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000064-source">
 <pre>
 <span class="ruby-comment cmt"># File funnel/iomodule.rb, line 16</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">port_def_to_str</span>(<span class="ruby-identifier">type</span>)
@@ -266,6 +581,29 @@
       <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Port</span><span class="ruby-operator">::</span><span class="ruby-constant">DOUT</span>
         <span class="ruby-keyword kw">return</span> <span class="ruby-value str">&quot;digital output&quot;</span>
       <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000076" class="method-detail">
+        <a name="M000076"></a>
+
+        <div class="method-heading">
+          <a href="#M000076" class="method-signature">
+          <span class="method-name">send_sysex</span><span class="method-args">(command, message)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000076-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000076-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iomodule.rb, line 135</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_sysex</span>(<span class="ruby-identifier">command</span>, <span class="ruby-identifier">message</span>)
+      <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">send_command</span>(<span class="ruby-constant">OSC</span><span class="ruby-operator">::</span><span class="ruby-constant">Message</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'/sysex'</span>, <span class="ruby-value str">'i'</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">+</span> <span class="ruby-value">2</span>), <span class="ruby-ivar">@id</span>, <span class="ruby-identifier">command</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>), <span class="ruby-keyword kw">false</span>)
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
