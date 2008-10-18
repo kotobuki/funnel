@@ -32,8 +32,9 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected static final int ARD_SYSEX_END = 0xF7;
 	protected static final int ARD_PIN_MODE_IN = 0x00;
 	protected static final int ARD_PIN_MODE_OUT = 0x01;
-	protected static final int ARD_PIN_MODE_PWM = 0x02;
-	protected static final int ARD_PIN_MODE_AIN = 0x03;
+	protected static final int ARD_PIN_MODE_AIN = 0x02;
+	protected static final int ARD_PIN_MODE_PWM = 0x03;
+	protected static final int ARD_PIN_MODE_SERVO = 0x04;
 
 	protected int totalAnalogPins = 8;
 	protected int totalDigitalPins = 22;
@@ -72,6 +73,12 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		pinMode = new int[totalDigitalPins];
 
 		digitalData = new float[MAX_NODES][totalDigitalPins];
+		for (int i = 0; i < MAX_NODES; i++) {
+			for (int j = 0; j < totalDigitalPins; j++) {
+				digitalData[i][j] = -1;
+			}
+		}
+
 		digitalPinUpdated = new boolean[totalDigitalPins];
 		firmwareVersionQueue = new LinkedBlockingQueue<String>(1);
 		sysExDataList = new ArrayList<ArrayList<Integer>>(MAX_NODES);
@@ -193,6 +200,10 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 		if ((moduleId != 0) && (moduleId != 0xFFFF)) {
 			// Accept configuration command to a 0th module or broadcast only
+			for (int j = 0; j < dinPinChunks.size(); j++) {
+				PortRange range = dinPinChunks.get(j);
+				notifyUpdate(moduleId, range.getMin(), range.getCounts());
+			}
 			return;
 		}
 
@@ -279,6 +290,11 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		// range.getMax() + "]");
 		// }
 		// }
+
+		for (int j = 0; j < dinPinChunks.size(); j++) {
+			PortRange range = dinPinChunks.get(j);
+			notifyUpdate(moduleId, range.getMin(), range.getCounts());
+		}
 
 		if (wasPollingEnabled) {
 			startPolling();
