@@ -120,9 +120,11 @@ public class CommandPortClient extends Client implements Runnable {
 		} else if (message.getAddress().equals("/sysex")) {
 			try {
 				server.getIOModule().sendSystemExclusiveMessage(message.getArguments());
-				sendSimpleReply(message.getAddress(), NO_ERROR, null);
+				// TODO: use a different address to return error report?
+				// sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			} catch (Exception e) {
-				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
+				// TODO: use a different address to return error report?
+				// sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
 			}
 		} else if (message.getAddress().equals("/quit")) {
 			sendSimpleReply(message.getAddress(), NO_ERROR, null);
