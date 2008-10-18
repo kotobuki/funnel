@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="XBee,funnel.XBee,XBS1" name="keywords">
+<meta content="XBee,funnel.XBee,MULTIPOINT,ZB" name="keywords">
 <title>funnel.XBee</title>
 </head>
 <body>
@@ -42,7 +42,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-  XBeeクラスはMaxStream XBeeシリーズを扱うためのクラスです。
+  XBeeクラスはDigi InternationalのXBeeシリーズを扱うためのクラスです。
   
   <p></p>
 <br>
@@ -69,6 +69,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
   </div>
 </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MULTIPOINT">MULTIPOINT</a> : <a href="funnel/Configuration.html">Configuration</a>
+<div class="summaryTableDescription">[static][read-only]
+   XBee 802.15.4用のコンフィギュレーションを取得します。
+   </div>
+</td><td class="summaryTableOwnerCol">XBee</td>
+</tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#samplingInterval">samplingInterval</a> : int<div class="summaryTableDescription">
    サンプリング間隔
@@ -76,9 +83,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#XBS1">XBS1</a> : <a href="funnel/Configuration.html">Configuration</a>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#ZB">ZB</a> : <a href="funnel/Configuration.html">Configuration</a>
 <div class="summaryTableDescription">[static][read-only]
-   XBee Series 1用のコンフィギュレーションを取得します。
+   XBee ZB ZigBee PRO用のコンフィギュレーションを取得します。ただし、D6、D8とD9はモジュールの仕様によりアクセスできません
    </div>
 </td><td class="summaryTableOwnerCol">XBee</td>
 </tr>
@@ -102,7 +109,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#XBee()">XBee</a>(nodes:Array = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33)</div>
+<a class="signatureLink" href="#XBee()">XBee</a>(nodes:Array = null, config:<a href="Configuration.html">Configuration</a> = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33)</div>
 <div class="summaryTableDescription">
    </div>
 </td><td class="summaryTableOwnerCol">XBee</td>
@@ -180,18 +187,32 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
-<a name="XBS1"></a>
+<a name="MULTIPOINT"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">XBS1</td><td class="detailHeaderType">property</td>
+<td class="detailHeaderName">MULTIPOINT</td><td class="detailHeaderType">property</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>XBS1:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   XBee Series 1用のコンフィギュレーションを取得します。
+<code>MULTIPOINT:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
+   XBee 802.15.4用のコンフィギュレーションを取得します。
    </p><span class="label">Implementation</span>
 <br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get XBS1():<a href="funnel/Configuration.html">Configuration</a></code>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get MULTIPOINT():<a href="funnel/Configuration.html">Configuration</a></code>
+<br>
+</div>
+<a name="ZB"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">ZB</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>ZB:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
+   XBee ZB ZigBee PRO用のコンフィギュレーションを取得します。ただし、D6、D8とD9はモジュールの仕様によりアクセスできません
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get ZB():<a href="funnel/Configuration.html">Configuration</a></code>
 <br>
 </div>
 <a name="constructorDetail"></a>
@@ -203,11 +224,18 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function XBee(nodes:Array = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33)</code><p>
+<code>public function XBee(nodes:Array = null, config:<a href="Configuration.html">Configuration</a> = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33)</code><p>
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">nodes</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; 利用するモジュールのID配列
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">config</span>:<a href="Configuration.html">Configuration</a></code> (default = <code>null</code>)<code></code> &mdash; コンフィギュレーション
    </td>
 </tr>
 <tr>

@@ -42,8 +42,16 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-  GAINER I/Oモジュール上のボタンを押している間、LEDが点灯するサンプルです。
-  
+  ボタンが押されている間LEDをサイン波でドライブする。
+  Drive a LED with sin wave while the button is pressed.
+    <p>準備<ol>
+  <li>aout 0にLEDを接続する（電流制限のための抵抗器が必要）</li>
+  <li>ain 0にセンサを接続する（例：ボリューム）</li>
+  </ol></p>
+    <p>Preparation<ol>
+  <li>Connect a LED to aout 0 (current-limiting resistor is needed)</li>
+  <li>Connect a sensor to ain 0 (e.g. a potentiometer)</li>
+  </ol></p>
   <p></p>
 <br>
 <hr>

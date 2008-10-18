@@ -47,7 +47,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="ArduinoTest.html">ArduinoTest</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('class-list.html');" href="package-detail.html">Top Level</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('class-list.html');" href="package-detail.html">Top Level</a></td><td class="summaryTableLastCol">
+  ボタンが押されている間LEDをサイン波でドライブする。
+  Drive a LED with sin wave while the button is pressed.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/Configuration.html">Configuration</a>
@@ -69,13 +71,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   FioクラスはFunnel I/Oモジュールを扱うためのクラスです。
-  
-  </td>
+    </td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="FioTest.html">FioTest</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('class-list.html');" href="package-detail.html">Top Level</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('class-list.html');" href="package-detail.html">Top Level</a></td><td class="summaryTableLastCol">
+  LEDを矩形波でドライブしつつアナログ入力の状態をシンプルなグラフに表示する。
+  Drive a LED with square wave and display analog input as a simple graph.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/FunnelErrorEvent.html">FunnelErrorEvent</a>
@@ -102,17 +105,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="GainerMatrixLEDTest.html">GainerMatrixLEDTest</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('class-list.html');" href="package-detail.html">Top Level</a></td><td class="summaryTableLastCol">
-  GAINERを使用してマトリクスLEDをコントロールするサンプルです。
-  
-  </td>
+  Gainer I/O MODE7を使用してマトリクスLEDをコントロールする。
+  An example of Gainer I/O MODE 7 to control a matrix LED.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="GainerTest.html">GainerTest</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('class-list.html');" href="package-detail.html">Top Level</a></td><td class="summaryTableLastCol">
-  GAINER I/Oモジュール上のボタンを押している間、LEDが点灯するサンプルです。
-  
-  </td>
+  ボタンが押されている間LEDをサイン波でドライブする。
+  Drive a LED with sin wave while the button is pressed.</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/GeneratorEvent.html">GeneratorEvent</a>
@@ -140,8 +141,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   PCに接続されたI/Oモジュールを抽象化して共通の方法でアクセスするためのクラスです。
-  
-  </td>
+    </td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/IOSystem.html">IOSystem</a>
@@ -154,7 +154,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/MatrixLED.html">MatrixLED</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
-  GAINER専用のマトリクスLEDをコントロールするクラスです。
+  Gainer I/Oモジュールに接続したマトリクスLEDをコントロールするクラスです。
   </td>
 </tr>
 <tr class="prow0">
@@ -190,17 +190,32 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/SetPoint.html">SetPoint</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
-  アナログの値に対して閾値とヒステリシスを持つポイントをセットし、現在の状態を段階化して返します。ポイントが1つの場合の出力は0または1の2種類、ポイントが2つの場合は0または1または2の3種類、ポイントがn個の場合は0からnまでのn種類になります。 
+  アナログの値に対して閾値とヒステリシスを持つポイントをセットし、現在の状態を段階化して返します。ポイントが1つの場合の出力は0または1の2種類、ポイントが2つの場合は0または1または2の3種類、ポイントがn個の場合は0からnまでのn種類になります。
+    </td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="SimpleScope.html">SimpleScope</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('class-list.html');" href="package-detail.html">Top Level</a></td><td class="summaryTableLastCol">
+  入力の状態を表示するためのシンプルなスコープクラス
+  A simple scope class to show changes of inputs.</td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/XBee.html">XBee</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
+  XBeeクラスはDigi InternationalのXBeeシリーズを扱うためのクラスです。
   
   </td>
 </tr>
 <tr class="prow1">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/XBee.html">XBee</a>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="XBeeTest.html">XBeeTest</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
-  XBeeクラスはMaxStream XBeeシリーズを扱うためのクラスです。
-  
-  </td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('class-list.html');" href="package-detail.html">Top Level</a></td><td class="summaryTableLastCol">
+  AD0/DIO0の状態をシンプルなグラフとして表示し、
+  AD5/DIO5の状態をマウスでコントロールする。
+  Display status of AD0/DIO0 as a simple graph and
+  Control status of AD5/DIO5 by the mouse.</td>
 </tr>
 </table>
 <p></p>

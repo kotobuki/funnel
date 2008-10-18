@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="SetPoint,funnel.SetPoint,processSample,addPoint,removePoint" name="keywords">
+<meta content="SetPoint,funnel.SetPoint,addPoint,processSample,removePoint" name="keywords">
 <title>funnel.SetPoint</title>
 </head>
 <body>
@@ -42,9 +42,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-  アナログの値に対して閾値とヒステリシスを持つポイントをセットし、現在の状態を段階化して返します。ポイントが1つの場合の出力は0または1の2種類、ポイントが2つの場合は0または1または2の3種類、ポイントがn個の場合は0からnまでのn種類になります。 
-  
-  <p></p>
+  アナログの値に対して閾値とヒステリシスを持つポイントをセットし、現在の状態を段階化して返します。ポイントが1つの場合の出力は0または1の2種類、ポイントが2つの場合は0または1または2の3種類、ポイントがn個の場合は0からnまでのn種類になります。
+    <p></p>
 <br>
 <hr>
 </div>
@@ -60,8 +59,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#SetPoint()">SetPoint</a>(points:Array = null)</div>
 <div class="summaryTableDescription">
-   
-   </div>
+      </div>
 </td><td class="summaryTableOwnerCol">SetPoint</td>
 </tr>
 <tr class="">
@@ -76,8 +74,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#processSample()">processSample</a>(val:<a href="">Number</a>):Number</div>
+<a class="signatureLink" href="#processSample()">processSample</a>(val:Number):Number</div>
 <div class="summaryTableDescription">
+   
    フィルタを適応します
    </div>
 </td><td class="summaryTableOwnerCol">SetPoint</td>
@@ -108,13 +107,11 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function SetPoint(points:Array = null)</code><p>
-   
-   </p><span class="label">Parameters</span>
+      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">points</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; 閾値とヒステリシスの2要素からなる配列の配列
-   
-   </td>
+<td width="20px"></td><td><code><span class="label">points</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; 閾値とヒステリシスの2要素からなる配列または配列の配列
+      </td>
 </tr>
 </table>
 </div>
@@ -140,8 +137,7 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">hysteresis</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; ヒステリシス
-   
-   </td>
+      </td>
 </tr>
 </table>
 </div>
@@ -152,12 +148,13 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function processSample(val:<a href="">Number</a>):Number</code><p>
+<code>public function processSample(val:Number):Number</code><p>
+   
    フィルタを適応します
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">val</span>:<a href="">Number</a></code> &mdash; 入力値
+<td width="20px"></td><td><code><span class="label">val</span>:Number</code> &mdash; 入力値
    </td>
 </tr>
 </table>
@@ -184,8 +181,7 @@ showHideInherited();
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">threshold</span>:Number</code> &mdash; 削除するポイントのキーとなる閾値
-   
-   </td>
+      </td>
 </tr>
 </table>
 </div>
