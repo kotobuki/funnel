@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="Configuration,funnel.Configuration,ainPorts,dinPorts,aoutPorts,doutPorts,button,led,analogPins,digitalPins,config,moduleID,setDigitalPinMode" name="keywords">
+<meta content="Configuration,funnel.Configuration,ainPorts,analogPins,aoutPorts,button,config,digitalPins,dinPorts,doutPorts,led,moduleID,setDigitalPinMode" name="keywords">
 <title>funnel.Configuration</title>
 </head>
 <body>
@@ -131,7 +131,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#setDigitalPinMode()">setDigitalPinMode</a>(portNum:uint, mode:uint):void</div>
 <div class="summaryTableDescription">
-   デジタルピンのモードを設定します。通常、Arduino使用時に利用します。
+   デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。
    </div>
 </td><td class="summaryTableOwnerCol">Configuration</td>
 </tr>
@@ -314,7 +314,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function setDigitalPinMode(portNum:uint, mode:uint):void</code><p>
-   デジタルピンのモードを設定します。通常、Arduino使用時に利用します。
+   デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -325,7 +325,7 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">mode</span>:uint</code> &mdash; デジタル入力(IN)、デジタル出力(OUT)、PWM(疑似アナログ出力)のいずれかを指定
+<td width="20px"></td><td><code><span class="label">mode</span>:uint</code> &mdash; 通常はデジタル入力(IN)、デジタル出力(OUT)、PWM(疑似アナログ出力)のいずれかを指定。ただし、アナログピンに対してアナログ入力(AIN)を設定することも可能。
    </td>
 </tr>
 </table>

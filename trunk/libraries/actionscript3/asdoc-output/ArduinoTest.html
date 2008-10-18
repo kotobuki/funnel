@@ -42,7 +42,19 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+  ボタンが押されている間LEDをサイン波でドライブする。
+  Drive a LED with sin wave while the button is pressed.
+    <p>準備<ol>
+  <li>D12にスイッチを接続する（プルアップが必要）</li>
+  <li>D11にLEDを接続する（電流制限のための抵抗器が必要）</li>
+  <li>A0にセンサを接続する（例：ボリューム）</li>
+  </ol></p>
+    <p>Preparation<ol>
+  <li>Connect a button to D12 (should be pulled-up)</li>
+  <li>Connect a LED to D11 (current-limiting resistor is needed)</li>
+  <li>Connect a sensor to A0 (e.g. a potentiometer)</li>
+  </ol></p>
+  <p></p>
 <br>
 <hr>
 </div>

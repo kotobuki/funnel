@@ -3,7 +3,7 @@ package funnel
 	import flash.display.BitmapData;
 	
 	/**
-	 * GAINER専用のマトリクスLEDをコントロールするクラスです。
+	 * Gainer I/Oモジュールに接続したマトリクスLEDをコントロールするクラスです。
 	 */ 
 	public class MatrixLED extends IOSystem
 	{
