@@ -1,9 +1,7 @@
 package processing.funnel;
 
 import java.text.NumberFormat;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
+
 
 import processing.core.PApplet;
 

@@ -5,8 +5,8 @@
 	
 	<property name="build" location="." />
 	<!-- processing directory -->
-	<property name="dest" location="C:\processing-0148\libraries\funnel\library" />
-	<property name="code" location="C:\processing-0148\libraries\funnel\code" />
+	<property name="dest" location="D:\processing-0148\libraries\funnel\library" />
+	<property name="code" location="D:\processing-0148\libraries\funnel\code" />
 
 	<target name="compile" description = "Compile the source">
 		<javac srcdir="./" destdir="./" source="1.3">
@@ -36,14 +36,6 @@
 			includes="processing/funnel/*.class com/illposed/osc/*.class com/illposed/osc/utility/*.class"
 		/>
 
-	</target>	
-	
-	<target name="doc" description="Create the documentation">
-		<javadoc destdir="doc/">
-			<fileset dir="./">
-				<include name="processing/funnel/*.java"/>			
-			</fileset>
-		</javadoc>
 	</target>	
 
 </project>

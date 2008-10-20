@@ -149,7 +149,7 @@ public final class Gainer extends IOSystem{
 	}
 
 	public Gainer(PApplet parent,
-			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config ){
+			int commandPortNumber, int samplingInterval,Configuration config ){
 		
 		this(parent,"localhost",commandPortNumber,
 				samplingInterval,config);

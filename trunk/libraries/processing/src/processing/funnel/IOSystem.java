@@ -15,8 +15,8 @@ import processing.core.*;
 /**
  * @author endo
  * @version 1.0
- * 
  */
+
 public class IOSystem implements Runnable{
 	
 	PApplet parent;
@@ -25,7 +25,6 @@ public class IOSystem implements Runnable{
 	public static final int PORT_DIN = 1;
 	public static final int PORT_AOUT = 2;
 	public static final int PORT_DOUT = 3;
-
 
 	protected HashMap iomodules = new HashMap();
 	
@@ -51,7 +50,7 @@ public class IOSystem implements Runnable{
 
 	
 	//ŠO•”‚ÉŒöŠJ‚·‚é
-	public boolean autoUpdate = false;
+	public boolean autoUpdate = true;
 	public int samplingInterval;
 	////
 	
@@ -91,7 +90,7 @@ public class IOSystem implements Runnable{
 	}
 
 	public IOSystem(PApplet parent,
-			int commandPortNumber, int notifyPortNumber,int samplingInterval,Configuration config ){
+			int commandPortNumber, int samplingInterval,Configuration config ){
 		
 		this(parent,"localhost",commandPortNumber,
 				samplingInterval,config);
@@ -219,7 +218,7 @@ public class IOSystem implements Runnable{
 }
 
 	private void execCode(String code,boolean answer){
-		//System.out.println("ececCode  " + code);
+		System.out.println("ececCode  " + code);
 		try {
 			client.sendFunnel(code);
 			if(answer){

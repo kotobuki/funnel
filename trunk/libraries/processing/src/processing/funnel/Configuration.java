@@ -36,20 +36,32 @@ public final class Configuration{
 	}
 	
 	/**
-	 * ARDUINO‚ÌDigitalPin‚ğİ’è‚·‚é
+	 * DigitalPin‚ğİ’è‚·‚é
 	 * iIOSystemì¬ŒãÄİ’è‚Í‚Å‚«‚Ü‚¹‚ñj
 	 */
 	
-	public boolean setDigitalPinMode(int n,int digitalType){
+	public boolean setDigitalPinMode(int n,int pinType){
 		
 		if(moduleName.equalsIgnoreCase(Arduino.moduleName) || moduleName.equalsIgnoreCase(Fio.moduleName)){
-			System.out.println("portStatus[]" + n + " type " + digitalType );
-			portStatus[n] = digitalType;
-			
-			return true;
+			if(pinType!=IOSystem.PORT_AIN){
+				System.out.println("portStatus[]" + n + " type " + pinType );
+				portStatus[n] = pinType;
+				
+				return true;
+			}
 		}
-		return false;
 		
+		if(moduleName.equalsIgnoreCase(XBee.moduleName)){
+			if(pinType!=IOSystem.PORT_AOUT){
+				System.out.println("portStatus[]" + n + " type " + pinType );
+				portStatus[n] = pinType;
+				
+				return true;
+			}
+			
+		}
+		
+		return false;
 	}
 	
 	
