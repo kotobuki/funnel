@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" author="true" classpath="D:\processing-0148\java\lib\rt.jar;D:\processing-0148\lib\core.jar;D:\javaosc\lib\javaosc.jar" destdir="D:\share\My Documents\workspace\libFunnel\doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="processing.funnel" source="1.4" sourcepath="." splitindex="true" use="true" version="true"/>
+    </target>
+</project>
