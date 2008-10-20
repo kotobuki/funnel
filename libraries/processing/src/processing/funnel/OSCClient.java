@@ -30,8 +30,6 @@ public final class OSCClient {
 			e.printStackTrace();
 		}
 
-
-
 	}
 	
 	public boolean openFunnel(String hostName, int commandPortNumber){

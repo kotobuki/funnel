@@ -12,16 +12,31 @@ public final class XBee extends IOSystem{
 	 */
 	public static final int moduleID = 0xFFFF;//
 	
-	private static final int[] xbs1 = {
+	public static final int AIN = PORT_AIN;
+	public static final int DIN = PORT_DIN;
+	public static final int OUT = PORT_DOUT;
+
+	
+	//XBee 802.15.4
+	private static final int[] multipoint = {
     PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
     PORT_DIN, PORT_DIN,
 	};
-	public static final Configuration XBS1 = new Configuration(moduleID,xbs1,moduleName);
-	//ポートの機能(参照する名前)
-	//private int analogInput[] = {0,1,2,3};
-	//private int analogOutput[] = {10,11,12,13};
-
-
+	public static final Configuration MULTIPOINT = new Configuration(moduleID,multipoint,moduleName);
+	
+	//XBee ZB ZigBee PRO
+	private static final int[] zb = {
+		PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
+		PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+	};
+	public static final Configuration ZB = new Configuration(moduleID,zb,moduleName);
+	
+	/**
+	 * XBeeのポート番号からfunnelのポート番号への変換
+	 */
+	static final int[] _a = {0,1,2,3,4,5};
+	static final int[] _d = {6,7};
+	
 	public XBee(PApplet parent, String hostName,
 			int commandPortNumber,int samplingInterval,int[] IDs,Configuration config){
 		super(parent,hostName,commandPortNumber,samplingInterval,config);
@@ -33,12 +48,15 @@ public final class XBee extends IOSystem{
 			String name = "xbee." + i;
 			addModule(IDs[i],config,name);
 		}
+		
+		initPorts(_a,_d);
+		
 		startIOSystem();
 	}
 	
 	public XBee(PApplet parent,int[] IDs){	
 		this(parent,"localhost",CommandPort.defaultPort,
-				33,IDs,XBS1);
+				33,IDs,MULTIPOINT);
 	}
 	
 	public XBee(PApplet parent, int[] IDs, Configuration config){
@@ -53,10 +71,12 @@ public final class XBee extends IOSystem{
 	}
 
 	public XBee(PApplet parent,
-			int commandPortNumber, int notifyPortNumber,int samplingInterval,int[] IDs, Configuration config ){
+			int commandPortNumber, int samplingInterval,int[] IDs, Configuration config ){
 		
 		this(parent,"localhost",commandPortNumber,
 				samplingInterval,IDs,config);
 	}
+	
+
 
 }
