@@ -475,7 +475,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				case ARD_REPORT_VERSION: // Report version
 					firmwareVersion[0] = storedInputData[source][0]; // minor
 					firmwareVersion[1] = storedInputData[source][1]; // major
-					printMessage("Firmata Protocol Vesrion: " + firmwareVersion[1] + "."
+					printMessage("Firmata Protocol Version: " + firmwareVersion[1] + "."
 							+ firmwareVersion[0]);
 					firmwareVersionQueue.add(firmwareVersion[1] + "." + firmwareVersion[0]);
 					break;
