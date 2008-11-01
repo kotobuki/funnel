@@ -15,66 +15,58 @@ byte slaveRegister;
 byte i2cRxData[32];
 boolean readingContinuously = false;
 
-void setRegister(int address, int thisRegister) {
+void readAndReportData(byte address, byte theRegister, byte numBytes) {
   Wire.beginTransmission(address);
-  Wire.send(thisRegister);
+  Wire.send(theRegister);
   Wire.endTransmission();
-}
 
-void readAndReportData(int address, int numBytes) {
   Wire.requestFrom(address, numBytes);
 
-  // TODO: Do timeout here if needed
   while (Wire.available() < numBytes) {
-
+    // TODO: Do timeout here if needed
   }
 
   i2cRxData[0] = address;
+  i2cRxData[1] = theRegister;
   for (int i = 0; i < numBytes; i++) {
-    i2cRxData[i + 1] = Wire.receive();
+    i2cRxData[2 + i] = Wire.receive();
   }
 
-  Firmata.sendSysex(SYSEX_I2C, numBytes + 1, i2cRxData);
+  // send slave address, register and received bytes
+  Firmata.sendSysex(SYSEX_I2C, numBytes + 2, i2cRxData);
 }
 
 void sysexCallback(byte command, byte argc, byte *argv)
 {
-  byte *p = argv;
   byte mode;
-  char message[32];
-  int i = 0;
-  int length;
+  int i;
   byte data;
 
   if (command == SYSEX_I2C) {
-    mode = *(p++);
-    slaveAddress = *(p++);
+    mode = argv[0];
+    slaveAddress = argv[1];
 
     switch(mode) {
     case I2C_WRITE:
       Wire.beginTransmission(slaveAddress);
-      length = (argc - 2) / 2;
-      for (i = 0; i < length; i++) {
-        data = *(p++) + (*(p++) << 7);
+      for (i = 2; i < argc; i += 2) {
+        data = argv[i] + (argv[i + 1] << 7);
         Wire.send(data);
       }
       Wire.endTransmission();
       delayMicroseconds(70);
       break;
     case I2C_READ:
-      slaveRegister = *(p++) + (*(p++) << 7);
-      data = *(p++) + (*(p++) << 7);  // bytes to read
-      setRegister(slaveAddress, slaveRegister);
-      readAndReportData(slaveAddress, data);
+      slaveRegister = argv[2] + (argv[3] << 7);
+      data = argv[4] + (argv[5] << 7);  // bytes to read
+      readAndReportData(slaveAddress, slaveRegister, data);
       break;
     case I2C_READ_CONTINUOUSLY:
-      slaveRegister = *(p++);
-      slaveRegister += *(p++) << 7;
-      data = *(p++);
-      data += *(p++) << 7;
+      // TODO: implement here
       readingContinuously = true;
       break;
     case I2C_STOP_READING:
+      // TODO: implement here
       readingContinuously = false;
       break;
     default:
