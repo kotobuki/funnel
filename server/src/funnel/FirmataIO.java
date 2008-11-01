@@ -36,6 +36,13 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected static final int ARD_PIN_MODE_PWM = 0x03;
 	protected static final int ARD_PIN_MODE_SERVO = 0x04;
 
+	protected static final int SERVO_CONFIG = 0x70;
+	protected static final int FIRMATA_STRING = 0x71;
+	protected static final int I2C = 0x76;
+	protected static final int REPORT_FIRMWARE = 0x79;
+	protected static final int SYSEX_NON_REALTIME = 0x7E;
+	protected static final int SYSEX_REALTIME = 0x7F;
+
 	protected int totalAnalogPins = 8;
 	protected int totalDigitalPins = 22;
 	protected int[] pwmCapablePins = null;
@@ -400,10 +407,19 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		beginPacketIfNeeded(moduleId);
 		writeByte(ARD_SYSEX_START);
 		writeByte(command);
-		for (int i = 2; i < arguments.length; i++) {
-			int value = ((Integer) arguments[i]).intValue();
-			writeByte(value & 0x7F); // LSB
-			writeByte((value >> 7) & 0x7F); // MSB
+
+		if (command == I2C) {
+			writeByte(((Integer) arguments[2]).intValue()); // read/write
+			writeByte(((Integer) arguments[3]).intValue()); // slave address
+			for (int i = 4; i < arguments.length; i++) {
+				int value = ((Integer) arguments[i]).intValue();
+				writeValueAsTwo7bitBytes(value);
+			}
+		} else {
+			for (int i = 2; i < arguments.length; i++) {
+				int value = ((Integer) arguments[i]).intValue();
+				writeValueAsTwo7bitBytes(value);
+			}
 		}
 		writeByte(ARD_SYSEX_END);
 		endPacketIfNeeded();
@@ -579,10 +595,20 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 		sysExMessage[0] = new Integer(source);
 		sysExMessage[1] = sysExDataList.get(source).get(idx++);
-		for (int i = 0; i < counts; i++) {
-			int data = sysExDataList.get(source).get(idx++);
-			data += sysExDataList.get(source).get(idx++) << 7;
-			sysExMessage[2 + i] = data;
+		if (((Integer) sysExMessage[1]).intValue() == FIRMATA_STRING) {
+			String s = new String();
+			for (int i = 0; i < counts; i++) {
+				int data = sysExDataList.get(source).get(idx++);
+				data += sysExDataList.get(source).get(idx++) << 7;
+				s += String.valueOf((char) data);
+			}
+			sysExMessage[2] = new String(s);
+		} else {
+			for (int i = 0; i < counts; i++) {
+				int data = sysExDataList.get(source).get(idx++);
+				data += sysExDataList.get(source).get(idx++) << 7;
+				sysExMessage[2 + i] = data;
+			}
 		}
 
 		OSCMessage message = new OSCMessage("/sysex", sysExMessage);
@@ -695,6 +721,11 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 	protected void queryVersion() {
 		writeByte(ARD_REPORT_VERSION);
+	}
+
+	protected void writeValueAsTwo7bitBytes(int value) {
+		writeByte(value & 0x7F); // LSB
+		writeByte((value >> 7) & 0x7F); // MSB
 	}
 
 	abstract void writeByte(int data);
