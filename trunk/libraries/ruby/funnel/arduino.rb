@@ -43,6 +43,10 @@ module Funnel
     def send_sysex(command, message)
       return @system.io_module(0).send_sysex(command, message)
     end
+
+    def add_sysex_listener(i2c_device)
+      @system.io_module(0).add_sysex_listener(i2c_device)
+    end
     
     alias :a :analog_pin
     alias :d :digital_pin

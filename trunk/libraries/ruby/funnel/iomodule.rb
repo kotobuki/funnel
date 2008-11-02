@@ -33,6 +33,7 @@ module Funnel
       @port = []
       @port_count = 0
       @name = name
+      @sysex_listeners = Hash::new
 
       init_ports(@config.to_a)
       @updated_port_indices = Array.new(@port_count, false)
@@ -134,6 +135,15 @@ module Funnel
 
     def send_sysex(command, message)
       @parent.send_command(OSC::Message.new('/sysex', 'i' * (message.to_a.size + 2), @id, command, *message.to_a), false)
+    end
+
+    def add_sysex_listener(i2c_device)
+      @sysex_listeners[i2c_device.address] = i2c_device
+    end
+
+    def handle_sysex(data)
+      # data should be: slave address, register, data0, data1...
+      @sysex_listeners[data[0]].handle_sysex(data) unless @sysex_listeners[data[0]] == nil
     end
 
     alias :ain :analog_input
