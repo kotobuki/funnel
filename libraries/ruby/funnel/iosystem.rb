@@ -103,7 +103,12 @@ module Funnel
                 when '/out'
                   puts "ERROR: #{message.address}" if message.to_a[0] < FunnelErrorEvent::NO_ERROR
                 when '/sysex'
-                  p message.to_a
+                  case message.to_a[1]
+                  when 0x76
+                    @modules[message.to_a[0]].handle_sysex(message.to_a[2..(message.to_a.size - 1)]) unless @modules[message.to_a[0]] == nil
+                  when 0x71
+                    puts "Firmata String (at #{message.to_a[0]}): #{message.to_a[2]}"
+                  end
                 end
               end
             rescue EOFError
