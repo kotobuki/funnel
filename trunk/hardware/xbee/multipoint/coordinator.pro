@@ -20,7 +20,7 @@ FE
 [A]A1=0
 [A]A2=0
 [A]EE=0
-[A]NI= COORDINATOR
+[A]NI=COORDINATOR
 [A]PL=4
 [A]CA=2C
 [A]SM=0
@@ -28,7 +28,7 @@ FE
 [A]SP=0
 [A]DP=3E8
 [A]SO=0
-[A]BD=3
+[A]BD=4
 [A]RO=3
 [A]AP=2
 [A]PR=FF
