@@ -4,4 +4,4 @@ server:
 io:
   type: XBee
   port: 
-  baudrate: 9600
+  baudrate: 19200
