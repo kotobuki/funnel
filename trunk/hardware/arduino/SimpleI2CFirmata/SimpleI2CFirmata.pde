@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include <Firmata.h>
 
+#define ENABLE_POWER_PINS
 #define SYSEX_I2C 0x76
 #define I2C_WRITE 0
 #define I2C_READ 1
@@ -75,16 +76,38 @@ void sysexCallback(byte command, byte argc, byte *argv)
   }
 }
 
+// reference: BlinkM_funcs.h by Tod E. Kurt, ThingM, http://thingm.com/
+static void enablePowerPins(byte pwrpin, byte gndpin)
+{
+  DDRC |= _BV(pwrpin) | _BV(gndpin);
+  PORTC &=~ _BV(gndpin);
+  PORTC |=  _BV(pwrpin);
+  delay(100);
+}
+
 void setup()
 {
   Firmata.setFirmwareVersion(2, 0);
+
   Firmata.attach(START_SYSEX, sysexCallback);
 
   for (int i = 0; i < TOTAL_DIGITAL_PINS; ++i) {
     pinMode(i, OUTPUT);
   }
 
-  Firmata.begin();
+#ifdef ENABLE_POWER_PINS
+  // AD2, AD3, AD4, AD4
+  // GND, PWR, SDA, SCL: e.g. BlinkM, HMC6352
+  enablePowerPins(PC3, PC2);
+#endif
+
+  // It seems that Arduino Pro Mini won't work with 115200bps
+  if (F_CPU == 8000000) {
+    Firmata.begin(57600);
+  } else {
+    Firmata.begin(115200);
+  }
+
   Wire.begin();
 }
 
