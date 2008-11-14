@@ -103,7 +103,7 @@ void setup()
 
   // It seems that Arduino Pro Mini won't work with 115200bps
   if (F_CPU == 8000000) {
-    Firmata.begin(57600);
+    Firmata.begin(19200);
   } else {
     Firmata.begin(115200);
   }
