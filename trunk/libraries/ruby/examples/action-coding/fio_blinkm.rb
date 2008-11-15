@@ -1,11 +1,11 @@
 # === Overview
 # A simple example to show a usage of Firmata I2C
-# Draw a triangle to show current heading of a compass
+# Control a BlinkM
 #
 # [Author] Shigeru Kobayashi
 # [License] The new BSD license
 # === Operating environment
-# * a HMC6352 compass module (e.g. SparkFun SEN-07915)
+# * a BlinkM
 # * Funnel 009 or later
 # * JRuby 1.1.*
 # * Processing 0135 or higher
@@ -18,7 +18,7 @@
 # === Reference
 # * http://code.google.com/p/action-coding/
 # * http://www.arduino.cc/playground/Interfacing/Firmata
-# * http://www.sparkfun.com/commerce/product_info.php?products_id=7915
+# * http://thingm.com/products/blinkm
 
 $: << '../..'
 
@@ -30,20 +30,15 @@ def setup
 
   config = Fio.FIRMATA
   @fio = Fio.new :applet => self, :config => config, :nodes => [1]
-  @compass = HMC6352.new @fio.io_module(1)
+  @led = BlinkM.new @fio.io_module(1)
+  @led.stop_script
+  @led.fade_to_hsb_color [0, 255, 255], 0
 end
 
 def draw
-  @compass.update
-  heading = @compass.heading
-
   background 0
-  translate 200, 200
-  rotate heading / 180 * PI
-  noStroke
-  smooth
-  fill 255
-  ellipse 0, 0, 200, 200
-  fill 150
-  triangle 0, -100, -25, 25, 25, 25
+end
+
+def mousePressed
+  @led.fade_to_random_hsb_color [255, 0, 0], 10  
 end
