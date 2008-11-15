@@ -78,6 +78,17 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 		printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
 	}
 
+	public void setConfiguration(Object[] arguments) {
+		super.setConfiguration(arguments);
+
+		for (int j = 0; j < dinPinChunks.size(); j++) {
+			PortRange range = dinPinChunks.get(j);
+
+			// TODO: Support multiple Arduino I/O boards if needed
+			notifyUpdate(0, range.getMin(), range.getCounts());
+		}
+	}
+
 	void writeByte(int data) {
 		try {
 			output.write((byte) data);

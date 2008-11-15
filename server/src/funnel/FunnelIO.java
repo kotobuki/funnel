@@ -1,6 +1,7 @@
 package funnel;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -79,6 +80,19 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 
 	public void reboot() {
 		return;
+	}
+
+	public void setConfiguration(Object[] arguments) {
+		super.setConfiguration(arguments);
+
+		Enumeration<Integer> e = nodes.keys();
+		while (e.hasMoreElements()) {
+			Integer moduleId = e.nextElement();
+			for (int j = 0; j < dinPinChunks.size(); j++) {
+				PortRange range = dinPinChunks.get(j);
+				notifyUpdate(moduleId, range.getMin(), range.getCounts());
+			}
+		}
 	}
 
 	public void setOutput(Object[] arguments) {
