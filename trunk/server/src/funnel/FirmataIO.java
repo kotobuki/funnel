@@ -290,19 +290,6 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			dinPinChunks.add(range);
 		}
 
-		// if (dinPinChunks != null) {
-		// for (int i = 0; i < dinPinChunks.size(); i++) {
-		// PortRange range = dinPinChunks.get(i);
-		// printMessage("digital inputs: [" + range.getMin() + ".." +
-		// range.getMax() + "]");
-		// }
-		// }
-
-		for (int j = 0; j < dinPinChunks.size(); j++) {
-			PortRange range = dinPinChunks.get(j);
-			notifyUpdate(moduleId, range.getMin(), range.getCounts());
-		}
-
 		if (wasPollingEnabled) {
 			startPolling();
 		}
