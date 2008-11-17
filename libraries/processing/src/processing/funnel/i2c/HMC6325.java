@@ -76,7 +76,6 @@ public class HMC6325 extends I2CDevice implements I2CInterface{
 		case 0x7F:
 			int ihead =  (data[0] & 0xFF)<< 8 | data[1]&0xFF;
 			heading = (float)ihead/10;
-			System.out.println(ihead);
 			break;
 		}
 	}
