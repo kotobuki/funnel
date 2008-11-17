@@ -279,7 +279,7 @@ public final class Gainer extends IOSystem{
 		
 		Set key = iomodules.entrySet();
 		if(!key.contains(new Integer(id))){
-			IOModule io =  new GainerIOModule(parent,id,config,name);
+			IOModule io =  new GainerIOModule(this,id,config,name);
 			iomodules.put(new Integer(id),io);
 			
 			//din‚ÉSetPoint‚ðŽ©“®‚Å‚Â‚¯‚é

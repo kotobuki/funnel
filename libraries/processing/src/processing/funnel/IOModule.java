@@ -2,10 +2,14 @@
 package processing.funnel;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.Vector;
 
 import processing.core.PApplet;
+
+import processing.funnel.i2c.*;
 
 /**
  * @author endo
@@ -14,17 +18,19 @@ import processing.core.PApplet;
  */
 public class IOModule{
 
-	PApplet parent;
-	
 	Method onRisingEdge = null;
 	Method onFallingEdge = null;
 	Method onChange = null;
 
+	public IOSystem system;
+	
 	protected Port port[];
 	protected int id;
 	protected Configuration config;
 	
 	public String name;
+	
+	protected HashMap i2cDevs = new HashMap();
 	
 	//ポートの機能(参照する名前)
 	private int analogPin[];
@@ -37,8 +43,11 @@ public class IOModule{
 	}
 	
   
-	public IOModule(PApplet parent,int id,Configuration config,String name){
-		this.parent = parent;
+	public IOModule(IOSystem system,int id,Configuration config,String name){
+		this.system = system;
+		
+		PApplet parent = system.parent;
+		
 		this.id = id;
 		this.name = name;
 		this.config = config;
@@ -49,12 +58,6 @@ public class IOModule{
 		for(int i=0;i<port.length;i++){
 			port[i] = new Port(parent,conf[i],i);
 		}
-
-//		System.out.println("conf");
-//		for(int i=0;i<conf.length;i++){
-//			System.out.print(conf[i] + " " );
-//		}
-//		System.out.println("");
 
 		
 		//イベントハンドラのリフレクション
@@ -120,6 +123,26 @@ public class IOModule{
 			}
 		}
 	}
+	
+	public boolean addI2CDevice(I2CInterface i2c){
+		Set key = i2cDevs.entrySet();
+		if(!key.contains(new Integer(i2c.getSlaveAddress()))){
+
+			i2cDevs.put(new Integer(i2c.getSlaveAddress()), i2c);
+			
+			System.out.println(" addI2CDevice() " + i2c.getName());
+			
+			return true;
+		}
+		return false;
+	}
+	
+	public I2CInterface i2cdevice(int slaveAddress){
+		
+		I2CInterface i2c = (I2CInterface)i2cDevs.get(new Integer(slaveAddress)); 
+		return i2c;
+	}
+	
 	
 	//
 	// funnel Port

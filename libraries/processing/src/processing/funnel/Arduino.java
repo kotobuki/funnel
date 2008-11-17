@@ -1,10 +1,14 @@
 package processing.funnel;
 
+import com.illposed.osc.OSCMessage;
+
 import processing.core.PApplet;
+
+import processing.funnel.i2c.*;
 
 /**
  * @author endo
- * @version 1.0
+ * @version 1.1
  * 
  */
 public final class Arduino extends IOSystem{
@@ -27,6 +31,8 @@ public final class Arduino extends IOSystem{
 	};
 	public static final Configuration FIRMATA = new Configuration(moduleID,firmata,moduleName);
 
+	
+	
 	
 
 	/**
@@ -72,12 +78,66 @@ public final class Arduino extends IOSystem{
 	
 	//Arduinoショートカット
 	public IOModule.Port analogPin(int nPort){
-		return iomodule(0).analogPin(nPort);
+		return iomodule(moduleID).analogPin(nPort);
 	}
 	
 	public IOModule.Port digitalPin(int nPort){
-		return iomodule(0).digitalPin(nPort);
+		return iomodule(moduleID).digitalPin(nPort);
 	} 
+	
+	public IOModule iomodule(){
+		return iomodule(moduleID);
+	}
+	
+	
+	public void sendSysex(int argc,byte[] argv){
+		
+		Object args[] = new Object[argc+1];
+		args[0] = new Integer(moduleID);
+		
+		for(int i=0;i<argc;i++){
+			args[i+1] = new Integer(argv[i]);
+		}
+		
+		execCode("/sysex",args,false);
+	}
+	
+	protected void waitMessage(OSCMessage message){
+		super.waitMessage(message);
+		
+		if(message.getAddress().equals("/sysex")){
+			if(((Integer)message.getArguments()[1]).intValue() == 0x76){
+				
+				int modid = ((Integer)message.getArguments()[0]).intValue();
+				
+				int slaveAddress = ((Integer)message.getArguments()[2]).intValue();
+				int registerAddress = ((Integer)message.getArguments()[3]).intValue();
+				
+				IOModule io = iomodule(modid);
+				I2CInterface i2c = io.i2cdevice(slaveAddress);
+				
+				int len = message.getArguments().length-4;
+				byte[] data = new byte[len];
+				for(int i=0;i<len;i++){
+					data[i] = ((Integer)message.getArguments()[4+i]).byteValue();
+				}
+				i2c.receiveData(registerAddress, data);
+				
+			}			
+			
+//			System.out.println("     ----wait sysex Message");
+//			System.out.print("       ");
+//			for(int i=0;i<message.getArguments().length;i++){
+//				int v = ((Integer)message.getArguments()[i]).intValue();
+//				
+//				System.out.print("0x"+Integer.toHexString(v ) + "  ");
+//			
+//			}
+//			System.out.println();
+			
+		}
+		
+	}
 }
 
 

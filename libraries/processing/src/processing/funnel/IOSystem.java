@@ -14,7 +14,7 @@ import processing.core.*;
 
 /**
  * @author endo
- * @version 1.0
+ * @version 1.1
  */
 
 public class IOSystem implements Runnable{
@@ -44,7 +44,7 @@ public class IOSystem implements Runnable{
 	
 	//定数
 	private int NO_ERROR = 0;
-	private int ERROR = -1;
+	//private int ERROR = -1;
 	private int REBOOT_ERROR = -2;
 	private int CONFIGURATION_ERROR = -3;
 
@@ -157,7 +157,7 @@ public class IOSystem implements Runnable{
 	
 	//samplingIntervalの周期ですべてのポート
 	//の分だけ呼び出される（複数回呼び出される）
-	private void interpretMessage(OSCMessage message){
+	protected void interpretMessage(OSCMessage message){
 		
 //			System.out.print("interpret " + message.getAddress() + "   ");
 //			for(int i=0;i<message.getArguments().length;i++){
@@ -180,7 +180,8 @@ public class IOSystem implements Runnable{
 
 	}
 
-	private void waitMessage(OSCMessage message){
+	protected void waitMessage(OSCMessage message){
+		
 //		System.out.print("   waitMessage recieve " + message.getAddress() + "   ");
 //		for(int i=0;i<message.getArguments().length;i++){
 //			System.out.print(message.getArguments()[i] + "   " );
@@ -215,9 +216,10 @@ public class IOSystem implements Runnable{
 				errorMessage((String)message.getArguments()[1]);
 			}			
 		}
-}
+		
+	}
 
-	private void execCode(String code,boolean answer){
+	protected void execCode(String code,boolean answer){
 		System.out.println("ececCode  " + code);
 		try {
 			client.sendFunnel(code);
@@ -230,7 +232,7 @@ public class IOSystem implements Runnable{
 	}
 	
 	//answer : 戻り値を確認する
-	private boolean execCode(String code,Object args[],boolean answer){
+	protected boolean execCode(String code,Object args[],boolean answer){
 		try {
 			client.sendFunnel(code,args);
 			if(answer){
@@ -414,7 +416,7 @@ public class IOSystem implements Runnable{
 		
 		Set key = iomodules.entrySet();
 		if(!key.contains(new Integer(id))){
-			IOModule io =  new IOModule(parent,id,config,name);
+			IOModule io =  new IOModule(this,id,config,name);
 			iomodules.put(new Integer(id), io);
 			
 			System.out.println(" addModule() " + name);
@@ -485,6 +487,8 @@ public class IOSystem implements Runnable{
 			port.addListener("/out", this);
 			port.addListener("/polling", this);
 			port.addListener("/samplingInterval", this);
+			
+			port.addListener("/sysex", this);
 		}
 		public void acceptMessage(Date time, OSCMessage message){
 			io.waitMessage(message);

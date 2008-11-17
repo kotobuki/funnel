@@ -17,9 +17,10 @@ public class GainerIOModule extends IOModule{
 
 	
 	
-	public GainerIOModule(PApplet parent,int id,Configuration config,String name){
-		super(parent,id,config,name);
+	public GainerIOModule(IOSystem system,int id,Configuration config,String name){
+		super(system,id,config,name);
 
+		PApplet parent = system.parent;
 		
 		int[] conf = config.getPortStatus();
 		
