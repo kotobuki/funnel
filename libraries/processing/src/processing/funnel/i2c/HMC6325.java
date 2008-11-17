@@ -74,8 +74,9 @@ public class HMC6325 extends I2CDevice implements I2CInterface{
 	public void receiveData(int regAddress,byte[] data){
 		switch(regAddress){
 		case 0x7F:
-			int ihead = (data[0]<<8) | data[1];
+			int ihead =  (data[0] & 0xFF)<< 8 | data[1]&0xFF;
 			heading = (float)ihead/10;
+			System.out.println(ihead);
 			break;
 		}
 	}
