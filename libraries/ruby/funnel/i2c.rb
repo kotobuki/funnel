@@ -22,6 +22,9 @@ module Funnel
       @iomodule.add_sysex_listener self
     end
 
+    def update
+    end
+
     def handle_sysex(data)
     end
   end
@@ -38,11 +41,9 @@ module Funnel
 
       # I2C, write, slave address, 'A'
       @iomodule.send_sysex 0x76, [WRITE, @address, ?A]
-    end
 
-    def update
-      # I2C, read, slave address, register = 0x7F, 2 bytes
-      @iomodule.send_sysex 0x76, [READ, @address, 0x7F, 0x02]
+      # start reading continuously
+      @iomodule.send_sysex 0x76, [READ_CONTINUOUS, @address, 0x7F, 0x02]
     end
 
     def handle_sysex(data)
