@@ -19,8 +19,8 @@ public final class XBee extends IOSystem{
 	
 	//XBee 802.15.4
 	private static final int[] multipoint = {
-    PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
-    PORT_DIN, PORT_DIN,
+		PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
+		PORT_DIN, PORT_DIN,
 	};
 	public static final Configuration MULTIPOINT = new Configuration(moduleID,multipoint,moduleName);
 	
