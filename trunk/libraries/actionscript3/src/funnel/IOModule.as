@@ -16,6 +16,8 @@ package funnel
 		private var _portCount:uint;
 		private var _config:Configuration;
 
+		private var _sysexListeners:Array;
+
 		/**
 		 *
 		 * @param system FunnelServerと通信をするIOSystemオブジェクト
@@ -40,6 +42,8 @@ package funnel
 				}
 				_ioPorts[i] = aPort;
 			}
+			
+			_sysexListeners = new Array();
 		}
 
 		/**
@@ -74,6 +78,19 @@ package funnel
 			if (_config.digitalPins == null) throw new ArgumentError("digital pins are not available");
 			if (_config.digitalPins[pinNum] == null) throw new ArgumentError("digital pin is not available at " + pinNum);
 			return _ioPorts[_config.digitalPins[pinNum]];
+		}
+
+		public function sendSysex(command:uint, message:Array):void {
+			_system.sendSysex(_id, command, message);
+		}
+
+		public function addSysexListener(device:I2CDevice):void {
+			_sysexListeners[device.address] = device;
+		}
+
+		public function handleSysex(command:uint, data:Array):void {
+			// data should be: slave address, register, data0, data1...
+			_sysexListeners[data[0]].handleSysex(command, data);
 		}
 
 		/**
