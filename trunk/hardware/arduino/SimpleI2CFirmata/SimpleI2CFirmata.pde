@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <Firmata.h>
 
-//#define ENABLE_POWER_PINS
+#define ENABLE_POWER_PINS
 #define SYSEX_I2C 0x76
 #define I2C_WRITE 0
 #define I2C_READ 1
@@ -121,7 +121,7 @@ void setup()
 
   // It seems that Arduino Pro Mini won't work with 115200bps
   if (F_CPU == 8000000) {
-    Firmata.begin(38400);
+    Firmata.begin(19200);
   } 
   else {
     Firmata.begin(115200);
