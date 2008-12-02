@@ -102,7 +102,7 @@ module Funnel
                   end
                 when '/out'
                   puts "ERROR: #{message.address}" if message.to_a[0] < FunnelErrorEvent::NO_ERROR
-                when '/sysex'
+                when '/sysex/reply'
                   case message.to_a[1]
                   when 0x76
                     @modules[message.to_a[0]].handle_sysex(message.to_a[2..(message.to_a.size - 1)]) unless @modules[message.to_a[0]] == nil

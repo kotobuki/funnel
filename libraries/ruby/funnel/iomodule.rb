@@ -134,7 +134,7 @@ module Funnel
     end
 
     def send_sysex(command, message)
-      @parent.send_command(OSC::Message.new('/sysex', 'i' * (message.to_a.size + 2), @id, command, *message.to_a), false)
+      @parent.send_command(OSC::Message.new('/sysex/request', 'i' * (message.to_a.size + 2), @id, command, *message.to_a), false)
     end
 
     def add_sysex_listener(i2c_device)
