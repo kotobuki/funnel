@@ -598,7 +598,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			}
 		}
 
-		OSCMessage message = new OSCMessage("/sysex", sysExMessage);
+		OSCMessage message = new OSCMessage("/sysex/reply", sysExMessage);
 		parent.getCommandPortServer().sendMessageToClients(message);
 	}
 
