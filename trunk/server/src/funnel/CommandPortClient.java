@@ -18,15 +18,11 @@ public class CommandPortClient extends Client implements Runnable {
 			client.addListener("/quit", this);
 			client.addListener("/reset", this);
 			client.addListener("/in", this);
-			client.addListener("/in/*", this);
-			// Since the addListener method is as follows,
-			// it's not possible to add listener for /in/[0..3]
-			// addListener(java.lang.String address, OSCListener listener)
 			client.addListener("/out", this);
 			client.addListener("/polling", this);
 			client.addListener("/samplingInterval", this);
 			client.addListener("/configure", this);
-			client.addListener("/sysex", this);
+			client.addListener("/sysex/request", this);
 		}
 
 		public void acceptMessage(java.util.Date time, OSCMessage message) {
@@ -117,14 +113,12 @@ public class CommandPortClient extends Client implements Runnable {
 			} catch (IllegalArgumentException e) {
 				sendSimpleReply(message.getAddress(), CONFIGURATION_ERROR, e.getMessage());
 			}
-		} else if (message.getAddress().equals("/sysex")) {
+		} else if (message.getAddress().equals("/sysex/request")) {
 			try {
 				server.getIOModule().sendSystemExclusiveMessage(message.getArguments());
-				// TODO: use a different address to return error report?
-				// sendSimpleReply(message.getAddress(), NO_ERROR, null);
+				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			} catch (Exception e) {
-				// TODO: use a different address to return error report?
-				// sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
+				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
 			}
 		} else if (message.getAddress().equals("/quit")) {
 			sendSimpleReply(message.getAddress(), NO_ERROR, null);
