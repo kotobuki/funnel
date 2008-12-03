@@ -153,9 +153,9 @@ public class CommandPortClient extends Client implements Runnable {
 				}
 
 				while (processedSize < readSize) {
-					int packetSize = ((buffer[processedSize + 0] << 24) & 0xFF)
-							+ ((buffer[processedSize + 1] << 16) & 0xFF)
-							+ ((buffer[processedSize + 2] << 8) & 0xFF)
+					int packetSize = ((buffer[processedSize + 0] & 0xFF) << 24)
+							+ ((buffer[processedSize + 1] & 0xFF) << 16)
+							+ ((buffer[processedSize + 2] & 0xFF) << 8)
 							+ (buffer[processedSize + 3] & 0xFF);
 
 					if (packetSize > 1536) {
