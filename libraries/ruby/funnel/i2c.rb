@@ -4,6 +4,9 @@ require 'funnel/iomodule'
 
 module Funnel
   class I2CDevice
+    I2C_REQUEST = 0x76
+    I2C_REPLY = 0x77
+
     WRITE = 0
     READ = 1
     READ_CONTINUOUS = 2
@@ -37,13 +40,13 @@ module Funnel
       @heading = 0
 
       # I2C, write, slave address, 'G', ram address, query mode
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?G, 0x74, 0x51]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?G, 0x74, 0x51]
 
       # I2C, write, slave address, 'A'
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?A]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?A]
 
       # start reading continuously
-      @iomodule.send_sysex 0x76, [READ_CONTINUOUS, @address, 0x7F, 0x02]
+      @iomodule.send_sysex I2C_REQUEST, [READ_CONTINUOUS, @address, 0x7F, 0x02]
     end
 
     def handle_sysex(data)
@@ -73,18 +76,18 @@ module Funnel
       @clear = 0
 
       # CAPs are 4bit
-      @iomodule.send_sysex 0x76, [WRITE, @address, 0x06, 0x03, 0x03, 0x03, 0x03]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, 0x06, 0x03, 0x03, 0x03, 0x03]
 
       # INTs are 12bit
-      @iomodule.send_sysex 0x76, [WRITE, @address, 0x0A, 0xC4, 0x09, 0xC4, 0x09, 0xC4, 0x09, 0xC4, 0x09]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, 0x0A, 0xC4, 0x09, 0xC4, 0x09, 0xC4, 0x09, 0xC4, 0x09]
     end
 
     def update
       # start reading
-      @iomodule.send_sysex 0x76, [WRITE, @address, 0x00, 0x01]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, 0x00, 0x01]
 
       # read data: red, green, blue and clear
-      @iomodule.send_sysex 0x76, [READ, @address, 0x40, 0x08]
+      @iomodule.send_sysex I2C_REQUEST, [READ, @address, 0x40, 0x08]
     end
 
     def color
@@ -109,39 +112,39 @@ module Funnel
     end
 
     def go_to_rgb_color_now(color)
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?n, color[0], color[1], color[2]]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?n, color[0], color[1], color[2]]
     end
 
     def fade_to_rgb_color(color, speed = nil)
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?f, speed] unless speed == nil
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?c, color[0], color[1], color[2]]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?f, speed] unless speed == nil
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?c, color[0], color[1], color[2]]
     end
 
     def fade_to_random_rgb_color(color, speed = nil)
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?f, speed] unless speed == nil
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?C, color[0], color[1], color[2]]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?f, speed] unless speed == nil
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?C, color[0], color[1], color[2]]
     end
 
     def fade_to_hsb_color(color, speed = nil)
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?f, speed] unless speed == nil
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?h, color[0], color[1], color[2]]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?f, speed] unless speed == nil
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?h, color[0], color[1], color[2]]
     end
 
     def fade_to_random_hsb_color(color, speed = nil)
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?f, speed] unless speed == nil
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?H, color[0], color[1], color[2]]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?f, speed] unless speed == nil
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?H, color[0], color[1], color[2]]
     end
 
     def set_fade_speed(speed)
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?f, speed]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?f, speed]
     end
 
     def play_light_script(script_id, the_number_of_repeats = 1, line_number = 0)
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?p, script_id, the_number_of_repeats, line_number]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?p, script_id, the_number_of_repeats, line_number]
     end
 
     def stop_script
-      @iomodule.send_sysex 0x76, [WRITE, @address, ?o]
+      @iomodule.send_sysex I2C_REQUEST, [WRITE, @address, ?o]
     end
 
     def handle_sysex(data)
