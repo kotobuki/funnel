@@ -38,7 +38,8 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 	protected static final int SERVO_CONFIG = 0x70;
 	protected static final int FIRMATA_STRING = 0x71;
-	protected static final int I2C = 0x76;
+	protected static final int I2C_REQUEST = 0x76;
+	protected static final int I2C_REPLY = 0x77;
 	protected static final int REPORT_FIRMWARE = 0x79;
 	protected static final int SYSEX_NON_REALTIME = 0x7E;
 	protected static final int SYSEX_REALTIME = 0x7F;
@@ -395,9 +396,21 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		writeByte(ARD_SYSEX_START);
 		writeByte(command);
 
-		if (command == I2C) {
-			writeByte(((Integer) arguments[2]).intValue()); // read/write
-			writeByte(((Integer) arguments[3]).intValue()); // slave address
+		if (command == I2C_REQUEST) {
+			int slaveAddress = ((Integer) arguments[3]).intValue();
+			if ((slaveAddress < 0) || (slaveAddress > 127)) {
+				throw new IllegalArgumentException("the slave address is out of range: "
+						+ Integer.toHexString(slaveAddress));
+			}
+
+			int readWriteMode = ((Integer) arguments[2]).intValue();
+			if ((readWriteMode < 0) || (readWriteMode > 3)) {
+				throw new IllegalArgumentException("read/write mode should be 0, 1, 2 or 3");
+			}
+
+			// TODO: Support 10 bit address mode if needed
+			writeByte(slaveAddress); // slave address
+			writeByte(readWriteMode << 3); // read/write
 			for (int i = 4; i < arguments.length; i++) {
 				int value = ((Integer) arguments[i]).intValue();
 				writeValueAsTwo7bitBytes(value);
