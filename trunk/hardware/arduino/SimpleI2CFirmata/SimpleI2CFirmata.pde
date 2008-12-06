@@ -2,11 +2,14 @@
 #include <Firmata.h>
 
 #define ENABLE_POWER_PINS
-#define SYSEX_I2C 0x76
+#define SYSEX_I2C_REQUEST 0x76
+#define SYSEX_I2C_REPLY 0x77
 #define I2C_WRITE 0
 #define I2C_READ 1
 #define I2C_READ_CONTINUOUSLY 2
 #define I2C_STOP_READING 3
+#define I2C_READ_WRITE_MODE_MASK B00011000
+#define I2C_10BIT_ADDRESS_MODE_MASK B00100000
 
 #define MAX_QUERIES 8
 
@@ -43,7 +46,7 @@ void readAndReportData(byte address, byte theRegister, byte numBytes) {
   }
 
   // send slave address, register and received bytes
-  Firmata.sendSysex(SYSEX_I2C, numBytes + 2, i2cRxData);
+  Firmata.sendSysex(SYSEX_I2C_REPLY, numBytes + 2, i2cRxData);
 }
 
 void sysexCallback(byte command, byte argc, byte *argv)
@@ -53,9 +56,15 @@ void sysexCallback(byte command, byte argc, byte *argv)
   byte slaveRegister;
   byte data;
 
-  if (command == SYSEX_I2C) {
-    mode = argv[0];
-    slaveAddress = argv[1];
+  if (command == SYSEX_I2C_REQUEST) {
+    mode = (argv[1] & I2C_READ_WRITE_MODE_MASK) >> 3;
+    if (argv[1] & I2C_10BIT_ADDRESS_MODE_MASK) {
+      Firmata.sendString("10-bit address mode is not supported");
+      return;
+    } 
+    else {
+      slaveAddress = argv[0];
+    }
 
     switch(mode) {
     case I2C_WRITE:
