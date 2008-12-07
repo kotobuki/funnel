@@ -4,10 +4,10 @@
 #define ENABLE_POWER_PINS
 #define SYSEX_I2C_REQUEST 0x76
 #define SYSEX_I2C_REPLY 0x77
-#define I2C_WRITE 0
-#define I2C_READ 1
-#define I2C_READ_CONTINUOUSLY 2
-#define I2C_STOP_READING 3
+#define I2C_WRITE B00000000
+#define I2C_READ B00001000
+#define I2C_READ_CONTINUOUSLY B00010000
+#define I2C_STOP_READING B00011000
 #define I2C_READ_WRITE_MODE_MASK B00011000
 #define I2C_10BIT_ADDRESS_MODE_MASK B00100000
 
@@ -57,7 +57,7 @@ void sysexCallback(byte command, byte argc, byte *argv)
   byte data;
 
   if (command == SYSEX_I2C_REQUEST) {
-    mode = (argv[1] & I2C_READ_WRITE_MODE_MASK) >> 3;
+    mode = argv[1] & I2C_READ_WRITE_MODE_MASK;
     if (argv[1] & I2C_10BIT_ADDRESS_MODE_MASK) {
       Firmata.sendString("10-bit address mode is not supported");
       return;
@@ -103,6 +103,12 @@ void sysexCallback(byte command, byte argc, byte *argv)
   }
 }
 
+void systemResetCallback()
+{
+  readingContinuously = false;
+  queryIndex = 0;  
+}
+
 // reference: BlinkM_funcs.h by Tod E. Kurt, ThingM, http://thingm.com/
 static void enablePowerPins(byte pwrpin, byte gndpin)
 {
@@ -117,6 +123,7 @@ void setup()
   Firmata.setFirmwareVersion(2, 0);
 
   Firmata.attach(START_SYSEX, sysexCallback);
+  Firmata.attach(SYSTEM_RESET, systemResetCallback);
 
   for (int i = 0; i < TOTAL_DIGITAL_PINS; ++i) {
     pinMode(i, OUTPUT);
