@@ -42,7 +42,7 @@ lineskip={-2pt}
 	\item Gainer I/Oモジュール\footnote{http://www.triggerdevice.com/items/}\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8480}または互換機
 	\item Arduino NG/Diecimila/LilyPad/Nano/Pro/Pro Mini\footnote{http://www.arduino.cc/en/Main/Hardware}またはBoarduinoなどの互換機
 	\item XBee 802.15.4 OEM RFモジュール\footnote{http://www.digi-intl.co.jp/digi/wireless/zigbee/xbee-series1-module.html}またはZB ZigBee PRO RFモジュール\footnote{http://www.digi-intl.co.jp/digi/wireless/zigbee-mesh/xbee-zb-module.html}
-	\item FIO（Funnel I/O）モジュール\footnote{Funnelの配布パッケージの一部として回路図と基板レイアウトデータおよびファームウェアを公開}
+	\item FIO（Funnel I/O）モジュール\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8957}
 	\end{itemize}
 \end{itemize}
 
@@ -202,8 +202,10 @@ Mac OS Xの場合には、XBee Terminalを利用して表3を参考に必要なコマンドを手動で入力
 \hline \texttt{ATID} & \texttt{1234} & \texttt{1234} & PAN ID \\
 \hline \texttt{ATMY} & \texttt{0} & \texttt{1} &  \\
 \hline \texttt{ATDL} & \texttt{FFFF} & \texttt{0} & 相手側のID \\
-\hline \texttt{ATD3} & 3 & - & DIO3をデジタル入力に※ \\
+\hline \texttt{ATD3} & 3 & 5 & DIO3をDINに／DIO3をHIGHに※ \\
 \hline \texttt{ATIC} & 8 & - & DIO Change DetectでDIO3の変化を検出※ \\
+\hline \texttt{ATIU} & - & 0 & I/O Outputを無効に※ \\
+\hline \texttt{ATIA} & - & FFFF & I/O Input Addressを設定※ \\
 \hline \texttt{ATWR} & - & - & 設定を書き込む \\
 \hline \texttt{ATCN} & - & - & コマンドモードを抜ける \\
 \hline 
