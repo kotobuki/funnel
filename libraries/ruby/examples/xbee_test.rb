@@ -24,7 +24,7 @@ xbee = XBee.new :config => config, :nodes => nodes
 xbee.all_io_modules.each do |io|
   puts "xbee: id: #{io.id}, name: #{io.name}"
 
-  io.port(0).on CHANGE do |event|
+  io.pin(0).on CHANGE do |event|
     puts "AD0: #{event.target.value}"
   end
 end
