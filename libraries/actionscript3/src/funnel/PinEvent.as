@@ -5,7 +5,7 @@ package funnel
 	/**
 	 * ポート値の変化に関連するイベントを表すクラスです。
 	 */ 
-	public class PortEvent extends Event
+	public class PinEvent extends Event
 	{
 		/**
 		* ポートの値が0から0以外に変化
@@ -22,7 +22,7 @@ package funnel
 		*/	
 		public static const CHANGE:String = "change";
 		
-		public function PortEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false) {
+		public function PinEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false) {
 			super(type, bubbles, cancelable);
 		}
 	}

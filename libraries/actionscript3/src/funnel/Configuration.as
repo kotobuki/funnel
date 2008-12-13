@@ -7,59 +7,59 @@ package funnel
 	public class Configuration
 	{
 		/**
-		* Gainer.analogInputを実際のポート番号に対応させるテーブル
+		* Gainer.analogInputを実際のピン番号に対応させるテーブル
 		* @see Gainer#analogInput
 		*/
-		public var ainPorts:Array;
+		public var ainPins:Array;
 
 		/**
-		* Gainer.digitalInputを実際のポート番号に対応させるテーブル
+		* Gainer.digitalInputを実際のピン番号に対応させるテーブル
 		* @see Gainer#digitalInput
 		*/
-		public var dinPorts:Array;
+		public var dinPins:Array;
 
 		/**
-		* Gainer.analogOutputを実際のポート番号に対応させるテーブル
+		* Gainer.analogOutputを実際のピン番号に対応させるテーブル
 		* @see Gainer#analogOutput
 		*/
-		public var aoutPorts:Array;
+		public var aoutPins:Array;
 
 		/**
-		* Gainer.digitalOutputを実際のポート番号に対応させるテーブル
+		* Gainer.digitalOutputを実際のピン番号に対応させるテーブル
 		* @see Gainer#digitalOutput
 		*/
-		public var doutPorts:Array;
+		public var doutPins:Array;
 
 		/**
-		* Gainer.buttonを実際のポート番号に対応させるテーブル
+		* Gainer.buttonを実際のピン番号に対応させるテーブル
 		* @see Gainer#button
 		*/
 		public var button:uint;
 
 		/**
-		* Gainer.ledを実際のポート番号に対応させるテーブル
+		* Gainer.ledを実際のピン番号に対応させるテーブル
 		* @see Gainer#led
 		*/
 		public var led:uint;
 
 		/**
-		* Arduino.analogPinを実際のポート番号に対応させるテーブル
+		* Arduino.analogPinを実際のピン番号に対応させるテーブル
 		* @see Arduino#analogPin
 		*/
 		public var analogPins:Array;
 
 		/**
-		* Arduino.digitsalPinを実際のポート番号に対応させるテーブル
+		* Arduino.digitsalPinを実際のピン番号に対応させるテーブル
 		* @see Arduino#digitsalPin
 		*/
 		public var digitalPins:Array;
 
 		/**
-		* ポートのタイプ(AIN、DIN、AOUT、DOUT)の配列
-		* @see Port#AIN
-		* @see Port#DIN
-		* @see Port#AOUT
-		* @see Port#DOUT
+		* ピンのタイプ(AIN、DIN、AOUT、DOUT)の配列
+		* @see Pin#AIN
+		* @see Pin#DIN
+		* @see Pin#AOUT
+		* @see Pin#DOUT
 		*/
 		public var config:Array;
 
@@ -70,18 +70,18 @@ package funnel
 
 		/**
 		 * デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。
-		 * @param portNum ピン番号
+		 * @param pinNum ピン番号
 		 * @param mode 通常はデジタル入力(IN)、デジタル出力(OUT)、PWM(疑似アナログ出力)のいずれかを指定。ただし、アナログピンに対してアナログ入力(AIN)を設定することも可能。
 		 */
-		public function setDigitalPinMode(portNum:uint, mode:uint):void {
+		public function setDigitalPinMode(pinNum:uint, mode:uint):void {
 			if (digitalPins == null) throw new ArgumentError("digital pins are not available");
-			if (digitalPins[portNum] == null) throw new ArgumentError("digital pin is not available at " + portNum);
+			if (digitalPins[pinNum] == null) throw new ArgumentError("digital pin is not available at " + pinNum);
 			if ([DIN, DOUT, AOUT].indexOf(mode) != -1) {
-				config[digitalPins[portNum]] = mode;
+				config[digitalPins[pinNum]] = mode;
 			} else if (AIN == mode) {
 				if (analogPins == null) throw new ArgumentError("analog pins are not available");
-				if (analogPins[portNum] == null) throw new ArgumentError("analog pin is not available at " + portNum);
-				config[analogPins[portNum]] = mode;
+				if (analogPins[pinNum] == null) throw new ArgumentError("analog pin is not available at " + pinNum);
+				config[analogPins[pinNum]] = mode;
 			} else {
 				throw new ArgumentError("mode #" + mode +" is not available");
 			}

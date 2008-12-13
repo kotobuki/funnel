@@ -1,6 +1,6 @@
 package funnel {
 	/**
-	* @see Port#AIN
+	* @see Pin#AIN
 	*/	
-	public var AIN:uint = Port.AIN;
+	public var AIN:uint = Pin.AIN;
 }

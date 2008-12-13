@@ -1,6 +1,6 @@
 package funnel {
 	/**
-	* @see Port#AOUT
+	* @see Pin#AOUT
 	*/
-	public var PWM:uint = Port.AOUT;
+	public var PWM:uint = Pin.AOUT;
 }

@@ -5,11 +5,11 @@ package funnel
 	 */ 
 	public class Gainer extends IOSystem
 	{
-		private var _port:Function;
-		private var _ainPorts:Array;
-		private var _dinPorts:Array;
-		private var _aoutPorts:Array;
-		private var _doutPorts:Array;
+		private var _pin:Function;
+		private var _ainPins:Array;
+		private var _dinPins:Array;
+		private var _aoutPins:Array;
+		private var _doutPins:Array;
 		private var _button:uint;
 		private var _led:uint;
 		
@@ -28,10 +28,10 @@ package funnel
 				DOUT, DOUT, DOUT, DOUT,
 				DOUT, DIN
 			];
-			k.ainPorts = [0, 1, 2, 3];
-			k.dinPorts = [4, 5, 6, 7];
-			k.aoutPorts = [8, 9, 10, 11];
-			k.doutPorts = [12, 13, 14, 15];
+			k.ainPins = [0, 1, 2, 3];
+			k.dinPins = [4, 5, 6, 7];
+			k.aoutPins = [8, 9, 10, 11];
+			k.doutPins = [12, 13, 14, 15];
 			k.button = 17;
 			k.led = 16;
 			return k;
@@ -49,9 +49,9 @@ package funnel
 				DOUT, DOUT, DOUT, DOUT,
 				DOUT, DIN
 			];
-			k.ainPorts = [0, 1, 2, 3, 4, 5, 6, 7];
-			k.aoutPorts = [8, 9, 10, 11];
-			k.doutPorts = [12, 13, 14, 15];
+			k.ainPins = [0, 1, 2, 3, 4, 5, 6, 7];
+			k.aoutPins = [8, 9, 10, 11];
+			k.doutPins = [12, 13, 14, 15];
 			k.button = 17;
 			k.led = 16;
 			return k;
@@ -69,9 +69,9 @@ package funnel
 				AOUT, AOUT, AOUT, AOUT,
 				DOUT, DIN
 			];
-			k.ainPorts = [0, 1, 2, 3];
-			k.dinPorts = [4, 5, 6, 7];
-			k.aoutPorts = [8, 9, 10, 11, 12, 13, 14, 15];
+			k.ainPins = [0, 1, 2, 3];
+			k.dinPins = [4, 5, 6, 7];
+			k.aoutPins = [8, 9, 10, 11, 12, 13, 14, 15];
 			k.button = 17;
 			k.led = 16;
 			return k;
@@ -89,8 +89,8 @@ package funnel
 				AOUT, AOUT, AOUT, AOUT,
 				DOUT, DIN
 			];
-			k.ainPorts = [0, 1, 2, 3, 4, 5, 6, 7];
-			k.aoutPorts = [8, 9, 10, 11, 12, 13, 14, 15];
+			k.ainPins = [0, 1, 2, 3, 4, 5, 6, 7];
+			k.aoutPins = [8, 9, 10, 11, 12, 13, 14, 15];
 			k.button = 17;
 			k.led = 16;
 			return k;
@@ -107,7 +107,7 @@ package funnel
 				DIN,  DIN,	DIN,  DIN,
 				DIN,  DIN,	DIN,  DIN
 			];
-			k.dinPorts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+			k.dinPins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 			return k;
 		}
 		
@@ -122,7 +122,7 @@ package funnel
 				DOUT, DOUT, DOUT, DOUT,
 				DOUT, DOUT, DOUT, DOUT
 			];
-			k.doutPorts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+			k.doutPins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 			return k;
 		}
 		
@@ -141,7 +141,7 @@ package funnel
 				AOUT, AOUT, AOUT, AOUT, AOUT, AOUT, AOUT, AOUT,
 				AOUT, AOUT, AOUT, AOUT, AOUT, AOUT, AOUT, AOUT
 			];
-			k.aoutPorts = [
+			k.aoutPins = [
 				0, 1, 2, 3, 4, 5, 6, 7,
 				8, 9, 10, 11, 12, 13, 14, 15,
 				16, 17, 18, 19, 20, 21, 22, 23,
@@ -165,8 +165,8 @@ package funnel
 				DOUT, DOUT, DOUT, DOUT,
 				DOUT, DOUT, DOUT, DOUT
 			];
-			k.dinPorts = [0, 1, 2, 3, 4, 5, 6, 7];
-			k.doutPorts = [8, 9, 10, 11, 12, 13, 14, 15];
+			k.dinPins = [0, 1, 2, 3, 4, 5, 6, 7];
+			k.doutPins = [8, 9, 10, 11, 12, 13, 14, 15];
 			return k;
 		}
 		
@@ -180,67 +180,67 @@ package funnel
 			if (config == null) config = MODE1;
 			super([config], host, portNum, samplingInterval);
 			
-			_port = ioModule(config.moduleID).port;
-			_ainPorts = config.ainPorts;
-			_dinPorts = config.dinPorts;
-			_aoutPorts = config.aoutPorts;
-			_doutPorts = config.doutPorts;
+			_pin = ioModule(config.moduleID).pin;
+			_ainPins = config.ainPins;
+			_dinPins = config.dinPins;
+			_aoutPins = config.aoutPins;
+			_doutPins = config.doutPins;
 			_button = config.button;
 			_led = config.led;
 		}
 		
 		/**
-		 * portNumで指定したポートを取得します。
-		 * @param portNum ポート番号
-		 * @return portNumで指定したPortオブジェクト
-		 * @see Port
+		 * pinNumで指定したピンを取得します。
+		 * @param pinNum ピン番号
+		 * @return pinNumで指定したPinオブジェクト
+		 * @see Pin
 		 */ 
-		public function analogInput(portNum:uint):Port {
-			return _port(_ainPorts[portNum]);
+		public function analogInput(pinNum:uint):Pin {
+			return _pin(_ainPins[pinNum]);
 		}
 		
 		/**
-		 * portNumで指定したポートを取得します。
-		 * @param portNum ポート番号
-		 * @return portNumで指定したPortオブジェクト
-		 * @see Port
+		 * pinNumで指定したピンを取得します。
+		 * @param pinNum ピン番号
+		 * @return pinNumで指定したPinオブジェクト
+		 * @see Pin
 		 */ 
-		public function digitalInput(portNum:uint):Port {
-			return _port(_dinPorts[portNum]);
+		public function digitalInput(pinNum:uint):Pin {
+			return _pin(_dinPins[pinNum]);
 		}
 		
 		/**
-		 * portNumで指定したポートを取得します。
-		 * @param portNum ポート番号
-		 * @return portNumで指定したPortオブジェクト
-		 * @see Port
+		 * pinNumで指定したピンを取得します。
+		 * @param pinNum ピン番号
+		 * @return pinNumで指定したPinオブジェクト
+		 * @see Pin
 		 */ 
-		public function analogOutput(portNum:uint):Port {
-			return _port(_aoutPorts[portNum]);
+		public function analogOutput(pinNum:uint):Pin {
+			return _pin(_aoutPins[pinNum]);
 		}
 		
 		/**
-		 * portNumで指定したポートを取得します。
-		 * @param portNum ポート番号
-		 * @return portNumで指定したPortオブジェクト
-		 * @see Port
+		 * pinNumで指定したピンを取得します。
+		 * @param pinNum ピン番号
+		 * @return pinNumで指定したPinオブジェクト
+		 * @see Pin
 		 */ 
-		public function digitalOutput(portNum:uint):Port {
-			return _port(_doutPorts[portNum]);
+		public function digitalOutput(pinNum:uint):Pin {
+			return _pin(_doutPins[pinNum]);
 		}
 		
 		/**
-		 * I/Oモジュール上のボタンを表すポート
+		 * I/Oモジュール上のボタンを表すピン
 		 */ 
-		public function get button():Port {
-			return _port(_button);
+		public function get button():Pin {
+			return _pin(_button);
 		}
 		
 		/**
-		 * I/Oモジュール上のLEDを表すポート
+		 * I/Oモジュール上のLEDを表すピン
 		 */ 
-		public function get led():Port {
-			return _port(_led);
+		public function get led():Pin {
+			return _pin(_led);
 		}
 		
 	}
