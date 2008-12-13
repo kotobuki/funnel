@@ -1,5 +1,4 @@
 #summary Code Examples without/with Funnel
-#labels Featured
 
 = Example 1: Detect changes of an analog input =
 
