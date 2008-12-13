@@ -1,5 +1,5 @@
 #summary Fio (Funnel I/O module) v1.1
-#labels Featured,Phase-Design
+#labels Phase-Design
 
 = Introduction =
 
