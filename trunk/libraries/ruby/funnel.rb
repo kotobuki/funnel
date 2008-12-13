@@ -7,26 +7,26 @@ require 'funnel/gainer.rb'
 require 'funnel/i2c.rb'
 require 'funnel/iomodule.rb'
 require 'funnel/iosystem.rb'
-require 'funnel/port.rb'
+require 'funnel/pin.rb'
 require 'funnel/xbee.rb'
 
 require 'funnel/scope.rb'
 
 module Funnel
-  AIN = Port::AIN
+  AIN = Pin::AIN
   ALL = IOSystem::ALL
-  AOUT = Port::AOUT
-  CHANGE = PortEvent::CHANGE
+  AOUT = Pin::AOUT
+  CHANGE = PinEvent::CHANGE
   CONFIGURATION_ERROR = FunnelErrorEvent::CONFIGURATION_ERROR
-  DIN = Port::DIN
-  DOUT = Port::DOUT
-  FALLING_EDGE = PortEvent::FALLING_EDGE
+  DIN = Pin::DIN
+  DOUT = Pin::DOUT
+  FALLING_EDGE = PinEvent::FALLING_EDGE
   ERROR = FunnelErrorEvent::ERROR
-  IN = Port::DIN
-  OUT = Port::DOUT
-  PWM = Port::AOUT
+  IN = Pin::DIN
+  OUT = Pin::DOUT
+  PWM = Pin::AOUT
   READY = FunnelEvent::READY
   REBOOT_ERROR = FunnelErrorEvent::REBOOT_ERROR
-  RISING_EDGE = PortEvent::RISING_EDGE
+  RISING_EDGE = PinEvent::RISING_EDGE
   UPDATE = GeneratorEvent::UPDATE
 end

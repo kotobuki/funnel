@@ -10,7 +10,7 @@ module Funnel
     end
   end
 
-  class PortEvent < FunnelEvent
+  class PinEvent < FunnelEvent
     RISING_EDGE         = 0
     FALLING_EDGE        = 1
     CHANGE              = 2

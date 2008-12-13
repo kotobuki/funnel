@@ -28,7 +28,7 @@ module Funnel
 
       # set SetPoint filters to each digital inputs
       config.digital_pins.each do |i|
-        @system.io_module(0).port(i).filters = [SetPoint.new(0.5, 0)] if config.to_a[i] == Port::DIN
+        @system.io_module(0).pin(i).filters = [SetPoint.new(0.5, 0)] if config.to_a[i] == Port::DIN
       end
     end
 

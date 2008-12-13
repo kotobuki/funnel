@@ -6,7 +6,7 @@ require 'osc'
 
 require 'funnel/configuration'
 require 'funnel/event'
-require 'funnel/port'
+require 'funnel/pin'
 require 'funnel/filter'
 require 'funnel/iomodule'
 
@@ -69,7 +69,7 @@ module Funnel
                   from = message.to_a[1]
                   counts = message.to_a.length - 2
                   counts.times do |i|
-                    @modules[id].port(from + i).value = message.to_a[2 + i]
+                    @modules[id].pin(from + i).value = message.to_a[2 + i]
                   end
                 when '/node'
                   next unless @autoregister
@@ -112,7 +112,7 @@ module Funnel
                 end
               end
             rescue EOFError
-              puts "notification port: EOF error"
+              puts "command port: EOF error"
             end
             processed_size += packet_size + 4
           end
@@ -208,10 +208,10 @@ module Funnel
       was_updated = false
 
       @modules.each_pair do |id, io_module|
-        io_module.updated_port_indices.each_with_index do |updated, index|
+        io_module.updated_pin_indices.each_with_index do |updated, index|
           if updated then
-            output_values.push(io_module.port[index].value)
-            io_module.updated_port_indices[index] = false
+            output_values.push(io_module.pin[index].value)
+            io_module.updated_pin_indices[index] = false
             start = index unless was_updated
           elsif was_updated then
             send_output_command(start, output_values) unless index == 0
@@ -248,22 +248,22 @@ if __FILE__ == $0
   module Funnel
     gio = IOSystem.new(Gainer::MODE1, '127.0.0.1', 9000, 33)
 
-    gio.io_module(0).port(0).filters = [SetPoint.new(0.5, 0.1)]
-    gio.io_module(0).port(0).add_event_listener(PortEvent::CHANGE) do |event|
+    gio.io_module(0).pin(0).filters = [SetPoint.new(0.5, 0.1)]
+    gio.io_module(0).pin(0).add_event_listener(PinEvent::CHANGE) do |event|
       puts "ain 0: #{event.target.value}"
     end
 
-    gio.io_module(0).port(17).on(PortEvent::RISING_EDGE) do
+    gio.io_module(0).pin(17).on(PinEvent::RISING_EDGE) do
       puts "button: pressed"
     end
 
-    gio.io_module(0).port(17).on PortEvent::FALLING_EDGE do
+    gio.io_module(0).pin(17).on PinEvent::FALLING_EDGE do
       puts "button: released"
     end
 
     Osc.service_interval = 33
     osc = Osc.new(Osc::SQUARE, 2.0, 0)
-    gio.io_module(0).port(16).filters = [osc]
+    gio.io_module(0).pin(16).filters = [osc]
     osc.reset
     osc.start
 

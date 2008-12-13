@@ -57,8 +57,8 @@ module Funnel
 
       # set SetPoint filters to each digital inputs
       @system.io_module(0).button.filters = [SetPoint.new(0.5, 0)] unless config.button == nil
-      config.din_ports.each do |i|
-        @system.io_module(0).port(i).filters = [SetPoint.new(0.5, 0)]
+      config.din_pins.each do |i|
+        @system.io_module(0).pin(i).filters = [SetPoint.new(0.5, 0)]
       end
     end
 
