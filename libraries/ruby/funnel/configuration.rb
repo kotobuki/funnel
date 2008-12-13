@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'funnel/port'
+require 'funnel/pin'
 
 module Funnel
   class Configuration
@@ -8,10 +8,10 @@ module Funnel
     (MODE1, MODE2, MODE3, MODE4, MODE5, MODE6, MODE7) = Array(1..7)
     (MULTIPOINT, ZB) = Array(0..1)
 
-    attr_reader :ain_ports
-    attr_reader :din_ports
-    attr_reader :aout_ports
-    attr_reader :dout_ports
+    attr_reader :ain_pins
+    attr_reader :din_pins
+    attr_reader :aout_pins
+    attr_reader :dout_pins
     attr_reader :analog_pins
     attr_reader :digital_pins
     attr_reader :button
@@ -25,113 +25,113 @@ module Funnel
         case mode
         when MODE1
           @config = [
-            Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-            Port::DIN, Port::DIN, Port::DIN, Port::DIN,
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT,
-            Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT,
-            Port::DOUT, Port::DIN  # LED, BUTTON
+            Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN,
+            Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN,
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT,
+            Pin::DOUT, Pin::DOUT, Pin::DOUT, Pin::DOUT,
+            Pin::DOUT, Pin::DIN  # LED, BUTTON
           ]
-          @ain_ports = [0, 1, 2, 3]
-          @din_ports = [4, 5, 6, 7]
-          @aout_ports = [8, 9, 10, 11]
-          @dout_ports = [12, 13, 14, 15]
+          @ain_pins = [0, 1, 2, 3]
+          @din_pins = [4, 5, 6, 7]
+          @aout_pins = [8, 9, 10, 11]
+          @dout_pins = [12, 13, 14, 15]
           @analog_pins = nil
           @digital_pins = nil
           @button = [17]
           @led = [16]
         when MODE2
           @config = [
-            Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-            Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT,
-            Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT,
-            Port::DOUT, Port::DIN  # LED, BUTTON
+            Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN,
+            Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN,
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT,
+            Pin::DOUT, Pin::DOUT, Pin::DOUT, Pin::DOUT,
+            Pin::DOUT, Pin::DIN  # LED, BUTTON
           ]
-          @ain_ports = [0, 1, 2, 3, 4, 5, 6, 7]
-          @din_ports = nil
-          @aout_ports = [8, 9, 10, 11]
-          @dout_ports = [12, 13, 14, 15]
+          @ain_pins = [0, 1, 2, 3, 4, 5, 6, 7]
+          @din_pins = nil
+          @aout_pins = [8, 9, 10, 11]
+          @dout_pins = [12, 13, 14, 15]
           @analog_pins = nil
           @digital_pins = nil
           @button = [17]
           @led = [16]
         when MODE3
           @config = [
-            Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-            Port::DIN, Port::DIN, Port::DIN, Port::DIN,
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT,
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT,
-            Port::DOUT, Port::DIN  # LED, BUTTON
+            Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN,
+            Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN,
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT,
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT,
+            Pin::DOUT, Pin::DIN  # LED, BUTTON
           ]
-          @ain_ports = [0, 1, 2, 3]
-          @din_ports = [4, 5, 6, 7]
-          @aout_ports = [8, 9, 10, 11, 12, 13, 14, 15]
-          @dout_ports = nil
+          @ain_pins = [0, 1, 2, 3]
+          @din_pins = [4, 5, 6, 7]
+          @aout_pins = [8, 9, 10, 11, 12, 13, 14, 15]
+          @dout_pins = nil
           @analog_pins = nil
           @digital_pins = nil
           @button = [17]
           @led = [16]
         when MODE4
           @config = [
-            Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-            Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT,
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT,
-            Port::DOUT, Port::DIN  # LED, BUTTON
+            Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN,
+            Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN,
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT,
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT,
+            Pin::DOUT, Pin::DIN  # LED, BUTTON
           ]
-          @ain_ports = [0, 1, 2, 3, 4, 5, 6, 7]
-          @din_ports = nil
-          @aout_ports = [8, 9, 10, 11, 12, 13, 14, 15]
-          @dout_ports = nil
+          @ain_pins = [0, 1, 2, 3, 4, 5, 6, 7]
+          @din_pins = nil
+          @aout_pins = [8, 9, 10, 11, 12, 13, 14, 15]
+          @dout_pins = nil
           @analog_pins = nil
           @digital_pins = nil
           @button = [17]
           @led = [16]
         when MODE5
           @config = [
-            Port::DIN, Port::DIN, Port::DIN, Port::DIN,
-            Port::DIN, Port::DIN, Port::DIN, Port::DIN,
-            Port::DIN, Port::DIN, Port::DIN, Port::DIN,
-            Port::DIN, Port::DIN, Port::DIN, Port::DIN,
+            Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN,
+            Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN,
+            Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN,
+            Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN,
           ]
-          @ain_ports = nil
-          @din_ports = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-          @aout_ports = nil
-          @dout_ports = nil
+          @ain_pins = nil
+          @din_pins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+          @aout_pins = nil
+          @dout_pins = nil
           @analog_pins = nil
           @digital_pins = nil
           @button = nil
           @led = nil
         when MODE6
           @config = [
-            Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT,
-            Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT,
-            Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT,
-            Port::DOUT, Port::DOUT, Port::DOUT, Port::DOUT,
+            Pin::DOUT, Pin::DOUT, Pin::DOUT, Pin::DOUT,
+            Pin::DOUT, Pin::DOUT, Pin::DOUT, Pin::DOUT,
+            Pin::DOUT, Pin::DOUT, Pin::DOUT, Pin::DOUT,
+            Pin::DOUT, Pin::DOUT, Pin::DOUT, Pin::DOUT,
           ]
-          @ain_ports = nil
-          @din_ports = nil
-          @aout_ports = nil
-          @dout_ports = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+          @ain_pins = nil
+          @din_pins = nil
+          @aout_pins = nil
+          @dout_pins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
           @analog_pins = nil
           @digital_pins = nil
           @button = nil
           @led = nil
         when MODE7
           @config = [
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, # [0..7, 0]
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, # [0..7, 1]
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, # [0..7, 2]
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, # [0..7, 3]
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, # [0..7, 4]
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, # [0..7, 5]
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, # [0..7, 6]
-            Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::AOUT, # [0..7, 7]
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, # [0..7, 0]
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, # [0..7, 1]
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, # [0..7, 2]
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, # [0..7, 3]
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, # [0..7, 4]
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, # [0..7, 5]
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, # [0..7, 6]
+            Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, # [0..7, 7]
           ]
-          @ain_ports = nil
-          @din_ports = nil
-          @aout_ports = nil
-          @dout_ports = nil
+          @ain_pins = nil
+          @din_pins = nil
+          @aout_pins = nil
+          @dout_pins = nil
           @analog_pins = nil
           @digital_pins = nil
           @button = nil
@@ -139,14 +139,14 @@ module Funnel
         end
       when ARDUINO
         @config = [
-          Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::DOUT, Port::AOUT, Port::AOUT,
-          Port::DOUT, Port::DOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::DOUT, Port::DOUT,
-          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN
+          Pin::DOUT, Pin::DOUT, Pin::DOUT, Pin::AOUT, Pin::DOUT, Pin::AOUT, Pin::AOUT,
+          Pin::DOUT, Pin::DOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::DOUT, Pin::DOUT,
+          Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN
         ]
-        @ain_ports = nil
-        @din_ports = nil
-        @aout_ports = nil
-        @dout_ports = nil
+        @ain_pins = nil
+        @din_pins = nil
+        @aout_pins = nil
+        @dout_pins = nil
         @analog_pins = [14, 15, 16, 17, 18, 19, 20, 21]
         @digital_pins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
         @button = nil
@@ -156,8 +156,8 @@ module Funnel
         when MULTIPOINT # was XBee Series 1, is 802.15.4
           # 8 digital I/O (including 6 ADC inputs)
           @config = [
-            Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-            Port::DIN, Port::DIN
+            Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN,
+            Pin::DIN, Pin::DIN
           ]
           @analog_pins = [0, 1, 2, 3, 4, 5]
           @digital_pins = [6, 7]
@@ -165,28 +165,28 @@ module Funnel
           # 13 digital I/O (including 4 ADC inputs)
           # NOTE: D6, D8 and D9 are not accessible
           @config = [
-            Port::AIN, Port::AIN, Port::AIN, Port::AIN,
-            Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN, Port::DIN
+            Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN,
+            Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN, Pin::DIN
           ]
           @analog_pins = [0, 1, 2, 3]
           @digital_pins = [4, 5, 6, 7, 8, 9, 10, 11, 12]
         end
-        @ain_ports = nil
-        @din_ports = nil
-        @aout_ports = nil
-        @dout_ports = nil
+        @ain_pins = nil
+        @din_pins = nil
+        @aout_pins = nil
+        @dout_pins = nil
         @button = nil
         @led = nil
       when FIO
         @config = [
-          Port::DOUT, Port::DOUT, Port::DOUT, Port::AOUT, Port::DOUT, Port::AOUT, Port::AOUT,
-          Port::DOUT, Port::DOUT, Port::AOUT, Port::AOUT, Port::AOUT, Port::DOUT, Port::DOUT,
-          Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN, Port::AIN
+          Pin::DOUT, Pin::DOUT, Pin::DOUT, Pin::AOUT, Pin::DOUT, Pin::AOUT, Pin::AOUT,
+          Pin::DOUT, Pin::DOUT, Pin::AOUT, Pin::AOUT, Pin::AOUT, Pin::DOUT, Pin::DOUT,
+          Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN, Pin::AIN
         ]
-        @ain_ports = nil
-        @din_ports = nil
-        @aout_ports = nil
-        @dout_ports = nil
+        @ain_pins = nil
+        @din_pins = nil
+        @aout_pins = nil
+        @dout_pins = nil
         @analog_pins = [14, 15, 16, 17, 18, 19, 20, 21]
         @digital_pins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
         @button = nil
@@ -198,12 +198,12 @@ module Funnel
       raise ArgumentError, "digital pins are not available" if @digital_pins == nil
       raise ArgumentError, "digital pin is not available at #{pin}" if @digital_pins.at(pin) == nil
       case mode
-      when Port::DIN
-        @config[@digital_pins.at(pin)] = Port::DIN
-      when Port::DOUT
-        @config[@digital_pins.at(pin)] = Port::DOUT
-      when Port::AOUT
-        @config[@digital_pins.at(pin)] = Port::AOUT
+      when Pin::DIN
+        @config[@digital_pins.at(pin)] = Pin::DIN
+      when Pin::DOUT
+        @config[@digital_pins.at(pin)] = Pin::DOUT
+      when Pin::AOUT
+        @config[@digital_pins.at(pin)] = Pin::AOUT
       else
         raise ArgumentError, "mode #{mode} is not available"
       end
@@ -227,10 +227,10 @@ if __FILE__ == $0
     arduino.set_digital_pin_mode(2, Configuration::OUT)
     arduino.set_digital_pin_mode(11, Configuration::PWM)
     p arduino.to_a
-    puts "ain: #{arduino.ain_ports.join(',')}" if arduino.ain_ports
-    puts "din: #{arduino.din_ports.join(',')}" if arduino.din_ports
-    puts "aout: #{arduino.aout_ports.join(',')}" if arduino.aout_ports
-    puts "dout: #{arduino.dout_ports.join(',')}" if arduino.dout_ports
+    puts "ain: #{arduino.ain_pins.join(',')}" if arduino.ain_pins
+    puts "din: #{arduino.din_pins.join(',')}" if arduino.din_pins
+    puts "aout: #{arduino.aout_pins.join(',')}" if arduino.aout_pins
+    puts "dout: #{arduino.dout_pins.join(',')}" if arduino.dout_pins
     puts "analog: #{arduino.analog_pins.join(',')}" if arduino.analog_pins
     puts "digital: #{arduino.digital_pins.join(',')}" if arduino.digital_pins
     puts "button: #{arduino.button.join(',')}" if arduino.button
@@ -240,10 +240,10 @@ if __FILE__ == $0
     puts "TEST: Gainer"
     gainer = Gainer::MODE1
     p gainer.to_a
-    puts "ain: #{gainer.ain_ports.join(',')}" if gainer.ain_ports
-    puts "din: #{gainer.din_ports.join(',')}" if gainer.din_ports
-    puts "aout: #{gainer.aout_ports.join(',')}" if gainer.aout_ports
-    puts "dout: #{gainer.dout_ports.join(',')}" if gainer.dout_ports
+    puts "ain: #{gainer.ain_pins.join(',')}" if gainer.ain_pins
+    puts "din: #{gainer.din_pins.join(',')}" if gainer.din_pins
+    puts "aout: #{gainer.aout_pins.join(',')}" if gainer.aout_pins
+    puts "dout: #{gainer.dout_pins.join(',')}" if gainer.dout_pins
     puts "analog: #{gainer.analog_pins.join(',')}" if gainer.analog_pins
     puts "digital: #{gainer.digital_pins.join(',')}" if gainer.digital_pins
     puts "button: #{gainer.button.join(',')}" if gainer.button

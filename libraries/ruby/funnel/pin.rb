@@ -1,7 +1,7 @@
 require 'funnel/event'
 
 module Funnel
-  class Port
+  class Pin
     AIN   = 0
     DIN   = 1
     AOUT  = 2
@@ -87,16 +87,16 @@ module Funnel
 
       @last_value = last_value
       @on_change_listeners.each do |proc|
-        proc.call(PortEvent.new(PortEvent::CHANGE, self))
+        proc.call(PinEvent.new(PinEvent::CHANGE, self))
       end
 
       if (last_value == 0) and (current_value != 0) then
         @on_rising_edge_listeners.each do |proc|
-          proc.call(PortEvent.new(PortEvent::RISING_EDGE, self))
+          proc.call(PinEvent.new(PinEvent::RISING_EDGE, self))
         end
       elsif (last_value != 0) and (current_value == 0) then
         @on_falling_edge_listeners.each do |proc|
-          proc.call(PortEvent.new(PortEvent::FALLING_EDGE, self))
+          proc.call(PinEvent.new(PinEvent::FALLING_EDGE, self))
         end
       end
     end
@@ -118,11 +118,11 @@ module Funnel
 
     def add_event_listener(type, &proc)
       case type
-      when PortEvent::CHANGE
+      when PinEvent::CHANGE
         @on_change_listeners << proc
-      when PortEvent::RISING_EDGE
+      when PinEvent::RISING_EDGE
         @on_rising_edge_listeners << proc
-      when PortEvent::FALLING_EDGE
+      when PinEvent::FALLING_EDGE
         @on_falling_edge_listeners << proc
       else
         raise ArgumentError, "unknown event type: #{type}"
