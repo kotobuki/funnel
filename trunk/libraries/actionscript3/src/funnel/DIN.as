@@ -1,6 +1,6 @@
 package funnel {
 	/**
-	* @see Port#DIN
+	* @see Pin#DIN
 	*/
-	public var DIN:uint = Port.DIN;
+	public var DIN:uint = Pin.DIN;
 }

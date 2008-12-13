@@ -11,9 +11,9 @@ package funnel
 	{
 		private var _system:IOSystem;
 		private var _id:uint;
-		private var _ioPorts:Array;
+		private var _ioPins:Array;
 		private var _updatedValues:Array;
-		private var _portCount:uint;
+		private var _pinCount:uint;
 		private var _config:Configuration;
 
 		private var _sysexListeners:Array;
@@ -30,54 +30,54 @@ package funnel
 			_config = configuration;
 			_id = configuration.moduleID;
 
-			var portTypes:Array = _config.config;
-			_portCount = portTypes.length;
-			_ioPorts = new Array(_portCount);
-			_updatedValues = new Array(_portCount);
-			for (var i:uint = 0; i < _portCount; ++i) {
-				var aPort:Port = new Port(i, portTypes[i]);
-				var type:uint = aPort.type;
-				if (type == Port.AOUT || type == Port.DOUT) {
-					aPort.addEventListener(PortEvent.CHANGE, handleChange);
+			var pinTypes:Array = _config.config;
+			_pinCount = pinTypes.length;
+			_ioPins = new Array(_pinCount);
+			_updatedValues = new Array(_pinCount);
+			for (var i:uint = 0; i < _pinCount; ++i) {
+				var aPin:Pin = new Pin(i, pinTypes[i]);
+				var type:uint = aPin.type;
+				if (type == Pin.AOUT || type == Pin.DOUT) {
+					aPin.addEventListener(PinEvent.CHANGE, handleChange);
 				}
-				_ioPorts[i] = aPort;
+				_ioPins[i] = aPin;
 			}
 			
 			_sysexListeners = new Array();
 		}
 
 		/**
-		 * portNumで指定したPortオブジェクトを取得します。
-		 * @param portNum ポート番号
-		 * @return Portオブジェクト
-		 * @see Port
+		 * pinNumで指定したPinオブジェクトを取得します。
+		 * @param pinNum ピン番号
+		 * @return Pinオブジェクト
+		 * @see Pin
 		 */
-		public function port(portNum:uint):Port {
-			return _ioPorts[portNum];
+		public function pin(pinNum:uint):Pin {
+			return _ioPins[pinNum];
 		}
 
 		/**
-		 * pinNumで指定したアナログピンのPortオブジェクトを取得します。
-		 * @param portNum アナログピン番号
-		 * @return Portオブジェクト
-		 * @see Port
+		 * pinNumで指定したアナログピンのPinオブジェクトを取得します。
+		 * @param pinNum アナログピン番号
+		 * @return Pinオブジェクト
+		 * @see Pin
 		 */
-		public function analogPin(pinNum:uint):Port {
+		public function analogPin(pinNum:uint):Pin {
 			if (_config.analogPins == null) throw new ArgumentError("analog pins are not available");
 			if (_config.analogPins[pinNum] == null) throw new ArgumentError("analog pin is not available at " + pinNum);
-			return _ioPorts[_config.analogPins[pinNum]];
+			return _ioPins[_config.analogPins[pinNum]];
 		}
 
 		/**
-		 * pinNumで指定したデジタルピンのPortオブジェクトを取得します。
-		 * @param portNum デジタルピン番号
-		 * @return Portオブジェクト
-		 * @see Port
+		 * pinNumで指定したデジタルピンのPinオブジェクトを取得します。
+		 * @param pinNum デジタルピン番号
+		 * @return Pinオブジェクト
+		 * @see Pin
 		 */
-		public function digitalPin(pinNum:uint):Port {
+		public function digitalPin(pinNum:uint):Pin {
 			if (_config.digitalPins == null) throw new ArgumentError("digital pins are not available");
 			if (_config.digitalPins[pinNum] == null) throw new ArgumentError("digital pin is not available at " + pinNum);
-			return _ioPorts[_config.digitalPins[pinNum]];
+			return _ioPins[_config.digitalPins[pinNum]];
 		}
 
 		public function sendSysex(command:uint, message:Array):void {
@@ -94,20 +94,20 @@ package funnel
 		}
 
 		/**
-		 * @return ポート数
+		 * @return ピン数
 		 *
 		 */
-		public function get portCount():uint {
-			return _portCount;
+		public function get pinCount():uint {
+			return _pinCount;
 		}
 
-		private function handleChange(event:PortEvent):void {
-			var port:Port = event.target as Port;
-			var index:uint = port.number;
+		private function handleChange(event:PinEvent):void {
+			var pin:Pin = event.target as Pin;
+			var index:uint = pin.number;
 			if (_system.autoUpdate) {
-				_system.sendOut(_id, index, [port.value]);
+				_system.sendOut(_id, index, [pin.value]);
 			} else {
-				_updatedValues[index] = port.value;
+				_updatedValues[index] = pin.value;
 			}
 		}
 
@@ -119,7 +119,7 @@ package funnel
 			var value:Number;
 			var adjoiningValues:Array;
 			var startIndex:uint;
-			for (var i:uint = 0; i < _portCount; ++i) {
+			for (var i:uint = 0; i < _pinCount; ++i) {
 				if (_updatedValues[i] != null) {
 					if (adjoiningValues == null) {
 						adjoiningValues = [];

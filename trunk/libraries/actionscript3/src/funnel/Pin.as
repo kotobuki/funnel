@@ -4,24 +4,24 @@ package funnel
 	import flash.events.EventDispatcher;
 	
 	/**
-	 * @copy PortEvent#CHANGE
+	 * @copy PinEvent#CHANGE
 	 */
-	[Event(name="change",type="PortEvent")]
+	[Event(name="change",type="PinEvent")]
 	
 	/**
-	 * @copy PortEvent#RISING_EDGE
+	 * @copy PinEvent#RISING_EDGE
 	 */
-	[Event(name="risingEdge",type="PortEvent")]
+	[Event(name="risingEdge",type="PinEvent")]
 	
 	/**
-	 * @copy PortEvent#FALLING_EDGE
+	 * @copy PinEvent#FALLING_EDGE
 	 */
-	[Event(name="fallingEdge",type="PortEvent")]
+	[Event(name="fallingEdge",type="PinEvent")]
 	
 	/**
 	 * I/Oモジュールの入出力ポートを表すクラスです。
 	 */ 
-	public class Port extends EventDispatcher
+	public class Pin extends EventDispatcher
 	{
 		/**
 		* アナログ入力
@@ -62,7 +62,7 @@ package funnel
 		 * @param type ポートのタイプ(AIN、DIN、AOUT、DOUT)
 		 * 
 		 */		
-		public function Port(number:uint, type:uint) {
+		public function Pin(number:uint, type:uint) {
 			_number = number;
 			_type = type;
 			_value = 0;
@@ -206,12 +206,12 @@ package funnel
 		private function detectEdge(oldValue:Number, newValue:Number):void {
 			if (oldValue == newValue) return;
 
-			dispatchEvent(new PortEvent(PortEvent.CHANGE));
+			dispatchEvent(new PinEvent(PinEvent.CHANGE));
 			
 			if (oldValue == 0 && newValue != 0) {
-				dispatchEvent(new PortEvent(PortEvent.RISING_EDGE));
+				dispatchEvent(new PinEvent(PinEvent.RISING_EDGE));
 			} else if (oldValue != 0 && newValue == 0) {
-				dispatchEvent(new PortEvent(PortEvent.FALLING_EDGE));
+				dispatchEvent(new PinEvent(PinEvent.FALLING_EDGE));
 			}
 
 		}

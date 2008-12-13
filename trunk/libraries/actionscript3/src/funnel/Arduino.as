@@ -6,7 +6,7 @@ package funnel
 	 */ 
 	public class Arduino extends IOSystem
 	{
-		private var _port:Function;
+		private var _pin:Function;
 		private var _analogPins:Array;
 		private var _digitalPins:Array;
 		
@@ -38,29 +38,29 @@ package funnel
 			if (config == null) config = FIRMATA;
 			super([config], host, portNum, samplingInterval);
 			
-			_port = ioModule(0).port;
+			_pin = ioModule(0).pin;
 			_analogPins = config.analogPins;
 			_digitalPins = config.digitalPins;
 		}
 		
 		/**
-		 * pinNumで指定したポートを取得します。
-		 * @param pinNum ポート番号
-		 * @return pinNumで指定したPortオブジェクト
-		 * @see Port
+		 * pinNumで指定したピンを取得します。
+		 * @param pinNum ピン番号
+		 * @return pinNumで指定したPinオブジェクト
+		 * @see Pin
 		 */		
-		public function analogPin(pinNum:uint):Port {
-			return _port(_analogPins[pinNum]);
+		public function analogPin(pinNum:uint):Pin {
+			return _pin(_analogPins[pinNum]);
 		}
 		
 		/**
-		 * pinNumで指定したポートを取得します。
-		 * @param pinNum ポート番号
-		 * @return pinNumで指定したPortオブジェクト
-		 * @see Port
+		 * pinNumで指定したピンを取得します。
+		 * @param pinNum ピン番号
+		 * @return pinNumで指定したPinオブジェクト
+		 * @see Pin
 		 */
-		public function digitalPin(pinNum:uint):Port {
-			return _port(_digitalPins[pinNum]);
+		public function digitalPin(pinNum:uint):Pin {
+			return _pin(_digitalPins[pinNum]);
 		}
 		
 	}

@@ -1,6 +1,6 @@
 package funnel {
 	/**
-	* @see PortEvent#CHANGE
+	* @see PinEvent#CHANGE
 	*/	
-	public var CHANGE:String = PortEvent.CHANGE;
+	public var CHANGE:String = PinEvent.CHANGE;
 }

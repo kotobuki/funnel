@@ -1,6 +1,6 @@
 package funnel {
 	/**
-	* @see PortEvent#RISING_EDGE
+	* @see PinEvent#RISING_EDGE
 	*/
-	public var RISING_EDGE:String = PortEvent.RISING_EDGE;
+	public var RISING_EDGE:String = PinEvent.RISING_EDGE;
 }
