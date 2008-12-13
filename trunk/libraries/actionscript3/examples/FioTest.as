@@ -50,7 +50,7 @@ package {
 
 		private function loop(event:Event):void {
 			for (var i:int = 0; i < NUM_CHANNELS; i++) {
-				scopes[i].update(fio.ioModule(1).analogPin(i).value);
+				scopes[i].update(fio.ioModule(1).analogPin(i));
 			}
 		}
 	}
