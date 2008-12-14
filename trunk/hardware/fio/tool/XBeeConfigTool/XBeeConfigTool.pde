@@ -25,10 +25,21 @@ IFButton readButton;
 
 IFLabel statusTextLabel;
 
+IFLabel statusBaudRate;
+IFLabel statusSerialNumberHigh;
+IFLabel statusSerialNumberLow;
+IFLabel statusFirmwareVersion;
+
 Serial serialPort;
 
 final String[] AT_COMMANDS = {
   "BD", "ID", "MY", "DL", "D3", "IC", "IU", "IA"};
+
+final String[] AT_READ = {   // commands sent to read xbee data
+  "BD", "ID", "MY", "DL", "SH", "SL", "VR"};
+
+final String[] BAUD_RATES = {
+  "1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200"};
 
 void setup() {
   size(500, 400);
@@ -46,6 +57,11 @@ void setup() {
   y += 14;
   b = new IFRadioButton[portList.length];
   for (int i = 0; i < portList.length; i++) {
+    if (portList[i].startsWith("/dev") && portList[i].startsWith("/dev/tty")) {
+      // Don't display tty devices to save space and simplify
+      // NOTE: OS X only
+      continue;
+    }
     b[i] = new IFRadioButton(portList[i], 20, y, portRadioButtons);
     gui.add(b[i]);
     y += 20;
@@ -72,11 +88,9 @@ void setup() {
   y += 14;
   modeButton = new IFRadioButton[2];
   modeButton[0] = new IFRadioButton("Coordinator", 20, y, modeRadioButtons);
-  //  modeButton[0].addActionListener(this);
   gui.add(modeButton[0]);
   y += 20;
   modeButton[1] = new IFRadioButton("End Devices", 20, y, modeRadioButtons);
-  //  modeButton[1].addActionListener(this);
   gui.add(modeButton[1]);
   y += 20;
 
@@ -94,6 +108,22 @@ void setup() {
   y += 38;
   statusTextLabel = new IFLabel("", 20, y, 12);
   gui.add(statusTextLabel);
+
+  y = 20;
+  statusBaudRate = new IFLabel("", 250, y, 12);
+  gui.add(statusBaudRate);
+
+  y += 32;
+  statusSerialNumberHigh = new IFLabel("", 250, y, 12);
+  gui.add(statusSerialNumberHigh);
+
+  y += 16;
+  statusSerialNumberLow = new IFLabel("", 250, y, 12);
+  gui.add(statusSerialNumberLow);
+
+  y += 32;
+  statusFirmwareVersion = new IFLabel("", 250, y, 12);
+  gui.add(statusFirmwareVersion);
 }
 
 void draw() {
@@ -103,7 +133,7 @@ void draw() {
 void actionPerformed(GUIEvent e) {
   if (e.getSource() == configureButton) {
     configureXBeeModem();
-  } 
+  }
   else if (e.getSource() == readButton) {
     readSettingsFromXBeeModem();
   }
@@ -160,6 +190,8 @@ void configureXBeeModem() {
     serialPort.write("ATRE,BD4,");
     serialPort.write("ID" + Integer.toString(id, 16) + ",");
     serialPort.write("MY" + Integer.toString(my, 16) + ",");
+    print("writing my as ");
+    println(Integer.toString(my, 16));
     serialPort.write("DLFFFF,D33,IC8,WR\r");
     if (!gotOkayFromXBeeModem()) {
       statusTextLabel.setLabel("Can't configure.");
@@ -200,12 +232,9 @@ void readSettingsFromXBeeModem() {
   statusTextLabel.setLabel("Entered command mode.");
 
   String resultString = "";
-  for (int i = 0; i < AT_COMMANDS.length; i++) {
-    String reply = getReplyFromXBeeModemFor(AT_COMMANDS[i]);
-    resultString += AT_COMMANDS[i] + ":" + reply;
-    if (i < AT_COMMANDS.length - 1) {
-      resultString += ", ";
-    }
+  for (int i = 0; i < AT_READ.length; i++) {
+    String reply = getReplyFromXBeeModemFor(AT_READ[i]);
+    showSetting(i, reply);
   }
 
   if (!exitCommandMode()) {
@@ -214,6 +243,30 @@ void readSettingsFromXBeeModem() {
   }
 
   statusTextLabel.setLabel(resultString);
+}
+
+void showSetting(int command, String reply) {
+  switch(command){
+  case 0: // Baud Rate
+    statusBaudRate.setLabel("Baud rate: " + BAUD_RATES[Integer.parseInt(reply)]);
+    break;
+  case 1: // ID
+    idTextField.setValue(reply);
+    break;
+  case 2: // MY ID
+    myTextField.setValue(reply);
+    break;
+  case 3: // DL
+    break;
+  case 4: // SH
+    statusSerialNumberHigh.setLabel("S/N high: " + reply);
+    break;
+  case 5: // SL
+    statusSerialNumberLow.setLabel("S/N low: " + reply);
+    break;
+  case 6: // VR
+    statusFirmwareVersion.setLabel("Firmware: " + reply) ;
+  }
 }
 
 boolean gotOkayFromXBeeModem() {
@@ -269,4 +322,3 @@ boolean exitCommandMode() {
   serialPort.write("ATCN\r");
   return gotOkayFromXBeeModem();
 }
-
