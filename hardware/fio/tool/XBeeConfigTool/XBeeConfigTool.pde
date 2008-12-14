@@ -21,13 +21,17 @@ IFRadioButton[] modeButton;
 
 IFButton configureButton;
 IFButton exitButton;
+IFButton readButton;
 
 IFLabel statusTextLabel;
 
 Serial serialPort;
 
+final String[] AT_COMMANDS = {
+  "BD", "ID", "MY", "DL", "D3", "IC", "IU", "IA"};
+
 void setup() {
-  size(400, 400);
+  size(500, 400);
   background(150);
 
   int y = 20;
@@ -80,7 +84,10 @@ void setup() {
   configureButton = new IFButton("Configure", 20, y, 80, 20);
   configureButton.addActionListener(this);
   gui.add(configureButton);
-  exitButton = new IFButton("Exit", 108, y, 80, 20);
+  readButton = new IFButton("Read", 108, y, 80, 20);
+  readButton.addActionListener(this);
+  gui.add(readButton);
+  exitButton = new IFButton("Exit", 196, y, 80, 20);
   exitButton.addActionListener(this);
   gui.add(exitButton);
 
@@ -97,6 +104,9 @@ void actionPerformed(GUIEvent e) {
   if (e.getSource() == configureButton) {
     configureXBeeModem();
   } 
+  else if (e.getSource() == readButton) {
+    readSettingsFromXBeeModem();
+  }
   else if (e.getSource() == exitButton) {
     exit();
   }
@@ -135,25 +145,11 @@ void configureXBeeModem() {
   }
 
   statusTextLabel.setLabel("Entering command mode...");
-  draw();
 
-  if (serialPort != null) {
-    serialPort.stop();
-    serialPort = null;
-  }
   String portName = portRadioButtons.getSelected().getLabel();
-  serialPort = new Serial(this, portName, 9600);
-  serialPort.write("+++");
-
-  if (!gotOkayFromXBeeModem()) {
-    serialPort.stop();
-    serialPort = null;
-    serialPort = new Serial(this, portName, 19200);
-    serialPort.write("+++");
-    if (!gotOkayFromXBeeModem()) {
-      statusTextLabel.setLabel("Can't enter command mode.");
-      return;
-    }
+  if (!enterCommandMode(portName)) {
+    statusTextLabel.setLabel("Can't enter command mode.");
+    return;
   }
   statusTextLabel.setLabel("Entered command mode.");
 
@@ -182,8 +178,7 @@ void configureXBeeModem() {
     break;
   }
 
-  serialPort.write("ATCN\r");
-  if (!gotOkayFromXBeeModem()) {
+  if (!exitCommandMode()) {
     statusTextLabel.setLabel("Can't exit command mode.");
     return;
   }
@@ -191,8 +186,40 @@ void configureXBeeModem() {
   statusTextLabel.setLabel("Configured successfully.");
 }
 
+void readSettingsFromXBeeModem() {
+  if (portRadioButtons.getSelectedIndex() < 0) {
+    statusTextLabel.setLabel("Please select a proper serial port.");
+    return;
+  }
+
+  String portName = portRadioButtons.getSelected().getLabel();
+  if (!enterCommandMode(portName)) {
+    statusTextLabel.setLabel("Can't enter command mode.");
+    return;
+  }
+  statusTextLabel.setLabel("Entered command mode.");
+
+  String resultString = "";
+  for (int i = 0; i < AT_COMMANDS.length; i++) {
+    String reply = getReplyFromXBeeModemFor(AT_COMMANDS[i]);
+    resultString += AT_COMMANDS[i] + ":" + reply;
+    if (i < AT_COMMANDS.length - 1) {
+      resultString += ", ";
+    }
+  }
+
+  if (!exitCommandMode()) {
+    statusTextLabel.setLabel("Can't exit command mode.");
+    return;
+  }
+
+  statusTextLabel.setLabel(resultString);
+}
+
 boolean gotOkayFromXBeeModem() {
-  for (int i = 0; i < 10; i++) {
+  delay(500);
+
+  for (int i = 0; i < 30; i++) {
     if (serialPort.available() >= 3) {
       break;
     }
@@ -207,4 +234,39 @@ boolean gotOkayFromXBeeModem() {
   return true;
 }
 
+String getReplyFromXBeeModemFor(String atCommand) {
+  serialPort.write("AT" + atCommand + "\r");
+  delay(50);
+  String reply = serialPort.readStringUntil(13);
+  return reply.substring(0, reply.length() - 1);
+}
+
+boolean enterCommandMode(String portName) {
+  if (serialPort != null) {
+    serialPort.stop();
+    serialPort = null;
+  }
+
+  serialPort = new Serial(this, portName, 9600);
+  serialPort.clear();
+  serialPort.write("+++");
+
+  if (!gotOkayFromXBeeModem()) {
+    serialPort.stop();
+    serialPort = null;
+    serialPort = new Serial(this, portName, 19200);
+    serialPort.clear();
+    serialPort.write("+++");
+    if (!gotOkayFromXBeeModem()) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+boolean exitCommandMode() {
+  serialPort.write("ATCN\r");
+  return gotOkayFromXBeeModem();
+}
 
