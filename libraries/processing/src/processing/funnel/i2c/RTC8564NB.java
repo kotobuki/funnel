@@ -5,7 +5,7 @@ import processing.funnel.*;
 /**
  * @author endo
  * @version 1.0
- * テスト用
+ * テスト用 RTC-8564NB
  */
 
 public class RTC8564NB extends I2CDevice implements I2CInterface{
@@ -25,13 +25,11 @@ public class RTC8564NB extends I2CDevice implements I2CInterface{
 	
 	
 	public void updateSecond(){
-		
-		//TODO arduino以外に対応するときは？
-		
-		Arduino ar = (Arduino)conectedModule.system;
-		  byte[] bu = {(byte)0x76,COM_READ,slaveAddress,0x02,0x01};
 
-		ar.sendSysex(bu.length,bu);
+		Firmata io = (Firmata)conectedModule.system;
+		  byte[] bu = {COM_I2C_REQUEST,COM_READ,slaveAddress,0x02,0x01};
+
+		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
 	}
 	
 	

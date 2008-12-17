@@ -7,10 +7,10 @@ import processing.core.PApplet;
 
 /**
  * @author endo
- * @version 1.0
+ * @version 1.1
  * 
  */
-public final class Fio extends IOSystem{
+public final class Fio extends Firmata{
 	
 	public static final String moduleName = "Fio";
 	
@@ -23,12 +23,12 @@ public final class Fio extends IOSystem{
 	public static final int OUT = PORT_DOUT;
 	public static final int PWM = PORT_AOUT;
 	
-	private static final int[] fio = {
+	private static final int[] firmata = {
 		PORT_DOUT,PORT_DOUT,PORT_DOUT,PORT_AOUT,PORT_DOUT,PORT_AOUT,PORT_AOUT,
 		PORT_DOUT,PORT_DOUT,PORT_AOUT,PORT_AOUT,PORT_AOUT,PORT_DOUT,PORT_DOUT,
 		PORT_AIN,PORT_AIN,PORT_AIN,PORT_AIN,PORT_AIN,PORT_AIN,PORT_AIN,PORT_AIN,
 	};
-	public static final Configuration FIRMATA = new Configuration(moduleID,fio,moduleName);
+	public static final Configuration FIRMATA = new Configuration(moduleID,firmata,moduleName);
 	
 
 	/**
@@ -81,7 +81,7 @@ public final class Fio extends IOSystem{
 		
 		for(int i=0;i<IDs.length;i++){
 		
-			String name = "Fio.node" + nf.format(i);
+			String name = "Fio.ID" + nf.format(IDs[i]);
 			addModule(IDs[i],config,name);
 		}
 	}

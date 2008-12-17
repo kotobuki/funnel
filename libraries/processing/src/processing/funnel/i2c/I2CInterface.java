@@ -1,5 +1,10 @@
 package processing.funnel.i2c;
 
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public interface I2CInterface {
 
 	

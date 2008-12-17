@@ -59,7 +59,7 @@ public class GainerIOModule extends IOModule{
 
 				if(onChange != null && lastValue != this.value){
 					try{
-						onChange.invoke(parent,new Object[]{ new PortEvent(this) });
+						onChange.invoke(parent,new Object[]{ new PinEvent(this) });
 					}catch(Exception e){
 						e.printStackTrace();
 						onChange = null;
