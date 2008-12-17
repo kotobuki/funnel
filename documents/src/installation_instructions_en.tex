@@ -187,7 +187,26 @@ Write \texttt{coordinator.pro} in \texttt{hardware/xbee/zb} to a coordinator, an
 Since FIO is an Arduino clone I/O board with a XBee module based on LilyPad Arduino Main Board v1.6\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8465}, you have to configure XBee modems and upload a sketch by using Arduino IDE. Though both XBee series are supported, but we recommend you to use 802.15.4 series for simplicity.
 
 \subsubsection{How to configure XBee modems}
-On Windows, write \texttt{coordinator\_auto\_reset.pro} or \texttt{coordinator.pro} (if you don't want to enable the auto reset function) in \texttt{hardware/fio/xbee} to a coordinator, and \texttt{router.pro} to end devices (i.e. XBee modems for FIO modules) using X-CTU. Please change parameters if needed. On Mac OS X, configure XBee modems manually using XBee Terminal references from table 3.
+On Windows, write \texttt{coordinator\_auto\_reset.pro} or \texttt{coordinator.pro} (if you don't want to enable the auto reset function) in \texttt{hardware/fio/xbee} to a coordinator, and \texttt{router.pro} to end devices (i.e. XBee modems for FIO modules) using X-CTU. Please change parameters if needed.
+
+On Mac OS X, XBeeConfigTool (available in \texttt{hardware/fio/tool}) will be your fried. The usage of the tools is as follows:
+
+\begin{enumerate}
+\item choose a proper serial port
+\item set a proper PAN ID
+\item set a proper MY ID
+\item choose a proper mode (Coordinator or End Devices)
+\item press the Configure button to configure the XBee modem 
+\end{enumerate}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=7.5cm, clip]{XBeeConfigTool.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{A typical screenshot of XBeeConfigTool}
+\label{default}
+\end{center}
+\end{figure}
 
 The baud rate setting in configuration files and the table is 19,200 bps, since the baud rate is used by boot loader in Arduino IDE. If you have to handle several FIO modules and the baud rate is not enough, change the baud rate of the coordinator to higher (e.g. 57,600 bps). Please don't forget to revert the baud rate to 19,200 bps to upload sketches to FIO modules.
 
@@ -214,6 +233,7 @@ The baud rate setting in configuration files and the table is 19,200 bps, since 
 \label{xbee}
 \end{table}
 
+\newpage
 \subsubsection{How to upload firmware}
 \label{uploading_firmata_fio}
 Please follow instructions below to upload the firmware to FIO modules.
