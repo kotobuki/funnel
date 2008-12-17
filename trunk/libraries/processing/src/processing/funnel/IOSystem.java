@@ -37,7 +37,7 @@ public class IOSystem implements Runnable{
 	private int updateInterval = 33;	
 
 	private Thread thread=null;
-	private boolean isWorking = false;
+	protected boolean initialized = false;
 	
 
 	private boolean quitServer = false;//終了時サーバーを終了するか
@@ -53,6 +53,7 @@ public class IOSystem implements Runnable{
 	public boolean autoUpdate = true;
 	public int samplingInterval;
 	////
+	
 	
 	private boolean waitAnswer;
 	private LinkedList waitQueue;
@@ -102,7 +103,7 @@ public class IOSystem implements Runnable{
 		long updateTickMillis = 0;
 		System.out.println("funnelServiceThread start");
 
-		while(isWorking){
+		while(initialized){
 			long processMillis = System.currentTimeMillis() - updateTickMillis;
 
 			
@@ -131,7 +132,7 @@ public class IOSystem implements Runnable{
 		endPolling();
 		reboot();
 
-		isWorking = false;
+		initialized = false;
 
 			try {
 				thread.join();
@@ -278,7 +279,7 @@ public class IOSystem implements Runnable{
 		beginPolling();
 		
 		thread = new Thread(this,"funnelServiceThread");
-		isWorking = true;
+		initialized = true;
 		thread.start();
 		
 		new NotifyTokenizer(this,client.commandPort);
@@ -487,8 +488,8 @@ public class IOSystem implements Runnable{
 			port.addListener("/out", this);
 			port.addListener("/polling", this);
 			port.addListener("/samplingInterval", this);
-			
-			port.addListener("/sysex", this);
+
+			port.addListener("/sysex/reply", this);
 		}
 		public void acceptMessage(Date time, OSCMessage message){
 			io.waitMessage(message);

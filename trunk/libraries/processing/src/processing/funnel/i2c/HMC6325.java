@@ -1,7 +1,11 @@
 package processing.funnel.i2c;
 
 import processing.funnel.*;
-
+/**
+ * @author endo
+ * @version 1.0
+ * 
+ */
 public class HMC6325 extends I2CDevice implements I2CInterface{
 
 	public String name = "HMC6352";
@@ -32,43 +36,49 @@ public class HMC6325 extends I2CDevice implements I2CInterface{
 //	}
 	
 	private void initialize(){
-		//TODO arduino以外に対応するときは？
 
-		Arduino ar = (Arduino)conectedModule.system;	
-		byte[] bu = {0x76,COM_WRITE,slaveAddress,'G',0x74,0x51};
+		Firmata io = (Firmata)conectedModule.system;
+		
+		byte[] bu = {COM_I2C_REQUEST,COM_STOP_READING,slaveAddress,'G',0x74,0x51};
+		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
+		
+		byte[] tu = {COM_I2C_REQUEST,COM_WRITE,slaveAddress,'A'};
+		io.sendSysex(conectedModule.getModuleID(),tu.length,tu);
 
-		ar.sendSysex(bu.length,bu);
-		
-		byte[] tu = {0x76,COM_WRITE,slaveAddress,'A'};
-		
-		ar.sendSysex(tu.length,tu);
 	}
 	
 	public void update(){
-		//TODO arduino以外に対応するときは？
 
-		Arduino ar = (Arduino)conectedModule.system;
-		  byte[] bu = {(byte)0x76,COM_READ,slaveAddress,0x7F,0x02};
+		Firmata io = (Firmata)conectedModule.system;
+		  byte[] bu = {COM_I2C_REQUEST,COM_READ,slaveAddress,0x7F,0x02};
 
 
-		ar.sendSysex(bu.length,bu);
+		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
+	}
+	
+	public void beginUpdate(){
+		
+	}
+	
+	public void endUpdate(){
+	
 	}
 	
 	public void enterCalibrationMode(){
 		System.out.println("enterCalibrationMode()");
-		Arduino ar = (Arduino)conectedModule.system;
+		Firmata io = (Firmata)conectedModule.system;
 		
-		byte[] bu = {0x76,COM_WRITE,slaveAddress,'C'};
+		byte[] bu = {COM_I2C_REQUEST,COM_WRITE,slaveAddress,'C'};
 
-		ar.sendSysex(bu.length,bu);
+		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
 	}
 	
 	public void exitCalibrationMode(){
 		System.out.println("exitCalibrationMode()");
-		Arduino ar = (Arduino)conectedModule.system;
-		byte[] bu = {0x76,COM_WRITE,slaveAddress,'E'};
+		Firmata io = (Firmata)conectedModule.system;
+		byte[] bu = {COM_I2C_REQUEST,COM_WRITE,slaveAddress,'E'};
 
-		ar.sendSysex(bu.length,bu);		
+		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);		
 	}
 	
 	public void receiveData(int regAddress,byte[] data){

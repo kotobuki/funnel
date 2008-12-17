@@ -129,24 +129,27 @@ public final class CommandPort extends TcpOSCPort implements Runnable{
 
 		
 		while (processedSize < readBytes) {
-			int packetSize = (buffer[processedSize + 0] << 24)
-					+ (buffer[processedSize + 1] << 16)
-					+ (buffer[processedSize + 2] << 8)
-					+ buffer[processedSize + 3];
+			int packetSize = (buffer[processedSize + 0] & 0xFF << 24)
+					+ (buffer[processedSize + 1] & 0xFF << 16)
+					+ (buffer[processedSize + 2] & 0xFF << 8)
+					+ buffer[processedSize + 3] & 0xFF;
 
-		if(packetSize < 7 || packetSize > 100){
-			System.out.println("  -------------paket size error--- ");
-			System.out.println("  paketSize " +packetSize);
-			System.out.println("  readBytes " +readBytes);
-			System.out.println("  processedSize " +processedSize);
 			
-			for(int i=0;i<readBytes;i++){
-				System.out.print(Integer.toHexString(buffer[i]) + " ");
-			}
-			System.out.println();
-			//System.out.println("  paket :"  + new String(packet,0,packetSize));
-			break;
-		}			
+//			if(packetSize < 7 || packetSize > 100){
+//				System.out.println("  -------------paket size error--- ");
+//				System.out.println("  paketSize " +packetSize);
+//				System.out.println("  readBytes " +readBytes);
+//				System.out.println("  processedSize " +processedSize);
+//				
+//				for(int i=0;i<readBytes;i++){
+//					System.out.print(Integer.toHexString(buffer[i]) + " ");
+//				}
+//				System.out.println();
+//				//System.out.println("  paket :"  + new String(packet,0,packetSize));
+//				break;
+//			}	
+			
+			
 			byte[] packet = new byte[packetSize];
 			System.arraycopy(buffer, processedSize + 4, packet, 0,packetSize);
 			message = (OSCMessage)converter.convert(packet, packetSize);

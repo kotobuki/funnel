@@ -63,7 +63,7 @@ public class IOModule{
 		//イベントハンドラのリフレクション
 		try {
 			onRisingEdge = 
-				parent.getClass().getMethod("risingEdge",new Class[] { PortEvent.class });
+				parent.getClass().getMethod("risingEdge",new Class[] { PinEvent.class });
 
 		} catch (Exception e) {
       // no such method, or an error.. which is fine, just ignore
@@ -71,14 +71,14 @@ public class IOModule{
 	
 		try {
 			onFallingEdge = 
-				parent.getClass().getMethod("fallingEdge",new Class[] { PortEvent.class });
+				parent.getClass().getMethod("fallingEdge",new Class[] { PinEvent.class });
 		} catch (Exception e) {
       // no such method, or an error.. which is fine, just ignore
 		}	
 		
 		try {
 			onChange = 
-				parent.getClass().getMethod("change",new Class[] { PortEvent.class });
+				parent.getClass().getMethod("change",new Class[] { PinEvent.class });
 			
 		} catch (Exception e) {
       // no such method, or an error.. which is fine, just ignore
@@ -253,7 +253,7 @@ public class IOModule{
 				if(isSetPoint ){
 					if(onRisingEdge != null  && this.value != 0 && lastValue == 0){
 						try{
-							onRisingEdge.invoke(parent,new Object[]{ new PortEvent(this) });
+							onRisingEdge.invoke(parent,new Object[]{ new PinEvent(this) });
 						}catch(Exception e){
 							e.printStackTrace();
 							onRisingEdge = null;
@@ -263,7 +263,7 @@ public class IOModule{
 					
 					if(onFallingEdge != null  && lastValue != 0 && this.value == 0){
 						try{
-							onFallingEdge.invoke(parent,new Object[]{ new PortEvent(this) });
+							onFallingEdge.invoke(parent,new Object[]{ new PinEvent(this) });
 						}catch(Exception e){
 							e.printStackTrace();
 							onFallingEdge = null;
@@ -285,7 +285,7 @@ public class IOModule{
 
 				if(onChange != null && lastValue != this.value){
 					try{
-						onChange.invoke(parent,new Object[]{ new PortEvent(this) });
+						onChange.invoke(parent,new Object[]{ new PinEvent(this) });
 					}catch(Exception e){
 						e.printStackTrace();
 						onChange = null;

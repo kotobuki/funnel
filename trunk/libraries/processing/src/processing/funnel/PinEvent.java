@@ -5,10 +5,10 @@ package processing.funnel;
  * @version 1.0
  * 
  */
-public class PortEvent {
+public class PinEvent {
 	public IOModule.Port target;
 	
-	public PortEvent (IOModule.Port target){
+	public PinEvent (IOModule.Port target){
 		this.target = target;
 	}
 }
