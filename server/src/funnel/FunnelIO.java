@@ -58,8 +58,8 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		xbee = new XBee(this, output);
 		xbee.sendATCommand("AP");
 		xbee.sendATCommand("VR");
-		xbee.sendATCommand("MY");
 		xbee.sendATCommand("ID");
+		xbee.sendATCommand("MY");
 
 		nodes = new Hashtable<Integer, String>();
 

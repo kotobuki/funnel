@@ -112,10 +112,10 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 			}
 
 			xbee = new XBee(this, output);
-			xbee.sendATCommand("VR"); // TODO: wait a response here
 			xbee.sendATCommand("AP");
-			xbee.sendATCommand("MY");
+			xbee.sendATCommand("VR");
 			xbee.sendATCommand("ID");
+			xbee.sendATCommand("MY");
 
 			nodeDiscoveryTask = new NodeDiscoveryTask(parent, xbee);
 			scheduler = Executors.newSingleThreadScheduledExecutor();
