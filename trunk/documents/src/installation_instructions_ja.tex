@@ -186,11 +186,30 @@ Arduino 0012をウェブサイト\footnote{http://arduino.cc}からダウンロードし、以下の
 FIOはLilyPad Arduino Main Board v1.6\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8465}をベースにXBeeを搭載できるようにしたもので、Arduino IDEによるファームウェアの書き込みとXBeeの設定を行う必要があります。XBeeは両シリーズ共に利用できますが、設定がシンプルな802.15.4を推奨します\footnote{ZB ZigBee PROシリーズの場合には、無線でFIOファームウェアを書き換える際にはコーディネータ側XBeeのファームウェアを変更する必要があります。}。
 
 \subsubsection{XBeeの設定}
-X-CTUを利用する場合には、\texttt{hardware/fio/xbee}に入っている\texttt{coordinator\_auto\_reset.pro}（自動リセットあり）または\texttt{coordinator.pro}（自動リセットなし）をPCに接続するコーディネータに、\texttt{enddevice.pro}をFIOに搭載するエンドデバイスに（必要に応じて設定を変更した上で）それぞれ書き込んでください。
+X-CTUを利用する場合には、\texttt{hardware/fio/xbee}に入っている\texttt{coordinator\_auto\_reset.pro}（自動リセットあり）または\texttt{coordinator.pro}（自動リセットなし）をPCに接続するコーディネータに、\texttt{enddevice.pro}をFIOに搭載するエンドデバイスに（必要に応じて設定を変更した上で）それぞれ書き込んでください\footnote{自動リセットの設定方法は「Xbee Adapter - wireless Arduino programming\footnote{http://www.ladyada.net/make/xbee/arduino.html}」で紹介されていた方法を参考に一部改変したものです。}。
 
-Mac OS Xの場合には、XBee Terminalを利用して表3を参考に必要なコマンドを手動で入力してください。なお、自動リセットの設定方法は「Xbee Adapter - wireless Arduino programming\footnote{http://www.ladyada.net/make/xbee/arduino.html}」で紹介されていた方法を参考に一部改変したものです。自動リセットを使用したくない場合には※印の項目を設定しないようにしてください。
+Mac OS Xの場合には、\texttt{hardware/fio/tool}に入っているXBeeConfigToolを使用して設定してください。このツールの使用方法は以下の通りです。
+
+\begin{enumerate}
+\item Serial PortでXBee USB Explorerなどが接続されているシリアルポートを選択します。
+\item PAN IDを適切な値に設定します。
+\item MY IDを適切な値に設定します。
+\item ModeとしてCoordinatorかEnd Devicesを選択します。
+\item Configureボタンを押すと数秒間で書込みが完了します。
+\end{enumerate}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=7.5cm, clip]{XBeeConfigTool.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{XBeeConfigToolの画面例}
+\label{default}
+\end{center}
+\end{figure}
 
 この設定は、FIOのファームウェアを無線で書き換えることを想定して、Arduinoのブートローダで使用される通信速度である19200bpsにしています。複数のFIOを同時に使用する場合など、コーディネータ側の通信速度が不足する時はコーディネータ側の通信速度を57600bpsなどに変更してください（ファームウェアをアップデートする際には戻してください）。
+
+以下は参考用として手動で設定を書き込む際の手順です。手動で設定を書き込む場合には、Making Things Talkのサンプルとして配布されているXBee\_terminalを使用すると便利です。
 
 \begin{table}[htdp]
 \begin{center}
