@@ -87,5 +87,28 @@ package funnel
 			}
 		}
 
+		public function clone():Configuration {
+			var clonedConfig:Configuration = new Configuration();
+
+			if (this.ainPins != null)
+				clonedConfig.ainPins = this.ainPins.concat();
+			if (this.dinPins != null)
+				clonedConfig.dinPins = this.dinPins.concat();
+			if (this.aoutPins != null)
+				clonedConfig.aoutPins = this.aoutPins.concat();
+			if (this.doutPins != null)
+				clonedConfig.doutPins = this.doutPins.concat();
+			if (this.analogPins != null)
+				clonedConfig.analogPins = this.analogPins.concat();
+			if (this.digitalPins != null)
+				clonedConfig.digitalPins = this.digitalPins.concat();
+			if (this.config != null)
+				clonedConfig.config = this.config.concat();
+			clonedConfig.button = this.button;
+			clonedConfig.led = this.led;
+			clonedConfig.moduleID = this.moduleID;
+
+			return clonedConfig;
+		}
 	}
 }
