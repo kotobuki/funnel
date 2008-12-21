@@ -8,11 +8,16 @@
 
 #include <Firmata.h>
 
+#define SYSEX_SAMPLING_INTERVAL 0x78
+
 int analogInputsToReport = 0;  // bitwise array to store pin reporting
 byte reportPINs[TOTAL_PORTS];  // PIN == input port
 
 unsigned long currentMillis;     // store the current value from millis()
 unsigned long nextExecuteMillis; // for comparison with currentMillis
+unsigned int samplingInterval = 32;  // default sampling interval is 33ms
+
+#define MINIMUM_SAMPLING_INTERVAL 10
 
 void setPinModeCallback(byte pin, int mode) {
   if (pin < 2) {
@@ -72,6 +77,16 @@ void reportDigitalCallback(byte port, int value) {
   }
 }
 
+void sysexCallback(byte command, byte argc, byte *argv) {
+  if (command == SYSEX_SAMPLING_INTERVAL) {
+    samplingInterval = argv[0] + (argv[1] << 7);
+    if (samplingInterval < MINIMUM_SAMPLING_INTERVAL) {
+      samplingInterval = MINIMUM_SAMPLING_INTERVAL;
+    }
+    samplingInterval -= 1;
+  }
+}
+
 void systemResetCallback() {
   for (byte i = 0; i < 3; i++) {
     digitalWrite(13, HIGH);
@@ -91,6 +106,7 @@ void setup() {
   Firmata.attach(REPORT_ANALOG, reportAnalogCallback);
   Firmata.attach(REPORT_DIGITAL, reportDigitalCallback);
   Firmata.attach(SET_PIN_MODE, setPinModeCallback);
+  Firmata.attach(START_SYSEX, sysexCallback);
   Firmata.attach(SYSTEM_RESET, systemResetCallback);
 
   for (i = 0; i < TOTAL_DIGITAL_PINS; ++i) {
@@ -115,7 +131,7 @@ void loop()
 
   currentMillis = millis();
   if (currentMillis > nextExecuteMillis) {
-    nextExecuteMillis = currentMillis + 32; // run this every 33ms
+    nextExecuteMillis = currentMillis + samplingInterval;
 
     // report digital ports if requested
     if (reportPINs[0]) {
