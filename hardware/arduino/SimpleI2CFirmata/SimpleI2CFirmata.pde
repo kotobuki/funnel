@@ -4,6 +4,7 @@
 #define ENABLE_POWER_PINS
 #define SYSEX_I2C_REQUEST 0x76
 #define SYSEX_I2C_REPLY 0x77
+#define SYSEX_SAMPLING_INTERVAL 0x78
 #define I2C_WRITE B00000000
 #define I2C_READ B00001000
 #define I2C_READ_CONTINUOUSLY B00010000
@@ -15,6 +16,9 @@
 
 unsigned long currentMillis;     // store the current value from millis()
 unsigned long nextExecuteMillis; // for comparison with currentMillis
+unsigned int samplingInterval = 32;  // default sampling interval is 33ms
+
+#define MINIMUM_SAMPLING_INTERVAL 10
 
 struct i2c_device_info {
   byte addr;
@@ -100,6 +104,14 @@ void sysexCallback(byte command, byte argc, byte *argv)
     default:
       break;
     }
+  } else if (command == SYSEX_SAMPLING_INTERVAL) {
+    samplingInterval = argv[0] + (argv[1] << 7);
+
+    if (samplingInterval < MINIMUM_SAMPLING_INTERVAL) {
+      samplingInterval = MINIMUM_SAMPLING_INTERVAL;
+    }
+
+    samplingInterval -= 1;
   }
 }
 
@@ -154,7 +166,7 @@ void loop()
 
   currentMillis = millis();
   if (currentMillis > nextExecuteMillis) {  
-    nextExecuteMillis = currentMillis + 19; // run this every 20ms
+    nextExecuteMillis = currentMillis + samplingInterval;
 
     for (byte i = 0; i < queryIndex; i++) {
       readAndReportData(query[i].addr, query[i].reg, query[i].bytes);
