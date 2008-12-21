@@ -1,10 +1,9 @@
 INTRODUCTION
-Funnel is a toolkit for physical computing. Funnel supports Arduino I/O 
-boards, Gainer I/O modules, XBee wireless modems and Funnel I/O 
-modules. The user can set filters to input or outputs ports: range division, 
-filtering (e.g. LPF, HPF), scaling and oscillators.
-Details, future plans are described at the following location, but are 
-subject to change.
+Funnel is a toolkit for physical computing. Funnel supports 
+Arduino I/O boards, Gainer I/O modules, XBee wireless modems and 
+FIO (Funnel I/O) boards. The user can set filters to input or 
+outputs ports: range division, filtering (e.g. LPF, HPF), 
+scaling and oscillators.
 
 About the latest information, please refer to the following web site:
 http://funnel.cc
@@ -16,15 +15,15 @@ REQUIREMENTS
   * Mac OS X 10.4 or 10.5
 * Runtime environments for software libraries
   * Various programming environments for ActionScript 3 (e.g. 
-    Flash CS3, Flex Builder 2/3, Flex SDK 2/3)
-  * Processing 0148
+    Flash CS3, Flex Builder 3, Flex SDK 3)
+  * Processing 1.0
   * Ruby 1.8.* with OSC library by Tadayoshi Funaba
     http://raa.ruby-lang.org/project/osc/
 * Runtime environments for the Funnel Server
   * Java Runtime Environment 1.5 or higher
 * Hardware
   * Arduino or clones with Firmara firmware v2
-    Standard_Firmata_334 (or sketches with Firmata library)
+    StandardFirmata (distributed as a part of Arduino 0012)
     http://www.arduino.cc/playground/Interfacing/Firmata
   * Gainer I/O module v1.0
 * Optional environments
@@ -61,8 +60,13 @@ Bini and RXTX by Keane Jarvi.
 
 
 UPDATES
+Funnel 009
+* added I2C over Firmata
+* added XBeeConfigTool to configure XBee modmes for uploading 
+  sketches to Arduino (including FIO) boards wirelessly
+
 Funnel 008 (2008.09.25)
-* added Fio (Funnel I/O)
+* added FIO (Funnel I/O) v1.0
 * Funnel Server now requires only one network port
 * added more samples for each hardware
 * XBee ZB ZigBee PRO is supported
