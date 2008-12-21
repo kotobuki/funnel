@@ -1,14 +1,11 @@
 ■はじめに
-Funnelはフィジカルコンピューティングのためのツールキットです。
-Gainer I/Oモジュール、Arduino I/Oボード、XBee無線モデムと
-Funnel I/Oモジュールに対応し、それぞれの入出力ポートに対して閾
-（しきい）値による分割、LPFやHPFなどのフィルタ処理、スケーリング、
-オシレータなどのフィルタをセットすることができます。
-詳細や今後のプランに関しては、specifications_ja.pdfを参照して下さい。
-なお、これはあくまで現時点での仕様や計画であり、今後大幅に変更
-される可能性もあります。
+Funnelはフィジカルコンピューティングのためのツールキットです。Gainer I/O
+モジュール、Arduino I/Oボード、XBee無線モデムとFIO（Funnel I/O）ボードに
+対応し、それぞれの入出力ポートに対して閾（しきい）値による分割、LPFやHPF
+などのフィルタ処理、スケーリング、オシレータなどのフィルタをセットすること
+ができます。
 
-最新の情報に関しては次のウェブサイトを参照してください：
+最新の情報に関しては次のウェブサイトを参照してください
 http://funnel.cc
 
 
@@ -18,9 +15,9 @@ http://funnel.cc
 ・Mac OS X 10.4または10.5
 
 □ライブラリの動作環境
-・Flash CS3、Flex Builder 2/3、Flex 2/3 SDKなどActionScript 3で
+・Flash CS3、Flex Builder 3、Flex 3 SDKなどActionScript 3で
 　プログラミングできる環境
-・Processing 0148
+・Processing 1.0
 ・Ruby 1.8.*（1.9では未確認）＋ふなばただよしさんのOSCライブラリ
 　http://raa.ruby-lang.org/project/osc/
 
@@ -32,7 +29,7 @@ http://funnel.cc
 ・Arduinoまたは互換機＋Firmata v2
 　http://www.arduino.cc/playground/Interfacing/Firmata
 ・XBee 802.15.4またはZB ZigBee PRO
-・Fio（Funnel I/O）モジュール
+・FIO（Funnel I/O）モジュール
 
 □オプションの環境
 ・Arduino 0012（ArduinoまたはFioを使用する場合）
@@ -63,8 +60,13 @@ Keane Jarvi氏によるRXTXを使用しています。
 
 
 ■更新履歴
+Funnel  009
+・Firmata経由のI2Cをサポート
+・無線でスケッチをArduinoボード（FIO含む）にアップロードするため
+　にXBee無線モデムを設定するためのツールXBeeConfigToolを追加
+
 Funnel  008（2008.09.25）
-・Fio（Funnel I/O）を追加
+・FIO（Funnel I/O）v1.0を追加
 ・Funnel Serverが使用するネットワークポートが1つのみに
 ・各ハードウェア用のサンプルを追加
 ・XBee ZB ZigBee PROのサポートを追加
