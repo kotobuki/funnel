@@ -40,6 +40,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected static final int FIRMATA_STRING = 0x71;
 	protected static final int I2C_REQUEST = 0x76;
 	protected static final int I2C_REPLY = 0x77;
+	protected static final int SAMPLING_INTERVAL = 0x78;
 	protected static final int REPORT_FIRMWARE = 0x79;
 	protected static final int SYSEX_NON_REALTIME = 0x7E;
 	protected static final int SYSEX_REALTIME = 0x7F;
@@ -359,6 +360,12 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		}
 
 		beginPacketIfNeeded(0xFFFF);
+
+		writeByte(ARD_SYSEX_START);
+		writeByte(SAMPLING_INTERVAL);
+		writeValueAsTwo7bitBytes(parent.getCommandPortServer().getSamplingInterval());
+		writeByte(ARD_SYSEX_END);
+
 		for (int pin = 0; pin < totalAnalogPins; pin++) {
 			if (pinMode[pin + analogPinRange.getMin()] == ARD_PIN_MODE_AIN) {
 				setAnalogPinReporting(pin, 1);
