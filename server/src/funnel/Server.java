@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 public abstract class Server extends Thread {
-	protected static int samplingInterval = 100;
+	protected int samplingInterval = 100;
 
 	protected ServerSocket srvsocket;
 	protected int port;
@@ -38,8 +38,7 @@ public abstract class Server extends Thread {
 		super(group, target, name);
 	}
 
-	public Server(ThreadGroup group, Runnable target, String name,
-			long stackSize) {
+	public Server(ThreadGroup group, Runnable target, String name, long stackSize) {
 		super(group, target, name, stackSize);
 	}
 
@@ -69,12 +68,12 @@ public abstract class Server extends Thread {
 
 	abstract public void dispose();
 
-	public static int getSamplingInterval() {
+	public int getSamplingInterval() {
 		return samplingInterval;
 	}
 
-	public static void setSamplingInterval(int samplingInterval) {
-		Server.samplingInterval = samplingInterval;
+	public void setSamplingInterval(int samplingInterval) {
+		this.samplingInterval = samplingInterval;
 	}
 
 }
