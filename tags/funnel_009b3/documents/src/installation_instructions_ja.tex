@@ -1,0 +1,470 @@
+%http://tex.dante.jp/typo/index.php?Listings
+\documentclass[9pt]{jsarticle}
+\usepackage{listings, jlisting, color}
+\usepackage[dvipdfm]{graphicx}
+\usepackage{mediabb}
+
+\lstset{
+basicstyle={\small\ttfamily},
+columns=[l]{fullflexible},
+frame={single},
+tabsize={4},
+lineskip={-2pt}
+}
+
+\def\lstlistingname{リスト}
+
+\begin{document}
+\hspace{-8.5pt}\includegraphics[cropboxonly, height=1.5cm, clip]{funnel_logo.pdf}
+
+\vspace{16pt}
+
+\hspace{-8.5pt}\textsf{{\large インストールマニュアル（ビルド009用）}\\開発者：小林茂＋遠藤孝則＋増田一太郎}
+
+\vspace{16pt}
+
+\section{動作環境}
+\begin{itemize}
+\item OS
+	\begin{itemize}
+	\item Windows XP SP2/3またはVista
+	\item Mac OS X Tiger 10.4またはLeopard 10.5
+	\end{itemize}
+\item ソフトウェア
+	\begin{itemize}
+	\item Java実行環境（J2SE 5.0以上）
+	\item Flash Professional CS3・Flex Builder 3・Flex 3 SDK\footnote{http://www.adobe.com/jp/products/flex/sdk/}
+	\item Processing（1.0）\footnote{http://processing.org/download/index.html}
+	\item Ruby（1.8.6系列・1.9系列での動作は未確認）\footnote{http://www.ruby-lang.org/ja/downloads/}＋OSCライブラリ\footnote{http://raa.ruby-lang.org/project/osc/}
+	\end{itemize}
+\item ハードウェア
+	\begin{itemize}
+	\item Gainer I/Oモジュール\footnote{http://www.triggerdevice.com/items/}\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8480}または互換機
+	\item Arduino Diecimila/Duemilanove/LilyPad/Nano/Pro/Pro Mini\footnote{http://www.arduino.cc/en/Main/Hardware}またはBoarduinoなどの互換機
+	\item XBee 802.15.4 OEM RFモジュール\footnote{http://www.digi-intl.co.jp/digi/wireless/zigbee/xbee-series1-module.html}またはZB ZigBee PRO RFモジュール\footnote{http://www.digi-intl.co.jp/digi/wireless/zigbee-mesh/xbee-zb-module.html}
+	\item FIO（Funnel I/O）モジュール\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8957}
+	\end{itemize}
+\end{itemize}
+
+\section{配布パッケージのディレクトリ構成}
+\begin{itemize}
+\item \texttt{documents/}：仕様書やマニュアルなど
+\item \texttt{hardware/}：ハードウェア及びファームウェア
+\item \texttt{libraries/}：各ソフトウェアライブラリ
+	\begin{itemize}
+	\item \texttt{actionscript3/}：AS3用ライブラリ・サンプル・ソースコード
+	\item \texttt{processing/}：Processing用ライブラリ・サンプル・ソースコード
+	\item \texttt{ruby/}：Ruby用ライブラリ・サンプル・ソースコード
+	\end{itemize}
+\item \texttt{LICENSE.txt}：ライセンス条項
+\item \texttt{README\_en.txt}：概要説明（英語版）
+\item \texttt{README\_ja.txt}：概要説明（日本語版）
+\item \texttt{server/}：Funnel Server
+	\begin{itemize}
+	\item \texttt{funnel\_server.jar}：Funnel Server本体
+	\item \texttt{settings.txt}：Funnel Serverの設定ファイル
+	\end{itemize}
+\end{itemize}
+
+\section{ドライバのインストール}
+Gainer I/Oモジュール、Arduino I/Oボード、およびXBee無線モデムやFIOモジュールとの接続に使用するUSB⇔XBee変換モジュール\footnote{SparkFun ElectronicsのXBee Explorer USB（パーツナンバーWRL-08687）など}のほとんどはFTDI社のUSB-to-UART変換ブリッジチップFT232Rシリーズを搭載しています。このため、最初にこのドライバをセットアップすればほとんどの全てのハードウェアを利用できます\footnote{Arduinoを使用する場合には配布パッケージの\texttt{drivers}フォルダ（例：\texttt{arduino-0012/drivers}）にも含まれています。}。
+
+\subsection{WIndows XP/Vistaの場合}
+まず最初にドライバをダウンロードします。ウェブブラウザで次のURLにアクセスし、Operating System（オペレーティング・システム）の欄がWindows XPと書かれているドライバをダウンロードします。
+
+\vspace{8pt}
+http://www.ftdichip.com/Drivers/VCP.htm
+\vspace{8pt}
+
+ドライバのダウンロードが終わったら、ZIPファイルを展開（右クリックして表示されるメニューから「全て展開…」を実行）します。展開が終わったら、I/OモジュールにUSBケーブルの片方のコネクタを接続し、もう片方のコネクタをPC側に接続します。数秒後、ドライバのインストールを要求するダイアログが表示されますので、ダイアログにしたがってドライバのインストールを行います。
+
+\begin{itemize}
+\item ソフトウェア検索のため、Windows Updateに接続しますか？\\→「いいえ、今回は接続しません。」選択します
+\item インストール方法を選んでください\\→「一覧または特定の場所からインストールする（詳細）」を選択します
+\item 次の場所で最適のドライバを検索する\\→「次の場所を含める」をチェックし、先ほどドライバを展開したフォルダを指定します
+\end{itemize}
+
+同じような操作を2回要求されますので、2回目も1回目と同様にドライバを展開したフォルダを指定します。 
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_win_1.pdf}
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_win_2.pdf}
+
+\vspace{3pt}
+
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_win_3.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{ドライバーインストール時の画面例（Windows XP SP2）}
+\label{default}
+\end{center}
+\end{figure}
+
+\newpage
+\subsection{Mac OS Xの場合}
+まず最初にドライバをダウンロードします。ウェブブラウザで次のURLにアクセスし、Operating System（オペレーティング・システム）の欄がMac OS Xと書かれているドライバをダウンロードします。
+
+\vspace{8pt}
+http://www.ftdichip.com/Drivers/VCP.htm
+\vspace{8pt}
+
+ドライバのダウンロードが終わると、自動的にディスクイメージファイル（拡張子はdmg）がマウントされます。もし自動的にマウントされない場合には、ファイルをダブルクリックしてマウントします。マウントが終わると、自動的にドライバのインストーラが起動します。インストーラが起動したら、インストーラの指示に従ってドライバをインストールします。途中で管理者のパスワードを入力するように求められますので、パスワードを入力します。インストール終了時には、指示に従って再起動してください。
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_osx_1_ja.pdf}
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_osx_2_ja.pdf}
+
+\vspace{3pt}
+
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_osx_3_ja.pdf}
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_osx_4_ja.pdf}
+\vspace{3pt}
+
+\includegraphics[mediaboxonly, height=4.4cm, clip]{driver_osx_5_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{ドライバーインストール時の画面例（Mac OS X 10.5.6）}
+\label{default}
+\end{center}
+\end{figure}
+
+\section{ハードウェアの準備}
+\subsection{Gainer I/Oモジュール}
+Gainer I/Oモジュールの場合には、特にハードウェア側の準備は必要ありません。USBケーブルでPCと接続し、後述する説明に従ってFunnel Serverを起動するだけですぐに利用できます。
+
+\subsection{Arduino I/Oボード}
+\label{uploading_firmata_arduino}
+Arduino I/Oボードとの接続には「Firmata」\footnote{http://www.arduino.cc/playground/Interfacing/Firmata/}を使います。FirmataはHans-Christoph SteinerがMIDIを参考に考案したプロトコルです。Arduino 0012にはこのFirmataライブラリが標準で含まれているため、ライブラリのサンプルを書き込むだけで簡単にI/Oモジュールとして利用できるようになります。
+
+Arduino 0012をウェブサイト\footnote{http://arduino.cc}からダウンロードし、以下の順で操作してください。
+\begin{enumerate}
+\item Tools→Boardから適切なモデルを選択
+\item Tools→Serial Portから該当するシリアルポートを選択
+\item File→Sketchbook→Examples→Library-Firmata→StandardFirmataを選択
+\item Uploadボタンを押してアップロード\footnote{Arduino NGなどでは必要に応じてアップロード前にリセットボタンを押してください。}
+\end{enumerate}
+
+アップロードは10数秒で終了するはずです。もしエラーメッセージが表示された場合には、再度アップロードからやり直してみてください。
+
+\clearpage
+\subsection{XBee無線モジュール}
+%XBee無線モジュールには802.15.4とZB ZigBee PROの2つのシリーズがあります。それぞれ、同じXBeeでも機能が異なりますので、よく理解した上で設定するようにしてください。
+
+\subsubsection{802.15.4シリーズの場合}
+\texttt{hardware/xbee/multipoint}に入っている\texttt{coordinator.pro}をPCに接続するコーディネータに、\texttt{enddevice.pro}をセンサなどに接続するエンドデバイスに（必要に応じて設定を変更した上で）それぞれ書き込んでください。Windowsの場合にはDigiが提供するX-CTU\footnote{http://www.digi.com/support/productdetl.jsp?pid=3352\&osvid=57\&tp=4\&s=316}がそのまま利用できます。Mac OS Xの場合には、Tom IgoeがMaking Things Talkのサンプルとして公開しているXBee Terminal\footnote{http://www.makingthingstalk.com/chapter6/31/}を利用して必要なコマンドを手動で入力することにより、設定を行うことができます\footnote{現時点ではファームウェアのアップデートにはX-CTUが必要となるため、Boot Campなどを利用してWindowsを利用できる状態にしておくことをおすすめします。}。表1にコーディネータとエンドデバイスの設定例を示します。なお、出力側も利用するためにはファームウェア1.0.C.Dが必要になります。
+
+\begin{table}[htdp]
+\begin{center}
+\small
+\begin{tabular}{|r|c|c|l|}
+\hline   & コーディネータ & エンド・デバイス & 備考 \\\hline
+\hline \texttt{ATRE} & - & - & 設定をリセット \\
+\hline \texttt{ATID} & \texttt{1234} & \texttt{1234} & PAN ID \\
+\hline \texttt{ATMY} & \texttt{0} & \texttt{1} &  \\
+\hline \texttt{ATDL} & \texttt{FFFF} & \texttt{0} & 相手側のID \\
+\hline \texttt{ATD0} & - & \texttt{2} & AD0/DIO0をアナログ入力に \\
+\hline \texttt{ATIR} & - & \texttt{32} & サンプリング間隔（0x32 = 50ms） \\
+\hline \texttt{ATIT} & - & \texttt{1} & ここで指定したサンプル数ごとに送信 \\
+\hline \texttt{ATAP} & 2 & - & APIモードの設定 \\
+\hline \texttt{ATWR} & - & - & 設定を書き込む \\
+\hline \texttt{ATCN} & - & - & コマンドモードを抜ける \\
+\hline 
+\end{tabular} 
+\caption{802.15.4シリーズの設定例}
+\end{center}
+\label{xbee}
+\end{table}
+
+\subsubsection{ZB ZigBee PROシリーズの場合}
+\texttt{hardware/xbee/zb}に入っている\texttt{coordinator.pro}をPCに接続するコーディネータに、\texttt{router.pro}をセンサなどに接続するルータに（必要に応じて設定を変更した上で）それぞれ書き込んでください。ファームウェアは、コーディネータ側には21xx（Coordinator - API Operation）を、ルータ側には22xx（Router - AT/Transparent Operation）を書き込みます。表2にXBee Terminalを利用して手動で設定を書き込む場合の参考となる設定例を示します。なお、これは最小限の実験用の構成ですので、実際にメッシュネットワークを構成する際にはルータとエンドデバイス用意してそれぞれ適切に設定してください。
+
+\begin{table}[htdp]
+\begin{center}
+\small
+\begin{tabular}{|r|c|c|l|}
+\hline   & コーディネータ & ルータ & 備考 \\\hline
+\hline \texttt{ATRE} & - & - & 設定をリセット \\
+\hline \texttt{ATID} & \texttt{1234} & \texttt{1234} & PAN ID \\
+\hline \texttt{ATJV} & - & \texttt{1} & コーディネータのチャンネルを確認 \\
+\hline \texttt{ATDL} & \texttt{FFFF} & \texttt{0} & 相手側のID \\
+\hline \texttt{ATD1} & - & \texttt{2} & AD1/DIO1をアナログ入力に \\
+\hline \texttt{ATIR} & - & \texttt{32} & サンプリング間隔（0x32 = 50ms） \\
+\hline \texttt{ATAP} & 2 & - & APIモードの設定 \\
+\hline \texttt{ATWR} & - & - & 設定を書き込む \\
+\hline \texttt{ATCN} & - & - & コマンドモードを抜ける \\
+\hline 
+\end{tabular} 
+\caption{ZB ZigBee PROシリーズの設定例}
+\end{center}
+\label{xbee}
+\end{table}
+
+\clearpage
+\subsection{FIO（Funnel I/Oモジュール）}
+FIOはLilyPad Arduino Main Board v1.6\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8465}をベースにXBeeを搭載できるようにしたもので、Arduino IDEによるファームウェアの書き込みとXBeeの設定を行う必要があります。XBeeは両シリーズ共に利用できますが、設定がシンプルな802.15.4を推奨します\footnote{ZB ZigBee PROシリーズの場合には、無線でFIOファームウェアを書き換える際にはコーディネータ側XBeeのファームウェアを変更する必要があります。}。
+
+\subsubsection{XBeeの設定}
+X-CTUを利用する場合には、\texttt{hardware/fio/xbee}に入っている\texttt{coordinator\_auto\_reset.pro}（自動リセットあり）または\texttt{coordinator.pro}（自動リセットなし）をPCに接続するコーディネータに、\texttt{enddevice.pro}をFIOに搭載するエンドデバイスに（必要に応じて設定を変更した上で）それぞれ書き込んでください\footnote{自動リセットの設定方法は「Xbee Adapter - wireless Arduino programming\footnote{http://www.ladyada.net/make/xbee/arduino.html}」で紹介されていた方法を参考に一部改変したものです。}。
+
+Mac OS Xの場合には、\texttt{hardware/fio/tool}に入っているXBeeConfigToolを使用して設定してください。このツールの使用方法は以下の通りです。
+
+\begin{enumerate}
+\item Serial PortでXBee USB Explorerなどが接続されているシリアルポートを選択します。
+\item PAN IDを適切な値に設定します。
+\item MY IDを適切な値に設定します。
+\item ModeとしてCoordinatorかEnd Devicesを選択します。
+\item Configureボタンを押すと数秒間で書込みが完了します。
+\end{enumerate}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=7.5cm, clip]{XBeeConfigTool.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{XBeeConfigToolの画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+この設定は、FIOのファームウェアを無線で書き換えることを想定して、Arduinoのブートローダで使用される通信速度である19200bpsにしています。複数のFIOを同時に使用する場合など、コーディネータ側の通信速度が不足する時はコーディネータ側の通信速度を57600bpsなどに変更してください（ファームウェアをアップデートする際には戻してください）。
+
+以下は参考用として手動で設定を書き込む際の手順です。手動で設定を書き込む場合には、Making Things Talkのサンプルとして配布されているXBee\_terminalを使用すると便利です。
+
+\begin{table}[htdp]
+\begin{center}
+\small
+\begin{tabular}{|r|c|c|l|}
+\hline   & コーディネータ & エンド・デバイス & 備考 \\\hline
+\hline \texttt{ATRE} & - & - & 設定をリセット \\
+\hline \texttt{ATBD} & \texttt{4} & \texttt{4} & 通信速度を19200bpsに \\
+\hline \texttt{ATID} & \texttt{1234} & \texttt{1234} & PAN ID \\
+\hline \texttt{ATMY} & \texttt{0} & \texttt{1} &  \\
+\hline \texttt{ATDL} & \texttt{FFFF} & \texttt{0} & 相手側のID \\
+\hline \texttt{ATD3} & 3 & 5 & DIO3をDINに／DIO3をHIGHに※ \\
+\hline \texttt{ATIC} & 8 & - & DIO Change DetectでDIO3の変化を検出※ \\
+\hline \texttt{ATIU} & - & 0 & I/O Outputを無効に※ \\
+\hline \texttt{ATIA} & - & FFFF & I/O Input Addressを設定※ \\
+\hline \texttt{ATWR} & - & - & 設定を書き込む \\
+\hline \texttt{ATCN} & - & - & コマンドモードを抜ける \\
+\hline 
+\end{tabular} 
+\caption{FIO用のXBee 802.15.4シリーズの設定例}
+\end{center}
+\label{xbee}
+\end{table}
+
+\subsubsection{ファームウェアの書き込み}
+\label{uploading_firmata_fio}
+Arduino 0012をウェブサイト\footnote{http://arduino.cc}からダウンロードし、以下の順で操作してください。
+\begin{enumerate}
+\item Tools→BoardからArduino Pro or Pro Mini (8MHz)を選択
+\item Tools→Serial Portから該当するシリアルポートを選択
+\item File→Sketchbook→Openでhardware/fio/firmware/FioStandardFirmataを選択
+\item FIO側の電源スイッチを入れるか、リセットスイッチを押したらすぐにUploadボタンを押す
+\end{enumerate}
+
+アップロードは10数秒で終了するはずです。もしエラーメッセージが表示された場合には、再度アップロードからやり直してみてください。
+
+\clearpage
+\section{Funnel Serverの設定と起動}
+\subsection{設定（Gainer I/Oモジュール以外の場合）}
+Funnel ServerはデフォルトでGainer I/Oモジュールを使用する設定になっています。このため、Gainer I/Oモジュール以外のI/Oモジュールを使用する場合には、ハードウェアに合わせてFunnel Serverの設定ファイル（\texttt{settings.txt}）を変更して下さい\footnote{Windowsの場合、ノートパッドでファイルを開くと改行コードの関係で全てが1行に表示されてしまうかもしれません。ワードパッドであれば問題なく編集できます。}。サンプルとして以下の設定ファイルも配布パッケージに含まれています。
+\begin{itemize}
+\item \texttt{settings.arduino.txt}：Arduino I/Oボード用の設定ファイル
+\item \texttt{settings.fio.txt}：FIO用の設定ファイル
+\item \texttt{settings.gainer.txt}：Gainer I/Oモジュール用の設定ファイル
+\item \texttt{settings.xbee.txt}：XBee用の設定ファイル
+\end{itemize}
+Funnel Serverは1つのネットワークポートを利用し、デフォルト値は9000番です。他のアプリケーションがこのポートを使用している場合には、競合しない番号に変更して下さい。Gainer I/Oモジュールの場合は、シリアルポートを指定しないと自動検出を試みますので、1台のみI/Oモジュールを接続するときには設定不要です。Mac OS Xの場合は、FTDIのUSB-to-UARTブリッジを使用している場合には自動での接続を試みますので、多くの場合にはArduinoなどもシリアルポートの指定無しで接続できるはずです。
+
+\begin{lstlisting}[caption={Gainer I/Oモジュール用のsettings.txtの設定例},label=useless]
+server:
+  port: 9000
+
+io:
+  type: Gainer
+  com: 
+  baudrate: 
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Arduino I/Oボード用のsettings.txtの設定例（Mac OS X）},label=useless]
+server:
+  port: 9000
+
+io:
+  type: Arduino
+  com: /dev/cu.usbserial-A*******
+  baudrate: 115200
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Arduino I/Oボード用のsettings.txtの設定例（Windows）},label=useless]
+server:
+  port: 9000
+
+io:
+  type: Arduino
+  com: COM3
+  baudrate: 115200
+\end{lstlisting}
+
+\clearpage
+\subsection{起動}
+設定が終わったら、\texttt{funnel\_server.jar}をダブルクリックしてFunnel Serverを起動してください。起動するとハードウェアとの接続を行い、その結果がメッセージとして表示されます。なお、Funnel Server自体が起動しない場合は、J2SE 5以上のJava実行環境がインストールされているかどうか確認してください。
+
+\subsection{Gainer I/Oモジュールの場合}
+正常に起動した場合には次のような画面が表示されます。何らかのエラーメッセージが表示される場合には、メッセージを参考に設定ファイルやハードウェアを確認してください。
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_gainer_successful_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{Gainer I/Oモジュールに接続したFunnel Serverが正常に起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+I/Oモジュールを接続しないで起動した場合、あるいは間違ってタイプを設定した場合には、次のようなメッセージが表示されます。この場合には、USBケーブルがきちんと接続されているか、I/OモジュールのLEDが点灯しているか、設定ファイルで別のタイプを設定していないかを確認してください。
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_gainer_unconnected_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{Gainer I/Oモジュールを接続しないでFunnel Serverを起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+\clearpage
+\subsection{Arduino I/Oボードの場合}
+正常に起動した場合には次のような画面が表示されます。何らかのエラーメッセージが表示される場合には、メッセージを参考に設定ファイルやハードウェアを確認してください。
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_arduino_successful_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{Arduino I/Oボードに接続したFunnel Serverが正常に起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+ここで「\texttt{Firmata Protocol Version: 2.0}」というメッセージが表示されない場合は、ファームウェアの書き込みが正しく行われていない可能性があります。セクション\ref{uploading_firmata_arduino}の説明を参考に、ファームウェアを書き込んでください。
+
+I/Oボードを接続しないで起動した場合、あるいは間違ってタイプを設定した場合には、次のようなメッセージが表示されます。この場合には、以下の項目について確認してください。
+
+\begin{itemize}
+\item USBケーブルがきちんと接続されているか
+\item I/OモジュールのLEDが点灯しているか
+\item 設定ファイルで別のタイプを設定していないか
+\item シリアルポートが正しく指定されているか
+\item シリアルポートの通信速度が正しく指定されているか
+\end{itemize}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_arduino_unconnected_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{Arduino I/Oボードを接続しないでFunnel Serverを起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+\clearpage
+\subsection{XBee無線モデムの場合}
+正常に起動した場合には次のような画面が表示されます。何らかのエラーメッセージが表示される場合には、メッセージを参考に設定ファイルやハードウェアを確認してください。
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_xbee_successful_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{XBee無線モデムに接続したFunnel Serverが正常に起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+XBee⇔USB変換モジュールを接続しないで起動した場合、あるいは間違ってタイプを設定した場合には、次のようなメッセージが表示されます。この場合には、以下の項目について確認してください。
+
+\begin{itemize}
+\item USBケーブルがきちんと接続されているか
+\item XBee⇔USB変換モジュールの電源LEDが点灯しているか
+\item 設定ファイルで別のタイプを設定していないか
+\item シリアルポートが正しく指定されているか
+\item シリアルポートの通信速度が正しく指定されているか
+\end{itemize}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_xbee_unconnected_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{XBee無線モデムを接続しないでFunnel Serverを起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+\clearpage
+\subsection{FIOの場合}
+正常に起動した場合には次のような画面が表示されます。何らかのエラーメッセージが表示される場合には、メッセージを参考に設定ファイルやハードウェアを確認してください。
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_fio_successful_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{FIO（Funnel I/Oモジュール）に接続したFunnel Serverが正常に起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+ここで「\texttt{Firmata Protocol Version: 2.0}」というメッセージが表示されない場合は、ファームウェアの書き込みが正しく行われていない可能性があります。セクション\ref{uploading_firmata_fio}の説明を参考に、ファームウェアを書き込んでください。
+
+XBee⇔USB変換モジュールを接続しないで起動した場合、あるいは間違ってタイプを設定した場合には、次のようなメッセージが表示されます。この場合には、以下の項目について確認してください。
+
+\begin{itemize}
+\item USBケーブルがきちんと接続されているか
+\item XBee⇔USB変換モジュールの電源LEDが点灯しているか
+\item 設定ファイルで別のタイプを設定していないか
+\item シリアルポートが正しく指定されているか
+\item シリアルポートの通信速度が正しく指定されているか
+\end{itemize}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_fio_unconnected_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{FIO（Funnel I/Oモジュール）を接続しないでFunnel Serverを起動した時の画面例}
+\label{default}
+\end{center}
+\end{figure}
+
+\clearpage
+\section{各ライブラリごとの準備と使用方法}
+\subsection{ActionScript 3}
+\subsubsection{準備}
+\texttt{libraries/actionscript3/examples/}に各ハードウェア用のサンプルがあります。例えば、Gainer I/Oモジュール用のサンプルは\texttt{GainerTest.as}、Flash IDE用のファイルは\texttt{GainerTest.fla}、パブリッシュ済みのFlash Player用ファイルは\texttt{GainerTest.swf}になります。Flash IDE以外でパブリッシュする場合には、それぞれの環境に合わせて\texttt{libraries/actionscript3/src/}をソースパスに設定して下さい。
+
+\begin{lstlisting}[caption={mxmlcでサンプルをコンパイルする際のオプションの設定例},label=useless]
+$ mxmlc GainerTest.as -sp ../src
+\end{lstlisting}
+
+次に、ウェブブラウザでhttp://tinyurl.com/2rg3lq\footnote{http://www.macromedia.com/support/documentation/jp/flashplayer/help/settings\_manager04.html}にアクセスして、「グローバルセキュリティ設定」の「これらのファイルとフォルダを常に信頼する→追加→フォルダを参照...」でサンプルのフォルダを追加してください。この設定を行わないと、Funnel ServerとFlash Playerの通信ができません。
+
+\subsubsection{動作確認}
+\texttt{libraries/actionscript3/examples/*Test.swf}をFlash Playerで再生してください。それぞれのサンプルで実装されている内容に関しては、\texttt{*Test.as}のコメントを参照してください。
+
+\subsection{Processing}
+\subsubsection{準備}
+\begin{enumerate}
+\item \texttt{funnel\_009/libraries/processing/library/}を\texttt{マイドキュメント/Processing/libraries/funnel/library/}（Windowsの場合）\texttt{書類/Processing/libraries/funnel/library/}（OS Xの場合）としてコピーしてください。
+\item この状態でProcessingを起動し、「Sketch→Import Library...」のメニュー項目として「funnel」が表示されるのを確認してください。確認が終わったらProcessingを終了してください。
+\item 必要に応じて、Processingのスケッチブックフォルダ（Windowsの場合には\texttt{マイドキュメント/Processing}、OS Xの場合には\texttt{書類/Processing}）の中に\texttt{libraries/processing/sketch\_samples/}をコピーしてください。
+\end{enumerate}
+
+\subsubsection{動作確認}
+Openボタンをクリックし、\texttt{sketch\_samples}フォルダの中からそれぞれのハードウェアのスケッチを開いて実行してください。それぞれのサンプルで実装されている内容に関しては、スケッチ中のコメントを参照してください。
+
+\subsection{Ruby}
+\subsubsection{準備}
+\texttt{libraries/ruby/examples}にGainer、Arduino、XBee、Funnel I/O用のサンプルがあります。また、\texttt{libraries/ruby/examples/action-coding/}にあるaction-coding用のサンプルを実行する場合には、http://code.google.com/p/action-coding/wiki/Tutorialを参照してaction-codingの設定を済ませてください。
+
+\subsubsection{動作確認}
+Rubyから\texttt{libraries/ruby/examples/}フォルダの中からそれぞれのハードウェアのスクリプトを開いて実行してください。それぞれのサンプルで実装されている内容に関しては、スクリプト中のコメントを参照してください。
+
+
+\end{document}

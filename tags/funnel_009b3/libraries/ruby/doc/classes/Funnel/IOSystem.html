@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: Funnel::IOSystem</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Funnel::IOSystem</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/funnel/iosystem_rb.html">
+                funnel/iosystem.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                Object
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+(IN, OUT, PWM) = Array(Configuration::IN..Configuration::PWM)
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000084">add_io_module</a>&nbsp;&nbsp;
+      <a href="#M000085">all_io_modules</a>&nbsp;&nbsp;
+      <a href="#M000091">dispose</a>&nbsp;&nbsp;
+      <a href="#M000090">io_module</a>&nbsp;&nbsp;
+      <a href="#M000083">new</a>&nbsp;&nbsp;
+      <a href="#M000086">register_node</a>&nbsp;&nbsp;
+      <a href="#M000087">send_command</a>&nbsp;&nbsp;
+      <a href="#M000088">send_output_command</a>&nbsp;&nbsp;
+      <a href="#M000089">update</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+    <div id="includes">
+      <h3 class="section-bar">Included Modules</h3>
+
+      <div id="includes-list">
+        <span class="include-name">IPAppletAdapter</span>
+      </div>
+    </div>
+
+    <div id="section">
+
+
+    <div id="constants-list">
+      <h3 class="section-bar">Constants</h3>
+
+      <div class="name-list">
+        <table summary="Constants">
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">MINIMUM_SAMPLING_INTERVAL</td>
+          <td>=</td>
+          <td class="context-item-value">10</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">ALL</td>
+          <td>=</td>
+          <td class="context-item-value">0xFFFF</td>
+        </tr>
+        </table>
+      </div>
+    </div>
+
+
+
+    <div id="attribute-list">
+      <h3 class="section-bar">Attributes</h3>
+
+      <div class="name-list">
+        <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">auto_update</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">autoregister</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">broadcast</td>
+          <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        </table>
+      </div>
+    </div>
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000083" class="method-detail">
+        <a name="M000083"></a>
+
+        <div class="method-heading">
+          <a href="#M000083" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(config, host, port, interval, applet = nil)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000083-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000083-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iosystem.rb, line 40</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">config</span>, <span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">interval</span>, <span class="ruby-identifier">applet</span> = <span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">applet</span> <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">then</span>
+        <span class="ruby-ivar">@applet</span> = <span class="ruby-identifier">applet</span>
+        <span class="ruby-ivar">@applet</span>.<span class="ruby-identifier">registerDispose</span>(<span class="ruby-keyword kw">self</span>)
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">begin</span>
+        <span class="ruby-ivar">@command_port</span> = <span class="ruby-constant">TCPSocket</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>)
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;command port: #{@command_port.addr.at(2)}, #{@command_port.addr.at(1)}&quot;</span>
+      <span class="ruby-keyword kw">rescue</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">RuntimeError</span>, <span class="ruby-node">&quot;can't connect to the command port (#{port}) of the funnel_server&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-ivar">@command_queue</span> = <span class="ruby-constant">Queue</span>.<span class="ruby-identifier">new</span>
+
+      <span class="ruby-ivar">@th</span> = <span class="ruby-constant">Thread</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">loop</span> <span class="ruby-keyword kw">do</span>
+          <span class="ruby-identifier">data</span> = <span class="ruby-ivar">@command_port</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">8192</span>)
+          <span class="ruby-identifier">processed_size</span> = <span class="ruby-value">0</span>
+          <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">processed_size</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">length</span> <span class="ruby-keyword kw">do</span>
+            <span class="ruby-identifier">packet_size</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">processed_size</span>, <span class="ruby-value">4</span>).<span class="ruby-identifier">unpack</span>(<span class="ruby-value str">'N'</span>).<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>)
+            <span class="ruby-identifier">packet</span> = <span class="ruby-identifier">data</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">processed_size</span> <span class="ruby-operator">+</span> <span class="ruby-value">4</span>, <span class="ruby-identifier">packet_size</span>)
+
+            <span class="ruby-keyword kw">begin</span>
+              <span class="ruby-constant">OSC</span><span class="ruby-operator">::</span><span class="ruby-constant">Packet</span>.<span class="ruby-identifier">decode</span>(<span class="ruby-identifier">packet</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">time</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">|</span>
+                <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">message</span>.<span class="ruby-identifier">address</span>
+                <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'/in'</span>
+                  <span class="ruby-identifier">id</span> = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>[<span class="ruby-value">0</span>]
+                  <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">id</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+                  <span class="ruby-identifier">from</span> = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>[<span class="ruby-value">1</span>]
+                  <span class="ruby-identifier">counts</span> = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>
+                  <span class="ruby-identifier">counts</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+                    <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">id</span>].<span class="ruby-identifier">port</span>(<span class="ruby-identifier">from</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">i</span>).<span class="ruby-identifier">value</span> = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>[<span class="ruby-value">2</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">i</span>]
+                  <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'/node'</span>
+                  <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@autoregister</span>
+                  <span class="ruby-identifier">id</span> = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>[<span class="ruby-value">0</span>]
+                  <span class="ruby-identifier">ni</span> = <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>[<span class="ruby-value">1</span>]
+                  <span class="ruby-identifier">register_node</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">ni</span>)
+                <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'/configure'</span>
+                  <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-constant">FunnelErrorEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIGURATION_ERROR</span> <span class="ruby-keyword kw">then</span>
+                    <span class="ruby-comment cmt"># raise RuntimeError, &quot;CONFIGURATION_ERROR: #{message.to_a[1]}&quot;</span>
+                    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;CONFIGURATION_ERROR: #{message.to_a[1]}&quot;</span>
+                  <span class="ruby-keyword kw">else</span>
+                    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Configured successfully&quot;</span>
+                    <span class="ruby-ivar">@command_queue</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">message</span>
+                  <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'/reset'</span>
+                  <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-constant">FunnelErrorEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">REBOOT_ERROR</span> <span class="ruby-keyword kw">then</span>
+                    <span class="ruby-comment cmt"># raise RuntimeError, &quot;REBOOT_ERROR: #{message.to_a[1]}&quot;</span>
+                    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;REBOOT_ERROR: #{message.to_a[1]}&quot;</span>
+                  <span class="ruby-keyword kw">else</span>
+                    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Rebooted successfully&quot;</span>
+                    <span class="ruby-ivar">@command_queue</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">message</span>
+                  <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'/samplingInterval'</span>
+                <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'/polling'</span>
+                  <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-constant">FunnelErrorEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">ERROR</span> <span class="ruby-keyword kw">then</span>
+                    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;ERROR: #{message.address}, #{message.to_a[1]}&quot;</span>
+                  <span class="ruby-keyword kw">else</span>
+                    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;OK: #{message.address}&quot;</span>
+                    <span class="ruby-ivar">@command_queue</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">message</span>
+                  <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'/out'</span>
+                  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;ERROR: #{message.address}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-constant">FunnelErrorEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">NO_ERROR</span>
+                <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'/sysex'</span>
+                  <span class="ruby-identifier">p</span> <span class="ruby-identifier">message</span>.<span class="ruby-identifier">to_a</span>
+                <span class="ruby-keyword kw">end</span>
+              <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">EOFError</span>
+              <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;notification port: EOF error&quot;</span>
+            <span class="ruby-keyword kw">end</span>
+            <span class="ruby-identifier">processed_size</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">packet_size</span> <span class="ruby-operator">+</span> <span class="ruby-value">4</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">begin</span>
+        <span class="ruby-identifier">send_command</span>(<span class="ruby-constant">OSC</span><span class="ruby-operator">::</span><span class="ruby-constant">Message</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'/reset'</span>), <span class="ruby-keyword kw">true</span>)
+      <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">RuntimeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;RuntimeError occurred: #{e.message}&quot;</span>
+        <span class="ruby-keyword kw">begin</span>
+          <span class="ruby-identifier">send_command</span>(<span class="ruby-constant">OSC</span><span class="ruby-operator">::</span><span class="ruby-constant">Message</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'/reset'</span>), <span class="ruby-keyword kw">true</span>)
+          <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Tried again rebooting and got success&quot;</span>
+        <span class="ruby-keyword kw">rescue</span>
+          <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;ERROR: Failed to reboot twice!!!&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">TimeoutError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;TimeoutError occurred: #{e.message}&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">interval</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">MINIMUM_SAMPLING_INTERVAL</span>
+        <span class="ruby-keyword kw">then</span> <span class="ruby-identifier">interval</span> = <span class="ruby-constant">MINIMUM_SAMPLING_INTERVAL</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-comment cmt"># begin</span>
+      <span class="ruby-comment cmt">#   send_command(OSC::Message.new('/samplingInterval', 'i', interval), true)</span>
+      <span class="ruby-comment cmt"># rescue RuntimeError =&gt; e</span>
+      <span class="ruby-comment cmt">#   puts &quot;RuntimeError occurred at setting the sampling interval: #{e.message}&quot;</span>
+      <span class="ruby-comment cmt"># rescue TimeoutError =&gt; e</span>
+      <span class="ruby-comment cmt">#   puts &quot;TimeoutError occurred at setting the sampling interval: #{e.message}&quot;</span>
+      <span class="ruby-comment cmt"># end</span>
+
+      <span class="ruby-ivar">@sampling_interval</span> = <span class="ruby-identifier">interval</span>
+
+      <span class="ruby-ivar">@auto_update</span> = <span class="ruby-keyword kw">true</span>
+      <span class="ruby-ivar">@modules</span> = <span class="ruby-constant">Hash</span><span class="ruby-operator">::</span><span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">add_io_module</span>(<span class="ruby-value">0</span>, <span class="ruby-identifier">config</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">config</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>  <span class="ruby-comment cmt"># add the first I/O module if specified</span>
+      <span class="ruby-ivar">@broadcast</span> = <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-ivar">@autoregister</span> = <span class="ruby-keyword kw">false</span>
+
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">config</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+
+      <span class="ruby-keyword kw">begin</span>
+        <span class="ruby-identifier">send_command</span>(<span class="ruby-constant">OSC</span><span class="ruby-operator">::</span><span class="ruby-constant">Message</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'/polling'</span>, <span class="ruby-value str">'i'</span>, <span class="ruby-value">1</span>), <span class="ruby-keyword kw">true</span>)
+      <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">RuntimeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;RuntimeError occurred at start polling: #{e.message}&quot;</span>
+      <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">TimeoutError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;TimeoutError occurred at start polling: #{e.message}&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000084" class="method-detail">
+        <a name="M000084"></a>
+
+        <div class="method-heading">
+          <a href="#M000084" class="method-signature">
+          <span class="method-name">add_io_module</span><span class="method-args">(id, config, name = &quot;&quot;, do_configure = true)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000084-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000084-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iosystem.rb, line 161</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_io_module</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">config</span>, <span class="ruby-identifier">name</span> = <span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-identifier">do_configure</span> = <span class="ruby-keyword kw">true</span>)
+      <span class="ruby-ivar">@modules</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">id</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@modules</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">id</span>)
+      <span class="ruby-identifier">io_module</span> = <span class="ruby-constant">IOModule</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">id</span>, <span class="ruby-identifier">config</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">do_configure</span>)
+      <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">id</span>] = <span class="ruby-identifier">io_module</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000085" class="method-detail">
+        <a name="M000085"></a>
+
+        <div class="method-heading">
+          <a href="#M000085" class="method-signature">
+          <span class="method-name">all_io_modules</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000085-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000085-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iosystem.rb, line 167</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">all_io_modules</span>()
+      <span class="ruby-ivar">@modules</span>.<span class="ruby-identifier">values</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000091" class="method-detail">
+        <a name="M000091"></a>
+
+        <div class="method-heading">
+          <a href="#M000091" class="method-signature">
+          <span class="method-name">dispose</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000091-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000091-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iosystem.rb, line 231</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dispose</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;INFO: Disposing...&quot;</span>
+      <span class="ruby-constant">Osc</span>.<span class="ruby-identifier">dispose</span>
+      <span class="ruby-ivar">@th</span>.<span class="ruby-identifier">join</span> <span class="ruby-value">1</span>
+      <span class="ruby-ivar">@command_port</span>.<span class="ruby-identifier">close</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;INFO: Disposed!&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000090" class="method-detail">
+        <a name="M000090"></a>
+
+        <div class="method-heading">
+          <a href="#M000090" class="method-signature">
+          <span class="method-name">io_module</span><span class="method-args">(id)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000090-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000090-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iosystem.rb, line 221</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">io_module</span>(<span class="ruby-identifier">id</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-constant">ALL</span> <span class="ruby-keyword kw">then</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;broadcast is not available for this type&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@broadcast</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+        <span class="ruby-ivar">@broadcast</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;I/O module is not available at #{id}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">id</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+        <span class="ruby-ivar">@modules</span>[<span class="ruby-identifier">id</span>]
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000086" class="method-detail">
+        <a name="M000086"></a>
+
+        <div class="method-heading">
+          <a href="#M000086" class="method-signature">
+          <span class="method-name">register_node</span><span class="method-args">(id, ni)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000086-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000086-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iosystem.rb, line 171</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">register_node</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">ni</span>)
+      <span class="ruby-comment cmt"># should be implemented in a derived class</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000087" class="method-detail">
+        <a name="M000087"></a>
+
+        <div class="method-heading">
+          <a href="#M000087" class="method-signature">
+          <span class="method-name">send_command</span><span class="method-args">(command, synchronized = false, time_limit = 1)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000087-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000087-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iosystem.rb, line 175</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_command</span>(<span class="ruby-identifier">command</span>, <span class="ruby-identifier">synchronized</span> = <span class="ruby-keyword kw">false</span>, <span class="ruby-identifier">time_limit</span> = <span class="ruby-value">1</span>)
+      <span class="ruby-identifier">encoded</span> = <span class="ruby-identifier">command</span>.<span class="ruby-identifier">encode</span>
+      <span class="ruby-identifier">data</span> = [<span class="ruby-identifier">encoded</span>.<span class="ruby-identifier">length</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">'N'</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">encoded</span>
+      <span class="ruby-ivar">@command_port</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">data</span>, <span class="ruby-value">0</span>)
+      <span class="ruby-ivar">@command_port</span>.<span class="ruby-identifier">flush</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">synchronized</span> <span class="ruby-keyword kw">then</span>
+        <span class="ruby-identifier">reply</span> = <span class="ruby-keyword kw">nil</span>
+        <span class="ruby-identifier">start_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">to_f</span>
+        <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">reply</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">do</span>
+          <span class="ruby-keyword kw">begin</span>
+            <span class="ruby-identifier">reply</span> = <span class="ruby-ivar">@command_queue</span>.<span class="ruby-identifier">pop</span>(<span class="ruby-keyword kw">true</span>)
+          <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">ThreadError</span>
+            <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.1</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">TimeoutError</span>, <span class="ruby-node">&quot;Got no reply for #{command.address}&quot;</span> <span class="ruby-keyword kw">if</span> (<span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">to_f</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">start_time</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">time_limit</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">RuntimeError</span>, <span class="ruby-node">&quot;Expected reply was #{command.address}, but is #{reply.address}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">command</span>.<span class="ruby-identifier">address</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">reply</span>.<span class="ruby-identifier">address</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000088" class="method-detail">
+        <a name="M000088"></a>
+
+        <div class="method-heading">
+          <a href="#M000088" class="method-signature">
+          <span class="method-name">send_output_command</span><span class="method-args">(id, start, values)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000088-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000088-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iosystem.rb, line 195</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_output_command</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">start</span>, <span class="ruby-identifier">values</span>)
+      <span class="ruby-identifier">command</span> = <span class="ruby-constant">OSC</span><span class="ruby-operator">::</span><span class="ruby-constant">Message</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'/out'</span>, <span class="ruby-value str">'iif'</span>, <span class="ruby-identifier">id</span>, <span class="ruby-identifier">start</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">values</span>)
+      <span class="ruby-identifier">send_command</span>(<span class="ruby-identifier">command</span>)
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000089" class="method-detail">
+        <a name="M000089"></a>
+
+        <div class="method-heading">
+          <a href="#M000089" class="method-signature">
+          <span class="method-name">update</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000089-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000089-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/iosystem.rb, line 200</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>()
+      <span class="ruby-identifier">start</span> = <span class="ruby-value">0</span>
+      <span class="ruby-identifier">output_values</span> = []
+      <span class="ruby-identifier">was_updated</span> = <span class="ruby-keyword kw">false</span>
+
+      <span class="ruby-ivar">@modules</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">id</span>, <span class="ruby-identifier">io_module</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">io_module</span>.<span class="ruby-identifier">updated_port_indices</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">updated</span>, <span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">updated</span> <span class="ruby-keyword kw">then</span>
+            <span class="ruby-identifier">output_values</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">io_module</span>.<span class="ruby-identifier">port</span>[<span class="ruby-identifier">index</span>].<span class="ruby-identifier">value</span>)
+            <span class="ruby-identifier">io_module</span>.<span class="ruby-identifier">updated_port_indices</span>[<span class="ruby-identifier">index</span>] = <span class="ruby-keyword kw">false</span>
+            <span class="ruby-identifier">start</span> = <span class="ruby-identifier">index</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">was_updated</span>
+          <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">was_updated</span> <span class="ruby-keyword kw">then</span>
+            <span class="ruby-identifier">send_output_command</span>(<span class="ruby-identifier">start</span>, <span class="ruby-identifier">output_values</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">index</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+            <span class="ruby-identifier">output_values</span> = []
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">was_updated</span> = <span class="ruby-identifier">updated</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">send_output_command</span>(<span class="ruby-identifier">start</span>, <span class="ruby-identifier">output_values</span>)
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
