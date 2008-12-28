@@ -1,0 +1,47 @@
+<install>
+	
+	<version>0.01</version>
+	<author>Shigeru Kobayashi</author>
+	<url>http://funnel.cc</url>
+	
+	<requires>OF_ADDON_USING_OFXNETWORK</requires>
+	<requires>OF_ADDON_USING_OFXOSC</requires>
+	<requires>OF_ADDON_USING_OFXTHREAD</requires>
+	
+	
+	<add>	
+		<!-- 	=====================================================================	-->
+		<!--	========================== add for the "installation" of OF =========	-->
+		<!-- 	=====================================================================	-->
+	
+		<addons_h>
+		//--------------------------------------------- ofxFunnel
+		#ifdef OF_ADDON_USING_OFXFUNNEL
+			#include "ofxFunnel.h"
+		#endif 
+		</addons_h>
+		
+		<!-- 	=====================================================================	-->
+		<!--	========================== add per project using this addon =========	-->
+		<!-- 	=====================================================================	-->
+	
+		<src>
+			<folder name="addons/ofxFunnel/src">
+				<file>../../../addons/ofxFunnel/src/ofxFunnel.h</file>
+				<file>../../../addons/ofxFunnel/src/ofxFunnel.cpp</file>
+				<file>../../../addons/ofxFunnel/src/ofxFunnelConfiguration.cpp</file>
+				<file>../../../addons/ofxFunnel/src/ofxFunnelConfiguration.h</file>
+				<file>../../../addons/ofxFunnel/src/ofxFunnelEvents.cpp</file>
+				<file>../../../addons/ofxFunnel/src/ofxFunnelEvents.h</file>
+				<file>../../../addons/ofxFunnel/src/ofxFunnelMessageReceiver.h</file>
+				<file>../../../addons/ofxFunnel/src/ofxFunnelMessageReceiver.cpp</file>
+			</folder>
+		</src>
+		
+		<include>
+			<path>../../../addons/ofxFunnel/src</path>
+		</include>
+		
+	</add>
+	 
+</install>
