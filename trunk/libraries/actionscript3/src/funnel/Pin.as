@@ -154,7 +154,7 @@ package funnel
 			}
 			
 			if (array == null || array.length == 0) {
-				filters = array;
+				_filters = array;
 				return;
 			}
 			
