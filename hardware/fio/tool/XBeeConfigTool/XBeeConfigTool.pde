@@ -41,6 +41,9 @@ final String[] AT_READ = {   // commands sent to read xbee data
 final String[] BAUD_RATES = {
   "1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200"};
 
+final String[] SUPPORTED_FIRMWARE_VERSIONS = {
+  "10A5", "10CD"};
+
 void setup() {
   size(500, 400);
   background(150);
@@ -183,6 +186,29 @@ void configureXBeeModem() {
   }
   statusTextLabel.setLabel("Entered command mode.");
 
+  String reply = getReplyFromXBeeModemFor("VR");
+  boolean foundSupportedVersion = false;
+  for (int i = 0; i < SUPPORTED_FIRMWARE_VERSIONS.length; i++) {
+    if (reply.equals(SUPPORTED_FIRMWARE_VERSIONS[i])) {
+      foundSupportedVersion = true;
+      println("found: " + SUPPORTED_FIRMWARE_VERSIONS[i]);
+      break;
+    }
+  }
+  if (!foundSupportedVersion) {
+    String errorMessage = "Please update the modem firmware with X-CTU to supported versions:\n";
+    for (int i = 0; i < SUPPORTED_FIRMWARE_VERSIONS.length; i++) {
+      errorMessage += SUPPORTED_FIRMWARE_VERSIONS[i];
+      if (i < (SUPPORTED_FIRMWARE_VERSIONS.length - 1)) {
+        errorMessage += ", ";
+      }
+    }
+    errorMessage += "\n";
+    statusTextLabel.setLabel(errorMessage);
+    exitCommandMode();
+    return;
+  }
+
   int mode = modeRadioButtons.getSelectedIndex();
 
   switch (mode) {
@@ -231,7 +257,6 @@ void readSettingsFromXBeeModem() {
   }
   statusTextLabel.setLabel("Entered command mode.");
 
-  String resultString = "";
   for (int i = 0; i < AT_READ.length; i++) {
     String reply = getReplyFromXBeeModemFor(AT_READ[i]);
     showSetting(i, reply);
@@ -242,7 +267,7 @@ void readSettingsFromXBeeModem() {
     return;
   }
 
-  statusTextLabel.setLabel(resultString);
+  statusTextLabel.setLabel("Read settings successfully.");
 }
 
 void showSetting(int command, String reply) {
@@ -265,7 +290,7 @@ void showSetting(int command, String reply) {
     statusSerialNumberLow.setLabel("S/N low: " + reply);
     break;
   case 6: // VR
-    statusFirmwareVersion.setLabel("Firmware: " + reply) ;
+    statusFirmwareVersion.setLabel("Firmware: " + reply);
   }
 }
 
@@ -322,3 +347,5 @@ boolean exitCommandMode() {
   serialPort.write("ATCN\r");
   return gotOkayFromXBeeModem();
 }
+
+
