@@ -70,20 +70,7 @@ void setup() {
     y += 20;
   }
 
-  y += 8;
-  idLabel = new IFLabel ("PAN ID", 20, y);
-  gui.add(idLabel);
-  y += 14;
-  idTextField = new IFTextField("ID", 20, y, 60, "1234");
-  gui.add(idTextField);
-  y += 38;
-  myLabel = new IFLabel ("MY ID", 20, y);
-  gui.add(myLabel);
-  y += 14;
-  myTextField = new IFTextField("MY", 20, y, 60, "0000");
-  gui.add(myTextField);
-  y += 38;
-
+  y += 20;
   modeRadioButtons = new IFRadioController("Mode Selector");
   modeRadioButtons.addActionListener(this);
   modeButtonsLabel = new IFLabel("Mode", 20, y, 12);
@@ -95,9 +82,21 @@ void setup() {
   y += 20;
   modeButton[1] = new IFRadioButton("End Devices", 20, y, modeRadioButtons);
   gui.add(modeButton[1]);
-  y += 20;
 
-  y += 16;
+  y += 38;
+  idLabel = new IFLabel ("PAN ID", 20, y);
+  gui.add(idLabel);
+  y += 14;
+  idTextField = new IFTextField("ID", 20, y, 60, "1234");
+  gui.add(idTextField);
+  y += 32;
+  myLabel = new IFLabel ("MY ID", 20, y);
+  gui.add(myLabel);
+  y += 14;
+  myTextField = new IFTextField("MY", 20, y, 60, "0000");
+  gui.add(myTextField);
+
+  y += 38;
   configureButton = new IFButton("Configure", 20, y, 80, 20);
   configureButton.addActionListener(this);
   gui.add(configureButton);
@@ -216,9 +215,7 @@ void configureXBeeModem() {
     serialPort.write("ATRE,BD4,");
     serialPort.write("ID" + Integer.toString(id, 16) + ",");
     serialPort.write("MY" + Integer.toString(my, 16) + ",");
-    print("writing my as ");
-    println(Integer.toString(my, 16));
-    serialPort.write("DLFFFF,D33,IC8,WR\r");
+    serialPort.write("DLFFFF,D33,IC8,RR6,RO0,WR\r");
     if (!gotOkayFromXBeeModem()) {
       statusTextLabel.setLabel("Can't configure.");
       return;
@@ -228,7 +225,7 @@ void configureXBeeModem() {
     serialPort.write("ATRE,BD4,");
     serialPort.write("ID" + Integer.toString(id, 16) + ",");
     serialPort.write("MY" + Integer.toString(my, 16) + ",");
-    serialPort.write("DL0,D35,IU0,IAFFFF,WR\r");
+    serialPort.write("DL0,D35,IU0,IAFFFF,RO0,WR\r");
     if (!gotOkayFromXBeeModem()) {
       statusTextLabel.setLabel("Can't configure.");
       return;
