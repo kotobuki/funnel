@@ -212,20 +212,32 @@ void configureXBeeModem() {
 
   switch (mode) {
   case COORDINATOR:
-    serialPort.write("ATRE,BD4,");
+    serialPort.write("ATRE\r");
+    if (!gotOkayFromXBeeModem()) {
+      statusTextLabel.setLabel("Can't reset.");
+      return;
+    }
+
+    serialPort.write("ATBD4,");
     serialPort.write("ID" + Integer.toString(id, 16) + ",");
     serialPort.write("MY" + Integer.toString(my, 16) + ",");
-    serialPort.write("DLFFFF,D33,IC8,RR6,RO0,WR\r");
+    serialPort.write("DLFFFF,D33,IC8,RR3,RO10,WR\r");
     if (!gotOkayFromXBeeModem()) {
       statusTextLabel.setLabel("Can't configure.");
       return;
     }
     break;
   case END_DEVICES:
-    serialPort.write("ATRE,BD4,");
+    serialPort.write("ATRE\r");
+    if (!gotOkayFromXBeeModem()) {
+      statusTextLabel.setLabel("Can't reset.");
+      return;
+    }
+
+    serialPort.write("ATBD4,");
     serialPort.write("ID" + Integer.toString(id, 16) + ",");
     serialPort.write("MY" + Integer.toString(my, 16) + ",");
-    serialPort.write("DL0,D35,IU0,IAFFFF,RO0,WR\r");
+    serialPort.write("DL0,D35,IU0,IAFFFF,RO10,WR\r");
     if (!gotOkayFromXBeeModem()) {
       statusTextLabel.setLabel("Can't configure.");
       return;
