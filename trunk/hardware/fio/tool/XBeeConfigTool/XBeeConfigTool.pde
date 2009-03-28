@@ -41,6 +41,9 @@ final String[] AT_READ = {   // commands sent to read xbee data
 final String[] BAUD_RATES = {
   "1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200"};
 
+final String[] BAUD_RATES_FOR_CONFIG = {
+  "9600", "19200", "38400", "57600", "115200", "1200", "2400", "4800"};
+
 final String[] SUPPORTED_FIRMWARE_VERSIONS = {
   "10A5", "10CD"};
 
@@ -304,13 +307,13 @@ void showSetting(int command, String reply) {
 }
 
 boolean gotOkayFromXBeeModem() {
-  delay(500);
+  delay(100);
 
-  for (int i = 0; i < 30; i++) {
+  for (int i = 0; i < 20; i++) {
     if (serialPort.available() >= 3) {
       break;
     }
-    delay(200);
+    delay(50);
   }
 
   String reply = serialPort.readStringUntil(13);
@@ -331,19 +334,20 @@ String getReplyFromXBeeModemFor(String atCommand) {
 boolean enterCommandMode(String portName) {
   boolean enteredSuccessfully = false;
 
-  for (int i = 0; i < BAUD_RATES.length; i++) {
+  for (int i = 0; i < BAUD_RATES_FOR_CONFIG.length; i++) {
     if (serialPort != null) {
       serialPort.stop();
       serialPort = null;
     }
 
-    serialPort = new Serial(this, portName, Integer.parseInt(BAUD_RATES[i]));
+    serialPort = new Serial(this, portName, Integer.parseInt(BAUD_RATES_FOR_CONFIG[i]));
     serialPort.clear();
     serialPort.write("+++");
+    delay(500);
 
     if (gotOkayFromXBeeModem()) {
       enteredSuccessfully = true;
-      println("opened " + portName + " at " + BAUD_RATES[i]);
+      println("opened " + portName + " at " + BAUD_RATES_FOR_CONFIG[i]);
       break;
     }
   }
