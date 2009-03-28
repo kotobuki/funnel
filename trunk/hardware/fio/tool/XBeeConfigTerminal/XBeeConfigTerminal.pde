@@ -25,6 +25,8 @@ Serial serialPort;
 final String[] BAUD_RATES = {
   "9600", "19200", "38400", "57600", "115200", "1200", "2400", "4800"};
 
+int lastSelectedPort = -1;
+
 void setup() {
   size(500, 400);
   background(150);
@@ -91,13 +93,15 @@ void actionPerformed(GUIEvent e) {
     exit();
   }
   else if (e.getSource() == txTextField) {
-    if (e.getMessage().equals("Completed"))
+    if (e.getMessage().equals("Completed")) {
       sendCommands();
+    }
   }
   else {
     for (int i = 0; i < b.length; i++) {
-      if (e.getSource() == b[i])
+      if (e.getSource() == b[i]) {
         statusTextLabel.setLabel("Type commands and press the send button to send commands.");
+      }
     }
   }
 }
@@ -120,8 +124,9 @@ void sendCommands() {
   serialPort.write(txTextField.getValue() + "\r");
 
   for (int i = 0; i < 30; i++) {
-    if (serialPort.available() >= 3)
+    if (serialPort.available() >= 3) {
       break;
+    }
     delay(50);
   }
   delay(500);
@@ -135,6 +140,8 @@ void sendCommands() {
   else {
     statusTextLabel.setLabel("Got no reply from the XBee modem.");
   }
+
+  serialPort.write("ATCN\r");
 }
 
 boolean gotOkayFromXBeeModem() {
@@ -158,23 +165,36 @@ boolean gotOkayFromXBeeModem() {
 boolean enterCommandMode(String portName) {
   boolean enteredSuccessfully = false;
 
-  for (int i = 0; i < BAUD_RATES.length; i++) {
-    if (serialPort != null) {
-      serialPort.stop();
-      serialPort = null;
-    }
+  if (lastSelectedPort != portRadioButtons.getSelectedIndex()) {
+    for (int i = 0; i < BAUD_RATES.length; i++) {
+      if (serialPort != null) {
+        serialPort.stop();
+        serialPort = null;
+      }
 
-    serialPort = new Serial(this, portName, Integer.parseInt(BAUD_RATES[i]));
+      serialPort = new Serial(this, portName, Integer.parseInt(BAUD_RATES[i]));
+      serialPort.clear();
+      serialPort.write("+++");
+      delay(500);
+
+      if (gotOkayFromXBeeModem()) {
+        enteredSuccessfully = true;
+        println("opened " + portName + " at " + BAUD_RATES[i]);
+        break;
+      }
+    }
+  } 
+  else {
     serialPort.clear();
     serialPort.write("+++");
     delay(500);
 
     if (gotOkayFromXBeeModem()) {
       enteredSuccessfully = true;
-      println("opened " + portName + " at " + BAUD_RATES[i]);
-      break;
     }
   }
+
+  lastSelectedPort = portRadioButtons.getSelectedIndex();
 
   return enteredSuccessfully;
 }
