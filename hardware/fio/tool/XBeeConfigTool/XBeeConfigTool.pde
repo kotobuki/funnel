@@ -329,32 +329,29 @@ String getReplyFromXBeeModemFor(String atCommand) {
 }
 
 boolean enterCommandMode(String portName) {
-  if (serialPort != null) {
-    serialPort.stop();
-    serialPort = null;
-  }
+  boolean enteredSuccessfully = false;
 
-  serialPort = new Serial(this, portName, 9600);
-  serialPort.clear();
-  serialPort.write("+++");
+  for (int i = 0; i < BAUD_RATES.length; i++) {
+    if (serialPort != null) {
+      serialPort.stop();
+      serialPort = null;
+    }
 
-  if (!gotOkayFromXBeeModem()) {
-    serialPort.stop();
-    serialPort = null;
-    serialPort = new Serial(this, portName, 19200);
+    serialPort = new Serial(this, portName, Integer.parseInt(BAUD_RATES[i]));
     serialPort.clear();
     serialPort.write("+++");
-    if (!gotOkayFromXBeeModem()) {
-      return false;
+
+    if (gotOkayFromXBeeModem()) {
+      enteredSuccessfully = true;
+      println("opened " + portName + " at " + BAUD_RATES[i]);
+      break;
     }
   }
 
-  return true;
+  return enteredSuccessfully;
 }
 
 boolean exitCommandMode() {
   serialPort.write("ATCN\r");
   return gotOkayFromXBeeModem();
 }
-
-
