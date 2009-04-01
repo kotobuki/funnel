@@ -20,6 +20,8 @@ unsigned int samplingInterval = 32;  // default sampling interval is 33ms
 
 #define MINIMUM_SAMPLING_INTERVAL 10
 
+#define REGISTER_NOT_SPECIFIED -1
+
 struct i2c_device_info {
   byte addr;
   byte reg;
@@ -32,10 +34,14 @@ byte i2cRxData[32];
 boolean readingContinuously = false;
 byte queryIndex = 0;
 
-void readAndReportData(byte address, byte theRegister, byte numBytes) {
-  Wire.beginTransmission(address);
-  Wire.send(theRegister);
-  Wire.endTransmission();
+void readAndReportData(byte address, int theRegister, byte numBytes) {
+  if (theRegister != REGISTER_NOT_SPECIFIED) {
+    Wire.beginTransmission(address);
+    Wire.send((byte)theRegister);
+    Wire.endTransmission();
+  } else {
+    theRegister = 0;  // fill the register with a dummy value
+  }
 
   Wire.requestFrom(address, numBytes);
 
@@ -44,7 +50,7 @@ void readAndReportData(byte address, byte theRegister, byte numBytes) {
   }
 
   i2cRxData[0] = address;
-  i2cRxData[1] = theRegister;
+  i2cRxData[1] = (byte)theRegister;
   for (int i = 0; i < numBytes; i++) {
     i2cRxData[2 + i] = Wire.receive();
   }
@@ -63,7 +69,7 @@ void sysexCallback(byte command, byte argc, byte *argv)
   if (command == SYSEX_I2C_REQUEST) {
     mode = argv[1] & I2C_READ_WRITE_MODE_MASK;
     if (argv[1] & I2C_10BIT_ADDRESS_MODE_MASK) {
-      Firmata.sendString("10-bit address mode is not supported");
+      Firmata.sendString("10-bit addressing mode is not yet supported");
       return;
     } 
     else {
@@ -81,9 +87,17 @@ void sysexCallback(byte command, byte argc, byte *argv)
       delayMicroseconds(70);
       break;
     case I2C_READ:
-      slaveRegister = argv[2] + (argv[3] << 7);
-      data = argv[4] + (argv[5] << 7);  // bytes to read
-      readAndReportData(slaveAddress, slaveRegister, data);
+      if (argc == 6) {
+        // a slave register is specified
+        slaveRegister = argv[2] + (argv[3] << 7);
+        data = argv[4] + (argv[5] << 7);  // bytes to read
+        readAndReportData(slaveAddress, (int)slaveRegister, data);
+      } 
+      else {
+        // a slave register is NOT specified
+        data = argv[2] + (argv[3] << 7);  // bytes to read
+        readAndReportData(slaveAddress, (int)REGISTER_NOT_SPECIFIED, data);      
+      }
       break;
     case I2C_READ_CONTINUOUSLY:
       if ((queryIndex + 1) >= MAX_QUERIES) {
@@ -104,7 +118,8 @@ void sysexCallback(byte command, byte argc, byte *argv)
     default:
       break;
     }
-  } else if (command == SYSEX_SAMPLING_INTERVAL) {
+  } 
+  else if (command == SYSEX_SAMPLING_INTERVAL) {
     samplingInterval = argv[0] + (argv[1] << 7);
 
     if (samplingInterval < MINIMUM_SAMPLING_INTERVAL) {
