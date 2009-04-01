@@ -1,0 +1,1 @@
+﻿package funnel{	public interface ISysexMessageListener	{		function handleSysex(command:uint, data:Array):void;	}}
