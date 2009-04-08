@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel 009 BETA (r557)";
+	private static final String buildName = "Funnel 009 BETA (r587)";
 
 	private CommandPortServer server;
 	private IOModule ioModule = null;
@@ -53,9 +53,11 @@ public class FunnelServer extends Frame {
 		setVisible(true);
 		setLayout(null);
 		setResizable(false);
-		loggingArea = new TextArea(buildName + "\n\n", 5, 10, TextArea.SCROLLBARS_VERTICAL_ONLY); //$NON-NLS-1$
+		loggingArea = new TextArea(
+				buildName + "\n\n", 5, 10, TextArea.SCROLLBARS_VERTICAL_ONLY); //$NON-NLS-1$
 		Insets insets = this.getInsets();
-		loggingArea.setBounds(insets.left, insets.top, width - (insets.left + insets.right), height
+		loggingArea.setBounds(insets.left, insets.top, width
+				- (insets.left + insets.right), height
 				- (insets.top + insets.bottom));
 		loggingArea.setEditable(false);
 		loggingArea.setFont(new Font("Monospaced", Font.PLAIN, 12)); //$NON-NLS-1$
@@ -67,7 +69,8 @@ public class FunnelServer extends Frame {
 		int baudRate = -1;
 
 		try {
-			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader(configFileName)); //$NON-NLS-1$
+			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader(
+					configFileName)); //$NON-NLS-1$
 			Map<?, ?> serverSettings = (Map<?, ?>) settings.get("server"); //$NON-NLS-1$
 			if (serverSettings.get("port") == null) { //$NON-NLS-1$
 				networkPort = "9000"; //$NON-NLS-1$
@@ -77,18 +80,21 @@ public class FunnelServer extends Frame {
 
 			Map<?, ?> modules = (Map<?, ?>) settings.get("io"); //$NON-NLS-1$
 			if (modules.get("type") == null) { //$NON-NLS-1$
-				printMessage(Messages.getString("FunnelServer.TypeIsNotSpecified")); //$NON-NLS-1$
+				printMessage(Messages
+						.getString("FunnelServer.TypeIsNotSpecified")); //$NON-NLS-1$
 				type = "Gainer"; //$NON-NLS-1$
 			} else {
 				type = modules.get("type").toString(); //$NON-NLS-1$
 			}
 
 			if (modules.get("port") == null) { //$NON-NLS-1$
-				printMessage(Messages.getString("FunnelServer.PortIsNotSpecified")); //$NON-NLS-1$
+				printMessage(Messages
+						.getString("FunnelServer.PortIsNotSpecified")); //$NON-NLS-1$
 				if (!type.equalsIgnoreCase("Gainer")) {
 					serialPort = IOModule.getSerialPortName();
 					if (serialPort == null) {
-						printMessage(Messages.getString("FunnelServer.NoSerialPorts")); //$NON-NLS-1$
+						printMessage(Messages
+								.getString("FunnelServer.NoSerialPorts")); //$NON-NLS-1$
 						return;
 					}
 				}
@@ -97,7 +103,8 @@ public class FunnelServer extends Frame {
 			}
 
 			if (modules.get("baudrate") != null) { //$NON-NLS-1$
-				baudRate = Integer.valueOf(modules.get("baudrate").toString()).intValue();
+				baudRate = Integer.valueOf(modules.get("baudrate").toString())
+						.intValue();
 			}
 		} catch (FileNotFoundException e) {
 			printMessage(Messages.getString("FunnelServer.NoSettingsFile")); //$NON-NLS-1$
@@ -110,7 +117,8 @@ public class FunnelServer extends Frame {
 				ioModule = new GainerIO(this, serialPort);
 				ioModule.reboot();
 			} catch (RuntimeException e) {
-				printMessage(Messages.getString("FunnelServer.CannotOpenGainer")); //$NON-NLS-1$
+				printMessage(Messages
+						.getString("FunnelServer.CannotOpenGainer")); //$NON-NLS-1$
 				return;
 			} finally {
 				setTitle("Funnel Server: Gainer");
@@ -123,7 +131,8 @@ public class FunnelServer extends Frame {
 				ioModule = new ArduinoIO(this, serialPort, baudRate);
 				// Arduino Diecimila will reboot automatically
 			} catch (RuntimeException e) {
-				printMessage(Messages.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
+				printMessage(Messages
+						.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
 				return;
 			} finally {
 				setTitle("Funnel Server: Arduino");
@@ -181,8 +190,10 @@ public class FunnelServer extends Frame {
 			if (file.exists()) {
 				configFileName = fileNameToTest;
 			} else {
-				System.out.println("Warning: " + fileNameToTest + " was not found");
-				System.out.println("Usage: java -jar funnel_server.jar -[gainer|arduino|xbee|fio]");
+				System.out.println("Warning: " + fileNameToTest
+						+ " was not found");
+				System.out
+						.println("Usage: java -jar funnel_server.jar -[gainer|arduino|xbee|fio]");
 			}
 		}
 
