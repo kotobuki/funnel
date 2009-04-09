@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <Firmata.h>
 
-#define ENABLE_POWER_PINS
+//#define ENABLE_POWER_PINS
 #define SYSEX_I2C_REQUEST 0x76
 #define SYSEX_I2C_REPLY 0x77
 #define SYSEX_SAMPLING_INTERVAL 0x78
@@ -39,20 +39,25 @@ void readAndReportData(byte address, int theRegister, byte numBytes) {
     Wire.beginTransmission(address);
     Wire.send((byte)theRegister);
     Wire.endTransmission();
-  } else {
+  } 
+  else {
     theRegister = 0;  // fill the register with a dummy value
   }
 
   Wire.requestFrom(address, numBytes);
 
-  while (Wire.available() < numBytes) {
-    // TODO: Do timeout here if needed
+  // check to be sure correct number of bytes were returned by slave
+  if(numBytes == Wire.available()) {
+    i2cRxData[0] = address;
+    i2cRxData[1] = theRegister;
+    for (int i = 0; i < numBytes; i++) {
+      i2cRxData[2 + i] = Wire.receive();
+    }
   }
-
-  i2cRxData[0] = address;
-  i2cRxData[1] = (byte)theRegister;
-  for (int i = 0; i < numBytes; i++) {
-    i2cRxData[2 + i] = Wire.receive();
+  else {
+    if(numBytes > Wire.available()) {
+      Firmata.sendString("I2C Read Error: Try lowering the baud rate");
+    }
   }
 
   // send slave address, register and received bytes
@@ -71,7 +76,7 @@ void sysexCallback(byte command, byte argc, byte *argv)
     if (argv[1] & I2C_10BIT_ADDRESS_MODE_MASK) {
       Firmata.sendString("10-bit addressing mode is not yet supported");
       return;
-    } 
+    }
     else {
       slaveAddress = argv[0];
     }
@@ -92,11 +97,11 @@ void sysexCallback(byte command, byte argc, byte *argv)
         slaveRegister = argv[2] + (argv[3] << 7);
         data = argv[4] + (argv[5] << 7);  // bytes to read
         readAndReportData(slaveAddress, (int)slaveRegister, data);
-      } 
+      }
       else {
         // a slave register is NOT specified
         data = argv[2] + (argv[3] << 7);  // bytes to read
-        readAndReportData(slaveAddress, (int)REGISTER_NOT_SPECIFIED, data);      
+        readAndReportData(slaveAddress, (int)REGISTER_NOT_SPECIFIED, data);
       }
       break;
     case I2C_READ_CONTINUOUSLY:
@@ -118,7 +123,7 @@ void sysexCallback(byte command, byte argc, byte *argv)
     default:
       break;
     }
-  } 
+  }
   else if (command == SYSEX_SAMPLING_INTERVAL) {
     samplingInterval = argv[0] + (argv[1] << 7);
 
@@ -133,7 +138,7 @@ void sysexCallback(byte command, byte argc, byte *argv)
 void systemResetCallback()
 {
   readingContinuously = false;
-  queryIndex = 0;  
+  queryIndex = 0;
 }
 
 // reference: BlinkM_funcs.h by Tod E. Kurt, ThingM, http://thingm.com/
@@ -165,9 +170,9 @@ void setup()
   // It seems that Arduino Pro Mini won't work with 115200bps
   if (F_CPU == 8000000) {
     Firmata.begin(19200);
-  } 
+  }
   else {
-    Firmata.begin(115200);
+    Firmata.begin(57600);  // I2C data is not reliable at higher baud rates
   }
 
   Wire.begin();
@@ -180,7 +185,7 @@ void loop()
   }
 
   currentMillis = millis();
-  if (currentMillis > nextExecuteMillis) {  
+  if (currentMillis > nextExecuteMillis) {
     nextExecuteMillis = currentMillis + samplingInterval;
 
     for (byte i = 0; i < queryIndex; i++) {
