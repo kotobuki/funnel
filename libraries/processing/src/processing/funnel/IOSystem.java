@@ -1,6 +1,6 @@
 package processing.funnel;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,7 +9,11 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.Vector;
 
+
 import com.illposed.osc.*;
+
+import funnel.FunnelServer;
+
 import processing.core.*;
 
 /**
@@ -65,7 +69,8 @@ public class IOSystem implements Runnable{
 		this.parent = parent;
 		this.samplingInterval = samplingInterval;
 
-		
+		startingServer();
+
 		client = new OSCClient();
 		if(client.openFunnel(hostName, commandPortNumber)){
 
@@ -97,6 +102,33 @@ public class IOSystem implements Runnable{
 				samplingInterval,config);
 	}
 	
+	protected void startingServer(){
+		//overwrite
+		System.out.println("Initializing IOSystem. starting funnel server. ");
+
+	}
+	
+	protected void waitingServer(String moduleName){
+
+		
+		String configFileName = LibraryPath.getFunnelLibraryPath() + "settings." + moduleName.toLowerCase() + ".txt";
+		System.out.println(configFileName);
+		//
+		//サーバーを起動させて待つ
+		FunnelServer.embeddedMode = true;
+		new FunnelServer(configFileName); 
+
+		while(!FunnelServer.initialized){
+			try {
+				Thread.sleep(100);
+				System.out.println("waiting server");
+			} catch (InterruptedException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+		}
+		
+	}
 
 	//funnelのautupdate==trueに依存
 	public void run(){

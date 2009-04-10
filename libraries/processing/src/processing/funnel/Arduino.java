@@ -87,7 +87,11 @@ public final class Arduino extends Firmata{
 	}
 	
 	
-
+	protected void startingServer(){
+		System.out.println("server  staring" + moduleName);
+		
+		waitingServer(moduleName);
+	}
 }
 
 
