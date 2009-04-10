@@ -12,7 +12,7 @@ import processing.core.PApplet;
  */
 public final class Fio extends Firmata{
 	
-	public static final String moduleName = "Fio";
+	public static final String moduleName = "fio";
 	
 	/**
 	 * 0xFFFF : broadcast
