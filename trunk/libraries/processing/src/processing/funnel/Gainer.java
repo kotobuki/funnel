@@ -322,4 +322,9 @@ public final class Gainer extends IOSystem{
 	public IOModule.Port button(){
 		return iomodule(0).port(button);
 	}
+	
+	protected void startingServer(){
+
+		waitingServer(moduleName);
+	}
 }

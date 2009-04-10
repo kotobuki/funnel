@@ -1,0 +1,3 @@
+application.macosx = funnel.jar, javaosc.jar, RXTXcomm.jar, funnel_server.jar, jvyaml.jar, librxtxSerial.jnilib
+application.windows = funnel.jar, javaosc.jar, RXTXcomm.jar, funnel_server.jar, jvyaml.jar, rxtxSerial.dll
+application.linux = funnel.jar, javaosc.jar, RXTXcomm.jar, funnel_server.jar, jvyaml.jar, librxtxSerial.so
