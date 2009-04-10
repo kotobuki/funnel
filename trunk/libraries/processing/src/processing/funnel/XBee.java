@@ -5,7 +5,7 @@ import processing.core.PApplet;
 public final class XBee extends IOSystem{
 
 	
-	public static final String moduleName = "Xbee";
+	public static final String moduleName = "xbee";
 	
 	/**
 	 * 0xFFFF : broadcast
