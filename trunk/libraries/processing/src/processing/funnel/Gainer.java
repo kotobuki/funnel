@@ -4,6 +4,7 @@ package processing.funnel;
 import java.util.Arrays;
 import java.util.Set;
 
+import processing.app.Base;
 import processing.core.PApplet;
 
 /**
@@ -134,6 +135,8 @@ public final class Gainer extends IOSystem{
 		
 		startIOSystem();
 		
+		
+
 	}
 	
 	public Gainer(PApplet parent,Configuration config){
@@ -324,7 +327,6 @@ public final class Gainer extends IOSystem{
 	}
 	
 	protected void startingServer(){
-
 		waitingServer(moduleName);
 	}
 }
