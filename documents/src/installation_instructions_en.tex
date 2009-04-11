@@ -35,7 +35,7 @@ lineskip={-2pt}
 \item Software
 	\begin{itemize}
 	\item Java Runtime Environment (J2SE 5.0 or above)
-	\item Flash Professional CS3, Flex Builder 3 or Flex 2/3 SDK\footnote{http://www.adobe.com/products/flex/flexdownloads/index.html}
+	\item Flash Professional CS3/4, Flex Builder 3 or Flex 2/3 SDK\footnote{http://www.adobe.com/products/flex/flexdownloads/index.html}
 	\item Processing v1.0\footnote{http://processing.org/download/index.html}
 	\item Ruby (1.8.6, not tested on 1.9)\footnote{http://www.ruby-lang.org/en/downloads/} and OSC library\footnote{http://raa.ruby-lang.org/project/osc/}
 	\end{itemize}
@@ -69,7 +69,7 @@ lineskip={-2pt}
 \end{itemize}
 
 \section{How to install a device driver}
-Gainer I/O modules, Arduino I/O boards, XBee RF modems, FIO modules and most USB-to-XBee bridge modules \footnote{SparkFun Electronics: XBee Explorer USB (part number WRL-08687)} are equipped with an FTDI's FT232RL (a very famous USB-to-UART bridge chip). So you can use virtually all hardware devices by installing the device driver for the bridge chip\footnote{The drivers are also included in a `\texttt{drivers}' folder  (e.g. \texttt{arduino-0012/drivers}) of an Arduino distribution package}.
+Gainer I/O modules, Arduino I/O boards, XBee RF modems, FIO modules and most USB-to-XBee bridge modules \footnote{SparkFun Electronics: XBee Explorer USB (part number WRL-08687)} are equipped with an FTDI's FT232RL (a very famous USB-to-UART bridge chip). So you can use virtually all hardware devices by installing the device driver for the bridge chip\footnote{The drivers are also included in a `\texttt{drivers}' folder  (e.g. \texttt{arduino-0015/drivers}) of an Arduino distribution package}.
 
 \subsection{Windows XP/Vista}
 First of all, download the driver from the following location. Point your web browser to the following URL, and download a device driver for Windows XP or Vista.
@@ -118,7 +118,7 @@ In case of Gainer I/O modules, you have nothings to do. Just connect your module
 
 \subsection{Arduino I/O boards}
 \label{uploading_firmata_arduino}
-To connect Arduino I/O boards, Firmata\footnote{http://www.arduino.cc/playground/Interfacing/Firmata/} is needed. Firmata is a MIDI like protocol developed by Hans-Christoph Steiner. Since Arduino 0012 includes Firmata library by default, you can easily start using your Arduino I/O board as an I/O module for Funnel just uploading the example sketch as follows.
+To connect Arduino I/O boards, Firmata\footnote{http://www.arduino.cc/playground/Interfacing/Firmata/} is needed. Firmata is a MIDI like protocol developed by Hans-Christoph Steiner. Since Arduino 0015 includes Firmata library by default, you can easily start using your Arduino I/O board as an I/O module for Funnel just uploading the example sketch as follows.
 
 \begin{enumerate}
 \item Choose an appropriate model in Tools/Board menu
@@ -131,10 +131,20 @@ The uploading process should be finished after 10 seconds or more. If you see er
 
 \clearpage
 \subsection{XBee RF modems}
-%XBee無線モジュールには802.15.4とZB ZigBee PROの2つのシリーズがあります。それぞれ、同じXBeeでも機能が異なりますので、よく理解した上で設定するようにしてください。
-
 \subsubsection{802.15.4 series}
-Write \texttt{coordinator.pro} in \texttt{hardware/xbee/multipoint} to a coordinator, and \texttt{enddevice.pro} to end devices. Please change parameters if needed. On Windows, you can get X-CTU\footnote{http://www.digi.com/support/productdetl.jsp?pid=3352\&osvid=57\&tp=4\&s=316} from Digi's web site. On Mac OS X, XBee Terminal\footnote{http://www.makingthingstalk.com/chapter6/31/} by Tom Igoe, distributed as an example for the book `Making Things Talk,' will be your friend. You can configure XBee modems by entering AT commands manually. An example of settings are described in table 1. You have to upgrade firmware to 1.0.C.D to use output side.
+On Windows, you can get X-CTU\footnote{http://www.digi.com/support/productdetl.jsp?pid=3352\&osvid=57\&tp=4\&s=316} from Digi's web site. Then write \texttt{coordinator.pro} in \texttt{hardware/xbee/multipoint} to a coordinator, and \texttt{enddevice.pro} to end devices. Please change parameters if needed.
+
+On Mac OS X, you can configure XBee modems using \texttt{XBeeConfigTerminal} in \texttt{hardware/fio/tool}. An example of settings are described in table 1. You have to upgrade firmware to 1.0.C.D to use output side.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, width=0.495\textwidth]{XBeeConfigTerminal_coordinator.pdf}
+\includegraphics[mediaboxonly, width=0.495\textwidth]{XBeeConfigTerminal_end_devices.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{Screenshots of XBeeConfigTerminal: a coordinator side (left) and end devices side (right)}
+\label{default}
+\end{center}
+\end{figure}
 
 \begin{table}[htdp]
 \begin{center}
@@ -201,9 +211,10 @@ On Mac OS X, XBeeConfigTool (available in \texttt{hardware/fio/tool}) will be yo
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[mediaboxonly, height=7.5cm, clip]{XBeeConfigTool.pdf}
+\includegraphics[mediaboxonly, width=0.495\textwidth]{XBeeConfigTool_coordinator.pdf}
+\includegraphics[mediaboxonly, width=0.495\textwidth]{XBeeConfigTool_end_devices.pdf}
 \vskip -\lastskip \vskip -3pt
-\caption{A typical screenshot of XBeeConfigTool}
+\caption{Screenshots of XBeeConfigTool: a coordinator side (left) and end devices side (right)}
 \label{default}
 \end{center}
 \end{figure}
@@ -247,7 +258,30 @@ Please follow instructions below to upload the firmware to FIO modules.
 The uploading process should be finished after 10 seconds or more. If you see error messages, please try again from the 4th step.
 
 \clearpage
+\section{Preparations for each software library}
+\subsection{ActionScript 3}
+The folder \texttt{libraries/actionscript3/examples/} contains examples for each hardware. For instance, an example source file for Gainer I/O modules is \texttt{GainerTest.as}, a Flash file is \texttt{GainerTest.fla} and pre published file for Flash Player is \texttt{GainerTest.swf}. If you use an development environment other than Flash IDE, please add \texttt{libraries/actionscript3/src/} to source paths.
+
+\begin{lstlisting}[caption={An example of compile option for mxmlc},label=useless]
+$ mxmlc GainerTest.as -sp ../src
+\end{lstlisting}
+
+Then point your web browser to http://tinyurl.com/ex6fd\footnote{http://www.macromedia.com/support/documentation/en/flashplayer/help/settings\_manager04.html}, choose `Global Security Settings Panel' and add the folder to allow access. Or your Flash Player can't communicate with a Funnel Server.
+
+\subsection{Processing}
+\begin{enumerate}
+\item Create \texttt{funnel/} in \texttt{Processing/libraries/} in your document folder\footnote{``My Documents'' on Windows XP, ``Documents'' on Windows Vista and Mac OS X}
+\item Copy \texttt{library/} and \texttt{sketch\_samples/} of \texttt{libraries/processing/} into the folder.
+\item Launch Processing to confirm that `funnel' is displayed as a menu item of Sketch/Import Library... menu. If you can't see, please confirm about the previous steps.
+\end{enumerate}
+
+\subsection{Ruby}
+The folder \texttt{libraries/ruby/examples} contains examples for Gainer, Arduino, XBee and FIO. If you are interested in examples action-coding in \texttt{libraries/ruby/examples/action-coding/}, please set-up an action-coding environment reffering http://code.google.com/p/action-coding/wiki/HowToUse.
+
+\clearpage
 \section{How to configure and run Funnel Server}
+Regarding ActionScript 3 and Ruby, the files mentioned below are located in \texttt{server/}. If you are using Processing, the files are are located in the library folder (i.e. \texttt{Processing/libraries/funnel/}). 
+
 \subsection{Configure settings (except for Gainer I/O modules)}
 By default, Funnel Server is configured to use with Gainer I/O modules. So you have to configure settings file to use Funnel with other types. For your reference, example files are included in a distribution package as follows.
 \begin{itemize}
@@ -304,7 +338,15 @@ If a Funnel Server launches successfully, messages will be printed as follows. I
 \end{center}
 \end{figure}
 
-If you see messages as follows, please check the USB cable is connected to the PC, and the USB LED on the I/O module lights up.
+If you see any error messages, please make sure about following points:
+
+\begin{itemize}
+\item The FTDI USB driver is installed
+\item The USB cable is connected to the PC and the I/O board
+\item The power LED on the I/O board lights up
+\item The appropriate type (i.e. Gainer) is specified
+\item An appropriate serial port (e.g. COM3) is specified (if needed)
+\end{itemize}
 
 \begin{figure}[htbp]
 \begin{center}
@@ -328,9 +370,10 @@ If a Funnel Server launches successfully, messages will be printed as follows. I
 \end{center}
 \end{figure}
 
-If you can't see `\texttt{Firmata Protocol Version: 2.0}' string, you might failed to upload a firmware. Please refer the section \ref{uploading_firmata_arduino} to try again. If you see any error messages, please make sure that following issues:
+If you can't see a string like `\texttt{Firmata Protocol Version: 2.0}', you might failed to upload a firmware. Please refer the section \ref{uploading_firmata_arduino} to try again. If you see any error messages, please make sure about following points:
 
 \begin{itemize}
+\item The FTDI USB driver is installed
 \item The USB cable is connected to the PC and the I/O board
 \item The power LED on the I/O board lights up
 \item The appropriate type (i.e. Arduino) is specified
@@ -360,14 +403,15 @@ If a Funnel Server launches successfully, messages will be printed as follows. I
 \end{center}
 \end{figure}
 
-If you see any error messages, please make sure that following issues:
+If you see any error messages, please make sure about following points:
 
 \begin{itemize}
+\item The FTDI USB driver is installed
 \item The USB cable is connected to the PC and the I/O board
 \item The power LED on the XBee-to-USB module lights up
 \item The appropriate type (i.e. XBee) is specified (if needed)
 \item An appropriate serial port (e.g. COM3) is specified
-\item An appropriate baud rate (e.g. 119200) is specified
+\item An appropriate baud rate (e.g. 115200) is specified
 \end{itemize}
 
 \begin{figure}[htbp]
@@ -392,9 +436,10 @@ If a Funnel Server launches successfully, messages will be printed as follows. I
 \end{center}
 \end{figure}
 
-If you can't see `\texttt{Firmata Protocol Version: 2.0}' string, you might failed to upload a firmware. Please refer the section \ref{uploading_firmata_fio} to try again. If you see any error messages, please make sure that following issues:
+If you can't see a string like `\texttt{Firmata Protocol Version: 2.0}', you might failed to upload a firmware. Please refer the section \ref{uploading_firmata_fio} to try again. If you see any error messages, please make sure about following points:
 
 \begin{itemize}
+\item The FTDI USB driver is installed
 \item The USB cable is connected to the PC and the I/O board
 \item The power LED on the XBee-to-USB module lights up
 \item The appropriate type (i.e. FIO) is specified
@@ -412,38 +457,14 @@ If you can't see `\texttt{Firmata Protocol Version: 2.0}' string, you might fail
 \end{figure}
 
 \clearpage
-\section{Preparations and checking of operations for each software libraries}
+\section{Checking of operations for each software library}
 \subsection{ActionScript 3}
-\subsubsection{Preparations}
-The folder \texttt{libraries/actionscript3/examples/} contains examples for each hardware. For instance, an example source file for Gainer I/O modules is \texttt{GainerTest.as}, a Flash file is \texttt{GainerTest.fla} and pre published file for Flash Player is \texttt{GainerTest.swf}. If you use an development environment other than Flash IDE, please add \texttt{libraries/actionscript3/src/} to source paths.
-
-\begin{lstlisting}[caption={An example of compile option for mxmlc},label=useless]
-$ mxmlc GainerTest.as -sp ../src
-\end{lstlisting}
-
-Then point your web browser to http://tinyurl.com/ex6fd\footnote{http://www.macromedia.com/support/documentation/en/flashplayer/help/settings\_manager04.html}, choose `Global Security Settings Panel' and add the folder to allow access. Or your Flash Player can't communicate with a Funnel Server.
-
-\subsubsection{Checking of operations}
-Run \texttt{libraries/actionscript3/examples/*Test.swf} with a Flash Player. As for details, please refer to the comments in \texttt{*Test.as}.
+Run an appropriate example in \texttt{libraries/actionscript3/examples/} with a Flash Player. As for details, please refer to the comments in examples.
 
 \subsection{Processing}
-\subsubsection{Preparations}
-\begin{enumerate}
-%\item If you have not installed Processing, please download an appropriate file for your operating system. then extract.\\http://processing.org/download/
-\item Copy \texttt{funnel\_009/libraries/processing/library/} as \texttt{My Documents/Processing/libraries/funnel/library/} (on Windows) or \texttt{Documents/Processing/libraries/funnel/library/} (on Mac OS X).
-\item Copy \texttt{libraries/processing/sketch\_samples/} into the document folder.
-\item Launch Processing to confirm that `funnel' is displayed as a menu item of Sketch/Import Library... menu. If you can't see, please confirm about the previous step.
-\end{enumerate}
-
-\subsubsection{Checking of operations}
-Click on the Open button, choose an example for your hardware environment in \texttt{sketch\_samples} folder. As for details, please refer to the comments in each sketch.
+Click on the Open button, choose an appropriate example in \texttt{sketch\_samples} folder. As for details, please refer to the comments in each sketch.
 
 \subsection{Ruby}
-\subsubsection{Preparations}
-The folder \texttt{libraries/ruby/examples} contains examples for Gainer, Arduino, XBee and FIO. If you are interested in examples action-coding in \texttt{libraries/ruby/examples/action-coding/}, please set-up an action-coding environment reffering http://code.google.com/p/action-coding/wiki/HowToUse.
-
-\subsubsection{Checking of operations}
-Choose an example in \texttt{libraries/ruby/examples/} folder for your hardware environment. As for details, please refer to the comments in each script file.
-
+Run an appropriate example in \texttt{libraries/ruby/examples/} folder. As for details, please refer to the comments in each script file.
 
 \end{document}
