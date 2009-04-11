@@ -15,19 +15,17 @@ REQUIREMENTS
   * Mac OS X 10.4 or 10.5
 * Runtime environments for software libraries
   * Various programming environments for ActionScript 3 (e.g. 
-    Flash CS3, Flex Builder 3, Flex SDK 3)
+    Flash CS3/4, Flex Builder 3, Flex SDK 3)
   * Processing 1.0
   * Ruby 1.8.* with OSC library by Tadayoshi Funaba
     http://raa.ruby-lang.org/project/osc/
 * Runtime environments for the Funnel Server
   * Java Runtime Environment 1.5 or higher
 * Hardware
-  * Arduino or clones with Firmara firmware v2
-    StandardFirmata (distributed as a part of Arduino 0012)
-    http://www.arduino.cc/playground/Interfacing/Firmata
+  * Arduino or clones via Firmata v2 (http://firmata.org/)
   * Gainer I/O module v1.0
 * Optional environments
-  * Arduino 0012 (required for Arduino and Fio)
+  * Arduino 0015 (required for Arduino and FIO)
   * action-coding
     http://code.google.com/p/action-coding/
 
@@ -53,17 +51,28 @@ Takanori Endo and Ichitaro Masuda.
 
 Funnel uses the Java OSC by Illposed Software, JvYAML by Ola 
 Bini and RXTX by Keane Jarvi.
-
 * Java OSC: http://www.illposed.com/software/javaosc.html
 * JvYAML: https://jvyaml.dev.java.net/
 * RXTX: http://www.rxtx.org/
 
+Contributors
+* Jeff Hoefs: I2C support related classes and improvement of the AS3 library
+* Kazuyoshi Kato: matrix LED (Gainer I/O's mode 7) support for the Ruby library
+
 
 UPDATES
-Funnel 009
-* added I2C over Firmata
-* added XBeeConfigTool to configure XBee modmes for uploading 
-  sketches to Arduino (including FIO) boards wirelessly
+Funnel 009 (2009.04.16)
+* released FIO (Funnel I/O) v1.3 in cooperation with Nathan Seidle (SparkFun Electronics)
+  http://www.sparkfun.com/commerce/product_info.php?products_id=8957
+* added I2C over Firmata support
+  * added I2C related classes for each software library
+  * added SimpleI2CFirmata and StandardFirmataWithI2C for Arduino and FIO
+* added configuration tools for XBee
+  * XBeeConfigTerminal: for generic configurations
+  * XBeeConfigTool: for uploading sketches wirelessly to FIO boards
+* Processing: Funnel Server is now embedded into Text Area
+* Ruby: added matrix LED (Gainer I/O's mode 7) support
+* fixed various bugs and improved performance
 
 Funnel 008 (2008.09.25)
 * added FIO (Funnel I/O) v1.0
@@ -72,7 +81,7 @@ Funnel 008 (2008.09.25)
 * XBee ZB ZigBee PRO is supported
 * output side control for XBee 802.15.4 is supported
 * added the installation instructions
-* fixed various bugs and improved performace
+* fixed various bugs and improved performance
 
 Funnel 007 (2008.04.21)
 * fixed bugs and added new features in the Processing library
