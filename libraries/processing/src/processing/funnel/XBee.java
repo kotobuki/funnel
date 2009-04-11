@@ -78,5 +78,9 @@ public final class XBee extends IOSystem{
 	}
 	
 
-
+	
+	
+	protected void startingServer(){
+		waitingServer(moduleName);
+	}
 }

@@ -87,6 +87,10 @@ public final class Fio extends Firmata{
 	}
 	
 
-
+	
+	
+	protected void startingServer(){
+		waitingServer(moduleName);
+	}
 	
 }

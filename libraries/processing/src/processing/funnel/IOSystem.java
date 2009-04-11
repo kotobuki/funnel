@@ -14,6 +14,7 @@ import com.illposed.osc.*;
 
 import funnel.FunnelServer;
 
+import processing.app.Base;
 import processing.core.*;
 
 /**
@@ -44,7 +45,7 @@ public class IOSystem implements Runnable{
 	protected boolean initialized = false;
 	
 
-	private boolean quitServer = false;//終了時サーバーを終了するか
+	private boolean quitServer = true;//終了時サーバーを終了するか
 	
 	//定数
 	private int NO_ERROR = 0;
@@ -58,6 +59,7 @@ public class IOSystem implements Runnable{
 	public int samplingInterval;
 	////
 	
+	public String libPath;
 	
 	private boolean waitAnswer;
 	private LinkedList waitQueue;
@@ -101,27 +103,36 @@ public class IOSystem implements Runnable{
 		this(parent,"localhost",commandPortNumber,
 				samplingInterval,config);
 	}
-	
+
+	//必ずオーバーライドする
 	protected void startingServer(){
-		//overwrite
-		System.out.println("Initializing IOSystem. starting funnel server. ");
+		//System.out.println("Initializing IOSystem. starting funnel server. ");
 
 	}
 	
 	protected void waitingServer(String moduleName){
-
 		
 		String configFileName = LibraryPath.getFunnelLibraryPath() + "settings." + moduleName.toLowerCase() + ".txt";
 		System.out.println(configFileName);
+		
+		libPath = configFileName;
 		//
 		//サーバーを起動させて待つ
 		FunnelServer.embeddedMode = true;
-		new FunnelServer(configFileName); 
+		FunnelServer server = new FunnelServer(configFileName); 
 
+		int waitCount = 10;
 		while(!FunnelServer.initialized){
 			try {
 				Thread.sleep(100);
 				System.out.println("waiting server");
+				waitCount--;
+				if(waitCount <0){
+					Base.showMessage("FunnelServer", "Please check to connect " + moduleName +" or " + configFileName);
+					quitServer(server);
+					parent.exit();
+					break;
+				}
 			} catch (InterruptedException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
@@ -129,6 +140,15 @@ public class IOSystem implements Runnable{
 		}
 		
 	}
+	
+	protected void quitServer(FunnelServer server){
+		if (server.getIOModule() != null) {
+			server.getIOModule().stopPolling();
+		}
+		server = null;
+		System.gc();
+	}
+
 
 	//funnelのautupdate==trueに依存
 	public void run(){
@@ -162,7 +182,9 @@ public class IOSystem implements Runnable{
 	public void dispose(){
 		System.out.println("dispose funnel");
 		endPolling();
-		reboot();
+		
+		
+		//reboot();
 
 		initialized = false;
 
