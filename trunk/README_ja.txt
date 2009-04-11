@@ -15,7 +15,7 @@ http://funnel.cc
 ・Mac OS X 10.4または10.5
 
 □ライブラリの動作環境
-・Flash CS3、Flex Builder 3、Flex 3 SDKなどActionScript 3で
+・Flash CS3/4、Flex Builder 3、Flex 3 SDKなどActionScript 3で
 　プログラミングできる環境
 ・Processing 1.0
 ・Ruby 1.8.*（1.9では未確認）＋ふなばただよしさんのOSCライブラリ
@@ -26,13 +26,12 @@ http://funnel.cc
 
 □ハードウェア
 ・Gainer I/Oモジュール
-・Arduinoまたは互換機＋Firmata v2
-　http://www.arduino.cc/playground/Interfacing/Firmata
+・Arduinoまたは互換機＋Firmata v2（http://firmata.org/）
 ・XBee 802.15.4またはZB ZigBee PRO
 ・FIO（Funnel I/O）モジュール
 
 □オプションの環境
-・Arduino 0012（ArduinoまたはFioを使用する場合）
+・Arduino 0015（ArduinoまたはFioを使用する場合）
 ・action-coding
 　http://code.google.com/p/action-coding/
 
@@ -58,12 +57,24 @@ Keane Jarvi氏によるRXTXを使用しています。
 ・JvYAML：https://jvyaml.dev.java.net/
 ・RXTX：http://www.rxtx.org/
 
+コントリビュータ
+・Jeff Hoefsさん：I2C関連クラスおよびAS3ライブラリの改善
+・加藤和良さん：RubyライブラリでのマトリクスLED（Gainer I/Oのモード7）のサポート
+
 
 ■更新履歴
-Funnel  009
-・Firmata経由のI2Cをサポート
-・無線でスケッチをArduinoボード（FIO含む）にアップロードするため
-　にXBee無線モデムを設定するためのツールXBeeConfigToolを追加
+Funnel  009（2009.04.16）
+・Nathan Seidle（SparkFun Electronics）の協力によりFIO（Funnel I/O）v1.3をリリース
+　http://www.sparkfun.com/commerce/product_info.php?products_id=8957
+・FirmataでのI2Cをサポート
+　・それぞれのソフトウェアライブラリにI2C関連のクラスを追加
+　・ArduinoおよびFIO用にSimpleI2CFirmataとStandardFirmataWithI2Cを追加
+・XBee設定用ツールの追加
+　・XBeeConfigTerminal：一般的な設定用
+　・XBeeConfigTool：無線でスケッチをFIOボードにアップロードする設定用
+・Processing：Funnel ServerのText Areaへの組込み
+・Ruby：マトリクスLED（Gainer I/Oモード7）のサポートを追加
+・さまざまなバグ修正とパフォーマンスの改善
 
 Funnel  008（2008.09.25）
 ・FIO（Funnel I/O）v1.0を追加
