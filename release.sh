@@ -4,3 +4,4 @@ cp ./server/librxtxSerial.* ./libraries/processing/library
 cp ./server/settings.*.txt ./libraries/processing/library
 cp ./server/lib/RXTXcomm.jar ./libraries/processing/library
 cp ./server/lib/jvyaml.jar ./libraries/processing/library
+cp ./documents/src/installation_instructions_*.pdf ./documents
