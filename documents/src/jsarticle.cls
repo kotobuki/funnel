@@ -37,7 +37,7 @@
 %%   Right brace   \}     Tilde         \~}
 \NeedsTeXFormat{pLaTeX2e}
 \ProvidesClass{jsarticle}
-  [2006/11/01 okumura]
+  [2009/02/22 okumura]
 \newif\if@restonecol
 \newif\if@titlepage
 \newif\if@enablejfam \@enablejfamtrue
@@ -181,12 +181,21 @@
 \newif\ifdraft
 \DeclareOption{draft}{\drafttrue \setlength\overfullrule{5pt}}
 \DeclareOption{final}{\draftfalse \setlength\overfullrule{0pt}}
-\newif\ifjisfont
-\jisfonttrue
-\DeclareOption{mingoth}{\jisfontfalse}
 \newif\ifwinjis
 \winjisfalse
+\newif\ifmingoth
+\mingothfalse
+\newif\ifjisfont
+\jisfontfalse
+\newif\if@jsc@uplatex
+\@jsc@uplatexfalse
+\DeclareOption{mingoth}{\mingothtrue}
 \DeclareOption{winjis}{\winjistrue}
+\DeclareOption{jis}{\jisfonttrue}
+\DeclareOption{uplatex}{\@jsc@uplatextrue\winjisfalse}
+\def\jsc@JYn{\if@jsc@uplatex JY2\else JY1\fi}
+\def\jsc@JTn{\if@jsc@uplatex JT2\else JT1\fi}
+\def\jsc@pfx@{\if@jsc@uplatex u\else \fi}
 \newif\ifpapersize
 \papersizefalse
 \DeclareOption{papersize}{\papersizetrue}
@@ -195,7 +204,6 @@
 \DeclareOption{english}{\@englishtrue}
 \ExecuteOptions{a4paper,oneside,onecolumn,notitlepage,final}
 \ProcessOptions
-%% <jspf>\RequirePackage{url}
 \if@slide
   \def\maybeblue{\@ifundefined{ver@color.sty}{}{\color{blue}}}
 \fi
@@ -214,108 +222,113 @@
   \AtBeginDvi{\special{papersize=\the\@tempdima,\the\@tempdimb}}
 \fi
 \if@slide\def\n@baseline{13}\else\def\n@baseline{16}\fi
+\def\inv@mag{1}
 \ifnum\@ptsize=-2
-  \mag 833 %
-  \setlength\paperwidth{1.20048\paperwidth}%
-  \setlength\paperheight{1.20048\paperheight}%
+  \mag 833
+  \def\inv@mag{1.20048}
   \def\n@baseline{15}%
 \fi
 \ifnum\@ptsize=-1
   \mag 913 % formerly 900
-  \setlength\paperwidth{1.09529\paperwidth}%
-  \setlength\paperheight{1.09529\paperheight}%
+  \def\inv@mag{1.09529}
   \def\n@baseline{15}%
 \fi
 \ifnum\@ptsize=1
   \mag 1095 % formerly 1100
-  \setlength\paperwidth{0.913242\paperwidth}% formerly 0.90909
-  \setlength\paperheight{0.913242\paperheight}% 0.90909
+  \def\inv@mag{0.913242}
 \fi
 \ifnum\@ptsize=2
   \mag 1200
-  \setlength\paperwidth{0.833333\paperwidth}%
-  \setlength\paperheight{0.833333\paperheight}%
+  \def\inv@mag{0.833333}
 \fi
 \ifnum\@ptsize=4
   \mag 1440
-  \setlength\paperwidth{0.694444\paperwidth}%
-  \setlength\paperheight{0.694444\paperheight}%
+  \def\inv@mag{0.694444}
 \fi
 \ifnum\@ptsize=7
   \mag 1728
-  \setlength\paperwidth{0.578704\paperwidth}%
-  \setlength\paperheight{0.578704\paperheight}%
+  \def\inv@mag{0.578704}
 \fi
 \ifnum\@ptsize=10
   \mag 2000
-  \setlength\paperwidth{0.5\paperwidth}%
-  \setlength\paperheight{0.5\paperheight}%
+  \def\inv@mag{0.5}
 \fi
 \ifnum\@ptsize=11
   \mag 2074
-  \setlength\paperwidth{0.48216\paperwidth}%
-  \setlength\paperheight{0.48216\paperheight}%
+  \def\inv@mag{0.48216}
 \fi
 \ifnum\@ptsize=15
   \mag 2488
-  \setlength\paperwidth{0.401929\paperwidth}%
-  \setlength\paperheight{0.401929\paperheight}%
+  \def\inv@mag{0.401929}
 \fi
 \ifnum\@ptsize=20
   \mag 2986
-  \setlength\paperwidth{0.334896\paperwidth}%
-  \setlength\paperheight{0.334896\paperheight}%
+  \def\inv@mag{0.334896}
 \fi
 \ifnum\@ptsize=26
   \mag 3583
-  \setlength\paperwidth{0.279096\paperwidth}%
-  \setlength\paperheight{0.279096\paperheight}%
+  \def\inv@mag{0.279096}
 \fi
 \ifnum\@ptsize=33
   \mag 4300
-  \setlength\paperwidth{0.232558\paperwidth}%
-  \setlength\paperheight{0.232558\paperheight}%
+  \def\inv@mag{0.232558}
 \fi
 \ifnum\@ptsize=1200
   \mag 923
-  \setlength\paperwidth{1.0834236\paperwidth}%
-  \setlength\paperheight{1.0834236\paperheight}%
+  \def\inv@mag{1.0834236}
 \fi
 \ifnum\@ptsize=1400
   \mag 1077
-  \setlength\paperwidth{0.928505\paperwidth}%
-  \setlength\paperheight{0.928505\paperheight}%
+  \def\inv@mag{0.928505}
 \fi
+\setlength\paperwidth{\inv@mag\paperwidth}%
+\setlength\paperheight{\inv@mag\paperheight}%
 \ifwinjis
   \DeclareFontShape{JY1}{mc}{m}{n}{<-> s * [0.961] winjis}{}
   \DeclareFontShape{JY1}{gt}{m}{n}{<-> s * [0.961] winjisg}{}
   \DeclareFontShape{JT1}{mc}{m}{n}{<-> s * [0.961] winjis-v}{}
   \DeclareFontShape{JT1}{gt}{m}{n}{<-> s * [0.961] winjisg-v}{}
 \else
-  \ifjisfont
-    \DeclareFontShape{JY1}{mc}{m}{n}{<-> s * [0.961] jis}{}
-    \DeclareFontShape{JY1}{gt}{m}{n}{<-> s * [0.961] jisg}{}
+  \ifmingoth
+    \DeclareFontShape{\jsc@JYn}{mc}{m}{n}{<-> s * [0.961] \jsc@pfx@ min10}{}
+    \DeclareFontShape{\jsc@JYn}{gt}{m}{n}{<-> s * [0.961] \jsc@pfx@ goth10}{}
+    \DeclareFontShape{\jsc@JTn}{mc}{m}{n}{<-> s * [0.961] \jsc@pfx@ tmin10}{}
+    \DeclareFontShape{\jsc@JTn}{gt}{m}{n}{<-> s * [0.961] \jsc@pfx@ tgoth10}{}
   \else
-    \DeclareFontShape{JY1}{mc}{m}{n}{<-> s * [0.961] min10}{}
-    \DeclareFontShape{JY1}{gt}{m}{n}{<-> s * [0.961] goth10}{}
+    \ifjisfont
+      \DeclareFontShape{\jsc@JYn}{mc}{m}{n}{<-> s * [0.961] \jsc@pfx@ jis}{}
+      \DeclareFontShape{\jsc@JYn}{gt}{m}{n}{<-> s * [0.961] \jsc@pfx@ jisg}{}
+      \DeclareFontShape{\jsc@JTn}{mc}{m}{n}{<-> s * [0.961] \jsc@pfx@ tmin10}{}
+      \DeclareFontShape{\jsc@JTn}{gt}{m}{n}{<-> s * [0.961] \jsc@pfx@ tgoth10}{}
+    \else
+      \if@jsc@uplatex
+        \DeclareFontShape{JY2}{mc}{m}{n}{<-> s * [0.924690] upjisr-h}{}
+        \DeclareFontShape{JY2}{gt}{m}{n}{<-> s * [0.924690] upjisg-h}{}
+        \DeclareFontShape{JT2}{mc}{m}{n}{<-> s * [0.924690] upjisr-v}{}
+        \DeclareFontShape{JT2}{gt}{m}{n}{<-> s * [0.924690] upjisg-v}{}
+      \else
+        \DeclareFontShape{\jsc@JYn}{mc}{m}{n}{<-> s * [0.961] \jsc@pfx@ jis}{}
+        \DeclareFontShape{\jsc@JYn}{gt}{m}{n}{<-> s * [0.961] \jsc@pfx@ jisg}{}
+        \DeclareFontShape{\jsc@JTn}{mc}{m}{n}{<-> s * [0.961] \jsc@pfx@ tmin10}{}
+        \DeclareFontShape{\jsc@JTn}{gt}{m}{n}{<-> s * [0.961] \jsc@pfx@ tgoth10}{}
+      \fi
+    \fi
   \fi
-  \DeclareFontShape{JT1}{mc}{m}{n}{<-> s * [0.961] tmin10}{}
-  \DeclareFontShape{JT1}{gt}{m}{n}{<-> s * [0.961] tgoth10}{}
 \fi
-\DeclareFontShape{JY1}{mc}{m}{it}{<->ssub*mc/m/n}{}
-\DeclareFontShape{JY1}{mc}{m}{sl}{<->ssub*mc/m/n}{}
-\DeclareFontShape{JY1}{mc}{m}{sc}{<->ssub*mc/m/n}{}
-\DeclareFontShape{JY1}{gt}{m}{it}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JY1}{gt}{m}{sl}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JY1}{mc}{bx}{it}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JY1}{mc}{bx}{sl}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JT1}{mc}{m}{it}{<->ssub*mc/m/n}{}
-\DeclareFontShape{JT1}{mc}{m}{sl}{<->ssub*mc/m/n}{}
-\DeclareFontShape{JT1}{mc}{m}{sc}{<->ssub*mc/m/n}{}
-\DeclareFontShape{JT1}{gt}{m}{it}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JT1}{gt}{m}{sl}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JT1}{mc}{bx}{it}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JT1}{mc}{bx}{sl}{<->ssub*gt/m/n}{}
+\DeclareFontShape{\jsc@JYn}{mc}{m}{it}{<->ssub*mc/m/n}{}
+\DeclareFontShape{\jsc@JYn}{mc}{m}{sl}{<->ssub*mc/m/n}{}
+\DeclareFontShape{\jsc@JYn}{mc}{m}{sc}{<->ssub*mc/m/n}{}
+\DeclareFontShape{\jsc@JYn}{gt}{m}{it}{<->ssub*gt/m/n}{}
+\DeclareFontShape{\jsc@JYn}{gt}{m}{sl}{<->ssub*gt/m/n}{}
+\DeclareFontShape{\jsc@JYn}{mc}{bx}{it}{<->ssub*gt/m/n}{}
+\DeclareFontShape{\jsc@JYn}{mc}{bx}{sl}{<->ssub*gt/m/n}{}
+\DeclareFontShape{\jsc@JTn}{mc}{m}{it}{<->ssub*mc/m/n}{}
+\DeclareFontShape{\jsc@JTn}{mc}{m}{sl}{<->ssub*mc/m/n}{}
+\DeclareFontShape{\jsc@JTn}{mc}{m}{sc}{<->ssub*mc/m/n}{}
+\DeclareFontShape{\jsc@JTn}{gt}{m}{it}{<->ssub*gt/m/n}{}
+\DeclareFontShape{\jsc@JTn}{gt}{m}{sl}{<->ssub*gt/m/n}{}
+\DeclareFontShape{\jsc@JTn}{mc}{bx}{it}{<->ssub*gt/m/n}{}
+\DeclareFontShape{\jsc@JTn}{mc}{bx}{sl}{<->ssub*gt/m/n}{}
 \DeclareRobustCommand\rmfamily
         {\not@math@alphabet\rmfamily\mathrm
          \romanfamily\rmdefault\kanjifamily\mcdefault\selectfont}
@@ -385,11 +398,11 @@
 \def\DLMfontsw@oldlfont#1#2{#1\relax#2\relax}
 \if@enablejfam
   \if@compatibility\else
-    \DeclareSymbolFont{mincho}{JY1}{mc}{m}{n}
+    \DeclareSymbolFont{mincho}{\jsc@JYn}{mc}{m}{n}
     \DeclareSymbolFontAlphabet{\mathmc}{mincho}
-    \SetSymbolFont{mincho}{bold}{JY1}{gt}{m}{n}
+    \SetSymbolFont{mincho}{bold}{\jsc@JYn}{gt}{m}{n}
     \jfam\symmincho
-    \DeclareMathAlphabet{\mathgt}{JY1}{gt}{m}{n}
+    \DeclareMathAlphabet{\mathgt}{\jsc@JYn}{gt}{m}{n}
   \fi
   \AtBeginDocument{%
     \reDeclareMathAlphabet{\mathrm}{\@mathrm}{\@mathmc}
@@ -545,7 +558,11 @@
   \fi
   \fontsize{#2}{#3}\selectfont
   \ifdim\parindent>\z@
-    \parindent=1zw
+    \if@english
+      \parindent=1em
+    \else
+      \parindent=1zw
+    \fi
   \fi
   \kanjiskip=0zw plus .1zw minus .01zw
   \ifdim\xkanjiskip>\z@
@@ -555,7 +572,9 @@
   \fi}
 \emergencystretch 3zw
 \newif\ifnarrowbaselines
-\if@english\narrowbaselinestrue\fi
+\if@english
+  \narrowbaselinestrue
+\fi
 \def\narrowbaselines{%
   \narrowbaselinestrue
   \skip0=\abovedisplayskip
@@ -695,7 +714,7 @@
 \iftombow
   \addtolength{\oddsidemargin}{-1in}
 \else
-  \addtolength{\oddsidemargin}{-1truein}
+  \addtolength{\oddsidemargin}{-\inv@mag in}
 \fi
 \setlength{\evensidemargin}{\oddsidemargin}
 \if@mparswitch
@@ -704,7 +723,7 @@
 \fi
 \setlength\marginparwidth{\paperwidth}
 \addtolength\marginparwidth{-\oddsidemargin}
-\addtolength\marginparwidth{-1truein}
+\addtolength\marginparwidth{-\inv@mag in}
 \addtolength\marginparwidth{-\textwidth}
 \addtolength\marginparwidth{-1cm}
 \addtolength\marginparwidth{-\marginparsep}
@@ -724,7 +743,7 @@
 \iftombow
   \addtolength\topmargin{-1in}
 \else
-  \addtolength\topmargin{-1truein}
+  \addtolength\topmargin{-\inv@mag in}
 \fi
 {\footnotesize\global\setlength\footnotesep{\baselineskip}}
 \setlength\footnotesep{0.7\footnotesep}
@@ -923,7 +942,7 @@
   \if@noskipsec \leavevmode \fi
   \par
   \@tempskipa #4\relax
-  \@afterindenttrue
+  \if@english \@afterindentfalse \else \@afterindenttrue \fi
   \ifdim \@tempskipa <\z@
     \@tempskipa -\@tempskipa \@afterindentfalse
   \fi
@@ -1000,8 +1019,7 @@
     \@afterheading
   \fi
   \if@slide
-%    {\vskip-6pt\maybeblue\hrule height0pt depth1pt\vskip7pt\relax}%
-    {\vskip-4pt\maybeblue\hrule height0pt depth0.1pt\vskip7pt\relax}%
+    {\vskip-6pt\maybeblue\hrule height0pt depth1pt\vskip7pt\relax}%
   \fi
   \par  % 2000-12-18
   \ignorespaces}
@@ -1039,6 +1057,7 @@
   \if@noskipsec \leavevmode \fi
   \par
   \addvspace{4ex}%
+  \if@english \@afterindentfalse \else \@afterindenttrue \fi
   \secdef\@part\@spart}
 \def\@part[#1]#2{%
   \ifnum \c@secnumdepth >\m@ne
@@ -1319,7 +1338,6 @@
 \setlength\abovecaptionskip{5\p@} % 元: 10\p@
 \setlength\belowcaptionskip{5\p@} % 元: 0\p@
 \long\def\@makecaption#1#2{{\small
-%\long\def\@makecaption#1#2{{\tiny
   \advance\leftskip .0628\linewidth
   \advance\rightskip .0628\linewidth
   \vskip\abovecaptionskip
