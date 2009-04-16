@@ -2,6 +2,7 @@
 \documentclass[9pt]{jsarticle}
 \usepackage{listings, jlisting, color}
 \usepackage[dvipdfm]{graphicx}
+\usepackage[expert, deluxe]{otf}
 \usepackage{mediabb}
 
 \lstset{
@@ -61,7 +62,7 @@ lineskip={-2pt}
 \item \texttt{README\_ja.txt}：概要説明（日本語版）
 \item \texttt{server/}：Funnel Server
 	\begin{itemize}
-	\item \texttt{funnel\_server.jar}：Funnel Server本体
+	\item \texttt{Funnel Server.appまたはFunnel Server.exe}：Funnel Server本体
 	\item \texttt{settings.txt}：Funnel Serverの設定ファイル
 	\end{itemize}
 \end{itemize}
@@ -229,11 +230,23 @@ FIOはLilyPad Arduino Main Board v1.6\footnote{http://www.sparkfun.com/commerce/p
 \item 「その他のオプション」で「クローズ時のRTS設定」をチェックする 
 \end{enumerate}
 
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[mediaboxonly, width=0.495\textwidth]{serial_port_setting_ja.pdf}
+\vskip -\lastskip \vskip -3pt
+\caption{WindowsでのCOMポートの設定}
+\label{default}
+\end{center}
+\end{figure}
+
 \subsubsection{XBeeの設定}
-X-CTUを利用する場合には、\texttt{hardware/fio/xbee}に入っている\texttt{coordinator\_auto\_reset.pro}（自動リセットあり）または\texttt{coordinator.pro}（自動リセットなし）をPCに接続するコーディネータに、\texttt{enddevice.pro}をFIOに搭載するエンドデバイスに（必要に応じて設定を変更した上で）それぞれ書き込んでください\footnote{自動リセットの設定方法はhttp://www.ladyada.net/make/xbee/arduino.htmlで紹介されていた方法を参考に一部改変したものです。}。
+無線でスケッチをアップロードするには、XBeeのファームウェアのバージョンが1.0.A.5または1.0.C.Dである必要があります。XBeeは1.0.8.4などの古いバージョンで販売されていることが多いため、その場合にはX-CTUを使用して1.0.C.Dにアップデートしてください。
+
+次に、XBeeに設定を書込みます。X-CTUを利用する場合には、\texttt{hardware/fio/xbee}に入っている\texttt{coordinator\_auto\_reset.pro}（自動リセットあり）または\texttt{coordinator.pro}（自動リセットなし）をPCに接続するコーディネータに、\texttt{enddevice.pro}をFIOに搭載するエンドデバイスに（必要に応じて設定を変更した上で）それぞれ書き込んでください\footnote{自動リセットの設定方法はhttp://www.ladyada.net/make/xbee/arduino.htmlで紹介されていた方法を参考に一部改変したものです。}。
 
 X-CTUを利用しない場合には、\texttt{hardware/fio/tool/XBeeConfigTool}を使用して設定してください。このツールの使用方法は以下の通りです。
 
+\newpage
 \begin{enumerate}
 \item Serial PortでXBee USB Explorerなどが接続されているシリアルポートを選択します。
 \item ModeとしてCoordinatorかEnd Devicesを選択します。
@@ -279,6 +292,7 @@ XBeeConfigToolは、FIOのファームウェアを無線で書き換えることを想定して、Arduinoの
 \label{xbee}
 \end{table}
 
+\newpage
 \subsubsection{ファームウェアの書き込み}
 \label{uploading_firmata_fio}
 Arduino 0015をウェブサイト\footnote{http://arduino.cc}からダウンロードし、以下の順で操作してください。
@@ -291,7 +305,7 @@ Arduino 0015をウェブサイト\footnote{http://arduino.cc}からダウンロードし、以下の
 
 アップロードは10数秒で終了するはずです。もしエラーメッセージが表示された場合には、再度アップロードからやり直してみてください。
 
-\clearpage
+%\clearpage
 \section{各ライブラリごとの準備}
 \subsection{ActionScript 3}
 \texttt{libraries/actionscript3/examples/}に各ハードウェア用のサンプルがあります。例えば、Gainer I/Oモジュール用のサンプルは\texttt{GainerTest.as}、Flash IDE用のファイルは\texttt{GainerTest.fla}、パブリッシュ済みのFlash Player用ファイルは\texttt{GainerTest.swf}になります。Flash IDE以外でパブリッシュする場合には、それぞれの環境に合わせて\texttt{libraries/actionscript3/src/}をソースパスに設定して下さい。
@@ -361,7 +375,7 @@ io:
 
 \clearpage
 \subsection{起動と確認}
-設定が終わったら、\texttt{funnel\_server.jar}をダブルクリックしてFunnel Serverを起動してください。起動するとハードウェアとの接続を行い、その結果がメッセージとして表示されます。なお、Funnel Server自体が起動しない場合は、J2SE 5以上のJava実行環境がインストールされているかどうか確認してください。
+設定が終わったら、\texttt{Funnel Server.app}または\texttt{Funnel Server.exe}をダブルクリックしてFunnel Serverを起動してください。起動するとハードウェアとの接続を行い、その結果がメッセージとして表示されます。なお、Funnel Server自体が起動しない場合は、J2SE 5以上のJava実行環境がインストールされているかどうか確認してください。
 
 \subsubsection{Gainer I/Oモジュールの場合}
 正常に起動した場合には次のような画面が表示されます。何らかのエラーメッセージが表示される場合には、メッセージを参考に設定ファイルやハードウェアを確認してください。
