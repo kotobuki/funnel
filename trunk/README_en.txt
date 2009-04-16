@@ -1,36 +1,42 @@
 INTRODUCTION
+--------------------------------------------------------------------
 Funnel is a toolkit for physical computing. Funnel supports 
 Arduino I/O boards, Gainer I/O modules, XBee wireless modems and 
-FIO (Funnel I/O) boards. The user can set filters to input or 
-outputs ports: range division, filtering (e.g. LPF, HPF), 
-scaling and oscillators.
+FIO (Funnel I/O) boards. The user can set filters for input or 
+outputs ports. Filtering can include range division, 
+filters like LPF & HPF, scaling and oscillators.
 
-About the latest information, please refer to the following web site:
-http://funnel.cc
+For the latest information, please refer to:
+    http://funnel.cc
 
 
 REQUIREMENTS
+--------------------------------------------------------------------
 * OS
   * Windows XP SP2/3 or Vista
   * Mac OS X 10.4 or 10.5
+
 * Runtime environments for software libraries
-  * Various programming environments for ActionScript 3 (e.g. 
-    Flash CS3/4, Flex Builder 3, Flex SDK 3)
+  * ActionScript 3 (e.g. Flash CS3/4, Flex Builder 3, Flex SDK 3)
   * Processing 1.0
   * Ruby 1.8.* with OSC library by Tadayoshi Funaba
     http://raa.ruby-lang.org/project/osc/
+
 * Runtime environments for the Funnel Server
   * Java Runtime Environment 1.5 or higher
+
 * Hardware
   * Arduino or clones via Firmata v2 (http://firmata.org/)
   * Gainer I/O module v1.0
+
 * Optional environments
   * Arduino 0015 (required for Arduino and FIO)
   * action-coding
     http://code.google.com/p/action-coding/
 
 BUG REPORTS AND REQUESTS
-Please file your bug reports or requests via Google Code's 
+--------------------------------------------------------------------
+Please file bug reports or requests via Google Code's 
 Issues system. We accepts issues written in English or 
 Japanese.
 http://code.google.com/p/funnel/issues/
@@ -44,27 +50,29 @@ forum to post articles.
 
 
 CREDITS
+--------------------------------------------------------------------
 Funnel is an open source project.
 
 The Funnel development team is composed of Shigeru Kobayashi, 
 Takanori Endo and Ichitaro Masuda.
 
-Funnel uses the Java OSC by Illposed Software, JvYAML by Ola 
+Funnel uses Java OSC by Illposed Software, JvYAML by Ola 
 Bini and RXTX by Keane Jarvi.
 * Java OSC: http://www.illposed.com/software/javaosc.html
 * JvYAML: https://jvyaml.dev.java.net/
 * RXTX: http://www.rxtx.org/
 
 Contributors
-* Jeff Hoefs: I2C support related classes and improvement of the AS3 library
+* Jeff Hoefs: I2C support for related classes and improvements to the AS3 library
 * Kazuyoshi Kato: matrix LED (Gainer I/O's mode 7) support for the Ruby library
 
 
 UPDATES
+--------------------------------------------------------------------
 Funnel 009 (2009.04.16)
 * released FIO (Funnel I/O) v1.3 in cooperation with Nathan Seidle (SparkFun Electronics)
   http://www.sparkfun.com/commerce/product_info.php?products_id=8957
-* added I2C over Firmata support
+* added I2C along with Firmata support
   * added I2C related classes for each software library
   * added SimpleI2CFirmata and StandardFirmataWithI2C for Arduino and FIO
 * added configuration tools for XBee
@@ -141,6 +149,7 @@ Funnel 000 (2007.09.24)
 
 
 ACKNOWLEDGMENTS
+--------------------------------------------------------------------
 Funnel is developed with the support of the Exploratory Software 
 Project (the first half of 2007) of IPA (Information-technology 
 Promotion Agency).
@@ -149,3 +158,4 @@ We would like to acknowledge the following people for assisting us in
 creating Funnel:
 * Yoshiaki Mima (was the project manager of the project)
 * David A. Mellis (for the binary files of the RXTX library)
+* Artem Titoulenko (for reviewing documents in English)
