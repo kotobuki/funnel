@@ -147,11 +147,15 @@ void actionPerformed(GUIEvent e) {
   }
   else if (e.getSource() == modeButton[0]) {
     myTextField.setValue("0000");
+    myLabel.setX(width);
+    myTextField.setX(width);
   }
   else if (e.getSource() == modeButton[1]) {
     if (Integer.parseInt(myTextField.getValue(), 16) == 0) {
       myTextField.setValue("0001");
     }
+    myLabel.setX(20);
+    myTextField.setX(20);
   }
 }
 
