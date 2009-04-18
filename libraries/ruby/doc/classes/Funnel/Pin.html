@@ -5,7 +5,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Class: Funnel::Port</title>
+  <title>Class: Funnel::Pin</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta http-equiv="Content-Script-Type" content="text/javascript" />
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
@@ -50,13 +50,13 @@
         <table class="header-table">
         <tr class="top-aligned-row">
           <td><strong>Class</strong></td>
-          <td class="class-name-in-header">Funnel::Port</td>
+          <td class="class-name-in-header">Funnel::Pin</td>
         </tr>
         <tr class="top-aligned-row">
             <td><strong>In:</strong></td>
             <td>
-                <a href="../../files/funnel/port_rb.html">
-                funnel/port.rb
+                <a href="../../files/funnel/pin_rb.html">
+                funnel/pin.rb
                 </a>
         <br />
             </td>
@@ -86,17 +86,17 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000101">add_event_listener</a>&nbsp;&nbsp;
-      <a href="#M000100">apply_filters</a>&nbsp;&nbsp;
-      <a href="#M000096">clear</a>&nbsp;&nbsp;
-      <a href="#M000099">detect_edge</a>&nbsp;&nbsp;
-      <a href="#M000097">filters</a>&nbsp;&nbsp;
-      <a href="#M000098">filters=</a>&nbsp;&nbsp;
-      <a href="#M000092">new</a>&nbsp;&nbsp;
-      <a href="#M000102">on</a>&nbsp;&nbsp;
-      <a href="#M000095">update</a>&nbsp;&nbsp;
-      <a href="#M000093">value</a>&nbsp;&nbsp;
-      <a href="#M000094">value=</a>&nbsp;&nbsp;
+      <a href="#M000100">add_event_listener</a>&nbsp;&nbsp;
+      <a href="#M000099">apply_filters</a>&nbsp;&nbsp;
+      <a href="#M000095">clear</a>&nbsp;&nbsp;
+      <a href="#M000098">detect_edge</a>&nbsp;&nbsp;
+      <a href="#M000096">filters</a>&nbsp;&nbsp;
+      <a href="#M000097">filters=</a>&nbsp;&nbsp;
+      <a href="#M000091">new</a>&nbsp;&nbsp;
+      <a href="#M000101">on</a>&nbsp;&nbsp;
+      <a href="#M000094">update</a>&nbsp;&nbsp;
+      <a href="#M000092">value</a>&nbsp;&nbsp;
+      <a href="#M000093">value=</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -184,21 +184,21 @@
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000092" class="method-detail">
-        <a name="M000092"></a>
+      <div id="method-M000091" class="method-detail">
+        <a name="M000091"></a>
 
         <div class="method-heading">
-          <a href="#M000092" class="method-signature">
+          <a href="#M000091" class="method-signature">
           <span class="method-name">new</span><span class="method-args">(id, type)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000092-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000092-source">
+            onclick="toggleCode('M000091-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000091-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/port.rb, line 17</span>
+<span class="ruby-comment cmt"># File funnel/pin.rb, line 17</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">type</span>)
       <span class="ruby-ivar">@number</span> = <span class="ruby-identifier">id</span>
 
@@ -227,28 +227,28 @@
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000101" class="method-detail">
-        <a name="M000101"></a>
+      <div id="method-M000100" class="method-detail">
+        <a name="M000100"></a>
 
         <div class="method-heading">
-          <a href="#M000101" class="method-signature">
+          <a href="#M000100" class="method-signature">
           <span class="method-name">add_event_listener</span><span class="method-args">(type, &amp;proc)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000101-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000101-source">
+            onclick="toggleCode('M000100-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000100-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/port.rb, line 119</span>
+<span class="ruby-comment cmt"># File funnel/pin.rb, line 119</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_event_listener</span>(<span class="ruby-identifier">type</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">proc</span>)
       <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">type</span>
-      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">PortEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">CHANGE</span>
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">PinEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">CHANGE</span>
         <span class="ruby-ivar">@on_change_listeners</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">proc</span>
-      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">PortEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">RISING_EDGE</span>
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">PinEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">RISING_EDGE</span>
         <span class="ruby-ivar">@on_rising_edge_listeners</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">proc</span>
-      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">PortEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">FALLING_EDGE</span>
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">PinEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">FALLING_EDGE</span>
         <span class="ruby-ivar">@on_falling_edge_listeners</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">proc</span>
       <span class="ruby-keyword kw">else</span>
         <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;unknown event type: #{type}&quot;</span>
@@ -259,21 +259,21 @@
         </div>
       </div>
 
-      <div id="method-M000100" class="method-detail">
-        <a name="M000100"></a>
+      <div id="method-M000099" class="method-detail">
+        <a name="M000099"></a>
 
         <div class="method-heading">
-          <a href="#M000100" class="method-signature">
+          <a href="#M000099" class="method-signature">
           <span class="method-name">apply_filters</span><span class="method-args">(value)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000100-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000100-source">
+            onclick="toggleCode('M000099-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000099-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/port.rb, line 104</span>
+<span class="ruby-comment cmt"># File funnel/pin.rb, line 104</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">apply_filters</span>(<span class="ruby-identifier">value</span>)
       <span class="ruby-identifier">result</span> = <span class="ruby-identifier">value</span>
       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">result</span> <span class="ruby-keyword kw">if</span> (<span class="ruby-ivar">@filters</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>) <span class="ruby-keyword kw">or</span> (<span class="ruby-ivar">@filters</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>)
@@ -293,85 +293,24 @@
         </div>
       </div>
 
-      <div id="method-M000096" class="method-detail">
-        <a name="M000096"></a>
+      <div id="method-M000095" class="method-detail">
+        <a name="M000095"></a>
 
         <div class="method-heading">
-          <a href="#M000096" class="method-signature">
+          <a href="#M000095" class="method-signature">
           <span class="method-name">clear</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000096-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000096-source">
+            onclick="toggleCode('M000095-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000095-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/port.rb, line 58</span>
+<span class="ruby-comment cmt"># File funnel/pin.rb, line 58</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear</span>
       <span class="ruby-ivar">@maximum</span> = <span class="ruby-ivar">@minimum</span> = <span class="ruby-ivar">@sum</span> = <span class="ruby-ivar">@last_value</span> = <span class="ruby-ivar">@value</span>
       <span class="ruby-ivar">@samples</span> = <span class="ruby-value">1</span>
-    <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="method-M000099" class="method-detail">
-        <a name="M000099"></a>
-
-        <div class="method-heading">
-          <a href="#M000099" class="method-signature">
-          <span class="method-name">detect_edge</span><span class="method-args">(last_value, current_value)</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000099-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000099-source">
-<pre>
-<span class="ruby-comment cmt"># File funnel/port.rb, line 85</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">detect_edge</span>(<span class="ruby-identifier">last_value</span>, <span class="ruby-identifier">current_value</span>)
-      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> ((<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">AIN</span>) <span class="ruby-keyword kw">or</span> (<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">DIN</span>)) <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">last_value</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">current_value</span>
-
-      <span class="ruby-ivar">@last_value</span> = <span class="ruby-identifier">last_value</span>
-      <span class="ruby-ivar">@on_change_listeners</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">proc</span><span class="ruby-operator">|</span>
-        <span class="ruby-identifier">proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-constant">PortEvent</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">PortEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">CHANGE</span>, <span class="ruby-keyword kw">self</span>))
-      <span class="ruby-keyword kw">end</span>
-
-      <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">last_value</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">current_value</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">then</span>
-        <span class="ruby-ivar">@on_rising_edge_listeners</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">proc</span><span class="ruby-operator">|</span>
-          <span class="ruby-identifier">proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-constant">PortEvent</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">PortEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">RISING_EDGE</span>, <span class="ruby-keyword kw">self</span>))
-        <span class="ruby-keyword kw">end</span>
-      <span class="ruby-keyword kw">elsif</span> (<span class="ruby-identifier">last_value</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">current_value</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">then</span>
-        <span class="ruby-ivar">@on_falling_edge_listeners</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">proc</span><span class="ruby-operator">|</span>
-          <span class="ruby-identifier">proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-constant">PortEvent</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">PortEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">FALLING_EDGE</span>, <span class="ruby-keyword kw">self</span>))
-        <span class="ruby-keyword kw">end</span>
-      <span class="ruby-keyword kw">end</span>
-    <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="method-M000097" class="method-detail">
-        <a name="M000097"></a>
-
-        <div class="method-heading">
-          <a href="#M000097" class="method-signature">
-          <span class="method-name">filters</span><span class="method-args">()</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000097-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000097-source">
-<pre>
-<span class="ruby-comment cmt"># File funnel/port.rb, line 63</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">filters</span>
-      <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@filters</span>
     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -383,7 +322,7 @@
 
         <div class="method-heading">
           <a href="#M000098" class="method-signature">
-          <span class="method-name">filters=</span><span class="method-args">(filters)</span>
+          <span class="method-name">detect_edge</span><span class="method-args">(last_value, current_value)</span>
           </a>
         </div>
       
@@ -392,7 +331,68 @@
             onclick="toggleCode('M000098-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000098-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/port.rb, line 67</span>
+<span class="ruby-comment cmt"># File funnel/pin.rb, line 85</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">detect_edge</span>(<span class="ruby-identifier">last_value</span>, <span class="ruby-identifier">current_value</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> ((<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">AIN</span>) <span class="ruby-keyword kw">or</span> (<span class="ruby-identifier">type</span> <span class="ruby-operator">==</span> <span class="ruby-constant">DIN</span>)) <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">last_value</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">current_value</span>
+
+      <span class="ruby-ivar">@last_value</span> = <span class="ruby-identifier">last_value</span>
+      <span class="ruby-ivar">@on_change_listeners</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">proc</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-constant">PinEvent</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">PinEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">CHANGE</span>, <span class="ruby-keyword kw">self</span>))
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">last_value</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">current_value</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">then</span>
+        <span class="ruby-ivar">@on_rising_edge_listeners</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">proc</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-constant">PinEvent</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">PinEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">RISING_EDGE</span>, <span class="ruby-keyword kw">self</span>))
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">elsif</span> (<span class="ruby-identifier">last_value</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">current_value</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">then</span>
+        <span class="ruby-ivar">@on_falling_edge_listeners</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">proc</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-constant">PinEvent</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">PinEvent</span><span class="ruby-operator">::</span><span class="ruby-constant">FALLING_EDGE</span>, <span class="ruby-keyword kw">self</span>))
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000096" class="method-detail">
+        <a name="M000096"></a>
+
+        <div class="method-heading">
+          <a href="#M000096" class="method-signature">
+          <span class="method-name">filters</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000096-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000096-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/pin.rb, line 63</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">filters</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@filters</span>
+    <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000097" class="method-detail">
+        <a name="M000097"></a>
+
+        <div class="method-heading">
+          <a href="#M000097" class="method-signature">
+          <span class="method-name">filters=</span><span class="method-args">(filters)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000097-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000097-source">
+<pre>
+<span class="ruby-comment cmt"># File funnel/pin.rb, line 67</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">filters=</span>(<span class="ruby-identifier">filters</span>)
       <span class="ruby-ivar">@filters</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">filter</span><span class="ruby-operator">|</span>
         <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">set_listener</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">filter</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Generator</span>
@@ -415,8 +415,8 @@
         </div>
       </div>
 
-      <div id="method-M000102" class="method-detail">
-        <a name="M000102"></a>
+      <div id="method-M000101" class="method-detail">
+        <a name="M000101"></a>
 
         <div class="method-heading">
           <span class="method-name">on</span><span class="method-args">(type, &amp;proc)</span>
@@ -424,26 +424,26 @@
       
         <div class="method-description">
           <p>
-Alias for <a href="Port.html#M000101">add_event_listener</a>
+Alias for <a href="Pin.html#M000100">add_event_listener</a>
 </p>
         </div>
       </div>
 
-      <div id="method-M000095" class="method-detail">
-        <a name="M000095"></a>
+      <div id="method-M000094" class="method-detail">
+        <a name="M000094"></a>
 
         <div class="method-heading">
-          <a href="#M000095" class="method-signature">
+          <a href="#M000094" class="method-signature">
           <span class="method-name">update</span><span class="method-args">(new_value)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000095-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000095-source">
+            onclick="toggleCode('M000094-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000094-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/port.rb, line 47</span>
+<span class="ruby-comment cmt"># File funnel/pin.rb, line 47</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">new_value</span>)
       <span class="ruby-identifier">last_value</span> = <span class="ruby-ivar">@value</span>
       <span class="ruby-ivar">@value</span> = <span class="ruby-identifier">apply_filters</span>(<span class="ruby-identifier">new_value</span>)
@@ -459,21 +459,21 @@ Alias for <a href="Port.html#M000101">add_event_listener</a>
         </div>
       </div>
 
-      <div id="method-M000093" class="method-detail">
-        <a name="M000093"></a>
+      <div id="method-M000092" class="method-detail">
+        <a name="M000092"></a>
 
         <div class="method-heading">
-          <a href="#M000093" class="method-signature">
+          <a href="#M000092" class="method-signature">
           <span class="method-name">value</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000093-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000093-source">
+            onclick="toggleCode('M000092-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000092-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/port.rb, line 39</span>
+<span class="ruby-comment cmt"># File funnel/pin.rb, line 39</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">value</span>
       <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@value</span>
     <span class="ruby-keyword kw">end</span>
@@ -482,21 +482,21 @@ Alias for <a href="Port.html#M000101">add_event_listener</a>
         </div>
       </div>
 
-      <div id="method-M000094" class="method-detail">
-        <a name="M000094"></a>
+      <div id="method-M000093" class="method-detail">
+        <a name="M000093"></a>
 
         <div class="method-heading">
-          <a href="#M000094" class="method-signature">
+          <a href="#M000093" class="method-signature">
           <span class="method-name">value=</span><span class="method-args">(new_value)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000094-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000094-source">
+            onclick="toggleCode('M000093-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000093-source">
 <pre>
-<span class="ruby-comment cmt"># File funnel/port.rb, line 43</span>
+<span class="ruby-comment cmt"># File funnel/pin.rb, line 43</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">value=</span>(<span class="ruby-identifier">new_value</span>)
       <span class="ruby-identifier">update</span>(<span class="ruby-identifier">new_value</span>)
     <span class="ruby-keyword kw">end</span>
