@@ -127,6 +127,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="IOSystem.html#sendSysex()">sendSysex</a>(moduleNum:uint, command:uint, sysexMessage:Array):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#update()">update</a>():void</div>
 <div class="summaryTableDescription">
    全ての出力ポートの値を更新します。通常、autoUpdateをfalseに設定して利用します。
@@ -155,28 +162,36 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:configurationError">configurationError</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+  指定したコンフィギュレーションの設定に失敗したとき送出されます。
+  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="hideInheritedEvent">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:error">error</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+  エラーが起きたとき送出されます。
+  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="hideInheritedEvent">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:ready">ready</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+  I/Oモジュールの初期化が完了したとき送出されます。
+  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="hideInheritedEvent">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:rebootError">rebootError</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+  I/Oモジュールの再起動に失敗したとき送出されます。
+  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 </table>
 </div>

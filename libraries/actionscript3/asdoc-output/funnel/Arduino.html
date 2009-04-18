@@ -110,20 +110,20 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#analogPin()">analogPin</a>(pinNum:uint):<a href="funnel/Port.html">Port</a>
+<a class="signatureLink" href="#analogPin()">analogPin</a>(pinNum:uint):<a href="funnel/Pin.html">Pin</a>
 </div>
 <div class="summaryTableDescription">
-   pinNumで指定したポートを取得します。
+   pinNumで指定したピンを取得します。
    </div>
 </td><td class="summaryTableOwnerCol">Arduino</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#digitalPin()">digitalPin</a>(pinNum:uint):<a href="funnel/Port.html">Port</a>
+<a class="signatureLink" href="#digitalPin()">digitalPin</a>(pinNum:uint):<a href="funnel/Pin.html">Pin</a>
 </div>
 <div class="summaryTableDescription">
-   pinNumで指定したポートを取得します。
+   pinNumで指定したピンを取得します。
    </div>
 </td><td class="summaryTableOwnerCol">Arduino</td>
 </tr>
@@ -135,6 +135,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summaryTableDescription">
    moduleNumで指定した番号のI/Oモジュールを取得します。
    </div>
+</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IOSystem.html#sendSysex()">sendSysex</a>(moduleNum:uint, command:uint, sysexMessage:Array):void</div>
+<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -270,12 +277,12 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function analogPin(pinNum:uint):<a href="funnel/Port.html">Port</a></code><p>
-   pinNumで指定したポートを取得します。
+<code>public function analogPin(pinNum:uint):<a href="funnel/Pin.html">Pin</a></code><p>
+   pinNumで指定したピンを取得します。
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">pinNum</span>:uint</code> &mdash; ポート番号
+<td width="20px"></td><td><code><span class="label">pinNum</span>:uint</code> &mdash; ピン番号
    </td>
 </tr>
 </table>
@@ -283,8 +290,8 @@ showHideInherited();
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code><a href="funnel/Port.html">Port</a></code> &mdash; 
-                        pinNumで指定したPortオブジェクト
+<td width="20"></td><td><code><a href="funnel/Pin.html">Pin</a></code> &mdash; 
+                        pinNumで指定したPinオブジェクト
    
                         
                      </td>
@@ -294,7 +301,7 @@ showHideInherited();
 <span class="label">See also</span>
 </p>
 <div class="seeAlso">
-<a href="Port.html" target="">Port</a>
+<a href="Pin.html" target="">Pin</a>
 </div>
 </div>
 <a name="digitalPin()"></a>
@@ -304,12 +311,12 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function digitalPin(pinNum:uint):<a href="funnel/Port.html">Port</a></code><p>
-   pinNumで指定したポートを取得します。
+<code>public function digitalPin(pinNum:uint):<a href="funnel/Pin.html">Pin</a></code><p>
+   pinNumで指定したピンを取得します。
    </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">pinNum</span>:uint</code> &mdash; ポート番号
+<td width="20px"></td><td><code><span class="label">pinNum</span>:uint</code> &mdash; ピン番号
    </td>
 </tr>
 </table>
@@ -317,8 +324,8 @@ showHideInherited();
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code><a href="funnel/Port.html">Port</a></code> &mdash; 
-                        pinNumで指定したPortオブジェクト
+<td width="20"></td><td><code><a href="funnel/Pin.html">Pin</a></code> &mdash; 
+                        pinNumで指定したPinオブジェクト
    
                         
                      </td>
@@ -328,7 +335,7 @@ showHideInherited();
 <span class="label">See also</span>
 </p>
 <div class="seeAlso">
-<a href="Port.html" target="">Port</a>
+<a href="Pin.html" target="">Pin</a>
 </div>
 </div>
 <br>
