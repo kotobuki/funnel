@@ -79,6 +79,10 @@
                 funnel/gainer.rb
                 </a>
         <br />
+                <a href="../files/funnel/i2c_rb.html">
+                funnel/i2c.rb
+                </a>
+        <br />
                 <a href="../files/funnel/iomodule_rb.html">
                 funnel/iomodule.rb
                 </a>
@@ -87,8 +91,12 @@
                 funnel/iosystem.rb
                 </a>
         <br />
-                <a href="../files/funnel/port_rb.html">
-                funnel/port.rb
+                <a href="../files/funnel/matrixled_rb.html">
+                funnel/matrixled.rb
+                </a>
+        <br />
+                <a href="../files/funnel/pin_rb.html">
+                funnel/pin.rb
                 </a>
         <br />
                 <a href="../files/funnel/scope_rb.html">
@@ -131,7 +139,9 @@
     <div id="class-list">
       <h3 class="section-bar">Classes and Modules</h3>
 
-      Class <a href="Funnel/Arduino.html" class="link">Funnel::Arduino</a><br />
+      Class <a href="Funnel/ADJD_S371_QR999.html" class="link">Funnel::ADJD_S371_QR999</a><br />
+Class <a href="Funnel/Arduino.html" class="link">Funnel::Arduino</a><br />
+Class <a href="Funnel/BlinkM.html" class="link">Funnel::BlinkM</a><br />
 Class <a href="Funnel/Configuration.html" class="link">Funnel::Configuration</a><br />
 Class <a href="Funnel/Convolution.html" class="link">Funnel::Convolution</a><br />
 Class <a href="Funnel/Filter.html" class="link">Funnel::Filter</a><br />
@@ -141,11 +151,14 @@ Class <a href="Funnel/FunnelEvent.html" class="link">Funnel::FunnelEvent</a><br 
 Class <a href="Funnel/Gainer.html" class="link">Funnel::Gainer</a><br />
 Class <a href="Funnel/Generator.html" class="link">Funnel::Generator</a><br />
 Class <a href="Funnel/GeneratorEvent.html" class="link">Funnel::GeneratorEvent</a><br />
+Class <a href="Funnel/HMC6352.html" class="link">Funnel::HMC6352</a><br />
+Class <a href="Funnel/I2CDevice.html" class="link">Funnel::I2CDevice</a><br />
 Class <a href="Funnel/IOModule.html" class="link">Funnel::IOModule</a><br />
 Class <a href="Funnel/IOSystem.html" class="link">Funnel::IOSystem</a><br />
+Class <a href="Funnel/MatrixLED.html" class="link">Funnel::MatrixLED</a><br />
 Class <a href="Funnel/Osc.html" class="link">Funnel::Osc</a><br />
-Class <a href="Funnel/Port.html" class="link">Funnel::Port</a><br />
-Class <a href="Funnel/PortEvent.html" class="link">Funnel::PortEvent</a><br />
+Class <a href="Funnel/Pin.html" class="link">Funnel::Pin</a><br />
+Class <a href="Funnel/PinEvent.html" class="link">Funnel::PinEvent</a><br />
 Class <a href="Funnel/Scaler.html" class="link">Funnel::Scaler</a><br />
 Class <a href="Funnel/Scope.html" class="link">Funnel::Scope</a><br />
 Class <a href="Funnel/SetPoint.html" class="link">Funnel::SetPoint</a><br />
@@ -161,7 +174,7 @@ Class <a href="Funnel/XBee.html" class="link">Funnel::XBee</a><br />
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">AIN</td>
           <td>=</td>
-          <td class="context-item-value">Port::AIN</td>
+          <td class="context-item-value">Pin::AIN</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">ALL</td>
@@ -171,12 +184,12 @@ Class <a href="Funnel/XBee.html" class="link">Funnel::XBee</a><br />
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">AOUT</td>
           <td>=</td>
-          <td class="context-item-value">Port::AOUT</td>
+          <td class="context-item-value">Pin::AOUT</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">CHANGE</td>
           <td>=</td>
-          <td class="context-item-value">PortEvent::CHANGE</td>
+          <td class="context-item-value">PinEvent::CHANGE</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">CONFIGURATION_ERROR</td>
@@ -186,17 +199,17 @@ Class <a href="Funnel/XBee.html" class="link">Funnel::XBee</a><br />
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">DIN</td>
           <td>=</td>
-          <td class="context-item-value">Port::DIN</td>
+          <td class="context-item-value">Pin::DIN</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">DOUT</td>
           <td>=</td>
-          <td class="context-item-value">Port::DOUT</td>
+          <td class="context-item-value">Pin::DOUT</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">FALLING_EDGE</td>
           <td>=</td>
-          <td class="context-item-value">PortEvent::FALLING_EDGE</td>
+          <td class="context-item-value">PinEvent::FALLING_EDGE</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">ERROR</td>
@@ -206,17 +219,17 @@ Class <a href="Funnel/XBee.html" class="link">Funnel::XBee</a><br />
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">IN</td>
           <td>=</td>
-          <td class="context-item-value">Port::DIN</td>
+          <td class="context-item-value">Pin::DIN</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">OUT</td>
           <td>=</td>
-          <td class="context-item-value">Port::DOUT</td>
+          <td class="context-item-value">Pin::DOUT</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">PWM</td>
           <td>=</td>
-          <td class="context-item-value">Port::AOUT</td>
+          <td class="context-item-value">Pin::AOUT</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">READY</td>
@@ -231,7 +244,7 @@ Class <a href="Funnel/XBee.html" class="link">Funnel::XBee</a><br />
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">RISING_EDGE</td>
           <td>=</td>
-          <td class="context-item-value">PortEvent::RISING_EDGE</td>
+          <td class="context-item-value">PinEvent::RISING_EDGE</td>
         </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">UPDATE</td>
