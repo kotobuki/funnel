@@ -14,7 +14,6 @@ import com.illposed.osc.*;
 
 import funnel.FunnelServer;
 
-import processing.app.Base;
 import processing.core.*;
 
 /**
@@ -59,7 +58,6 @@ public class IOSystem implements Runnable{
 	public int samplingInterval;
 	////
 	
-	public String libPath;
 	
 	private boolean waitAnswer;
 	private LinkedList waitQueue;
@@ -112,13 +110,25 @@ public class IOSystem implements Runnable{
 	
 	protected void waitingServer(String moduleName){
 		
-		String configFileName = LibraryPath.getFunnelLibraryPath() + "settings." + moduleName.toLowerCase() + ".txt";
-		System.out.println(configFileName);
+		String configFileName;
+
+		if(P5util.isPDE()){
+			FunnelServer.embeddedMode = true;
+			configFileName = P5util.getFunnelLibraryPath() + "settings." + moduleName.toLowerCase() + ".txt";
+		}else{
+			if(P5util.isMac()){
+
+				configFileName = P5util.getFunnelLibraryPath() + "../../../../" + "settings." + moduleName.toLowerCase() + ".txt";
+			}else{
+				configFileName = P5util.getFunnelLibraryPath() + ".." + File.separator + "settings." + moduleName.toLowerCase() + ".txt";
+			}
+
+		}
 		
-		libPath = configFileName;
+		System.out.println(configFileName);
+
 		//
 		//サーバーを起動させて待つ
-		FunnelServer.embeddedMode = true;
 		FunnelServer server = new FunnelServer(configFileName); 
 
 		int waitCount = 10;
@@ -128,7 +138,7 @@ public class IOSystem implements Runnable{
 				System.out.println("waiting server");
 				waitCount--;
 				if(waitCount <0){
-					Base.showMessage("FunnelServer", "Please check to connect " + moduleName +" or " + configFileName);
+					//Base.showMessage("FunnelServer", "Please check to connect " + moduleName +" or " + configFileName);
 					quitServer(server);
 					parent.exit();
 					break;
