@@ -4,7 +4,7 @@ package processing.funnel;
 import java.util.Arrays;
 import java.util.Set;
 
-import processing.app.Base;
+
 import processing.core.PApplet;
 
 /**
