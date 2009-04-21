@@ -12,13 +12,12 @@ import java.util.Vector;
  */
 public class SetPoint implements Filter{
 
-	public Vector point;
+	public Vector<Point> point = new Vector<Point>();
 	
 	private float lastStatus = 0;
 	
 	
 	public SetPoint(float threshold, float hysteresis){
-		point = new Vector();
 		
 		addPoint(threshold,hysteresis);
 	}
@@ -34,10 +33,10 @@ public class SetPoint implements Filter{
 		float status = 0;
 		
 		int index = 0;
-		ListIterator it = point.listIterator();
-		for(ListIterator i = it;it.hasNext();){
+		ListIterator<Point> it = point.listIterator();
+		for(ListIterator<Point> i = it;it.hasNext();){
 			index = i.nextIndex();
-			Point p = (Point)i.next();
+			Point p = i.next();
 			if(in > p.threshold + p.hysteresis){
 				status = index+1;
 				continue;
@@ -76,9 +75,9 @@ public class SetPoint implements Filter{
 	}
 	
 	public void removePoint(float threshold){
-		ListIterator it = point.listIterator();
-		for(ListIterator i = it;it.hasNext();){
-			Point p = (Point)i.next();
+		ListIterator<Point> it = point.listIterator();
+		for(ListIterator<Point> i = it;it.hasNext();){
+			Point p = i.next();
 			if(p.threshold == threshold){
 				point.remove(p);
 				break;
@@ -98,16 +97,14 @@ public class SetPoint implements Filter{
 	}
 	
 	//è∏èáÇ…ï‘Ç∑
-	private static class ThresholdComparatorUpper implements Comparator {
-    public int compare(Object o1, Object o2) {
-      Point p1 = (Point)o1;
-      Point p2 = (Point)o2;
-      
-      Float f1 = new Float(p1.threshold);
-      Float f2 = new Float(p2.threshold);
-      
-      return f1.compareTo(f2);
-    }
+	private static class ThresholdComparatorUpper implements Comparator<Point> {
+	    public int compare(Point p1, Point p2) {
+	      
+	      Float f1 = new Float(p1.threshold);
+	      Float f2 = new Float(p2.threshold);
+	      
+	      return f1.compareTo(f2);
+	    }
 	}
 }
 

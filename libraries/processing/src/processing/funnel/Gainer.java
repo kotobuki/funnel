@@ -9,7 +9,7 @@ import processing.core.PApplet;
 
 /**
  * @author endo
- * @version 1.0
+ * @version 1.2
  * 
  */
 public final class Gainer extends IOSystem{
@@ -131,7 +131,7 @@ public final class Gainer extends IOSystem{
 		
 		addModule(moduleID,config,config.getModuleName());
 		
-		initPorts(config.portStatus);
+		initPorts(config.pinsStatus);
 		
 		startIOSystem();
 		
@@ -280,7 +280,7 @@ public final class Gainer extends IOSystem{
 
 		System.out.println("addmodule() Gainer");
 		
-		Set key = iomodules.entrySet();
+		Set<?> key = iomodules.entrySet();
 		if(!key.contains(new Integer(id))){
 			IOModule io =  new GainerIOModule(this,id,config,name);
 			iomodules.put(new Integer(id),io);

@@ -30,7 +30,7 @@ public class IOSystem implements Runnable{
 	public static final int PORT_AOUT = 2;
 	public static final int PORT_DOUT = 3;
 
-	protected HashMap iomodules = new HashMap();
+	protected HashMap<Integer, IOModule> iomodules = new HashMap<Integer, IOModule>();
 	
 	private final int TIMEOUT = 1000; 
 	private OSCClient client;
@@ -57,10 +57,10 @@ public class IOSystem implements Runnable{
 	public boolean autoUpdate = true;
 	public int samplingInterval;
 	////
-	
+	public static boolean withoutServer = false;
 	
 	private boolean waitAnswer;
-	private LinkedList waitQueue;
+	private LinkedList<String> waitQueue;
 
 	
 	public IOSystem(PApplet parent, String hostName,
@@ -75,7 +75,7 @@ public class IOSystem implements Runnable{
 		if(client.openFunnel(hostName, commandPortNumber)){
 
 			new CommandTokenizer(this,client.commandPort);
-			waitQueue = new LinkedList();
+			waitQueue = new LinkedList<String>();
 
 		}else{
 			errorMessage("Funnel server could not open !");
@@ -108,8 +108,7 @@ public class IOSystem implements Runnable{
 
 	}
 	
-	protected void waitingServer(String moduleName){
-		
+	protected String getServerConfigFilePath(String moduleName){
 		String configFileName;
 
 		if(P5util.isPDE()){
@@ -125,30 +124,40 @@ public class IOSystem implements Runnable{
 
 		}
 		
+		return configFileName;
+	}
+	
+	protected void waitingServer(String moduleName){
+		
+
+		String configFileName = getServerConfigFilePath(moduleName);
+		
 		System.out.println(configFileName);
 
-		//
-		//サーバーを起動させて待つ
-		FunnelServer server = new FunnelServer(configFileName); 
+		if(!withoutServer){
+			//
+			//サーバーを起動させて待つ
+			FunnelServer server = new FunnelServer(configFileName); 
+			
 
-		int waitCount = 10;
-		while(!FunnelServer.initialized){
-			try {
-				Thread.sleep(100);
-				System.out.println("waiting server");
-				waitCount--;
-				if(waitCount <0){
-					//Base.showMessage("FunnelServer", "Please check to connect " + moduleName +" or " + configFileName);
-					quitServer(server);
-					parent.exit();
-					break;
+			int waitCount = 10;
+			while(!FunnelServer.initialized){
+				try {
+					Thread.sleep(100);
+					System.out.println("waiting server");
+					waitCount--;
+					if(waitCount <0){
+						System.err.println("Check to connect " + moduleName + " or settings.txt " + configFileName);
+						quitServer(server);
+						parent.exit();
+						break;
+					}
+				} catch (InterruptedException e) {
+					// TODO 自動生成された catch ブロック
+					e.printStackTrace();
 				}
-			} catch (InterruptedException e) {
-				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
 			}
 		}
-		
 	}
 	
 	protected void quitServer(FunnelServer server){
@@ -216,7 +225,7 @@ public class IOSystem implements Runnable{
 	}
 	
 	protected void errorMessage(String message){
-		System.out.println(message);
+		System.err.println(message);
 		System.exit(-1);	
 	}
 	
@@ -242,6 +251,7 @@ public class IOSystem implements Runnable{
 				io.port(nPort).updateInput(((Float)message.getArguments()[i]).floatValue());
 	
 			}
+
 
 	}
 
@@ -333,20 +343,20 @@ public class IOSystem implements Runnable{
 
 		setSamplingInterval(samplingInterval);
 	
-		
+		initialized = true;
 		parent.registerDispose(this);
 		return true;
 	}
 	
 	protected boolean startIOSystem(){
-			
+
 		beginPolling();
 		
 		thread = new Thread(this,"funnelServiceThread");
-		initialized = true;
+
 		thread.start();
 		
-		new NotifyTokenizer(this,client.commandPort);
+		new NotifyTokenizer(this,client.commandPort);		
 		
 		return true;
 	}
@@ -435,8 +445,8 @@ public class IOSystem implements Runnable{
 	}
 	
 	public void update(){
-		Set keys = iomodules.keySet();
-		Iterator it = keys.iterator();
+		Set<Integer> keys = iomodules.keySet();
+		Iterator<Integer> it = keys.iterator();
 		while(it.hasNext()){
 			//モジュール毎
 			Integer id = (Integer)it.next();
@@ -444,10 +454,10 @@ public class IOSystem implements Runnable{
 			
 			io.checkOutputPortsUpdated();
 
-			Vector oport = io.getOutputPorts();
+			Vector<Integer> oport = io.getOutputPorts();
 			int[] outports = new int[oport.size()];
 			for(int i=0;i<oport.size();i++){
-				Integer iop = (Integer)oport.get(i);
+				Integer iop = oport.get(i);
 				outports[i] = iop.intValue();
 			}
 			int start=0;
@@ -479,10 +489,10 @@ public class IOSystem implements Runnable{
 	protected boolean addModule(int id,Configuration config,String name){
 
 		
-		Set key = iomodules.entrySet();
-		if(!key.contains(new Integer(id))){
+		Set<?> key = iomodules.entrySet();
+		if(!key.contains(id)){
 			IOModule io =  new IOModule(this,id,config,name);
-			iomodules.put(new Integer(id), io);
+			iomodules.put(id, io);
 			
 			System.out.println(" addModule() " + name);
 			
@@ -510,10 +520,10 @@ public class IOSystem implements Runnable{
 	//ポートの機能(参照する名前)を割り当てる
 	protected void initPorts(int[] _a,int[] _d){
 		
-		Collection c = iomodules.values();
-		Iterator it = c.iterator();
+		Collection<IOModule> c = iomodules.values();
+		Iterator<IOModule> it = c.iterator();
 		while(it.hasNext()){
-			IOModule io = (IOModule)it.next();
+			IOModule io = it.next();
 			io.setPinAD(_a, _d);
 		}
 		
@@ -531,6 +541,7 @@ public class IOSystem implements Runnable{
 		public NotifyTokenizer(IOSystem io,CommandPort port){
 			this.io = io;
 			port.addListener("/in", this);
+			port.addListener("/node",this);
 			port.startListening();
 		}
 		public void acceptMessage(Date time, OSCMessage message){

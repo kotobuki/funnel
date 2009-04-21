@@ -182,12 +182,12 @@ public class Osc{
 		boolean isWorking = false;
 		long serviceTickMillis;
 //		List oscList;
-		Vector oscList;
+		Vector<Osc> oscList;
 
 		public OscThread(int id){
 			super("OscServiceThread");
 //			oscList = Collections.synchronizedList(new LinkedList());
-			oscList = new Vector();
+			oscList = new Vector<Osc>();
 		}
 		
 		public void startThread(){

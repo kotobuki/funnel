@@ -6,7 +6,7 @@ import processing.core.PApplet;
 
 /**
  * @author endo
- * @version 1.1
+ * @version 1.2
  * 
  */
 public final class Arduino extends Firmata{
@@ -51,6 +51,7 @@ public final class Arduino extends Firmata{
 		initPorts(_a,_d);
 		
 		startIOSystem();
+		
 	}
 	
 	public Arduino(PApplet parent,Configuration config){
