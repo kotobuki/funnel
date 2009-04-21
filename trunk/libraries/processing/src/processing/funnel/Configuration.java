@@ -4,27 +4,27 @@ import java.util.Vector;
 
 /**
  * @author endo
- * @version 1.0
+ * @version 1.1
  * 
  */
 public final class Configuration{
 
-	int[] portStatus;
+	int[] pinsStatus;
 	final int moduleID;
 	final String moduleName;
 	
-	public Vector outputPorts = new Vector();
+	public Vector<Integer> outputPins = new Vector<Integer>();
 	
 	public Configuration(int moduleID, int[] config,String moduleName){
 		this.moduleID = moduleID;
 		this.moduleName = moduleName;
-		portStatus = config;
+		pinsStatus = config;
 	}
 
 
 	
 	public int[] getPortStatus(){
-		return portStatus;
+		return pinsStatus;
 	}
 	
 	public int getModuleID(){
@@ -45,7 +45,7 @@ public final class Configuration{
 		if(moduleName.equalsIgnoreCase(Arduino.moduleName) || moduleName.equalsIgnoreCase(Fio.moduleName)){
 			if(pinType!=IOSystem.PORT_AIN){
 				System.out.println("portStatus[]" + n + " type " + pinType );
-				portStatus[n] = pinType;
+				pinsStatus[n] = pinType;
 				
 				return true;
 			}
@@ -54,7 +54,7 @@ public final class Configuration{
 		if(moduleName.equalsIgnoreCase(XBee.moduleName)){
 			if(pinType!=IOSystem.PORT_AOUT){
 				System.out.println("portStatus[]" + n + " type " + pinType );
-				portStatus[n] = pinType;
+				pinsStatus[n] = pinType;
 				
 				return true;
 			}

@@ -30,7 +30,7 @@ public class IOModule{
 	
 	public String name;
 	
-	protected HashMap i2cDevs = new HashMap();
+	protected HashMap<Integer,I2CInterface> i2cDevs = new HashMap<Integer,I2CInterface>();
 	
 	//ポートの機能(参照する名前)
 	private int analogPin[];
@@ -107,8 +107,8 @@ public class IOModule{
 		return null;
 	}
 	
-	public Vector getOutputPorts(){
-		return config.outputPorts;
+	public Vector<Integer> getOutputPorts(){
+		return config.outputPins;
 	}
 	
 	public int getModuleID(){
@@ -116,7 +116,7 @@ public class IOModule{
 	}
 	
 	public void checkOutputPortsUpdated(){
-		int[] conf = config.portStatus;
+		int[] conf = config.pinsStatus;
 		for(int i=0;i<conf.length;i++){
 			if((conf[i] & 0x02)==0x2){
 				port(i).checkOutputUpdated();
@@ -125,7 +125,7 @@ public class IOModule{
 	}
 	
 	public boolean addI2CDevice(I2CInterface i2c){
-		Set key = i2cDevs.entrySet();
+		Set<?> key = i2cDevs.entrySet();
 		if(!key.contains(new Integer(i2c.getSlaveAddress()))){
 
 			i2cDevs.put(new Integer(i2c.getSlaveAddress()), i2c);
@@ -169,7 +169,7 @@ public class IOModule{
 		private int times;
 		private final int maxCount = 100;
 		
-		private LinkedList buffer;
+		private LinkedList<Float> buffer;
 		private final int bufferSize = 8;
 		
 		
@@ -178,7 +178,7 @@ public class IOModule{
 			number = n;
 			
 			filters = new Filter[0];
-			buffer = new LinkedList();
+			buffer = new LinkedList<Float>();
 			for(int i=0;i<bufferSize;i++){
 				buffer.addLast(new Float(0));//dummy
 			}
@@ -197,7 +197,7 @@ public class IOModule{
 		public void checkOutputUpdated(){
 			if(this.value != lastValue){
 				lastValue = value;
-				config.outputPorts.addElement(new Integer(number));
+				config.outputPins.add(new Integer(number));
 			}
 		}
 
