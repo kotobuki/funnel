@@ -1,0 +1,1 @@
+exewrap.exe -g -i FunnelLogo.ico -o "Funnel Server.exe" -v 0.0.9.0 funnel_server.jar
