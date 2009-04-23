@@ -10,6 +10,7 @@ void setup()
   size(200, 200);
     
   int[] moduleIDs = {1};
+  Fio.withoutServer =true;
   fio = new Fio(this,moduleIDs,Fio.FIRMATA);
   compass = new HMC6325(fio.iomodule(1));
 

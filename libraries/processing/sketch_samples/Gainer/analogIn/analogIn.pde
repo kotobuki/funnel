@@ -17,7 +17,7 @@ void setup()
   textFont(myFont, 24);
   
   gainer = new Gainer(this,Gainer.MODE1);
- 
+  
 }
 
 void draw()
@@ -28,7 +28,4 @@ void draw()
   text("analogInput[2]: " + gainer.analogInput(2).value,10,140);
   text("analogInput[3]: " + gainer.analogInput(3).value,10,170);
 }
-  
-
-
 

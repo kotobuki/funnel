@@ -1,7 +1,7 @@
 /*
 Osc with handler
 
-©•ª‚ÅOsc.update()‚ğŒÄ‚Ño‚µ‚Ä‚Í‚¢‚¯‚Ü‚¹‚ñ
+è‡ªåˆ†ã§Osc.update()ã‚’å‘¼ã³å‡ºã—ã¦ã¯ã„ã‘ã¾ã›ã‚“
 */
 
 import processing.funnel.*;
@@ -53,6 +53,7 @@ void mouseReleased()
   osc.start();
   println("osc update start");
 }
+
 
 
 
