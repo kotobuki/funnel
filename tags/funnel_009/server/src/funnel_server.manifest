@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: funnel.FunnelServer
-Class-Path: ./lib/RXTXcomm.jar ./lib/javaosc.jar ./lib/jvyaml.jar
