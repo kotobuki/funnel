@@ -33,14 +33,14 @@ void draw()
   
 }
 
-void risingEdge(PortEvent e)
+void risingEdge(PinEvent e)
 {
   backgroundcolor=170;
 
   println("rising  " + e.target.number + " " + e.target.value);
 }
 
-void fallingEdge(PortEvent e)
+void fallingEdge(PinEvent e)
 {
   backgroundcolor=100;
 

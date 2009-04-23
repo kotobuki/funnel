@@ -26,7 +26,7 @@ void draw()
  background(100);
 }
 
-void change(PortEvent e)
+void change(PinEvent e)
 {
  if (e.target.number == Gainer.button) {
    gainer.led().value = e.target.value;
