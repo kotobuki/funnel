@@ -11,3 +11,4 @@ rm -r ./release/
 mv ./server/rxtxSerial.dll ./server/lib
 rm ./server/librxtxSerial.*
 rm ./release.sh
+rm -r ./libraries/of/
