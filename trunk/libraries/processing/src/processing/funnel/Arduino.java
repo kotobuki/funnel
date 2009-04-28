@@ -75,11 +75,11 @@ public final class Arduino extends Firmata{
 	
 	
 	//Arduinoショートカット
-	public IOModule.Port analogPin(int nPort){
+	public IOModule.Pin analogPin(int nPort){
 		return iomodule(moduleID).analogPin(nPort);
 	}
 	
-	public IOModule.Port digitalPin(int nPort){
+	public IOModule.Pin digitalPin(int nPort){
 		return iomodule(moduleID).digitalPin(nPort);
 	} 
 	

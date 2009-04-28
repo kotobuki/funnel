@@ -42,7 +42,7 @@ public class RTC8564NB extends I2CDevice implements I2CInterface{
 	
 			second = (bcd>>4)*10+(bcd&0x0F);
 		 
-//			System.out.println(Integer.toHexString(bcd) + " s");
+			System.out.println(Integer.toHexString(bcd) + " s");
 			break;
 		}
 	   

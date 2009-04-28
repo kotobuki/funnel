@@ -38,7 +38,7 @@ public class GainerIOModule extends IOModule{
 	}
 	
 	//Port‚»‚Ì‚à‚Ì‚ð•Ô‚·
-	public Port port(int nPort){
+	public Pin pin(int nPort){
 		if(nPort<port.length){
 			return port[nPort];
 		}
@@ -46,7 +46,7 @@ public class GainerIOModule extends IOModule{
 	}
 	
 	
-	public class GainerPort extends IOModule.Port{
+	public class GainerPort extends IOModule.Pin{
 	
 		public GainerPort(PApplet parent, int type, int n){
 			super(parent,type,n);

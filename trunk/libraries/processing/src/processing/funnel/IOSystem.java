@@ -248,7 +248,7 @@ public class IOSystem implements Runnable{
 				
 				//入力ポートを更新する
 				int nPort = n+i-2;
-				io.port(nPort).updateInput(((Float)message.getArguments()[i]).floatValue());
+				io.pin(nPort).updateInput(((Float)message.getArguments()[i]).floatValue());
 	
 			}
 
@@ -433,7 +433,7 @@ public class IOSystem implements Runnable{
 		args[0] = new Integer(io.getModuleID());
 		args[1] = new Integer(startPort);
 		for(int n=0;n<nPort;n++){
-			args[n+2] = new Float(io.port(startPort+n).value);
+			args[n+2] = new Float(io.pin(startPort+n).value);
 		}
 		execCode("/out",args,false);
 
@@ -449,20 +449,23 @@ public class IOSystem implements Runnable{
 		Iterator<Integer> it = keys.iterator();
 		while(it.hasNext()){
 			//モジュール毎
-			Integer id = (Integer)it.next();
-			IOModule io = (IOModule)iomodules.get(id);
+			Integer id = it.next();
+			IOModule io = iomodules.get(id);
 			
 			io.checkOutputPortsUpdated();
 
+			
 			Vector<Integer> oport = io.getOutputPorts();
 			int[] outports = new int[oport.size()];
-			for(int i=0;i<oport.size();i++){
-				Integer iop = oport.get(i);
-				outports[i] = iop.intValue();
+
+			for(int i=0;i<outports.length;i++){
+				outports[i] = oport.get(i).intValue();
 			}
+
 			int start=0;
 			int nPort=0;
 			for(int i=0;i<outports.length;i++){
+
 				if(nPort==0){
 					start = outports[i];
 					nPort++;
@@ -501,7 +504,7 @@ public class IOSystem implements Runnable{
 //			for(int i=0;i<portStatus.length;i++){
 //				if(portStatus[i] == PORT_DIN){
 //					Filter[] filters ={ new SetPoint(0.5f,0)};
-//					io.port(i).filters = filters;
+//					io.pin(i).filters = filters;
 //				}
 //			}
 			return true;

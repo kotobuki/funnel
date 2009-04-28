@@ -113,7 +113,7 @@ public final class Fio extends Firmata{
 				
 				//入力ポートを更新する
 				int nPort = n+i-2;
-				io.port(nPort).updateInput(((Float)message.getArguments()[i]).floatValue());
+				io.pin(nPort).updateInput(((Float)message.getArguments()[i]).floatValue());
 	
 			}
 		}catch(NullPointerException e){
