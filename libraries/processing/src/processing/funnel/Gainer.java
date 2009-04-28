@@ -290,7 +290,7 @@ public final class Gainer extends IOSystem{
 			for(int i=0;i<portStatus.length;i++){
 				if(portStatus[i] == PORT_DIN){
 					Filter[] filters ={ new SetPoint(0.5f,0)};
-					io.port(i).filters = filters;
+					io.pin(i).filters = filters;
 				}
 			}
 			
@@ -302,28 +302,28 @@ public final class Gainer extends IOSystem{
 	
 	
 	//Gainerショートカット
-	public IOModule.Port analogOutput(int nPort){
-		return iomodule(0).port(analogOutput[nPort]);
+	public IOModule.Pin analogOutput(int nPort){
+		return iomodule(0).pin(analogOutput[nPort]);
 	}
 	
-	public IOModule.Port analogInput(int nPort){
-		return iomodule(0).port(analogInput[nPort]);
+	public IOModule.Pin analogInput(int nPort){
+		return iomodule(0).pin(analogInput[nPort]);
 	}
 	
-	public IOModule.Port digitalOutput(int nPort){
-		return iomodule(0).port(digitalOutput[nPort]);
+	public IOModule.Pin digitalOutput(int nPort){
+		return iomodule(0).pin(digitalOutput[nPort]);
 	}
 	
-	public IOModule.Port digitalInput(int nPort){
-		return iomodule(0).port(digitalInput[nPort]);
+	public IOModule.Pin digitalInput(int nPort){
+		return iomodule(0).pin(digitalInput[nPort]);
 	}
 	
-	public IOModule.Port led(){
-		return iomodule(0).port(led);
+	public IOModule.Pin led(){
+		return iomodule(0).pin(led);
 	}
 	
-	public IOModule.Port button(){
-		return iomodule(0).port(button);
+	public IOModule.Pin button(){
+		return iomodule(0).pin(button);
 	}
 	
 	protected void startingServer(){

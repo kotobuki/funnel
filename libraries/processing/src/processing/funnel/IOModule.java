@@ -24,7 +24,7 @@ public class IOModule{
 
 	public IOSystem system;
 	
-	protected Port port[];
+	protected Pin pin[];
 	protected int id;
 	protected Configuration config;
 	
@@ -54,9 +54,9 @@ public class IOModule{
 		
 		int[] conf = config.getPortStatus();
 		
-		port = new Port[conf.length];
-		for(int i=0;i<port.length;i++){
-			port[i] = new Port(parent,conf[i],i);
+		pin = new Pin[conf.length];
+		for(int i=0;i<pin.length;i++){
+			pin[i] = new Pin(parent,conf[i],i);
 		}
 
 		
@@ -90,19 +90,19 @@ public class IOModule{
 		digitalPin = _d;
 	}
 	
-	public Port analogPin(int nPort){
-		return port(analogPin[nPort]);
+	public Pin analogPin(int nPort){
+		return pin(analogPin[nPort]);
 	}
 	
-	public Port digitalPin(int nPort){
-		return port(digitalPin[nPort]);
+	public Pin digitalPin(int nPort){
+		return pin(digitalPin[nPort]);
 	}
 	
 	
 	//Port‚»‚Ì‚à‚Ì‚ð•Ô‚·
-	public Port port(int nPort){
-		if(nPort<port.length){
-			return port[nPort];
+	public Pin pin(int nPort){
+		if(nPort<pin.length){
+			return pin[nPort];
 		}
 		return null;
 	}
@@ -119,7 +119,7 @@ public class IOModule{
 		int[] conf = config.pinsStatus;
 		for(int i=0;i<conf.length;i++){
 			if((conf[i] & 0x02)==0x2){
-				port(i).checkOutputUpdated();
+				pin(i).checkOutputUpdated();
 			}
 		}
 	}
@@ -145,14 +145,14 @@ public class IOModule{
 	
 	
 	//
-	// funnel Port
-	public class Port {
+	// 
+	public class Pin {
 
 		PApplet parent;
 		
 
 
-		public final int number;//ƒ|[ƒg’Ê‚µ”Ô†
+		public final int number;//pin ’Ê‚µ”Ô†
 		
 		public float value;
 		public float lastValue;
@@ -173,7 +173,7 @@ public class IOModule{
 		private final int bufferSize = 8;
 		
 		
-		public Port(PApplet parent, int type, int n){
+		public Pin(PApplet parent, int type, int n){
 			this.parent = parent;
 			number = n;
 			
@@ -197,7 +197,7 @@ public class IOModule{
 		public void checkOutputUpdated(){
 			if(this.value != lastValue){
 				lastValue = value;
-				config.outputPins.add(new Integer(number));
+				config.outputPins.add(number);
 			}
 		}
 
