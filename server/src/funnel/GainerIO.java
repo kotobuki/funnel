@@ -220,6 +220,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			return;
 		}
 
+		if (this.isPolling) {
+			stopPolling();
+		}
+
 		printMessage(Messages.getString("IOModule.Rebooting")); //$NON-NLS-1$
 		write("Q*"); //$NON-NLS-1$
 		try {
