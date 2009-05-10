@@ -108,8 +108,9 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	 * @see funnel.IOModule#dispose()
 	 */
 	public void dispose() {
-		port.removeEventListener();
 		printMessage(Messages.getString("IOModule.Disposing")); //$NON-NLS-1$
+
+		port.removeEventListener();
 		try {
 			if (input != null)
 				input.close();

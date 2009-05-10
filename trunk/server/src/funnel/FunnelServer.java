@@ -26,26 +26,31 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel Server (r626)";
+	private static final String buildName = "Funnel Server 009 (r627)";
 
 	private CommandPortServer server;
 	private IOModule ioModule = null;
 	private TextArea loggingArea;
 	private final int width = 480;
 	private final int height = 270;
+	private boolean hasDisposed = false;
 
 	static public boolean embeddedMode = false;
 	static public boolean initialized = false;
 
 	public FunnelServer(String configFileName) {
 		super();
+		Runtime.getRuntime().addShutdownHook(new Shutdown());
 
 		if (!embeddedMode) {
 			// Close the I/O module when the window is closed
 			addWindowListener(new WindowAdapter() {
 				public void windowClosing(WindowEvent evt) {
 					if (ioModule != null) {
-						ioModule.stopPolling();
+						System.out.println("disposing...");
+						ioModule.dispose();
+						System.out.println("disposed.");
+						hasDisposed = true;
 					}
 					System.exit(0);
 				}
@@ -133,7 +138,7 @@ public class FunnelServer extends Frame {
 				printMessage(Messages.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
 				return;
 			} finally {
-				setTitle("Funnel Server: Arduino");
+				setTitle("Funnel Server: Arduino (Firmata v2)");
 			}
 		} else if (type.equalsIgnoreCase("xbee")) { //$NON-NLS-1$
 			try {
@@ -151,7 +156,7 @@ public class FunnelServer extends Frame {
 				printMessage(Messages.getString("FunnelServer.CannotOpenFio")); //$NON-NLS-1$
 				return;
 			} finally {
-				setTitle("Funnel Server: FIO (Funnel I/O)");
+				setTitle("Funnel Server: FIO");
 			}
 		}
 
@@ -213,5 +218,15 @@ public class FunnelServer extends Frame {
 		}
 
 		new FunnelServer(configFileName);
+	}
+
+	class Shutdown extends Thread {
+		public void run() {
+			if (ioModule != null && !hasDisposed) {
+				System.out.println("disposing...");
+				ioModule.dispose();
+				System.out.println("disposed.");
+			}
+		}
 	}
 }
