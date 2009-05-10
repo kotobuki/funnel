@@ -9,7 +9,7 @@ FE
 [A]DH=0
 [A]DL=FFFF
 [A]MY=0
-[A]RR=0
+[A]RR=3
 [A]RN=0
 [A]MM=0
 [A]NT=19
@@ -29,7 +29,7 @@ FE
 [A]DP=3E8
 [A]SO=0
 [A]BD=4
-[A]RO=3
+[A]RO=10
 [A]AP=0
 [A]PR=FF
 [A]D8=0

@@ -126,8 +126,24 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 	}
 
 	public void dispose() {
-		port.removeEventListener();
+		if (xbee != null) {
+			byte[] command = new byte[] { '+', '+', '+' };
+			byte[] apiModeCommand = new byte[] { 'A', 'T', 'A', 'P', '0', ',', ' ', 'C', 'N', 13 };
+			try {
+				printMessage("Reverteing the API mode setting to 0"); //$NON-NLS-1$
+				output.write(command);
+				sleep(1500);
+				output.write(apiModeCommand);
+				sleep(100);
+				System.out.println("reverted the API mode setting to 0");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 		printMessage(Messages.getString("IOModule.Disposing")); //$NON-NLS-1$
+		port.removeEventListener();
 		try {
 			if (input != null)
 				input.close();

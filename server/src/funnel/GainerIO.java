@@ -149,8 +149,9 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void dispose() {
-		port.removeEventListener();
 		printMessage(Messages.getString("IOModule.Disposing")); //$NON-NLS-1$
+
+		port.removeEventListener();
 		try {
 			if (input != null)
 				input.close();

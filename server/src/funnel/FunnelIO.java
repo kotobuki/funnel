@@ -82,6 +82,25 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		return;
 	}
 
+	public void dispose() {
+		if (xbee != null) {
+			printMessage("Reverteing the API mode setting to 0"); //$NON-NLS-1$
+			byte[] command = new byte[] { '+', '+', '+' };
+			byte[] apiModeCommand = new byte[] { 'A', 'T', 'A', 'P', '0', ',', ' ', 'C', 'N', 13 };
+			try {
+				output.write(command);
+				sleep(1500);
+				output.write(apiModeCommand);
+				sleep(100);
+				System.out.println("reverted the API mode setting to 0");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		super.dispose();
+	}
+
 	public void setConfiguration(Object[] arguments) {
 		super.setConfiguration(arguments);
 
