@@ -62,6 +62,7 @@ public class IOSystem implements Runnable{
 	private boolean waitAnswer;
 	private LinkedList<String> waitQueue;
 
+
 	
 	public IOSystem(PApplet parent, String hostName,
 			int commandPortNumber,int samplingInterval,Configuration config){

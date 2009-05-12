@@ -113,7 +113,7 @@ public class Scaler implements Filter{
 	class ScalerFunctionCUBE implements ScalerFunction{
 		
 		public float calculate(float val){
-			return val*val*val;
+			return val*val*val*val;
 		}
 	}
 	class ScalerFunctionCUBE_ROOT implements ScalerFunction{
