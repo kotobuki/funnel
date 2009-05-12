@@ -1,6 +1,7 @@
 
 package processing.funnel;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -254,7 +255,11 @@ public class IOModule{
 					if(onRisingEdge != null  && this.value != 0 && lastValue == 0){
 						try{
 							onRisingEdge.invoke(parent,new Object[]{ new PinEvent(this) });
-						}catch(Exception e){
+						}catch(IllegalAccessException e){
+							e.printStackTrace();
+						}catch(IllegalArgumentException e){
+							e.printStackTrace();
+						} catch (InvocationTargetException e) {
 							e.printStackTrace();
 							onRisingEdge = null;
 							errorMessage("onRisingEdge handler error !!");
@@ -264,7 +269,11 @@ public class IOModule{
 					if(onFallingEdge != null  && lastValue != 0 && this.value == 0){
 						try{
 							onFallingEdge.invoke(parent,new Object[]{ new PinEvent(this) });
-						}catch(Exception e){
+						}catch(IllegalAccessException e){
+							e.printStackTrace();
+						}catch(IllegalArgumentException e){
+							e.printStackTrace();
+						} catch (InvocationTargetException e) {
 							e.printStackTrace();
 							onFallingEdge = null;
 							errorMessage("onFallingEdge handler error !!");
@@ -308,11 +317,24 @@ public class IOModule{
 			for(int i=0;i<newFilters.length;i++){
 				f[c++] = newFilters[i];
 			}
+
 			
 			filters = f;
 		}
 		
-		
+		public void addFilters(Filter newFilter){
+			
+			int filterSize = filters.length + 1;
+			
+			Filter[] f = new Filter[filterSize];
+			int i;
+			for(i=0;i<filters.length;i++){
+				f[i] = filters[i];
+			}
+			f[i] = newFilter;
+			
+			filters = f;
+		}
 		
 		
 	}
