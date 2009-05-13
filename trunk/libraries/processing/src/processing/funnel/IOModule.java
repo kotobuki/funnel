@@ -152,7 +152,6 @@ public class IOModule{
 		PApplet parent;
 		
 
-
 		public final int number;//pin 通し番号
 		
 		public float value;
@@ -163,7 +162,7 @@ public class IOModule{
 		public float minimum = Float.MAX_VALUE;
 		public float maximum = 0;
 		
-		public Filter filters[];
+		private Filter filters[];
 		
 		//
 		private float history;
@@ -304,38 +303,31 @@ public class IOModule{
 			}
 		}
 		
-		//フィルターを追加する
-		public void addFilters(Filter[] newFilters){
+		//フィルターを置き換える
+		public void setFilters(Filter[] newFilters){
 			
-			int filterSize = filters.length + newFilters.length;
-			
-			Filter[] f = new Filter[filterSize];
-			int c=0;
-			for(int i=0;i<filters.length;i++){
-				f[c++] = filters[i];
-			}
-			for(int i=0;i<newFilters.length;i++){
-				f[c++] = newFilters[i];
-			}
-
-			
-			filters = f;
+			filters = newFilters;
 		}
-		
-		public void addFilters(Filter newFilter){
+		//フィルターを追加する
+		public void addFilter(Filter newFilter){
 			
 			int filterSize = filters.length + 1;
 			
 			Filter[] f = new Filter[filterSize];
-			int i;
-			for(i=0;i<filters.length;i++){
-				f[i] = filters[i];
-			}
-			f[i] = newFilter;
+//			int i;
+//			for(i=0;i<filters.length;i++){
+//				f[i] = filters[i];
+//			}
+			System.arraycopy(f, 0, filters, 0, filters.length);
+			f[filters.length] = newFilter;
 			
 			filters = f;
 		}
 		
+		public void removeAllFilters(){
+			Filter f[] = new Filter[0];
+			filters = f;
+		}
 		
 	}
 }
