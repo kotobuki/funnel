@@ -1,6 +1,6 @@
 package processing.funnel;
 
-public class P5util {
+public final class P5util {
 
 	static String getFunnelLibraryPath(){
 
