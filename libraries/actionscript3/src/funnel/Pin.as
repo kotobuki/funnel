@@ -174,6 +174,38 @@ package funnel
 			_filters = array.slice(lastIndexOfGenerator);
 		}
 		
+		public function addFilter(newFilter:*):void {
+			if (newFilter == null) {
+				return;
+			}
+
+			if (_filters == null) {
+				_filters = new Array();
+			}
+
+			if (newFilter is IFilter) {
+				;
+			} else if (newFilter is IGenerator) {
+				if (_generator != null) {
+					_generator.removeEventListener(GeneratorEvent.UPDATE, autoSetValue);
+				}
+				_generator = newFilter;
+				_generator.addEventListener(GeneratorEvent.UPDATE, autoSetValue);
+			} else {
+				return;
+			}
+
+			_filters.push(newFilter);
+		}
+
+		public function setFilters(newFilters:Array):void {
+			filters = newFilters;
+		}
+
+		public function removeAllFilters():void {
+			filters = null;
+		}
+
 		private function autoSetValue(event:Event):void {
 			value = _generator.value;
 		}
