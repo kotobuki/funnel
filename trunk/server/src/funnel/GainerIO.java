@@ -590,7 +590,9 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			}
 		} else if (command.startsWith("i") || command.startsWith("I")) { //$NON-NLS-1$ //$NON-NLS-2$
 			String value;
-			for (int i = 0; i < ainPortRange.getCounts(); i++) {
+			int theNumberOfChannels = (command.length() - 2) / 2;
+			theNumberOfChannels = Math.min(theNumberOfChannels, ainPortRange.getCounts());
+			for (int i = 0; i < theNumberOfChannels; i++) {
 				value = command.substring(2 * i + 1, 2 * (i + 1) + 1);
 				inputs[ainPortRange.getMin() + i] = (float) Integer.parseInt(value, 16) / 255.0f;
 			}
