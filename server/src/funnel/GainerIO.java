@@ -151,6 +151,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	public void dispose() {
 		printMessage(Messages.getString("IOModule.Disposing")); //$NON-NLS-1$
 
+		if (this.isPolling) {
+			stopPolling();
+		}
+
 		port.removeEventListener();
 		try {
 			if (input != null)
@@ -796,6 +800,18 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			input = port.getInputStream();
 			output = port.getOutputStream();
 			port.setSerialPortParams(rate, databits, stopbits, parity);
+
+			if (input.available() > 0) {
+				// It seems that the previous polling is still alive, so try to
+				// stop polling.
+				output.write("E*".getBytes());
+				sleep(500);
+
+				while (input.available() > 0) {
+					input.read();
+				}
+			}
+
 			port.addEventListener(this);
 			port.notifyOnDataAvailable(true);
 		} catch (gnu.io.PortInUseException e) {
