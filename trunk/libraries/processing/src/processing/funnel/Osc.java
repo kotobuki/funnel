@@ -34,7 +34,7 @@ public class Osc{
 	public float phase;
 	public int times;
 	
-	public static int serviceInterval = 0;//serviceInterval‚ª0‚Ì‚Æ‚«‚Íauto update‚µ‚È‚¢
+	public static int serviceInterval = 33;//serviceInterval‚ª0‚Ì‚Æ‚«‚Íauto update‚µ‚È‚¢
 	private static OscThread serviceThread = null;
 
 	private long startTickMillis;//Šî€‚ÌŠÔ

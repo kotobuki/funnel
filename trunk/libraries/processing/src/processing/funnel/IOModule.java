@@ -216,8 +216,7 @@ public class IOModule{
 			history += value;
 			average = history / times;
 
-
-			
+		
 			//もしフィルターがセットされていたら
 			//bufferが必要なのはConvolutionのみ
 			if(filters.length == 0 ){
@@ -235,9 +234,13 @@ public class IOModule{
 				
 				boolean isSetPoint = false;
 				for(int n=0;n<filters.length;n++){
-					if(filters[n].getName()=="SetPoint"){
+					if(filters[n].getName().equalsIgnoreCase("SetPoint"))
+					{
+						if(isSetPoint){
+							errorMessage(" You can set just one SetPoint");
+						}
 						isSetPoint = true;
-					}else if(filters[n].getName()=="Convolution"){
+					}else if(filters[n].getName().equalsIgnoreCase("Convolution")){
 						fbuf[i] = tempValue;
 						buffer.addLast(new Float(tempValue));
 						if(buffer.size()>bufferSize){
@@ -246,7 +249,6 @@ public class IOModule{
 					}
 					tempValue = filters[n].processSample(tempValue, fbuf);
 				}
-
 
 				updateValueInput(tempValue);
 				
@@ -258,7 +260,7 @@ public class IOModule{
 							e.printStackTrace();
 						}catch(IllegalArgumentException e){
 							e.printStackTrace();
-						} catch (InvocationTargetException e) {
+						}catch (InvocationTargetException e) {
 							e.printStackTrace();
 							onRisingEdge = null;
 							errorMessage("onRisingEdge handler error !!");
@@ -311,17 +313,31 @@ public class IOModule{
 		//フィルターを追加する
 		public void addFilter(Filter newFilter){
 			
+			int i;
+			
+			for(i=0;i<filters.length;i++){
+				if(!filters[i].getName().equalsIgnoreCase("Convolution")){
+					
+					if(filters[i].getName().equalsIgnoreCase(newFilter.getName())){
+						filters[i] = newFilter;
+						System.out.println("replace "+ newFilter.getName() + " filter");
+						return;
+					}
+				}
+			}
+			
+			
 			int filterSize = filters.length + 1;
 			
 			Filter[] f = new Filter[filterSize];
-//			int i;
-//			for(i=0;i<filters.length;i++){
-//				f[i] = filters[i];
-//			}
-			System.arraycopy(f, 0, filters, 0, filters.length);
-			f[filters.length] = newFilter;
 			
+			for(i=0;i<filters.length;i++){
+				
+				f[i] = filters[i];
+			}
+			f[i] = newFilter;
 			filters = f;
+
 		}
 		
 		public void removeAllFilters(){
