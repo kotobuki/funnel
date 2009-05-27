@@ -32,8 +32,8 @@ void setup()
     new Convolution(Convolution.MOVING_AVERAGE),
     new Scaler(0.30, 0.70, -1.0, 1.0, Scaler.LINEAR, true)
   };
-  gainer.analogInput(0).filters = f0; 
-  gainer.analogInput(1).filters = f1; 
+  gainer.analogInput(0).setFilters(f0); 
+  gainer.analogInput(1).setFilters(f1); 
 } 
  
 void draw() 

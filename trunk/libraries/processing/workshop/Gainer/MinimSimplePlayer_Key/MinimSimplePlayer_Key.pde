@@ -1,5 +1,6 @@
 import ddf.minim.*;
 
+Minim minim;
 AudioPlayer player;
 
 void setup()
@@ -8,11 +9,11 @@ void setup()
 
   // always start Minim first
   // 常にMinimを最初にスタートする
-  Minim.start(this);
+  minim = new Minim(this);
 
   // load a file, give the AudioPlayer buffers that are 512 samples long
   // ファイルをロードし、AudioPlayerのバッファサイズを512サンプルにセット
-  player = Minim.loadFile("marcus_kellis_theme.mp3", 512);
+  player = minim.loadFile("marcus_kellis_theme.mp3", 512);
 }
 
 void draw()

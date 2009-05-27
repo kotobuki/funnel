@@ -66,13 +66,13 @@ void setup(){
     new Scaler(0.25, 0.75, -1, 1, Scaler.LINEAR, true),
     new Convolution(Convolution.MOVING_AVERAGE)   
   };
-  gainer.analogInput(0).filters = f0;
+  gainer.analogInput(0).setFilters(f0);
   
   Filter f1[] = {
     new Scaler(0.25, 0.75, -1, 1, Scaler.LINEAR, true),
     new Convolution(Convolution.MOVING_AVERAGE)   
   };
-  gainer.analogInput(1).filters = f1;
+  gainer.analogInput(1).setFilters(f1);
 }
 
 void draw(){

@@ -48,7 +48,7 @@ void setup()
     Filter[] f = {
       new SetPoint(gio.analogInput(i).average - 0.1, 0.05)
     };
-    gio.analogInput(i).filters = f;
+    gio.analogInput(i).setFilters(f);
 
     // Initialize flags and Delay objects
     // フラグとディレイを初期化
@@ -90,7 +90,7 @@ void draw()
 
 // The event handler to handle falling edge (from non zero to 0) events
 // 1→0に変化したときに呼ばれるイベントハンドラ
-void fallingEdge(PortEvent e)
+void fallingEdge(PinEvent e)
 {
   switch (e.target.number) {
   case 0:

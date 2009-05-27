@@ -21,10 +21,7 @@ void setup()
   gio = new Gainer(this, Gainer.MODE1);
   gio.autoUpdate = true;
 
-  Filter filters[] = {
-    new SetPoint(0.50, 0.05)
-  };
-  gio.analogInput(0).filters = filters;
+  gio.analogInput(0).addFilter(new SetPoint(0.50, 0.05));
 
   flasher = new Osc(this, Osc.IMPULSE, 1.0, 1);
   Osc.serviceInterval = 30;
@@ -44,7 +41,7 @@ void oscUpdated(Osc o)
 // The event handler for SetPoint filters to input ports
 // (from zero to non-zero)
 // SetPointフィルタ適用後の値が0から0以外に変化した時に呼ばれるイベントハンドラ
-void risingEdge(PortEvent e)
+void risingEdge(PinEvent e)
 {
   if (e.target.number == gio.analogInput[0]) {
     println("0 to 1");
@@ -56,7 +53,7 @@ void risingEdge(PortEvent e)
 // The event handler for SetPoint filters to input ports
 // (from non-zero to zero)
 // SetPointフィルタ適用後の値が0から0以外に変化した時に呼ばれるイベントハンドラ
-void fallingEdge(PortEvent e)
+void fallingEdge(PinEvent e)
 {
   if (e.target.number == gio.analogInput[0]) {
     println("1 to 0");

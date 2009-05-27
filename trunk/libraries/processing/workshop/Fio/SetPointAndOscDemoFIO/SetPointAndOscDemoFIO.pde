@@ -16,11 +16,8 @@ void setup()
 
   fio = new Fio(this, moduleIDs, config);
 
-  Filter f[] = {
-    // パラメータは閾値とヒステリシス
-    new SetPoint(0.5, 0.05)
-  };
-  fio.iomodule(1).analogPin(0).filters = f;
+  // パラメータは閾値とヒステリシス
+  fio.iomodule(1).analogPin(0).addFilter(new SetPoint(0.5, 0.05));
 
   // パラメータは波形、周波数、繰り返し回数（0は無制限）
   osc = new Osc(this, Osc.SIN, 0.5, 0);
@@ -40,7 +37,7 @@ void oscUpdated(Osc osc)
 }
 
 // SetPointをセットした入力が0から1に変化する時に呼ばれるイベントリスナ
-void risingEdge(PortEvent e)
+void risingEdge(PinEvent e)
 {
   // Arduinoでピンを連番で表現する際、A0はD13の後の14番になる
   if (e.target.number == 14) {
@@ -52,7 +49,7 @@ void risingEdge(PortEvent e)
 }
 
 // SetPointをセットした入力が1から0に変化する時に呼ばれるイベントリスナ
-void fallingEdge(PortEvent e)
+void fallingEdge(PinEvent e)
 {
   // Arduinoでピンを連番で表現する際、A0はD13の後の14番になる
   if (e.target.number == 14) {

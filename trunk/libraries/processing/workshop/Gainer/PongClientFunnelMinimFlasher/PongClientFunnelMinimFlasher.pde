@@ -16,6 +16,7 @@ import ddf.minim.*;
 import processing.funnel.*;
 
 Client c;
+Minim minim;
 AudioSample sample;
 Gainer gainer;
 
@@ -26,9 +27,7 @@ void setup()
 {
   size(450, 255);
 
-  // always start Minim first
-  // 常にMinimを最初にスタートする
-  Minim.start(this);
+  minim = new Minim(this);
 
   background(204);
   stroke(0);
@@ -39,7 +38,7 @@ void setup()
 
   // load a file, give the AudioPlayer buffers that are 512 samples long
   // ファイルをロードし、AudioPlayerのバッファサイズを512サンプルにセット
-  sample = Minim.loadSample("BLASTWAVEFX_06241.mp3", 512);
+  sample = minim.loadSample("BLASTWAVEFX_06241.mp3", 512);
 
   gainer = new Gainer(this, Gainer.MODE1);
   gainer.autoUpdate = true;
@@ -98,7 +97,7 @@ void clientEvent(Client someClient) {
 
 // the event handler to handle changes
 // 変化を受けるイベントハンドラ
-void change(PortEvent e)
+void change(PinEvent e)
 {
   if (e.target.number == gainer.analogInput[0]) {
     // send the new absolute position of the paddle
