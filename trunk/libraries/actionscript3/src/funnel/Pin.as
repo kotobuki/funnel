@@ -37,6 +37,7 @@ package funnel
 		* アナログ出力
 		*/		
 		public static const AOUT:uint = 2;
+		public static const PWM:uint = AOUT;
 		
 		/**
 		* デジタル出力
