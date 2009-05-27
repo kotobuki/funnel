@@ -26,7 +26,7 @@ void draw() {
 
 // the event handler to handle changes
 // 変化を受けるイベントハンドラ
-void change(PortEvent e)
+void change(PinEvent e)
 {
   if (e.target.number == gainer.analogInput[0]) {
     brightness = int(e.target.value * 255);

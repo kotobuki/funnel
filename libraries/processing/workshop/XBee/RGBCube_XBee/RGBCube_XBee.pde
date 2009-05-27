@@ -11,10 +11,6 @@ import processing.funnel.*;
  * NOTE:
  * Modified from the original to control Z and X axis by a mouse.
  * Replace the mouseX and mouseY by a physical controller.
- * 
- * ProcessingについてくるサンプルRGBCubeをマウスでコントロールできるように
- * したものをさらに変更してXBeeに接続した加速度センサでコントロールできる
- * ようにしたサンプル。
  */
 
 XBee xbee;
@@ -29,9 +25,6 @@ void setup()
   int ids[] = { 1 };
   xbee = new XBee(this, ids);
 
-  // 加速度センサの値に対して以下の2つのフィルタをセット
-  // 1) スムージング（移動平均）
-  // 2) スケーリング
   Filter f0[] = {
     new Convolution(Convolution.MOVING_AVERAGE),
     new Scaler(0.30, 0.70, -1.0, 1.0, Scaler.LINEAR, true)
@@ -40,8 +33,8 @@ void setup()
     new Convolution(Convolution.MOVING_AVERAGE),
     new Scaler(0.30, 0.70, -1.0, 1.0, Scaler.LINEAR, true)
   };
-  xbee.iomodule(1).port(1).filters = f0;
-  xbee.iomodule(1).port(2).filters = f1;
+  xbee.iomodule(1).pin(1).setFilters(f0);
+  xbee.iomodule(1).pin(2).setFilters(f1);
 } 
  
 void draw() 
@@ -52,8 +45,8 @@ void draw()
  
   translate(width/2, height/2, -30); 
 
-  rotateZ(-asin(xbee.iomodule(1).port(1).value));
-  rotateX(asin(xbee.iomodule(1).port(2).value));
+  rotateZ(-asin(xbee.iomodule(1).pin(1).value));
+  rotateX(asin(xbee.iomodule(1).pin(2).value));
   
   scale(100);
   beginShape(QUADS);

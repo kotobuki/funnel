@@ -15,10 +15,7 @@ void setup()
   gainer= new Gainer(this, Gainer.MODE1);
   gainer.autoUpdate = true;
 
-  Filter filters[] = {
-    new SetPoint(0.6, 0.05)
-  };
-  gainer.analogInput(0).filters = filters;
+  gainer.analogInput(0).addFilter(new SetPoint(0.6, 0.05));
 
   osc = new Osc(this, Osc.SQUARE, 1.0, 0);
   osc.serviceInterval = 30;
@@ -35,7 +32,7 @@ void oscUpdated(Osc osc)
   gainer.led().value = osc.value;
 }
 
-void risingEdge(PortEvent e)
+void risingEdge(PinEvent e)
 {
   if (e.target.number == gainer.analogInput[0]) {
     println("BRIGHT");
@@ -43,7 +40,7 @@ void risingEdge(PortEvent e)
   }
 }
 
-void fallingEdge(PortEvent e)
+void fallingEdge(PinEvent e)
 {
   if (e.target.number == gainer.analogInput[0]) {
     println("DARK");

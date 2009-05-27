@@ -24,7 +24,7 @@ void setup()
 void draw()
 {
   background(0);
-  scope[0].updateAndDraw(xbee.iomodule(1).port(1).value);
-  scope[1].updateAndDraw(xbee.iomodule(1).port(2).value);
-  scope[2].updateAndDraw(xbee.iomodule(1).port(0).value);
+  scope[0].updateAndDraw(xbee.iomodule(1).pin(1).value);
+  scope[1].updateAndDraw(xbee.iomodule(1).pin(2).value);
+  scope[2].updateAndDraw(xbee.iomodule(1).pin(0).value);
 }

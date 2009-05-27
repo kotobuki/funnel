@@ -43,8 +43,8 @@ void setup()
     new Scaler(0.30, 0.70, -1.0, 1.0, Scaler.LINEAR, true)
   };
 
-  fio.iomodule(1).analogPin(1).filters = f0;
-  fio.iomodule(1).analogPin(2).filters = f1;
+  fio.iomodule(1).analogPin(1).setFilters(f0);
+  fio.iomodule(1).analogPin(2).setFilters(f1);
 } 
  
 void draw() 

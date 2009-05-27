@@ -21,10 +21,7 @@ void setup()
   gainer= new Gainer(this, Gainer.MODE1);
   gainer.autoUpdate = true;
 
-  Filter filters[] = {
-    new SetPoint(0.5, 0.0)
-  };
-  gainer.digitalInput(0).filters = filters;
+  gainer.digitalInput(0).addFilter(new SetPoint(0.5, 0.0));
 
   img = loadImage("arch.jpg");
 }
@@ -47,7 +44,7 @@ void draw()
   }
 }
 
-void risingEdge(PortEvent e)
+void risingEdge(PinEvent e)
 {
   if (e.target.number == gainer.digitalInput[0]) {
     gainer.led().value = 1.0;
@@ -62,7 +59,7 @@ void risingEdge(PortEvent e)
   }
 }
 
-void fallingEdge(PortEvent e)
+void fallingEdge(PinEvent e)
 {
   if (e.target.number == gainer.digitalInput[0]) {
     gainer.led().value = 0.0;
