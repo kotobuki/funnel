@@ -12,16 +12,11 @@ int R = 3;
 int G = 10;
 int B = 11;
 
-
 Osc osc_r,osc_g,osc_b;
-
-
 
 void setup()
 {
-  size(400,130);
-  frameRate(25);
-  
+  size(200,200);
   
   Configuration config = Fio.FIRMATA;
   config.setDigitalPinMode(R,Fio.PWM);
@@ -29,9 +24,7 @@ void setup()
   config.setDigitalPinMode(B,Fio.PWM);
   
   int[] nodeIDs = {1};
-  
   fio = new Fio(this,nodeIDs,config);
-  fio.autoUpdate = true;
  
   osc_r = new Osc(this,Osc.SIN,0.5,1,0,0,0);
   osc_r.serviceInterval = 1;
@@ -48,9 +41,7 @@ void setup()
   osc_b.addEventListener(Osc.UPDATE,"oscUpdated");
   osc_b.start();
   
-  frameRate(1);
-  
-  noLoop();
+  colorMode(RGB,1.0);
 }
 
 void oscUpdated(Osc osc)
@@ -59,12 +50,14 @@ void oscUpdated(Osc osc)
   fio.iomodule(1).digitalPin(G).value = osc_g.value;
   fio.iomodule(1).digitalPin(B).value = osc_b.value;
   //println(osc_r.value + " " + osc_g.value + " " + osc_b.value);
+  
+  background(osc_r.value,osc_g.value,osc_b.value);
 }
 
 
 void draw()
 {
-  background(0);
+
 }
   
 

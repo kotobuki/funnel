@@ -18,8 +18,6 @@ void setup()
   
   int[] nodeIDs = {1};
   fio = new Fio(this,nodeIDs,config);
-  fio.autoUpdate = true;
-
 }
 
 void draw()
@@ -28,7 +26,6 @@ void draw()
   
   float val = float(mouseX)/width;
   fio.iomodule(1).digitalPin(ledPin).value = val;
-
 }
   
 
