@@ -2,6 +2,7 @@ package funnel
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.utils.getTimer;
 	
 	/**
 	 * @copy PinEvent#CHANGE
@@ -24,24 +25,24 @@ package funnel
 	public class Pin extends EventDispatcher
 	{
 		/**
-		* アナログ入力
-		*/		
+		 * アナログ入力
+		 */
 		public static const AIN:uint = 0;
-		
+
 		/**
-		* デジタル入力
-		*/		
+		 * デジタル入力
+		 */
 		public static const DIN:uint = 1;
-		
+
 		/**
-		* アナログ出力
-		*/		
+		 * アナログ出力
+		 */
 		public static const AOUT:uint = 2;
 		public static const PWM:uint = AOUT;
-		
+
 		/**
-		* デジタル出力
-		*/		
+		 * デジタル出力
+		 */
 		public static const DOUT:uint = 3;
 		
 		private var _value:Number;
@@ -56,6 +57,9 @@ package funnel
 		private var _maximum:Number;
 		private var _numSamples:Number;
 		private static const MAX_SAMPLES:Number = Number.MAX_VALUE;
+		private var _debounceInterval:int;
+		private var _lastRisingEdge:int;
+		private var _lastFallingEdge:int;
 		
 		/**
 		 * 
@@ -73,6 +77,9 @@ package funnel
 			_average = 0;
 			_sum = 0;
 			_numSamples = 0;
+			_debounceInterval = 0;
+			_lastRisingEdge = 0;
+			_lastFallingEdge = 0;
 		}
 		
 		/**
@@ -149,6 +156,25 @@ package funnel
 			return _filters;
 		}
 		
+
+		/**
+		 * 
+		 * @param interval set interval for debouncing
+		 * 
+		 */
+		public function set debounceInterval(interval:int):void {
+			_debounceInterval = interval;
+		}
+
+		/**
+		 * 
+		 * @param interval get interval for debouncing
+		 * 
+		 */
+		public function get debounceInterval():int {
+			return _debounceInterval;
+		}
+
 		public function set filters(array:Array):void {
 			if (_generator != null) {
 				_generator.removeEventListener(GeneratorEvent.UPDATE, autoSetValue);
@@ -239,14 +265,17 @@ package funnel
 		private function detectEdge(oldValue:Number, newValue:Number):void {
 			if (oldValue == newValue) return;
 
+			var now:int = getTimer();
+
 			dispatchEvent(new PinEvent(PinEvent.CHANGE));
 			
-			if (oldValue == 0 && newValue != 0) {
+			if ((oldValue == 0 && newValue != 0) && ((now - _lastRisingEdge) >= _debounceInterval)) {
 				dispatchEvent(new PinEvent(PinEvent.RISING_EDGE));
-			} else if (oldValue != 0 && newValue == 0) {
+				_lastRisingEdge = now;
+			} else if ((oldValue != 0 && newValue == 0) && ((now - _lastFallingEdge) >= _debounceInterval)) {
 				dispatchEvent(new PinEvent(PinEvent.FALLING_EDGE));
+				_lastFallingEdge = now;
 			}
-
 		}
 		
 		private function applyFilters(val:Number):Number {
