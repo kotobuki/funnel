@@ -4,6 +4,9 @@ import interfascia.*;
 final int COORDINATOR = 0;
 final int END_DEVICES = 1;
 
+final int BAUDRATE_19200 = 4;
+final int BAUDRATE_57600 = 6;
+
 GUIController gui;
 IFRadioController portRadioButtons;
 IFLabel l;
@@ -19,6 +22,10 @@ IFRadioController modeRadioButtons;
 IFLabel modeButtonsLabel;
 IFRadioButton[] modeButton;
 
+IFRadioController baudRateRadioButtons;
+IFLabel baudRateButtonsLabel;
+IFRadioButton[] baudRateButton;
+
 IFButton configureButton;
 IFButton exitButton;
 IFButton readButton;
@@ -29,6 +36,7 @@ IFLabel statusBaudRate;
 IFLabel statusSerialNumberHigh;
 IFLabel statusSerialNumberLow;
 IFLabel statusFirmwareVersion;
+int baudRate;
 
 Serial serialPort;
 
@@ -48,7 +56,7 @@ final String[] SUPPORTED_FIRMWARE_VERSIONS = {
   "10A5", "10CD"};
 
 void setup() {
-  size(500, 400);
+  size(500, 600);
   background(150);
 
   int y = 20;
@@ -85,6 +93,19 @@ void setup() {
   y += 20;
   modeButton[1] = new IFRadioButton("End Devices", 20, y, modeRadioButtons);
   gui.add(modeButton[1]);
+
+  y += 38;
+  baudRateRadioButtons = new IFRadioController("Baud Rate Selector");
+  baudRateRadioButtons.addActionListener(this);
+  baudRateButtonsLabel = new IFLabel("Baud rate", 20, y, 12);
+  gui.add(baudRateButtonsLabel);
+  y += 14;
+  baudRateButton = new IFRadioButton[2];
+  baudRateButton[0] = new IFRadioButton("19200 (for ATmega168)", 20, y, baudRateRadioButtons);
+  gui.add(baudRateButton[0]);
+  y += 20;
+  baudRateButton[1] = new IFRadioButton("57600 (for ATmega328)", 20, y, baudRateRadioButtons);
+  gui.add(baudRateButton[1]);
 
   y += 38;
   idLabel = new IFLabel ("PAN ID", 20, y);
@@ -157,6 +178,12 @@ void actionPerformed(GUIEvent e) {
     myLabel.setX(20);
     myTextField.setX(20);
   }
+  else if (e.getSource() == baudRateButton[0]) {
+    baudRate = BAUDRATE_19200;
+  }
+  else if (e.getSource() == baudRateButton[1]) {
+    baudRate = BAUDRATE_57600;    
+  }
 }
 
 void configureXBeeModem() {
@@ -167,6 +194,11 @@ void configureXBeeModem() {
 
   if (modeRadioButtons.getSelectedIndex() < 0) {
     statusTextLabel.setLabel("Please select a proper mode.");
+    return;
+  }
+
+  if (baudRateRadioButtons.getSelectedIndex() < 0) {
+    statusTextLabel.setLabel("Please select a proper baud rate.");
     return;
   }
 
@@ -225,7 +257,7 @@ void configureXBeeModem() {
       return;
     }
 
-    serialPort.write("ATBD4,");
+    serialPort.write("ATBD" + baudRate + ",");
     serialPort.write("ID" + Integer.toString(id, 16) + ",");
     serialPort.write("MY" + Integer.toString(my, 16) + ",");
     serialPort.write("DLFFFF,D33,IC8,RR3,RO10,WR\r");
@@ -241,7 +273,7 @@ void configureXBeeModem() {
       return;
     }
 
-    serialPort.write("ATBD4,");
+    serialPort.write("ATBD" + baudRate + ",");
     serialPort.write("ID" + Integer.toString(id, 16) + ",");
     serialPort.write("MY" + Integer.toString(my, 16) + ",");
     serialPort.write("DL0,D35,IU0,IAFFFF,RO10,WR\r");
@@ -290,6 +322,13 @@ void showSetting(int command, String reply) {
   switch(command){
   case 0: // Baud Rate
     statusBaudRate.setLabel("Baud rate: " + BAUD_RATES[Integer.parseInt(reply)]);
+    if (Integer.parseInt(reply) == BAUDRATE_19200) {
+      baudRateRadioButtons.selectButton(baudRateButton[0]);
+    } else if (Integer.parseInt(reply) == BAUDRATE_57600) {
+      baudRateRadioButtons.selectButton(baudRateButton[1]);
+    } else {
+      baudRateRadioButtons.deselectAll();
+    }
     break;
   case 1: // ID
     idTextField.setValue(reply);
