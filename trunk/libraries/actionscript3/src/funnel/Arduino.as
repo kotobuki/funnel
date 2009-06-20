@@ -62,6 +62,14 @@ package funnel
 		public function digitalPin(pinNum:uint):Pin {
 			return _pin(_digitalPins[pinNum]);
 		}
+
+		public function sendFirmataString(stringToSend:String):void {
+			ioModule(0).sendFirmataString(stringToSend);
+		}
+
+		public function sendSysexMessage(command:uint, message:Array):void {
+			ioModule(0).sendSysex(command, message);
+		}
 		
 	}
 }
