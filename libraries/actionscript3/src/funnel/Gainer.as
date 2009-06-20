@@ -176,7 +176,7 @@ package funnel
 		 * @param portNum ポート番号
 		 * @param samplingInterval サンプリング間隔(ms)
 		 */
-		public function Gainer(config:Configuration = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
+		public function Gainer(config:Configuration = null, host:* = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
 			if (config == null) config = MODE1;
 			super([config], host, portNum, samplingInterval);
 			
