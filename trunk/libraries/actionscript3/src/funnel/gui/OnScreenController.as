@@ -55,7 +55,7 @@ package funnel.gui {
 
 		private var _width:int;
 
-		public function OnScreenController(label:String, width:int = 128, type:uint = ANALOG) {
+		public function OnScreenController(label:String, width:int = 128, type:uint = ANALOG, enableMouseControl:Boolean = true) {
 			super();
 			_width = (width < MINIMUM_WIDTH) ? MINIMUM_WIDTH : width;
 			_type = type;
@@ -80,15 +80,8 @@ package funnel.gui {
 			_knob.graphics.endFill();
 			_knob.x = _barLeft;
 			_knob.y = 2 + (_barHeight / 2);
-			_knob.buttonMode = true;
+			_knob.buttonMode = enableMouseControl;
 			addChild(_knob);
-
-			if (type == ANALOG) {
-				_knob.addEventListener(MouseEvent.MOUSE_DOWN, sliderModeMouseDownHandler);
-			} else {
-				_knob.addEventListener(MouseEvent.MOUSE_DOWN, buttonModeMouseDownHandler);
-				_knob.addEventListener(MouseEvent.MOUSE_UP, buttonModeMouseUpHandler);
-			}
 
 			_label = new TextField();
 			_label.width = LABEL_WIDTH - 2;
@@ -99,6 +92,17 @@ package funnel.gui {
 			_label.defaultTextFormat = new TextFormat('Verdana', 8, 0xE0E0E0, null, null, null, null, null, TextFormatAlign.RIGHT);
 			_label.text = label;
 			addChild(_label);
+
+			if (!enableMouseControl) {
+				return;
+			}
+
+			if (type == ANALOG) {
+				_knob.addEventListener(MouseEvent.MOUSE_DOWN, sliderModeMouseDownHandler);
+			} else {
+				_knob.addEventListener(MouseEvent.MOUSE_DOWN, buttonModeMouseDownHandler);
+				_knob.addEventListener(MouseEvent.MOUSE_UP, buttonModeMouseUpHandler);
+			}
 		}
 
 		public function get value():Number {
