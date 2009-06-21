@@ -176,11 +176,11 @@ package funnel
 		 * @param config コンフィギュレーション。指定しない場合はGainer.MODE1
 		 * @param host ホスト名
 		 * @param portNum ポート番号
-		 * @param samplingInterval サンプリング間隔(ms)
+		 * @param parent Gainerオブジェクトのオーナー（Spriteなど）
 		 */
 		public function Gainer(config:Configuration = null, host:String = "localhost", portNum:Number = 9000, parent:Sprite = null) {
 			if (config == null) config = MODE1;
-			super([config], host, portNum, samplingInterval, parent);
+			super([config], host, portNum, 33, parent);
 			
 			_pin = ioModule(config.moduleID).pin;
 			_ainPins = config.ainPins;
