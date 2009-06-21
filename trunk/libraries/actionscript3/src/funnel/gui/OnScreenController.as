@@ -55,7 +55,7 @@ package funnel.gui {
 
 		private var _width:int;
 
-		public function OnScreenController(label:String, width:int = 128, type:uint = ANALOG, enableMouseControl:Boolean = true) {
+		public function OnScreenController(label:String, width:int = 128, type:uint = ANALOG, isInput:Boolean = true) {
 			super();
 			_width = (width < MINIMUM_WIDTH) ? MINIMUM_WIDTH : width;
 			_type = type;
@@ -80,7 +80,7 @@ package funnel.gui {
 			_knob.graphics.endFill();
 			_knob.x = _barLeft;
 			_knob.y = 2 + (_barHeight / 2);
-			_knob.buttonMode = enableMouseControl;
+			_knob.buttonMode = isInput;
 			addChild(_knob);
 
 			_label = new TextField();
@@ -93,7 +93,7 @@ package funnel.gui {
 			_label.text = label;
 			addChild(_label);
 
-			if (!enableMouseControl) {
+			if (!isInput) {
 				return;
 			}
 
