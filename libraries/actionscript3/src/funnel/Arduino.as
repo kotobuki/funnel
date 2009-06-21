@@ -1,5 +1,7 @@
 package funnel
 {
+	import flash.display.Sprite;
+	
 	/**
 	 * ArduinoクラスはファームウェアとしてFirmataを搭載したArduinoをI/Oモジュールとして扱うためのクラスです。
 	 * 
@@ -34,9 +36,9 @@ package funnel
 		 * @param portNum ポート番号
 		 * @param samplingInterval サンプリング間隔(ms)
 		 */			
-		public function Arduino(config:Configuration = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
+		public function Arduino(config:Configuration = null, host:String = "localhost", portNum:Number = 9000, parent:Sprite = null) {
 			if (config == null) config = FIRMATA;
-			super([config], host, portNum, samplingInterval);
+			super([config], host, portNum, 33, parent);
 			
 			_pin = ioModule(0).pin;
 			_analogPins = config.analogPins;
