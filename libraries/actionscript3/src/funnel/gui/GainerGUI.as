@@ -47,13 +47,13 @@ package funnel.gui {
 				_din[i] = new OnScreenController("din " + i, 58, OnScreenController.DIGITAL_TOGGLE);
 				_din[i].y = offset;
 				_din[i].value = 0;
-				_ain[i].addEventListener(Event.CHANGE, onDigitalInputChange);
+				_din[i].addEventListener(Event.CHANGE, onDigitalInputChange);
 				addChild(_din[i]);
 				offset += 16;
 			}
 
 			offset += 4;
-			_led = new OnScreenController("LED", 58, OnScreenController.DIGITAL_MOMENTARY);
+			_led = new OnScreenController("LED", 58, OnScreenController.DIGITAL_MOMENTARY, false);
 			_led.x = 128 - 58;
 			_led.y = offset;
 			_led.value = 0;
@@ -62,7 +62,7 @@ package funnel.gui {
 			offset = 0;
 			_aout = new Array(Gainer.MODE1.aoutPins.length);
 			for (i = 0; i < _aout.length; i++) {
-				_aout[i] = new OnScreenController("aout " + i, 128, OnScreenController.ANALOG);
+				_aout[i] = new OnScreenController("aout " + i, 128, OnScreenController.ANALOG, false);
 				_aout[i].x = 128 + 16;
 				_aout[i].y = offset;
 				_aout[i].value = 0;
@@ -73,7 +73,7 @@ package funnel.gui {
 			offset += 4;
 			_dout = new Array(Gainer.MODE1.doutPins.length);
 			for (i = 0; i < _dout.length; i++) {
-				_dout[i] = new OnScreenController("dout " + i, 58, OnScreenController.DIGITAL_TOGGLE);
+				_dout[i] = new OnScreenController("dout " + i, 58, OnScreenController.DIGITAL_TOGGLE, false);
 				_dout[i].x = 128 + 16;
 				_dout[i].y = offset;
 				_dout[i].value = 0;
