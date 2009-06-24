@@ -68,6 +68,8 @@ package funnel
 		*/
 		public var moduleID:uint;
 
+		private var _powerPinsAreEnabled:Boolean = false;
+
 		/**
 		 * デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。
 		 * @param pinNum ピン番号
@@ -85,6 +87,14 @@ package funnel
 			} else {
 				throw new ArgumentError("mode #" + mode +" is not available");
 			}
+		}
+
+		public function enablePowerPins():void {
+			_powerPinsAreEnabled = true;
+		}
+
+		public function get powerPinsAreEnabled():Boolean {
+			return _powerPinsAreEnabled;
 		}
 
 		public function clone():Configuration {
