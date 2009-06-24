@@ -74,7 +74,7 @@ package funnel.i2c {
 		 *
 		 */
 		public function WiiNunchuck(ioModule:*, isReadContinuous:Boolean = true, address:uint = 0x52) {
-			super(ioModule, address);
+			super(ioModule, address, 150);	// set I2C delay to 150uS (or higher)
 
 			_address = address;
 			_isReadContinuous = isReadContinuous;
