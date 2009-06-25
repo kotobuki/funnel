@@ -55,10 +55,16 @@ package funnel.gui {
 
 		private var _width:int;
 
-		public function OnScreenController(label:String, width:int = 128, type:uint = ANALOG, isInput:Boolean = true) {
+		private var _min:Number;
+
+		private var _max:Number;
+
+		public function OnScreenController(label:String, width:int = 128, type:uint = ANALOG, isInput:Boolean = true, min:Number = 0, max:Number = 1) {
 			super();
 			_width = (width < MINIMUM_WIDTH) ? MINIMUM_WIDTH : width;
 			_type = type;
+			_min = min;
+			_max = max;
 			_barHeight = HEIGHT - 2 - 2;
 
 			_base = new Shape();
@@ -106,11 +112,11 @@ package funnel.gui {
 		}
 
 		public function get value():Number {
-			return _value;
+			return scale(_value, 0, 1, _min, _max);
 		}
 
 		public function set value(newValue:Number):void {
-			_value = newValue;
+			_value = scale(newValue, _min, _max);
 			_value = Math.max(0, Math.min(1, _value));
 
 			if (_type == ANALOG) {
@@ -154,6 +160,12 @@ package funnel.gui {
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, stageMouseMoveHandler);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stageMouseUpHandler, true);
 			e.stopPropagation();
+		}
+
+		private function scale(input:Number, inMin:Number, inMax:Number, outMin:Number = 0, outMax:Number = 1):Number {
+			var inRange:Number = inMax - inMin;
+			var outRange:Number = outMax - outMin;
+			return ((input - inMin) / inRange) * outRange + outMin;
 		}
 
 	}
