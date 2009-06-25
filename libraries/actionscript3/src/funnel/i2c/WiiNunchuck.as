@@ -11,11 +11,11 @@ package funnel.i2c {
 	 */
 	public class WiiNunchuck extends I2CDevice implements IEventDispatcher {
 
-		private static const SENSOR_DATA_REGISTER:uint = 0x00;
-
 		private static const CALIBRATION_DATA_REGISTER:uint = 0x20;
 
 		private static const NUM_SENSOR_DATA_BYTES:uint = 6;
+
+		private static const SENSOR_DATA_REGISTER:uint = 0x00;
 
 		private var _accelerometer1GRangeX:int = 256;
 
@@ -74,7 +74,7 @@ package funnel.i2c {
 		 *
 		 */
 		public function WiiNunchuck(ioModule:*, isReadContinuous:Boolean = true, address:uint = 0x52) {
-			super(ioModule, address, 150);	// set I2C delay to 150uS (or higher)
+			super(ioModule, address, 150); // set I2C delay to 150uS (or higher)
 
 			_address = address;
 			_isReadContinuous = isReadContinuous;
@@ -90,6 +90,16 @@ package funnel.i2c {
 
 		public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void {
 			_dispatcher.addEventListener(type, listener, useCapture, priority);
+		}
+
+		/**
+		 *
+		 *
+		 * @return
+		 *
+		 */
+		public function get cButton():Number {
+			return _cButton;
 		}
 
 		public function dispatchEvent(evt:Event):Boolean {
@@ -142,7 +152,6 @@ package funnel.i2c {
 		 *
 		 */
 		public function get joystickX():Number {
-			// TODO: use calibration data stored in a controller to normalize
 			return _joystickX;
 		}
 
@@ -153,7 +162,6 @@ package funnel.i2c {
 		 *
 		 */
 		public function get joystickY():Number {
-			// TODO: use calibration data stored in a controller to normalize
 			return _joystickY;
 		}
 
@@ -204,6 +212,16 @@ package funnel.i2c {
 			return _z;
 		}
 
+		/**
+		 *
+		 *
+		 * @return
+		 *
+		 */
+		public function get zButton():Number {
+			return _zButton;
+		}
+
 		private function decodeByte(x:int):int {
 			x = (x ^ 0x17) + 0x17;
 			return x;
@@ -227,9 +245,6 @@ package funnel.i2c {
 			_accelerometer1GRangeX = (int(data[6]) << 2) + ((int(data[9]) >> 0) & 0x03) - _accelerometerCenterX;
 			_accelerometer1GRangeY = (int(data[7]) << 2) + ((int(data[9]) >> 2) & 0x03) - _accelerometerCenterY;
 			_accelerometer1GRangeZ = (int(data[8]) << 2) + ((int(data[9]) >> 4) & 0x03) - _accelerometerCenterZ;
-
-			trace("Calibration data: " + data);
-			trace([_accelerometerCenterX, _accelerometer1GRangeX]);
 		}
 
 		private function handleData(data:Array):void {

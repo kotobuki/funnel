@@ -98,6 +98,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	private final static Float FLOAT_ZERO = new Float(0.0f);
 	private int ainReceiveCount = 0;
 
+	private final static int REALTIME_COMMAND_TIMEOUT = 100;
+
+	// private final static int NONREALTIME_COMMAND_TIMEOUT = 1000;
+
 	public GainerIO(FunnelServer server, String serialPortName) {
 
 		this.parent = server;
@@ -393,7 +397,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 					if (FLOAT_ZERO.equals(arguments[index])) {
 						write("l*"); //$NON-NLS-1$
 						try {
-							ledCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+							ledCommandQueue.poll(REALTIME_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -401,7 +405,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 					} else {
 						write("h*"); //$NON-NLS-1$
 						try {
-							ledCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+							ledCommandQueue.poll(REALTIME_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -443,7 +447,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 					if (FLOAT_ZERO.equals(arguments[index])) {
 						write("l*"); //$NON-NLS-1$
 						try {
-							ledCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+							ledCommandQueue.poll(REALTIME_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -451,7 +455,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 					} else {
 						write("h*"); //$NON-NLS-1$
 						try {
-							ledCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+							ledCommandQueue.poll(REALTIME_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -476,7 +480,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 				if (hasAnalogValues) {
 					// let's pop the queue to clear
 					try {
-						aoutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+						aoutCommandQueue.poll(REALTIME_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -678,7 +682,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			s += "*"; //$NON-NLS-1$
 			write(s);
 			try {
-				aoutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+				aoutCommandQueue.poll(REALTIME_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -708,7 +712,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		write(s);
 		if (!async) {
 			try {
-				aoutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+				aoutCommandQueue.poll(REALTIME_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -743,7 +747,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			String s = "D" + sv + "*";
 			write(s);
 			try {
-				doutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+				doutCommandQueue.poll(REALTIME_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -759,7 +763,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			String s = "H" + Integer.toHexString(outChannel).toUpperCase() + "*"; //$NON-NLS-1$ //$NON-NLS-2$
 			write(s);
 			try {
-				doutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+				doutCommandQueue.poll(REALTIME_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -775,7 +779,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			String s = "L" + Integer.toHexString(outChannel).toUpperCase() + "*"; //$NON-NLS-1$ //$NON-NLS-2$
 			write(s);
 			try {
-				doutCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
+				doutCommandQueue.poll(REALTIME_COMMAND_TIMEOUT, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -40,8 +40,9 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected static final int FIRMATA_STRING = 0x71;
 	protected static final int I2C_REQUEST = 0x76;
 	protected static final int I2C_REPLY = 0x77;
-	protected static final int SAMPLING_INTERVAL = 0x78;
+	protected static final int I2C_CONFIG = 0x78;
 	protected static final int REPORT_FIRMWARE = 0x79;
+	protected static final int SAMPLING_INTERVAL = 0x7A;
 	protected static final int SYSEX_NON_REALTIME = 0x7E;
 	protected static final int SYSEX_REALTIME = 0x7F;
 
