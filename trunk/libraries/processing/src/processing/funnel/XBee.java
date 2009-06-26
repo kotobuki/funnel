@@ -1,5 +1,11 @@
 package processing.funnel;
 
+import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import com.illposed.osc.OSCMessage;
+
 import processing.core.PApplet;
 
 public final class XBee extends IOSystem{
@@ -16,6 +22,10 @@ public final class XBee extends IOSystem{
 	public static final int DIN = PORT_DIN;
 	public static final int OUT = PORT_DOUT;
 
+	private HashSet<Integer> nodes = new HashSet<Integer>();
+	private int[] IDs;
+	private Configuration config;
+	
 	
 	//XBee 802.15.4
 	private static final int[] multipoint = {
@@ -40,23 +50,29 @@ public final class XBee extends IOSystem{
 	public XBee(PApplet parent, String hostName,
 			int commandPortNumber,int samplingInterval,int[] IDs,Configuration config){
 		super(parent,hostName,commandPortNumber,samplingInterval,config);
-
-		if(!initialize(moduleID,config)){
-			errorMessage("Funnel configuration error!");
-		}
-		for(int i=0;i<IDs.length;i++){
-			String name = "xbee." + i;
-			addModule(IDs[i],config,name);
-		}
+		
+		regModule(IDs,config);
+		this.IDs = IDs;
+		this.config = config;
 		
 		initPorts(_a,_d);
-		
+
 		startIOSystem();
+		
+		if(withoutServer){
+			if(!initialize(config)){
+				errorMessage("Funnel configuration error!");
+			}else{
+				thread = new Thread(this,"funnelServiceThread");
+				thread.start();
+			}
+		}
+
 	}
 	
 	public XBee(PApplet parent,int[] IDs){	
 		this(parent,"localhost",CommandPort.defaultPort,
-				33,IDs,MULTIPOINT);
+				33,IDs, MULTIPOINT);
 	}
 	
 	public XBee(PApplet parent, int[] IDs, Configuration config){
@@ -77,9 +93,93 @@ public final class XBee extends IOSystem{
 				samplingInterval,IDs,config);
 	}
 	
+	@Override
+	protected boolean startIOSystem(){
 
+		beginPolling();
+		
+		new NotifyTokenizer(this,client.commandPort);		
+		
+		return true;
+	}
 	
+	//それぞれのエンドデバイスを仮登録
+	private void regModule(int[] IDs,Configuration config){
+		System.out.println("modules registered [XBee]");
+		NumberFormat nf = NumberFormat.getInstance();
+		nf.setMinimumIntegerDigits(2);
+		
+		for(int i=0;i<IDs.length;i++){
+		
+			String name = "XBee.ID" + nf.format(IDs[i]);
+			addModule(IDs[i],config,name);
+		}
+	}
 	
+	@Override
+	protected void interpretMessage(OSCMessage message){
+		
+//		System.out.print("interpret " + message.getAddress() + "   ");
+//		for(int i=0;i<message.getArguments().length;i++){
+//			System.out.print(message.getArguments()[i] + "   " );
+//		}
+//		System.out.println( " " );
+		
+		if(message.getAddress().equals("/in") &&initialized){
+			
+			int id = ((Integer)message.getArguments()[0]).intValue();
+			int n = ((Integer)message.getArguments()[1]).intValue();
+			
+			if(nodes.contains(id)){
+				
+				try{
+					IOModule io = iomodules.get(id);
+					for(int i=2;i<message.getArguments().length;i++){
+						
+						//入力ポートを更新する
+						int nPort = n+i-2;
+						io.pin(nPort).updateInput(((Float)message.getArguments()[i]).floatValue());
+			
+					}
+				}catch(NullPointerException e){
+					errorMessage("Not match your end device MY.");
+				}			
+			}
+
+		}
+		
+		if(message.getAddress().equals("/node")){
+			
+			if(!initialized){
+				int n = message.getArguments().length;
+
+				if(n == 2){
+					
+//					String name = (String)message.getArguments()[1];
+					
+					int my = ((Integer)message.getArguments()[0]).intValue();
+					if(Arrays.binarySearch(IDs, my)>=0){
+						nodes.add(my);
+					}
+					
+					
+					if(nodes.size() == IDs.length){
+
+						if(!initialize(config)){
+							errorMessage("Funnel configuration error!");
+						}else{
+							thread = new Thread(this,"funnelServiceThread");
+							thread.start();
+						}
+					}
+				}
+			}
+	
+		}
+
+	}
+	
+	@Override
 	protected void startingServer(){
 		waitingServer(moduleName);
 	}

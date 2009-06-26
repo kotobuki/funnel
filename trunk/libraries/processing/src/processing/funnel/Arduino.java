@@ -43,7 +43,8 @@ public final class Arduino extends Firmata{
 			int commandPortNumber ,int samplingInterval,Configuration config){
 		super(parent,hostName,commandPortNumber,samplingInterval,config);
 		
-		if(!initialize(moduleID,config)){
+		
+		if(!initialize(config)){
 			errorMessage("Funnel configuration error!");
 		}
 		addModule(moduleID,config,config.getModuleName());

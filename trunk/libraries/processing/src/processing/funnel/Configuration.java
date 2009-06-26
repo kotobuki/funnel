@@ -10,8 +10,8 @@ import java.util.Vector;
 public final class Configuration{
 
 	int[] pinsStatus;
-	final int moduleID;
-	final String moduleName;
+	public final int moduleID;
+	public final String moduleName;
 	
 	public Vector<Integer> outputPins = new Vector<Integer>();
 	

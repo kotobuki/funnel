@@ -1,13 +1,14 @@
 package processing.funnel;
 
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import com.illposed.osc.OSCMessage;
 
 
-
 import processing.core.PApplet;
+
 
 /**
  * @author endo
@@ -41,17 +42,17 @@ public final class Fio extends Firmata{
 	static final int[] _a = {14,15,16,17,18,19,20,21};
 	static final int[] _d = {0,1,2,3,4,5,6,7,8,9,10,11,12,13};
 	
-	private Configuration config;
 
 	private HashSet<Integer> nodes = new HashSet<Integer>();
-	private int nodeSize;
+	private int[] IDs;
+	private Configuration config;
 	
 	public Fio(PApplet parent, String hostName,
 			int commandPortNumber,int samplingInterval,int[] IDs,Configuration config){
 		super(parent,hostName,commandPortNumber,samplingInterval,config);
 
 		regModule(IDs,config);
-		nodeSize = IDs.length;
+		this.IDs = IDs;
 
 
 		this.config = config;
@@ -60,6 +61,14 @@ public final class Fio extends Firmata{
 
 		startIOSystem();
 		
+		if(withoutServer){
+			if(!initialize(config)){
+				errorMessage("Funnel configuration error!");
+			}else{
+				thread = new Thread(this,"funnelServiceThread");
+				thread.start();
+			}
+		}
 		
 	}
 	
@@ -81,10 +90,21 @@ public final class Fio extends Firmata{
 		this(parent,"localhost",commandPortNumber,
 				samplingInterval,IDs,config);
 	}
-
 	
+	protected boolean startIOSystem(){
+
+		beginPolling();
+		
+
+		
+		new NotifyTokenizer(this,client.commandPort);		
+		
+		return true;
+	}
+
+	//それぞれのエンドデバイス
 	private void regModule(int[] IDs,Configuration config){
-		System.out.println("regModule() Fio");
+		System.out.println("module registerd  [Fio]");
 		NumberFormat nf = NumberFormat.getInstance();
 		nf.setMinimumIntegerDigits(2);
 		
@@ -102,43 +122,66 @@ public final class Fio extends Firmata{
 //			System.out.print(message.getArguments()[i] + "   " );
 //		}
 //		System.out.println( " " );
-	if(message.getAddress().equals("/in") ){
-
-		int id = ((Integer)message.getArguments()[0]).intValue();
-		int n = ((Integer)message.getArguments()[1]).intValue();
 		
-		try{
-			IOModule io = iomodules.get(id);
-			for(int i=2;i<message.getArguments().length;i++){
+		if(message.getAddress().equals("/in") &&initialized){
+			
+			int id = ((Integer)message.getArguments()[0]).intValue();
+			int n = ((Integer)message.getArguments()[1]).intValue();
+			
+			if(nodes.contains(id)){
 				
-				//入力ポートを更新する
-				int nPort = n+i-2;
-				io.pin(nPort).updateInput(((Float)message.getArguments()[i]).floatValue());
-	
+				try{
+					IOModule io = iomodules.get(id);
+					for(int i=2;i<message.getArguments().length;i++){
+						
+						//入力ポートを更新する
+						int nPort = n+i-2;
+						io.pin(nPort).updateInput(((Float)message.getArguments()[i]).floatValue());
+			
+					}
+				}catch(NullPointerException e){
+					errorMessage("Not match your end device MY.");
+				}			
 			}
-		}catch(NullPointerException e){
-			errorMessage("Not match your MY(end devices).");
+
 		}
+		
+		if(message.getAddress().equals("/node")){
+			
+			if(!initialized){
+				int n = message.getArguments().length;
+
+				if(n == 2){
+					
+//					String name = (String)message.getArguments()[1];
+					
+					int my = ((Integer)message.getArguments()[0]).intValue();
+					if(Arrays.binarySearch(IDs, my)>=0){
+						nodes.add(my);
+					}
+					
+					
+					if(nodes.size() == IDs.length){
+
+						if(!initialize(config)){
+							errorMessage("Funnel configuration error!");
+						}else{
+							thread = new Thread(this,"funnelServiceThread");
+							thread.start();
+						}
+					}
+				}
+			}
+	
+		}
+
+
 	}
 	
-	if(message.getAddress().equals("/node")){
-
-		int my = ((Integer)message.getArguments()[0]).intValue();
-		nodes.add(my);
-
-		if(nodes.size()==nodeSize && !initialized){
-			if(!initialize(moduleID,config)){
-				errorMessage("Funnel configuration error!");
-			}		
-		}
-
-	}
-
-}
-	
-	
+	@Override
 	protected void startingServer(){
 		waitingServer(moduleName);
 	}
 	
+
 }

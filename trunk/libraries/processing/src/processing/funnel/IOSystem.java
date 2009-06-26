@@ -33,14 +33,14 @@ public class IOSystem implements Runnable{
 	protected HashMap<Integer, IOModule> iomodules = new HashMap<Integer, IOModule>();
 	
 	private final int TIMEOUT = 1000; 
-	private OSCClient client;
+	protected OSCClient client;
 	
 	/**
 	 * autoUpdate=trueの送信時の更新間隔
 	 */
 	private int updateInterval = 33;	
 
-	private Thread thread=null;
+	protected Thread thread=null;
 	protected boolean initialized = false;
 	
 
@@ -78,6 +78,7 @@ public class IOSystem implements Runnable{
 			new CommandTokenizer(this,client.commandPort);
 			waitQueue = new LinkedList<String>();
 
+			reboot();
 		}else{
 			errorMessage("Funnel server could not open !");
 		}
@@ -215,7 +216,7 @@ public class IOSystem implements Runnable{
 			}
 
 
-		if(quitServer){
+		if(quitServer && !withoutServer){
 			quit();
 		}
 
@@ -310,6 +311,7 @@ public class IOSystem implements Runnable{
 	//answer : 戻り値を確認する
 	protected boolean execCode(String code,Object args[],boolean answer){
 		try {
+	
 			client.sendFunnel(code,args);
 			if(answer){
 				waitAnswer = true;
@@ -334,11 +336,11 @@ public class IOSystem implements Runnable{
 		return true;
 	}
 	
-	protected boolean initialize(int moduleID,Configuration config){
+	protected boolean initialize(Configuration config){
 		
-		reboot();
+		//reboot();
 
-		if(!configuration(moduleID,config.getPortStatus())){
+		if(!configuration(config.moduleID, config.getPortStatus())){
 			return false;
 		}
 
@@ -363,21 +365,22 @@ public class IOSystem implements Runnable{
 	}
 	
 	
-	private void reboot(){
+	protected void reboot(){
 
 		execCode("/reset",true);
 
 	}
 	
-	private void quit(){
+	protected void quit(){
 		execCode("/quit",true);
 	}
 	
 	
-	private boolean configuration(int id,int[] config){
+	protected boolean configuration(int id,int[] config){
 
 		Object args[] = new Object[config.length+1];
 		args[0] = new Integer(id);
+		
 		for(int i=0;i<config.length;i++){
 			args[i+1] = new Integer(config[i]);
 		}
@@ -387,7 +390,7 @@ public class IOSystem implements Runnable{
 		return true;
 	}
 	
-	private void setSamplingInterval(int ms){
+	protected void setSamplingInterval(int ms){
 		Object args[] = new Object[1];
 		args[0] = new Integer(ms);
 		
@@ -395,7 +398,7 @@ public class IOSystem implements Runnable{
 
 	}
 	
-	private void beginPolling(){
+	protected void beginPolling(){
 		Object args[] = new Object[1];
 		args[0] = new Integer(1);
 		
@@ -403,7 +406,7 @@ public class IOSystem implements Runnable{
 
 	}
 
-	private void endPolling(){
+	protected void endPolling(){
 		Object args[] = new Object[1];
 		args[0] = new Integer(0);
 		
@@ -429,7 +432,7 @@ public class IOSystem implements Runnable{
 //		
 //	}
 	
-	private void outputValues(IOModule io, int startPort,int nPort){
+	protected void outputValues(IOModule io, int startPort,int nPort){
 		Object args[] = new Object[nPort+2];
 		args[0] = new Integer(io.getModuleID());
 		args[1] = new Integer(startPort);
@@ -498,19 +501,18 @@ public class IOSystem implements Runnable{
 			IOModule io =  new IOModule(this,id,config,name);
 			iomodules.put(id, io);
 			
-			System.out.println(" addModule() " + name);
+			System.out.println("   addModule() " + name);
 			
 			//dinにSetPointを自動でつける
-//			int[] portStatus = config.getPortStatus();
-//			for(int i=0;i<portStatus.length;i++){
-//				if(portStatus[i] == PORT_DIN){
-//					Filter[] filters ={ new SetPoint(0.5f,0)};
-//					io.pin(i).filters = filters;
-//				}
-//			}
+			int[] portStatus = config.getPortStatus();
+			for(int i=0;i<portStatus.length;i++){
+				if(portStatus[i] == PORT_DIN){
+					io.pin(i).addFilter(new SetPoint(0.5f,0));
+				}
+			}
 			return true;
 		}
-		System.out.println("add module error !" + name);
+		System.err.println("add module error !" + name);
 		return false;
 	}
 	
@@ -549,6 +551,7 @@ public class IOSystem implements Runnable{
 			port.startListening();
 		}
 		public void acceptMessage(Date time, OSCMessage message){
+
 			io.interpretMessage(message);
 			
 		}
