@@ -125,7 +125,7 @@ public final class Gainer extends IOSystem{
 			int commandPortNumber,int samplingInterval,Configuration config){
 		super(parent,hostName,commandPortNumber,samplingInterval,config);
 		
-		if(!initialize(moduleID,config)){
+		if(!initialize(config)){
 			errorMessage("Funnel configuration error!");
 		}
 		
