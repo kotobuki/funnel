@@ -56,10 +56,12 @@ package funnel
 
 		/**
 		* ピンのタイプ(AIN、DIN、AOUT、DOUT)の配列
-		* @see Pin#AIN
 		* @see Pin#DIN
-		* @see Pin#AOUT
 		* @see Pin#DOUT
+		* @see Pin#AIN
+		* @see Pin#AOUT
+		* @see Pin#PWM
+		* @see Pin#SERVO
 		*/
 		public var config:Array;
 
