@@ -1,6 +1,6 @@
 package funnel
 {
-	import flash.display.Sprite;
+	import funnel.gui.IOModuleGUI;
 	
 	/**
 	 * Gainer I/Oモジュールを扱うためのクラスです。
@@ -178,9 +178,9 @@ package funnel
 		 * @param portNum ポート番号
 		 * @param parent Gainerオブジェクトのオーナー（Spriteなど）
 		 */
-		public function Gainer(config:Configuration = null, host:String = "localhost", portNum:Number = 9000, parent:Sprite = null) {
+		public function Gainer(config:Configuration = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
 			if (config == null) config = MODE1;
-			super([config], host, portNum, 33, parent);
+			super([config], host, portNum, samplingInterval);
 			
 			_pin = ioModule(config.moduleID).pin;
 			_ainPins = config.ainPins;
@@ -244,6 +244,13 @@ package funnel
 		public function get led():Pin {
 			return _pin(_led);
 		}
+
+		public function get gui():IOModuleGUI {
+			return ioModule(0).gui;
+		}
 		
+		public function set gui(gui:IOModuleGUI):void {
+			ioModule(0).gui = gui;;
+		}
 	}
 }
