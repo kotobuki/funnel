@@ -69,17 +69,19 @@ void readAndReportData(byte address, int theRegister, byte numBytes) {
     for (int i = 0; i < numBytes; i++) {
       i2cRxData[2 + i] = Wire.receive();
     }
+    // send slave address, register and received bytes
+    Firmata.sendSysex(SYSEX_I2C_REPLY, numBytes + 2, i2cRxData);
   }
   else {
     if(numBytes > Wire.available()) {
       Firmata.sendString("I2C Read Error: Too many bytes received");
+      while(Wire.available()) {
+        i2cRxData[0] = Wire.receive();
+      }
     } else {
       Firmata.sendString("I2C Read Error: Too few bytes received"); 
     }
   }
-
-  // send slave address, register and received bytes
-  Firmata.sendSysex(SYSEX_I2C_REPLY, numBytes + 2, i2cRxData);
 }
 
 void sysexCallback(byte command, byte argc, byte *argv)
