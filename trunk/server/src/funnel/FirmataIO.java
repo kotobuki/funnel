@@ -65,7 +65,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected float[][] digitalData = null;
 	protected boolean[] digitalPinUpdated = null;
 	protected int[] pinMode;
-	protected int[] firmwareVersion = new int[ARD_MAX_DATA_BYTES];
+	protected int[] protocolVersion = new int[ARD_MAX_DATA_BYTES];
 	private int stateOfDigitalPins = 0x0000;
 	protected funnel.PortRange analogPinRange;
 	protected funnel.PortRange digitalPinRange;
@@ -239,7 +239,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 						"Argument of the following pin is not an integer value: " + i);
 			}
 			if (digitalPinRange.contains(i)) {
-				if (PORT_AIN.equals(config[i])) {
+				if (PIN_AIN.equals(config[i])) {
 					if (!analogPinRange.contains(i)) {
 						throw new IllegalArgumentException(
 								"AIN is not available on the following pin: " + i);
@@ -247,17 +247,17 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 					setPinMode(i, ARD_PIN_MODE_IN);
 					pinMode[i] = ARD_PIN_MODE_AIN;
 					rearmostAnalogInputPin = i - analogPinRange.getMin();
-				} else if (PORT_AOUT.equals(config[i])) {
+				} else if (PIN_AOUT.equals(config[i])) {
 					if (Arrays.binarySearch(pwmCapablePins, i) < 0) {
 						throw new IllegalArgumentException(
 								"PWM is not available on the following pin: " + i);
 					}
 					setPinMode(i, ARD_PIN_MODE_PWM);
 					pinMode[i] = ARD_PIN_MODE_PWM;
-				} else if (PORT_DIN.equals(config[i])) {
+				} else if (PIN_DIN.equals(config[i])) {
 					setPinMode(i, ARD_PIN_MODE_IN);
 					pinMode[i] = ARD_PIN_MODE_IN;
-				} else if (PORT_DOUT.equals(config[i])) {
+				} else if (PIN_DOUT.equals(config[i])) {
 					setPinMode(i, ARD_PIN_MODE_OUT);
 					pinMode[i] = ARD_PIN_MODE_OUT;
 				} else {
@@ -498,11 +498,11 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 							((storedInputData[source][0] << 7) | storedInputData[source][1]));
 					break;
 				case ARD_REPORT_VERSION: // Report version
-					firmwareVersion[0] = storedInputData[source][0]; // minor
-					firmwareVersion[1] = storedInputData[source][1]; // major
-					printMessage("Firmata Protocol Version: " + firmwareVersion[1] + "."
-							+ firmwareVersion[0]);
-					firmwareVersionQueue.add(firmwareVersion[1] + "." + firmwareVersion[0]);
+					protocolVersion[0] = storedInputData[source][0]; // minor
+					protocolVersion[1] = storedInputData[source][1]; // major
+					printMessage("Firmata Protocol Version: " + protocolVersion[1] + "."
+							+ protocolVersion[0]);
+					firmwareVersionQueue.add(protocolVersion[1] + "." + protocolVersion[0]);
 					break;
 				case ARD_ANALOG_MESSAGE:
 					digitalData[source][multiByteChannel[source] + analogPinRange.getMin()] = (float) ((storedInputData[source][0] << 7) | storedInputData[source][1]) / 1023.0f;
