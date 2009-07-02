@@ -22,7 +22,7 @@ package funnel.gui {
 		public function IOModuleGUI() {
 			super();
 
-			_mode = MONITOR_MODE;
+			_mode = CONTROLLER_MODE;
 		}
 
 		public function configure(id:int, config:Configuration):void {
