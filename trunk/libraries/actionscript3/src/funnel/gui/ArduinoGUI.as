@@ -1,6 +1,8 @@
 package funnel.gui {
 
+	import flash.display.Shape;
 	import flash.events.Event;
+	
 	import funnel.*;
 
 	public class ArduinoGUI extends IOModuleGUI {
@@ -9,7 +11,7 @@ package funnel.gui {
 			super();
 		}
 
-		override public function configure(id:int, config:Configuration):void {
+		public override function configure(id:int, config:Configuration):void {
 			var offset:int = 0;
 
 			var type:int = OnScreenController.ANALOG;
@@ -35,6 +37,7 @@ package funnel.gui {
 						controllerWidth = 58;
 						break;
 					case Pin.PWM:
+					case Pin.SERVO:
 						type = OnScreenController.ANALOG;
 						isInput = false;
 						controllerWidth = 128;
@@ -50,6 +53,15 @@ package funnel.gui {
 				addChild(_pin[i]);
 				offset += 16;
 			}
+
+			var base:Shape = new Shape();
+			base.graphics.beginFill(0x044F6F, 0.7);
+			base.graphics.drawRoundRect(0, 0, this.width, this.height, 4, 4);
+			base.graphics.endFill();
+			this.addChildAt(base, 0);
+
+			// set initial position to right-bottom
+			this.setPosition(IOModuleGUI.RIGHT_BOTTOM);
 		}
 
 	}

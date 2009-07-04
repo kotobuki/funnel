@@ -13,12 +13,12 @@ package funnel
 		
 		/**
 		* ハイパスフィルタのカーネル。コンストラクタに渡すことで利用します。
-		*/
+ 		*/
 		public static const HPF:Array = [1/3, -2/3, 1/3];
 		
 		/**
 		* 移動平均フィルタのカーネル。コンストラクタに渡すことで利用します。
-		*/
+ 		*/
 		public static const MOVING_AVERAGE:Array = [1/8, 1/8, 1/8, 1/8, 1/8, 1/8, 1/8, 1/8];
 		
 		private var _coef:Array;

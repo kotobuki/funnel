@@ -45,6 +45,8 @@ package funnel.gui {
 
 		private var _knob:Sprite;
 
+		private var _knobMarker:Sprite;
+
 		private var _knobWidth:int;
 
 		private var _label:TextField;
@@ -68,7 +70,7 @@ package funnel.gui {
 			_barHeight = HEIGHT - 2 - 2;
 
 			_base = new Shape();
-			_base.graphics.beginFill(BASE_COLOR, 0.7);
+			_base.graphics.beginFill(BASE_COLOR);
 			_base.graphics.drawRoundRect(0, 0, _width, HEIGHT, 4, 4);
 			_base.graphics.endFill();
 			_base.graphics.beginFill(BAR_COLOR);
@@ -88,6 +90,19 @@ package funnel.gui {
 			_knob.y = 2 + (_barHeight / 2);
 			_knob.buttonMode = isInput;
 			addChild(_knob);
+
+			// TODO: refine graphical design
+			if (isInput) {
+				_knobMarker = new Sprite();
+				_knobMarker.graphics.lineStyle(1, HIGHLIGHT_COLOR);
+				_knobMarker.graphics.moveTo(-3, -_barHeight * 0.3);
+				_knobMarker.graphics.lineTo(-3, _barHeight * 0.3);
+				_knobMarker.graphics.moveTo(0, -_barHeight * 0.3);
+				_knobMarker.graphics.lineTo(0, _barHeight * 0.3);
+				_knobMarker.graphics.moveTo(3, -_barHeight * 0.3);
+				_knobMarker.graphics.lineTo(3, _barHeight * 0.3);
+				_knob.addChild(_knobMarker);
+			}
 
 			_label = new TextField();
 			_label.width = LABEL_WIDTH - 2;

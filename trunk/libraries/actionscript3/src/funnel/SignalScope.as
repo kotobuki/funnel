@@ -10,15 +10,17 @@ package funnel {
 	 */
 	public class SignalScope extends Sprite {
 		private var _values:Array;
+		private var _preFilterValues:Array;
 		private var _descriptionLabel:TextField;
 		private var _currentValueText:TextField;
 		private var _maximumValueText:TextField;
 		private var _minimumValueText:TextField;
 		private var _averageValueText:TextField;
-		private const CUR_VAL_COLOR:uint = 0xFFFFFF;
-		private const MAX_VAL_COLOR:uint = 0xFF5A00;
-		private const MIN_VAL_COLOR:uint = 0x00D42D;
-		private const AVG_VAL_COLOR:uint = 0xFFE000;
+		private const CURRENT_VALUE_COLOR:uint = 0xFFFFFF;
+		private const MAXIMUM_VALUE_COLOR:uint = 0xFF5A00;
+		private const MINIMUM_VALUE_COLOR:uint = 0x00D42D;
+		private const AVERAGE_VALUE_COLOR:uint = 0xFFE000;
+		private const PRE_FILTER_VALUE_COLOR:uint = 0x808080;
 		private var _range:Number = 100;
 		private var _rangeMax:Number = 1;
 
@@ -26,9 +28,17 @@ package funnel {
 			super();
 			this.x = left;
 			this.y = top;
+
+			var i:int = 0;
+
 			_values = new Array(points);
-			for (var i:int = 0; i < _values.length; i++) {
+			for (i = 0; i < _values.length; i++) {
 				_values[i] = 0.0;
+			}
+
+			_preFilterValues = new Array(points);
+			for (i = 0; i < _preFilterValues.length; i++) {
+				_preFilterValues[i] = 0.0;
 			}
 
 			var format:TextFormat = new TextFormat();
@@ -40,19 +50,19 @@ package funnel {
 			_minimumValueText = new TextField();
 			_averageValueText = new TextField();
 			_descriptionLabel = new TextField();
-			format.color = CUR_VAL_COLOR;
+			format.color = CURRENT_VALUE_COLOR;
 			_currentValueText.defaultTextFormat = format;
-			_currentValueText.width = 102;
-			format.color = MAX_VAL_COLOR;
+			_currentValueText.autoSize = TextFieldAutoSize.LEFT;
+			format.color = MAXIMUM_VALUE_COLOR;
 			_maximumValueText.defaultTextFormat = format;
-			_maximumValueText.width = 102;
-			format.color = MIN_VAL_COLOR;
+			_maximumValueText.autoSize = TextFieldAutoSize.LEFT;
+			format.color = MINIMUM_VALUE_COLOR;
 			_minimumValueText.defaultTextFormat = format;
-			_minimumValueText.width = 102;
-			format.color = AVG_VAL_COLOR;
+			_minimumValueText.autoSize = TextFieldAutoSize.LEFT;
+			format.color = AVERAGE_VALUE_COLOR;
 			_averageValueText.defaultTextFormat = format;
-			_averageValueText.width = 102;
-			format.color = CUR_VAL_COLOR;
+			_averageValueText.autoSize = TextFieldAutoSize.LEFT;
+			format.color = CURRENT_VALUE_COLOR;
 			_descriptionLabel.defaultTextFormat = format;
 			_descriptionLabel.autoSize = TextFieldAutoSize.LEFT;
 			_currentValueText.text = "current: 0.0";
@@ -85,10 +95,8 @@ package funnel {
 			this.graphics.beginFill(0x000000, 0.5);
 			this.graphics.drawRect(x - 2, y - 2, _values.length + 4, 100 + 4);
 			this.graphics.endFill();
-			this.graphics.lineStyle(0.25, CUR_VAL_COLOR);
+			this.graphics.lineStyle(0.25, CURRENT_VALUE_COLOR);
 			this.graphics.drawRect(x - 2, y - 2, _values.length + 4, 100 + 4);
-			this.graphics.lineStyle(0.5, CUR_VAL_COLOR);
-			this.graphics.moveTo(x, y + 100);
 
 			var offset:Number = 0;
 			var i:int = 0;
@@ -96,41 +104,54 @@ package funnel {
 			if (input is Pin) {
 				_values.push(input.value);
 				_values.shift();
+				_preFilterValues.push(input.preFilterValue);
+				_preFilterValues.shift();
 
+				this.graphics.lineStyle(0.5, PRE_FILTER_VALUE_COLOR);
+				this.graphics.moveTo(x, y + 100);
+				for (i = 0; i < _preFilterValues.length; i++) {
+					offset = (_rangeMax - _preFilterValues[i]) * _range;
+					this.graphics.lineTo(x + i, y + offset);
+				}
+
+				this.graphics.lineStyle(0.5, CURRENT_VALUE_COLOR);
+				this.graphics.moveTo(x, y + 100);
 				for (i = 0; i < _values.length; i++) {
 					offset = (_rangeMax - _values[i]) * _range;
 					this.graphics.lineTo(x + i, y + offset);
 				}
 
 				offset = (_rangeMax - input.maximum) * _range;
-				this.graphics.lineStyle(0.25, MAX_VAL_COLOR);
+				this.graphics.lineStyle(0.25, MAXIMUM_VALUE_COLOR);
 				this.graphics.moveTo(x, y + offset);
 				this.graphics.lineTo(x + _values.length, y + offset);
 
 				offset = (_rangeMax - input.minimum) * _range;
-				this.graphics.lineStyle(0.25, MIN_VAL_COLOR);
+				this.graphics.lineStyle(0.25, MINIMUM_VALUE_COLOR);
 				this.graphics.moveTo(x, y + offset);
 				this.graphics.lineTo(x + _values.length, y + offset);
 
 				offset = (_rangeMax - input.average) * _range;
-				this.graphics.lineStyle(0.25, AVG_VAL_COLOR);
+				this.graphics.lineStyle(0.25, AVERAGE_VALUE_COLOR);
 				this.graphics.moveTo(x, y + offset);
 				this.graphics.lineTo(x + _values.length, y + offset);
 
-				_currentValueText.text = "current: " + input.value;
-				_maximumValueText.text = "maximum: " + input.maximum;
-				_minimumValueText.text = "minimum: " + input.minimum;
-				_averageValueText.text = "average: " + input.average;
+				_currentValueText.text = "current: " + input.value.toFixed(3);
+				_maximumValueText.text = "maximum: " + input.maximum.toFixed(3);
+				_minimumValueText.text = "minimum: " + input.minimum.toFixed(3);
+				_averageValueText.text = "average: " + input.average.toFixed(3);
 			} else if (input is Number) {
 				_values.push(input);
 				_values.shift();
 
+				this.graphics.lineStyle(0.5, CURRENT_VALUE_COLOR);
+				this.graphics.moveTo(x, y + 100);
 				for (i = 0; i < _values.length; i++) {
 					offset = (_rangeMax - _values[i]) * _range;
 					this.graphics.lineTo(x + i, y + offset);
 				}
 
-				_currentValueText.text = "current: " + input;
+				_currentValueText.text = "current: " + input.toFixed(3);
 			}
 		}
 	}
