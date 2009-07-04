@@ -30,6 +30,8 @@ package funnel
 		*/
 		public var doutPins:Array;
 
+		public var servoPins:Array;
+
 		/**
 		* Gainer.buttonを実際のピン番号に対応させるテーブル
 		* @see Gainer#button
@@ -70,7 +72,7 @@ package funnel
 		*/
 		public var moduleID:uint;
 
-		private var _powerPinsAreEnabled:Boolean = false;
+		private var _powerPinsEnabled:Boolean = false;
 
 		/**
 		 * デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。
@@ -85,18 +87,22 @@ package funnel
 			} else if (AIN == mode) {
 				if (analogPins == null) throw new ArgumentError("analog pins are not available");
 				if (analogPins[pinNum] == null) throw new ArgumentError("analog pin is not available at " + pinNum);
-				config[analogPins[pinNum]] = mode;
+				config[analogPins[pinNum]] = AIN;
+			} else if (SERVO == mode) {
+				if (servoPins == null) throw new ArgumentError("servo pins are not available");
+				if (servoPins.indexOf(pinNum) == -1) throw new ArgumentError("servo pin is not available at " + pinNum);
+				config[pinNum] = SERVO;
 			} else {
 				throw new ArgumentError("mode #" + mode +" is not available");
 			}
 		}
 
 		public function enablePowerPins():void {
-			_powerPinsAreEnabled = true;
+			_powerPinsEnabled = true;
 		}
 
-		public function get powerPinsAreEnabled():Boolean {
-			return _powerPinsAreEnabled;
+		public function get powerPinsEnabled():Boolean {
+			return _powerPinsEnabled;
 		}
 
 		public function clone():Configuration {
@@ -114,11 +120,14 @@ package funnel
 				clonedConfig.analogPins = this.analogPins.concat();
 			if (this.digitalPins != null)
 				clonedConfig.digitalPins = this.digitalPins.concat();
+			if (this.servoPins != null)
+				clonedConfig.servoPins = this.servoPins.concat();
 			if (this.config != null)
 				clonedConfig.config = this.config.concat();
 			clonedConfig.button = this.button;
 			clonedConfig.led = this.led;
 			clonedConfig.moduleID = this.moduleID;
+			clonedConfig._powerPinsEnabled = this._powerPinsEnabled;
 
 			return clonedConfig;
 		}

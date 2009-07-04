@@ -27,6 +27,7 @@ package funnel
 			];
 			k.analogPins = [14, 15, 16, 17, 18, 19, 20, 21];
 			k.digitalPins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+			k.servoPins = [9, 10];
 			return k;
 		}
 		
@@ -71,6 +72,10 @@ package funnel
 
 		public function sendSysexMessage(command:uint, message:Array):void {
 			ioModule(0).sendSysex(command, message);
+		}
+
+		public function setServoPulseRange(pinNumber:uint, minPulse:uint, maxPulse:uint):void {
+			ioModule(0).setServoPulseRange(pinNumber, minPulse, maxPulse);
 		}
 
 		public function get gui():IOModuleGUI {

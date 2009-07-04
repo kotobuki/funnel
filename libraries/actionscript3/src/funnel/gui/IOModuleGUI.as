@@ -11,6 +11,11 @@ package funnel.gui {
 
 		public static const CONTROLLER_MODE:int = 1;
 
+		public static const LEFT_TOP:int = 0;
+		public static const LEFT_BOTTOM:int = 1;
+		public static const RIGHT_TOP:int = 2;
+		public static const RIGHT_BOTTOM:int = 3;
+
 		protected var _id:int;
 
 		protected var _inputMessage:OSCMessage;
@@ -55,6 +60,29 @@ package funnel.gui {
 			}
 
 			_pin[pinNumber].value = value;
+		}
+
+		public function setPosition(position:uint):void {
+			switch (position) {
+				case LEFT_TOP:
+					x = 0;
+					y = 0;
+					break;
+				case LEFT_BOTTOM:
+					x = 0;
+					y = stage.stageHeight - this.height - 1;
+					break;
+				case RIGHT_TOP:
+					x = stage.stageWidth - this.width - 1;
+					y = 0;
+					break;
+				case RIGHT_BOTTOM:
+					x = stage.stageWidth - this.width - 1;
+					y = stage.stageHeight - this.height - 1;
+					break;
+				default:
+					break;
+			}
 		}
 
 		protected function onInputChange(e:Event):void {

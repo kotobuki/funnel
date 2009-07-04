@@ -1,5 +1,6 @@
 package funnel.gui {
 
+	import flash.display.Shape;
 	import flash.events.Event;
 	
 	import funnel.*;
@@ -10,7 +11,7 @@ package funnel.gui {
 			super();
 		}
 
-		override public function configure(id:int, config:Configuration):void {
+		public override function configure(id:int, config:Configuration):void {
 			var i:int = 0;
 			var pinNumber:int = 0;
 			var offset:int = 0;
@@ -85,6 +86,15 @@ package funnel.gui {
 				_pin[pinNumber].addEventListener(Event.CHANGE, onInputChange);
 				addChild(_pin[pinNumber]);
 			}
+
+			var base:Shape = new Shape();
+			base.graphics.beginFill(0xFF0000, 0.7);
+			base.graphics.drawRoundRect(0, 0, this.width, this.height, 4, 4);
+			base.graphics.endFill();
+			this.addChildAt(base, 0);
+
+			// set initial position to right-bottom
+			this.setPosition(IOModuleGUI.RIGHT_BOTTOM);
 		}
 
 	}

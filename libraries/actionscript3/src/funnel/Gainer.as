@@ -1,6 +1,7 @@
 package funnel
 {
 	import funnel.gui.IOModuleGUI;
+	import funnel.ui.*;
 	
 	/**
 	 * Gainer I/Oモジュールを扱うためのクラスです。
@@ -12,8 +13,8 @@ package funnel
 		private var _dinPins:Array;
 		private var _aoutPins:Array;
 		private var _doutPins:Array;
-		private var _button:uint;
-		private var _led:uint;
+		private var _button:Button;
+		private var _led:LED;
 		
 		/**
 		 * GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
@@ -187,8 +188,13 @@ package funnel
 			_dinPins = config.dinPins;
 			_aoutPins = config.aoutPins;
 			_doutPins = config.doutPins;
-			_button = config.button;
-			_led = config.led;
+
+			if (config.button != 0) {
+				_button = new Button(_pin(config.button));
+			}
+			if (config.led != 0) {
+				_led = new LED(_pin(config.led));
+			}
 		}
 		
 		/**
@@ -232,17 +238,17 @@ package funnel
 		}
 		
 		/**
-		 * I/Oモジュール上のボタンを表すピン
+		 * @see funnel.ui.Button
 		 */ 
-		public function get button():Pin {
-			return _pin(_button);
+		public function get button():Button {
+			return _button;
 		}
 		
 		/**
-		 * I/Oモジュール上のLEDを表すピン
+		 * @see funnel.ui.LED
 		 */ 
-		public function get led():Pin {
-			return _pin(_led);
+		public function get led():LED {
+			return _led;
 		}
 
 		public function get gui():IOModuleGUI {
@@ -250,7 +256,7 @@ package funnel
 		}
 		
 		public function set gui(gui:IOModuleGUI):void {
-			ioModule(0).gui = gui;;
+			ioModule(0).gui = gui;
 		}
 	}
 }
