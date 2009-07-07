@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel Server 010 (r660) [EXPERIMENTAL]";
+	private static final String buildName = "Funnel Server 010 (r673) [BETA]";
 
 	private CommandPortServer server;
 	private IOModule ioModule = null;
@@ -64,8 +64,7 @@ public class FunnelServer extends Frame {
 			setResizable(false);
 			loggingArea = new TextArea(buildName + "\n\n", 5, 10, TextArea.SCROLLBARS_VERTICAL_ONLY); //$NON-NLS-1$
 			Insets insets = this.getInsets();
-			loggingArea.setBounds(insets.left, insets.top, width - (insets.left + insets.right),
-					height - (insets.top + insets.bottom));
+			loggingArea.setBounds(insets.left, insets.top, width - (insets.left + insets.right), height - (insets.top + insets.bottom));
 			loggingArea.setEditable(false);
 			loggingArea.setFont(new Font("Monospaced", Font.PLAIN, 12)); //$NON-NLS-1$
 			this.add(loggingArea);

@@ -38,9 +38,9 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 	protected static final int SERVO_CONFIG = 0x70;
 	protected static final int FIRMATA_STRING = 0x71;
-	protected static final int I2C_REQUEST = 0x76;
-	protected static final int I2C_REPLY = 0x77;
-	protected static final int I2C_CONFIG = 0x78;
+	protected static final int SYSEX_I2C_REQUEST = 0x76;
+	protected static final int SYSEX_I2C_REPLY = 0x77;
+	protected static final int SYSEX_I2C_CONFIG = 0x78;
 	protected static final int REPORT_FIRMWARE = 0x79;
 	protected static final int SAMPLING_INTERVAL = 0x7A;
 	protected static final int SYSEX_NON_REALTIME = 0x7E;
@@ -260,6 +260,9 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				} else if (PIN_DOUT.equals(config[i])) {
 					setPinMode(i, ARD_PIN_MODE_OUT);
 					pinMode[i] = ARD_PIN_MODE_OUT;
+				} else if (PIN_SERVO.equals(config[i])) {
+					setPinMode(i, ARD_PIN_MODE_SERVO);
+					pinMode[i] = ARD_PIN_MODE_SERVO;
 				} else {
 					throw new IllegalArgumentException(
 							"A wrong pin mode is specified for the following pin: " + i);
@@ -325,6 +328,8 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 					if (pinMode[pin] == ARD_PIN_MODE_OUT) {
 						digitalWrite(pinNumber, FLOAT_ZERO.equals(arguments[index]) ? 0 : 1);
 					} else if (pinMode[pin] == ARD_PIN_MODE_PWM) {
+						analogWrite(pinNumber, ((Float) arguments[index]).floatValue());
+					} else if (pinMode[pin] == ARD_PIN_MODE_SERVO) {
 						analogWrite(pinNumber, ((Float) arguments[index]).floatValue());
 					}
 				}
@@ -405,7 +410,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		writeByte(ARD_SYSEX_START);
 		writeByte(command);
 
-		if (command == I2C_REQUEST) {
+		if (command == SYSEX_I2C_REQUEST) {
 			int slaveAddress = ((Integer) arguments[3]).intValue();
 			if ((slaveAddress < 0) || (slaveAddress > 127)) {
 				throw new IllegalArgumentException("the slave address is out of range: "
