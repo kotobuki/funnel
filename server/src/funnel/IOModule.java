@@ -12,12 +12,18 @@ import gnu.io.CommPortIdentifier;
  * 
  * @author Shigeru Kobayashi
  * @see GainerIO
+ * @see ArduinoIO
+ * @see XbeeIO
+ * @see FunnelIO
  */
 public abstract class IOModule {
 	public final static Integer PIN_AIN = new Integer(0);
 	public final static Integer PIN_DIN = new Integer(1);
 	public final static Integer PIN_AOUT = new Integer(2);
 	public final static Integer PIN_DOUT = new Integer(3);
+	public final static Integer PIN_SERVO = new Integer(4);
+	// public final static Integer PIN_SPI = new Integer(5);
+	public final static Integer PIN_I2C = new Integer(6);
 
 	protected FunnelServer parent;
 	protected boolean isPolling = false;

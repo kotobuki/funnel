@@ -9,6 +9,9 @@
 	 * This is the class to express a servo
 	 */
 	public class Servo {
+		// the scale to convert 0-1 (0-255 in 8bit) to 0-0.706 (0-180 in 8bit)
+		private static const COEF_TO_0_180:Number = 180 / 255;
+
 		private var _angle:Number;
 
 		private var _maxAngle:int;
@@ -34,8 +37,8 @@
 		public function set angle(newAngle:Number):void {
 			_angle = newAngle;
 
-			// scale and normalize
-			_pin.value = Math.max(0, Math.min(1, (_angle - _minAngle) / (_maxAngle - _minAngle)));
+			// NOTE: A servo accepts values in 0-180 range instead of the normal range (i.e. 0-255)
+			_pin.value = Math.max(0, Math.min(1, (_angle - _minAngle) / (_maxAngle - _minAngle) * COEF_TO_0_180));
 		}
 
 	}
