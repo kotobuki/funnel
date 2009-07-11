@@ -1,5 +1,8 @@
 package funnel
 {
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
+	
 	import funnel.gui.IOModuleGUI;
 	
 	/**
@@ -44,6 +47,14 @@ package funnel
 			_pin = ioModule(0).pin;
 			_analogPins = config.analogPins;
 			_digitalPins = config.digitalPins;
+
+			if (config.powerPinsEnabled) {
+				var timer:Timer = new Timer(I2C_POWER_PINS_STARTUP_TIME, 1);
+				timer.addEventListener(TimerEvent.TIMER_COMPLETE, function(e:TimerEvent):void {
+					dispatchEvent(new FunnelEvent(FunnelEvent.I2C_POWER_PINS_READY));
+				});
+				timer.start();
+			}
 		}
 		
 		/**
