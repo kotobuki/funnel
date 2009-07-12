@@ -21,7 +21,7 @@ lineskip={-2pt}
 
 \vspace{8pt}
 
-\hspace{-8.5pt}\textsf{{\large The Installation Instructions for Build 009}\\Developers: Shigeru Kobayashi, Takanori Endo and Ichitaro Masuda}
+\hspace{-8.5pt}\textsf{{\large The Installation Instructions for Build 010}\\Developers: Shigeru Kobayashi, Takanori Endo and Ichitaro Masuda}
 
 \vspace{8pt}
 
@@ -69,7 +69,7 @@ lineskip={-2pt}
 \end{itemize}
 
 \section{How to install a device driver}
-Gainer I/O modules, Arduino I/O boards, XBee RF modems, FIO boards and most USB-to-XBee bridge modules \footnote{SparkFun Electronics: XBee Explorer USB (part number WRL-08687)} are equipped with an FTDI FT232RL (a very famous USB-to-UART bridge chip). So you can use virtually any hardware device by installing the device driver for the bridge chip\footnote{The drivers are also included in a `\texttt{drivers}' folder  (e.g. \texttt{arduino-0015/drivers}) of an Arduino distribution package}.
+Gainer I/O modules, Arduino I/O boards, XBee RF modems, FIO boards and most USB-to-XBee bridge modules \footnote{SparkFun Electronics: XBee Explorer USB (part number WRL-08687)} are equipped with an FTDI FT232RL (a very famous USB-to-UART bridge chip). So you can use virtually any hardware device by installing the device driver for the bridge chip\footnote{The drivers are also included in a `\texttt{drivers}' folder  (e.g. \texttt{arduino-0017/drivers}) of an Arduino distribution package}.
 
 \subsection{Windows XP/Vista}
 First, install the device driver from the following URL. Point your web browser to the following URL, and download a device driver for Windows XP or Vista.
@@ -95,7 +95,7 @@ In case of Gainer I/O modules, you have nothing to do. Just connect your module 
 
 \subsection{Arduino I/O boards}
 \label{uploading_firmata_arduino}
-To connect Arduino I/O boards, Firmata\footnote{http://www.arduino.cc/playground/Interfacing/Firmata/} is needed. Firmata is a MIDI like protocol proposed by Hans-Christoph Steiner. Since Arduino 0015 includes the Firmata library by default, you can easily start using your Arduino I/O board as an I/O module for Funnel just by uploading the example sketch as follows.
+To connect Arduino I/O boards, Firmata\footnote{http://www.arduino.cc/playground/Interfacing/Firmata/} is needed. Firmata is a MIDI like protocol proposed by Hans-Christoph Steiner. Since Arduino 0017 includes the Firmata library by default, you can easily start using your Arduino I/O board as an I/O module for Funnel just by uploading the example sketch as follows.
 
 \begin{enumerate}
 \item Choose an appropriate model in Tools/Board menu
@@ -287,7 +287,7 @@ server:
 io:
   type: Arduino
   com: /dev/cu.usbserial-A*******
-  baudrate: 115200
+  baudrate: 57600
 \end{lstlisting}
 
 \begin{lstlisting}[caption={An example of settings.txt for Arduino I/O boards (Windows)},label=useless]
@@ -297,7 +297,7 @@ server:
 io:
   type: Arduino
   com: COM3
-  baudrate: 115200
+  baudrate: 57600
 \end{lstlisting}
 
 \clearpage
@@ -348,7 +348,7 @@ If a Funnel Server launches successfully, messages will be printed as follows. I
 \end{center}
 \end{figure}
 
-If you can't see a string like `\texttt{Firmata Protocol Version: 2.0}', the firmware might have failed to upload. Please refer the section \ref{uploading_firmata_arduino} to try again. If you see any error messages, please make sure that:
+If you can't see a string like `\texttt{Firmata Protocol Version: 2.1}', the firmware might have failed to upload. Please refer the section \ref{uploading_firmata_arduino} to try again. If you see any error messages, please make sure that:
 
 \begin{itemize}
 \item The FTDI USB driver is installed
@@ -356,7 +356,7 @@ If you can't see a string like `\texttt{Firmata Protocol Version: 2.0}', the fir
 \item The power LED on the I/O board lights up
 \item The appropriate type (i.e. Arduino) is specified
 \item An appropriate serial port (e.g. COM3) is specified (if needed)
-\item An appropriate baud rate (e.g. 115200) is specified
+\item An appropriate baud rate (e.g. 57600) is specified
 \end{itemize}
 
 \begin{figure}[htbp]
@@ -389,7 +389,7 @@ If you see any error messages, please make sure that:
 \item The power LED on the XBee-to-USB module lights up
 \item The appropriate type (i.e. XBee) is specified (if needed)
 \item An appropriate serial port (e.g. COM3) is specified
-\item An appropriate baud rate (e.g. 115200) is specified
+\item An appropriate baud rate (e.g. 57600) is specified
 \end{itemize}
 
 \begin{figure}[htbp]
@@ -414,7 +414,7 @@ If a Funnel Server launches successfully, messages will be printed as follows. I
 \end{center}
 \end{figure}
 
-If you can't see a string like `\texttt{Firmata Protocol Version: 2.0}', the firmware might have failed to upload. Please refer the section \ref{uploading_firmata_fio} to try again. If you see any error messages, please make sure that:
+If you can't see a string like `\texttt{Firmata Protocol Version: 2.1}', the firmware might have failed to upload. Please refer the section \ref{uploading_firmata_fio} to try again. If you see any error messages, please make sure that:
 
 \begin{itemize}
 \item The FTDI USB driver is installed
