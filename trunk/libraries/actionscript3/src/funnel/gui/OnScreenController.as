@@ -17,11 +17,11 @@ package funnel.gui {
 
 		public static const DIGITAL_TOGGLE:uint = 2;
 
+		public static const HEIGHT:uint = 14;
+
 		private static const BAR_COLOR:uint = 0x808080;
 
 		private static const BASE_COLOR:uint = 0x404040;
-
-		private static const HEIGHT:uint = 14;
 
 		private static const HIGHLIGHT_COLOR:uint = 0xE0E0E0;
 
@@ -110,7 +110,7 @@ package funnel.gui {
 			_label.x = 1;
 			_label.y = -0.5;
 			_label.autoSize = TextFieldAutoSize.NONE;
-			_label.defaultTextFormat = new TextFormat('Verdana', 8, 0xE0E0E0, null, null, null, null, null, TextFormatAlign.RIGHT);
+			_label.defaultTextFormat = new TextFormat('Verdana', 8, 0xE0E0E0, null, null, null, null, null, TextFormatAlign.LEFT);
 			_label.text = label;
 			addChild(_label);
 
