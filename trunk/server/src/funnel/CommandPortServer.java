@@ -1,12 +1,5 @@
 ﻿package funnel;
 
-/**
- * Server class
- *
- * @author PDP Project
- * @version 1.0
- */
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -58,9 +51,6 @@ public class CommandPortServer extends Server {
 
 	public void deleteClient(Client client) {
 		clist.remove(client);
-		if (clist.isEmpty()) {
-			getIOModule().stopPolling();
-		}
 	}
 
 	public void sendMessageToClients(OSCPacket message) {
