@@ -82,8 +82,7 @@ public class CommandPortClient extends Client implements Runnable {
 				server.getIOModule().reboot();
 				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			} catch (Exception e) {
-				sendSimpleReply(message.getAddress(), REBOOT_ERROR, e
-						.getMessage());
+				sendSimpleReply(message.getAddress(), REBOOT_ERROR, e.getMessage());
 			}
 		} else if (message.getAddress().equals("/polling")) {
 			try {
@@ -94,8 +93,7 @@ public class CommandPortClient extends Client implements Runnable {
 			}
 		} else if (message.getAddress().startsWith("/in")) {
 			try {
-				Object[] reply = server.getIOModule().getInputs(
-						message.getAddress(), message.getArguments());
+				Object[] reply = server.getIOModule().getInputs(message.getAddress(), message.getArguments());
 				sendReply(message.getAddress(), reply);
 			} catch (IllegalArgumentException e) {
 				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
@@ -116,13 +114,11 @@ public class CommandPortClient extends Client implements Runnable {
 				server.getIOModule().setConfiguration(message.getArguments());
 				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			} catch (IllegalArgumentException e) {
-				sendSimpleReply(message.getAddress(), CONFIGURATION_ERROR, e
-						.getMessage());
+				sendSimpleReply(message.getAddress(), CONFIGURATION_ERROR, e.getMessage());
 			}
 		} else if (message.getAddress().equals("/sysex/request")) {
 			try {
-				server.getIOModule().sendSystemExclusiveMessage(
-						message.getArguments());
+				server.getIOModule().sendSystemExclusiveMessage(message.getArguments());
 				sendSimpleReply(message.getAddress(), NO_ERROR, null);
 			} catch (Exception e) {
 				sendSimpleReply(message.getAddress(), ERROR, e.getMessage());
@@ -150,6 +146,7 @@ public class CommandPortClient extends Client implements Runnable {
 	public void run() {
 		byte[] buffer = new byte[1536]; // this is a common MTU
 		byte[] packet = new byte[buffer.length];
+		boolean wasConnetionToGetASecurityPolicyFile = false;
 		try {
 			while (isListening) {
 				int readSize = in.read(buffer, 0, 1536);
@@ -160,10 +157,8 @@ public class CommandPortClient extends Client implements Runnable {
 				}
 
 				while (processedSize < readSize) {
-					int packetSize = ((buffer[processedSize + 0] & 0xFF) << 24)
-							+ ((buffer[processedSize + 1] & 0xFF) << 16)
-							+ ((buffer[processedSize + 2] & 0xFF) << 8)
-							+ (buffer[processedSize + 3] & 0xFF);
+					int packetSize = ((buffer[processedSize + 0] & 0xFF) << 24) + ((buffer[processedSize + 1] & 0xFF) << 16)
+							+ ((buffer[processedSize + 2] & 0xFF) << 8) + (buffer[processedSize + 3] & 0xFF);
 
 					if (packetSize > 1536) {
 						if (processedSize == 0) {
@@ -173,10 +168,12 @@ public class CommandPortClient extends Client implements Runnable {
 							if (s.equals(fpQueryString)) {
 								bufferedOut.write(fpReplyString.getBytes());
 								bufferedOut.flush();
+								wasConnetionToGetASecurityPolicyFile = true;
+								server.printMessage("Got a policy file request from the Flash Player");
+								break;
 							}
 						} else {
-							server
-									.printMessage("ERROR: Your client's endianness is not compatible with the server.");
+							server.printMessage("ERROR: Your client's endianness is not compatible with the server.");
 							System.out.println(Arrays.toString(buffer));
 						}
 						break;
@@ -184,8 +181,7 @@ public class CommandPortClient extends Client implements Runnable {
 
 					// TODO: Modify here to do not copy arrays to improve
 					// performance
-					System.arraycopy(buffer, processedSize + 4, packet, 0,
-							packetSize);
+					System.arraycopy(buffer, processedSize + 4, packet, 0, packetSize);
 					OSCPacket oscPacket = converter.convert(packet, packetSize);
 					dispatcher.dispatchPacket(oscPacket);
 					processedSize += packetSize + 4;
@@ -194,10 +190,10 @@ public class CommandPortClient extends Client implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			server
-					.printMessage(Messages
-							.getString("FunnelServer.CommandPort") + getIP() + Messages.getString("Server.ClientDisconnected")); //$NON-NLS-1$
-			server.getIOModule().reboot();
+			server.printMessage(Messages.getString("FunnelServer.CommandPort") + getIP() + Messages.getString("Server.ClientDisconnected")); //$NON-NLS-1$
+			if (!wasConnetionToGetASecurityPolicyFile) {
+				server.getIOModule().reboot();
+			}
 			close();
 		}
 
@@ -214,9 +210,7 @@ public class CommandPortClient extends Client implements Runnable {
 		try {
 			send(reply);
 		} catch (Exception e) {
-			server
-					.printMessage("Error sending reply to the client: "
-							+ address);
+			server.printMessage("Error sending reply to the client: " + address);
 		}
 	}
 
@@ -225,9 +219,7 @@ public class CommandPortClient extends Client implements Runnable {
 		try {
 			send(reply);
 		} catch (Exception e) {
-			server
-					.printMessage("Error sending reply to the client: "
-							+ address);
+			server.printMessage("Error sending reply to the client: " + address);
 		}
 	}
 

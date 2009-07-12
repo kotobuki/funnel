@@ -4,4 +4,4 @@ server:
 io:
   type: Arduino
   port: 
-  baudrate: 115200
+  baudrate: 57600
