@@ -2,8 +2,11 @@ package funnel.gui {
 
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.text.TextField;
 	
 	import funnel.Configuration;
+	import funnel.FunnelErrorEvent;
+	import funnel.FunnelEvent;
 	import funnel.osc.*;
 
 	public class IOModuleGUI extends Sprite {
@@ -12,8 +15,11 @@ package funnel.gui {
 		public static const CONTROLLER_MODE:int = 1;
 
 		public static const LEFT_TOP:int = 0;
+
 		public static const LEFT_BOTTOM:int = 1;
+
 		public static const RIGHT_TOP:int = 2;
+
 		public static const RIGHT_BOTTOM:int = 3;
 
 		protected var _id:int;
@@ -23,6 +29,8 @@ package funnel.gui {
 		protected var _mode:int;
 
 		protected var _pin:Array;
+
+		protected var _messageArea:TextField;
 
 		public function IOModuleGUI() {
 			super();
@@ -63,6 +71,12 @@ package funnel.gui {
 		}
 
 		public function setPosition(position:uint):void {
+			if (stage == null) {
+				x = 0;
+				y = 0;
+				return;
+			}
+
 			switch (position) {
 				case LEFT_TOP:
 					x = 0;
@@ -82,6 +96,30 @@ package funnel.gui {
 					break;
 				default:
 					break;
+			}
+		}
+
+		public function onReady(e:FunnelEvent):void {
+			if (_messageArea != null) {
+				_messageArea.text = "INFO: Ready";
+			}
+		}
+
+		public function onRebootError(e:FunnelErrorEvent):void {
+			if (_messageArea != null) {
+				_messageArea.text = "ERROR: Reboot error";
+			}
+		}
+
+		public function onConfigurationError(e:FunnelErrorEvent):void {
+			if (_messageArea != null) {
+				_messageArea.text = "ERROR: Configuration error";
+			}
+		}
+
+		public function onError(e:FunnelErrorEvent):void {
+			if (_messageArea != null) {
+				_messageArea.text = "ERROR: " + e.text;
 			}
 		}
 
