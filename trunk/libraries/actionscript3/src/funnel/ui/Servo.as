@@ -3,10 +3,9 @@
 	import funnel.*;
 
 	/**
-	 * Created 4 July 2009
-	 * By Shigeru Kobayashi
-	 *
 	 * This is the class to express a servo
+	 * 
+	 * @author Shigeru Kobayashi
 	 */
 	public class Servo {
 		// the scale to convert 0-1 (0-255 in 8bit) to 0-0.706 (0-180 in 8bit)
@@ -20,6 +19,13 @@
 
 		private var _pin:Pin;
 
+		/**
+		 * 
+		 * @param servoPin the number of servo pin
+		 * @param minAngle the minimum angle (default is 0)
+		 * @param maxAngle the maximum angle (default is 180)
+		 * @throws ArgumentError
+		 */
 		public function Servo(servoPin:Pin, minAngle:int = 0, maxAngle:int = 180) {
 			if (servoPin.type != Pin.SERVO) {
 				throw new ArgumentError("Can't attach a servo to a non servo pin. Please set the pin mode of the digital pin " + servoPin.number + " as Servo");
@@ -30,10 +36,18 @@
 			_maxAngle = maxAngle;
 		}
 
+		/**
+		 * 
+		 * @return the current angle
+		 */
 		public function get angle():Number {
 			return _angle;
 		}
 
+		/**
+		 * 
+		 * @param newAngle the new angle to set
+		 */
 		public function set angle(newAngle:Number):void {
 			_angle = newAngle;
 
