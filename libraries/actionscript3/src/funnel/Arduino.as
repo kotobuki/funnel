@@ -48,6 +48,12 @@ package funnel
 			_analogPins = config.analogPins;
 			_digitalPins = config.digitalPins;
 
+			for (var i:int = 0; i < config.config.length; i++) {
+				if (config.config[i] == SERVO) {
+					setServoPulseRange(i, 544, 2400);
+				}
+			}
+
 			if (config.powerPinsEnabled) {
 				var timer:Timer = new Timer(I2C_POWER_PINS_STARTUP_TIME, 1);
 				timer.addEventListener(TimerEvent.TIMER_COMPLETE, function(e:TimerEvent):void {
