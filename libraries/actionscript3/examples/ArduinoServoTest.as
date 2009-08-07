@@ -23,15 +23,17 @@ package {
 	 * http://firmata.org/
 	 */
 	public class ArduinoServoTest extends Sprite {
+		private const SERVO_PIN:int = 9;
+
 		private var aio:Arduino;
 		private var servo:Servo;
 		private var pulseGenerator:Timer;
 
 		public function ArduinoServoTest() {
 			var config:Configuration = Arduino.FIRMATA;
-			config.setDigitalPinMode(9, SERVO);
+			config.setDigitalPinMode(SERVO_PIN, SERVO);
 			aio = new Arduino(config);
-			servo = new Servo(aio.digitalPin(9));
+			servo = new Servo(aio.digitalPin(SERVO_PIN));
 
 			pulseGenerator = new Timer(1000);
 			pulseGenerator.addEventListener(TimerEvent.TIMER, onPulse);
