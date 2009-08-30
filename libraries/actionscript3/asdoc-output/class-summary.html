@@ -37,12 +37,25 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <th>&nbsp;</th><th width="20%">Class</th><th width="20%">Package</th><th width="60%">Description</th>
 </tr>
 <tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/ui/Accelerometer.html">Accelerometer</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/ui/class-list.html');" href="funnel/ui/package-detail.html">funnel.ui</a></td><td class="summaryTableLastCol">
+  This is the class to express an analog accelerometer
+  
+  </td>
+</tr>
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/Arduino.html">Arduino</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   ArduinoクラスはファームウェアとしてFirmataを搭載したArduinoをI/Oモジュールとして扱うためのクラスです。
   
   </td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/gui/ArduinoGUI.html">ArduinoGUI</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/gui/class-list.html');" href="funnel/gui/package-detail.html">funnel.gui</a></td><td class="summaryTableLastCol">&nbsp;</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/i2c/AvagoColorSensor.html">AvagoColorSensor</a>
@@ -56,6 +69,22 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/i2c/class-list.html');" href="funnel/i2c/package-detail.html">funnel.i2c</a></td><td class="summaryTableLastCol">
   This is the class to express BlinkM devices
+  </td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/ui/Button.html">Button</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/ui/class-list.html');" href="funnel/ui/package-detail.html">funnel.ui</a></td><td class="summaryTableLastCol">
+  This is the class to express a generic button
+  
+  </td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/ui/ButtonEvent.html">ButtonEvent</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/ui/class-list.html');" href="funnel/ui/package-detail.html">funnel.ui</a></td><td class="summaryTableLastCol">
+  This is the class to express physical button releated events
+  
   </td>
 </tr>
 <tr class="prow0">
@@ -98,7 +127,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/FunnelEvent.html">FunnelEvent</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
-  IOSystemのイベントを表すクラスです。
+  This is the class to express IOSystem's non-error events
   </td>
 </tr>
 <tr class="prow0">
@@ -109,58 +138,119 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
   </td>
 </tr>
 <tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/gui/GainerGUI.html">GainerGUI</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/gui/class-list.html');" href="funnel/gui/package-detail.html">funnel.gui</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</tr>
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/GeneratorEvent.html">GeneratorEvent</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   ジェネレーターのイベントを表すクラスです。
   </td>
 </tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/ui/HBridge.html">HBridge</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/ui/class-list.html');" href="funnel/ui/package-detail.html">funnel.ui</a></td><td class="summaryTableLastCol">
+  This is the class to express a H-bridge
+  
+  Reference
+  http://www.switch-science.com/trac/wiki/BD62xx-Basic
+  
+  </td>
+</tr>
 <tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/i2c/HMC6343_Advanced.html">HMC6343_Advanced</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/i2c/class-list.html');" href="funnel/i2c/package-detail.html">funnel.i2c</a></td><td class="summaryTableLastCol">
+  This is the class to express HMC6343 tilt-compensated compass
+  Exposes Heading, Pitch, Roll and Acclerometer X, Y, Z data
+    Created by Jeff Hoefs
+  Modified by Shigeru Kobayashi
+    </td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/i2c/HMC6343_Simple.html">HMC6343_Simple</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/i2c/class-list.html');" href="funnel/i2c/package-detail.html">funnel.i2c</a></td><td class="summaryTableLastCol">
+  This is the class to express HMC6343 tilt-compensated compass
+  Simple version only enables Heading, Pitch, and Roll data
+    Created by Jeff Hoefs
+  Modified by Shigeru Kobayashi
+    </td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/i2c/HMC6343Event.html">HMC6343Event</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/i2c/class-list.html');" href="funnel/i2c/package-detail.html">funnel.i2c</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</tr>
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/i2c/HMC6352.html">HMC6352</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/i2c/class-list.html');" href="funnel/i2c/package-detail.html">funnel.i2c</a></td><td class="summaryTableLastCol">
   This is the class to express HMC6352 devices
     </td>
 </tr>
-<tr class="prow1">
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/i2c/I2CDevice.html">I2CDevice</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/i2c/class-list.html');" href="funnel/i2c/package-detail.html">funnel.i2c</a></td><td class="summaryTableLastCol">
   This is the class to express I2C devices
     </td>
 </tr>
-<tr class="prow0">
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/IFilter.html"><i>IFilter</i></a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   フィルタのインタフェースです。
   </td>
 </tr>
-<tr class="prow1">
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/IGenerator.html"><i>IGenerator</i></a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   ジェネレーターのインタフェースです。
   </td>
 </tr>
-<tr class="prow0">
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/IOModule.html">IOModule</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   PCに接続されたI/Oモジュールを抽象化して共通の方法でアクセスするためのクラスです。
     </td>
 </tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/gui/IOModuleGUI.html">IOModuleGUI</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/gui/class-list.html');" href="funnel/gui/package-detail.html">funnel.gui</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/IOSystem.html">IOSystem</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
-  複数のI/Oモジュールから構成されるシステムを表現するためのクラスです。 
+  複数のI/Oモジュールから構成されるシステムを表現するためのクラスです。
   </td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/ISysexMessageListener.html"><i>ISysexMessageListener</i></a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/ui/LED.html">LED</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/ui/class-list.html');" href="funnel/ui/package-detail.html">funnel.ui</a></td><td class="summaryTableLastCol">
+  This is the class to express a LED
+  
+  </td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/i2c/LIS302DL.html">LIS302DL</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/i2c/class-list.html');" href="funnel/i2c/package-detail.html">funnel.i2c</a></td><td class="summaryTableLastCol">
+  This is the class to express a LIS302DL 3-axis accelerometer
+    </td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/i2c/LIS3LV02DQ.html">LIS3LV02DQ</a>
@@ -176,10 +266,23 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
   </td>
 </tr>
 <tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/gui/OnScreenController.html">OnScreenController</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/gui/class-list.html');" href="funnel/gui/package-detail.html">funnel.gui</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</tr>
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/Osc.html">Osc</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   LEDをふわふわ点滅させたりする時などに使います。回数を1回に設定すると、ワンショットの制御にも使えます。サービス間隔はOsc.serviceIntervalの設定に従います。
+  
+  </td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/ui/PhysicalInput.html">PhysicalInput</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/ui/class-list.html');" href="funnel/ui/package-detail.html">funnel.ui</a></td><td class="summaryTableLastCol">
+  This is the base class for physical inputs
   
   </td>
 </tr>
@@ -198,6 +301,22 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
   </td>
 </tr>
 <tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/ui/Potentiometer.html">Potentiometer</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/ui/class-list.html');" href="funnel/ui/package-detail.html">funnel.ui</a></td><td class="summaryTableLastCol">
+  This is the class to express a potentiometer
+  
+  </td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/ui/RGBLED.html">RGBLED</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/ui/class-list.html');" href="funnel/ui/package-detail.html">funnel.ui</a></td><td class="summaryTableLastCol">
+  This is the class to express a full color LED
+  
+  </td>
+</tr>
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/Scaler.html">Scaler</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
@@ -205,27 +324,52 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
   </td>
 </tr>
 <tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/ui/Servo.html">Servo</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/ui/class-list.html');" href="funnel/ui/package-detail.html">funnel.ui</a></td><td class="summaryTableLastCol">
+  This is the class to express a servo
+  
+  </td>
+</tr>
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/SetPoint.html">SetPoint</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   アナログの値に対して閾値とヒステリシスを持つポイントをセットし、現在の状態を段階化して返します。ポイントが1つの場合の出力は0または1の2種類、ポイントが2つの場合は0または1または2の3種類、ポイントがn個の場合は0からnまでのn種類になります。
     </td>
 </tr>
-<tr class="prow0">
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/SignalScope.html">SignalScope</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   入力の状態を表示するためのスコープクラス
   A signal scope class to show changes of inputs.</td>
 </tr>
-<tr class="prow1">
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/SysexEvent.html">SysexEvent</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">
   Sysexに関連するイベントを表すクラスです。
   </td>
 </tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/i2c/WiiNunchuck.html">WiiNunchuck</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/i2c/class-list.html');" href="funnel/i2c/package-detail.html">funnel.i2c</a></td><td class="summaryTableLastCol">
+  This is the class to express a Wii Nunchuck controller
+  Reference: http://www.wiili.org/index.php/Wiimote/Extension_Controllers/Nunchuk
+  </td>
+</tr>
 <tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/i2c/WiiNunchuckEvent.html">WiiNunchuckEvent</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/i2c/class-list.html');" href="funnel/i2c/package-detail.html">funnel.i2c</a></td><td class="summaryTableLastCol">
+  Created 16 June 2009
+  By Shigeru Kobayashi
+  This is the class to express Wii Nunchuck releated events
+  </td>
+</tr>
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="funnel/XBee.html">XBee</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('funnel/class-list.html');" href="funnel/package-detail.html">funnel</a></td><td class="summaryTableLastCol">

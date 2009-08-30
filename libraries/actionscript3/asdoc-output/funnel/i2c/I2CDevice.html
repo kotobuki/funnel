@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="I2CDevice,funnel.i2c.I2CDevice,I2C_ADDRESS_BASE,I2C_REPLY,I2C_REQUEST,READ,READ_CONTINUOUS,STOP_READING,WRITE,_io,address,command,handleSysex,update" name="keywords">
+<meta content="I2CDevice,funnel.i2c.I2CDevice,I2C_ADDRESS_BASE,I2C_CONFIG,I2C_REPLY,I2C_REQUEST,READ,READ_CONTINUOUS,STOP_READING,WRITE,_delay,_io,address,command,handleSysex,update" name="keywords">
 <title>funnel.i2c.I2CDevice</title>
 </head>
 <body>
@@ -41,7 +41,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="classHeaderTableLabel">Implements</td><td><a href="../ISysexMessageListener.html">ISysexMessageListener</a></td>
 </tr>
 <tr>
-<td class="classHeaderTableLabel">Subclasses</td><td><a href="../i2c/AvagoColorSensor.html">AvagoColorSensor</a>, <a href="../i2c/BlinkM.html">BlinkM</a>, <a href="../i2c/HMC6352.html">HMC6352</a>, <a href="../i2c/LIS3LV02DQ.html">LIS3LV02DQ</a></td>
+<td class="classHeaderTableLabel">Subclasses</td><td><a href="../i2c/AvagoColorSensor.html">AvagoColorSensor</a>, <a href="../i2c/BlinkM.html">BlinkM</a>, <a href="../i2c/HMC6343_Advanced.html">HMC6343_Advanced</a>, <a href="../i2c/HMC6343_Simple.html">HMC6343_Simple</a>, <a href="../i2c/HMC6352.html">HMC6352</a>, <a href="../i2c/LIS302DL.html">LIS302DL</a>, <a href="../i2c/LIS3LV02DQ.html">LIS3LV02DQ</a>, <a href="../i2c/WiiNunchuck.html">WiiNunchuck</a></td>
 </tr>
 </table>
 <p></p>
@@ -76,6 +76,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#_delay">_delay</a> : uint = 0<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">I2CDevice</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#_io">_io</a> : <a href="../funnel/IOModule.html">IOModule</a>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">I2CDevice</td>
@@ -92,7 +96,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#I2CDevice()">I2CDevice</a>(ioModule:*, slaveAddress:uint)</div>
+<a class="signatureLink" href="#I2CDevice()">I2CDevice</a>(ioModule:*, slaveAddress:uint, delayUS:uint = 0)</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">I2CDevice</td>
 </tr>
@@ -122,6 +126,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#I2C_ADDRESS_BASE">I2C_ADDRESS_BASE</a> : uint = 15488<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">I2CDevice</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#I2C_CONFIG">I2C_CONFIG</a> : uint = 0x78<div class="summaryTableDescription">[static]</div>
 </td><td class="summaryTableOwnerCol">I2CDevice</td>
 </tr>
 <tr class="">
@@ -191,6 +199,15 @@ showHideInherited();
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get command():uint</code>
 <br>
 </div>
+<a name="_delay"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">_delay</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected static var _delay:uint = 0</code>
+</div>
 <a name="_io"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -209,7 +226,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function I2CDevice(ioModule:*, slaveAddress:uint)</code><span class="label">Parameters</span>
+<code>public function I2CDevice(ioModule:*, slaveAddress:uint, delayUS:uint = 0)</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">ioModule</span>:*</code></td>
@@ -219,6 +236,12 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">slaveAddress</span>:uint</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">delayUS</span>:uint</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 </div>
@@ -264,6 +287,15 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static const I2C_ADDRESS_BASE:uint = 15488</code>
+</div>
+<a name="I2C_CONFIG"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">I2C_CONFIG</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const I2C_CONFIG:uint = 0x78</code>
 </div>
 <a name="I2C_REPLY"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">

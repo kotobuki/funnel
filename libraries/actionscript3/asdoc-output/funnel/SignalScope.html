@@ -58,14 +58,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#SignalScope()">SignalScope</a>(x:Number, y:Number, points:int, description:String = "")</div>
+<a class="signatureLink" href="#SignalScope()">SignalScope</a>(left:Number, top:Number, points:int, description:String = "", rangeMin:Number = 0, rangeMax:Number = 1)</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">SignalScope</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#update()">update</a>(pin:<a href="Pin.html">Pin</a>):void</div>
+<a class="signatureLink" href="#update()">update</a>(input:*):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">SignalScope</td>
 </tr>
@@ -85,16 +85,16 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function SignalScope(x:Number, y:Number, points:int, description:String = "")</code><span class="label">Parameters</span>
+<code>public function SignalScope(left:Number, top:Number, points:int, description:String = "", rangeMin:Number = 0, rangeMax:Number = 1)</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">x</span>:Number</code></td>
+<td width="20px"></td><td><code><span class="label">left</span>:Number</code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">y</span>:Number</code></td>
+<td width="20px"></td><td><code><span class="label">top</span>:Number</code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
@@ -108,6 +108,18 @@ showHideInherited();
 <tr>
 <td width="20px"></td><td><code><span class="label">description</span>:String</code> (default = "<code></code>")<code></code></td>
 </tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">rangeMin</span>:Number</code> (default = <code>0</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">rangeMax</span>:Number</code> (default = <code>1</code>)<code></code></td>
+</tr>
 </table>
 </div>
 <a name="methodDetail"></a>
@@ -119,10 +131,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function update(pin:<a href="Pin.html">Pin</a>):void</code><span class="label">Parameters</span>
+<code>public function update(input:*):void</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">pin</span>:<a href="Pin.html">Pin</a></code></td>
+<td width="20px"></td><td><code><span class="label">input</span>:*</code></td>
 </tr>
 </table>
 </div>
