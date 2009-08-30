@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="Pin,funnel.Pin,AIN,AOUT,DIN,DOUT,average,filters,lastValue,maximum,minimum,number,type,value,clear" name="keywords">
+<meta content="Pin,funnel.Pin,AIN,AOUT,DIN,DOUT,I2C,PWM,SERVO,average,filters,lastValue,maximum,minimum,number,preFilterValue,type,value,addFilter,clear,removeAllFilters,setFilters" name="keywords">
 <title>funnel.Pin</title>
 </head>
 <body>
@@ -100,6 +100,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Pin</td>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#preFilterValue">preFilterValue</a> : Number<div class="summaryTableDescription">[read-only]</div>
+</td><td class="summaryTableOwnerCol">Pin</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#type">type</a> : uint<div class="summaryTableDescription">[read-only]
    ポートのタイプ(AIN、DIN、AOUT、DOUT)
    
@@ -134,11 +138,32 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#addFilter()">addFilter</a>(newFilter:*):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Pin</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#clear()">clear</a>():void</div>
 <div class="summaryTableDescription">
    ヒストリをリセットします。
    
    </div>
+</td><td class="summaryTableOwnerCol">Pin</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#removeAllFilters()">removeAllFilters</a>():void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Pin</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setFilters()">setFilters</a>(newFilters:Array):void</div>
+<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">Pin</td>
 </tr>
 </table>
@@ -188,26 +213,42 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#AIN">AIN</a> : uint = 0<div class="summaryTableDescription">[static]
-  アナログ入力
-  </div>
+   アナログ入力
+   </div>
 </td><td class="summaryTableOwnerCol">Pin</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#AOUT">AOUT</a> : uint = 2<div class="summaryTableDescription">[static]
-  アナログ出力
-  </div>
+   アナログ出力
+   </div>
 </td><td class="summaryTableOwnerCol">Pin</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DIN">DIN</a> : uint = 1<div class="summaryTableDescription">[static]
-  デジタル入力
-  </div>
+   デジタル入力
+   </div>
 </td><td class="summaryTableOwnerCol">Pin</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DOUT">DOUT</a> : uint = 3<div class="summaryTableDescription">[static]
-  デジタル出力
-  </div>
+   デジタル出力
+   </div>
+</td><td class="summaryTableOwnerCol">Pin</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#I2C">I2C</a> : uint = 6<div class="summaryTableDescription">[static]
+   Pins for I2C
+   </div>
+</td><td class="summaryTableOwnerCol">Pin</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#PWM">PWM</a> : uint = 2<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Pin</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SERVO">SERVO</a> : uint = 4<div class="summaryTableDescription">[static]
+   Pins for servo
+   </div>
 </td><td class="summaryTableOwnerCol">Pin</td>
 </tr>
 </table>
@@ -314,6 +355,18 @@ showHideInherited();
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get number():uint</code>
 <br>
 </div>
+<a name="preFilterValue"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">preFilterValue</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>preFilterValue:Number</code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get preFilterValue():Number</code>
+<br>
+</div>
 <a name="type"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -375,10 +428,24 @@ showHideInherited();
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
+<a name="addFilter()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">addFilter</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function addFilter(newFilter:*):void</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">newFilter</span>:*</code></td>
+</tr>
+</table>
+</div>
 <a name="clear()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">clear</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+<td class="detailHeaderName">clear</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -386,6 +453,29 @@ showHideInherited();
    ヒストリをリセットします。
    
    </p></div>
+<a name="removeAllFilters()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">removeAllFilters</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function removeAllFilters():void</code>
+</div>
+<a name="setFilters()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setFilters</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setFilters(newFilters:Array):void</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">newFilters</span>:Array</code></td>
+</tr>
+</table>
+</div>
 <div class="detailSectionHeader">Event detail</div>
 <a name="event:change"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -433,8 +523,8 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static const AIN:uint = 0</code><p>
-  アナログ入力
-  </p></div>
+   アナログ入力
+   </p></div>
 <a name="AOUT"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -443,8 +533,8 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static const AOUT:uint = 2</code><p>
-  アナログ出力
-  </p></div>
+   アナログ出力
+   </p></div>
 <a name="DIN"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -453,8 +543,8 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static const DIN:uint = 1</code><p>
-  デジタル入力
-  </p></div>
+   デジタル入力
+   </p></div>
 <a name="DOUT"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -463,8 +553,37 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static const DOUT:uint = 3</code><p>
-  デジタル出力
-  </p></div>
+   デジタル出力
+   </p></div>
+<a name="I2C"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">I2C</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const I2C:uint = 6</code><p>
+   Pins for I2C
+   </p></div>
+<a name="PWM"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">PWM</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const PWM:uint = 2</code>
+</div>
+<a name="SERVO"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">SERVO</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const SERVO:uint = 4</code><p>
+   Pins for servo
+   </p></div>
 <br>
 <br>
 <hr>

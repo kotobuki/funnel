@@ -19,7 +19,7 @@
 <td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?funnel/MatrixLED.html&amp;funnel/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MatrixLED</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a></td>
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MatrixLED</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
 </tr>
 <tr class="titleTableRow3">
 <td colspan="2">&nbsp;</td>
@@ -27,7 +27,7 @@
 </table>
 <script type="text/javascript" language="javascript">
 <!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class MatrixLED"); titleBar_setSubNav(false,true,false,false,true,false,true,false,false,false,false,false,false,false);}
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class MatrixLED"); titleBar_setSubNav(true,true,false,false,true,false,true,false,false,false,false,false,false,false);}
 --></script>
 <div class="MainContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable">
@@ -64,8 +64,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#autoUpdate">autoUpdate</a> : Boolean<div class="summaryTableDescription">
-  出力ポートを手動で更新する場合はfalseにします。
-  </div>
+   出力ポートを手動で更新する場合はfalseにします。
+   </div>
 </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -156,28 +156,66 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:configurationError">configurationError</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+  指定したコンフィギュレーションの設定に失敗したとき送出されます。
+  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="hideInheritedEvent">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:error">error</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+  エラーが起きたとき送出されます。
+  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</tr>
+<tr class="hideInheritedEvent">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IOSystem.html#event:i2cPowerPinsReady">i2cPowerPinsReady</a>
+</div>
+</td><td class="summaryTableDescription summaryTableCol">
+   This event will be sent when I2C power pins of an I/O module is ready
+   </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="hideInheritedEvent">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:ready">ready</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+   This event will be sent when an I/O module is ready
+   </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="hideInheritedEvent">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:rebootError">rebootError</a>
 </div>
-</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</td><td class="summaryTableDescription summaryTableCol">
+  I/Oモジュールの再起動に失敗したとき送出されます。
+  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</tr>
+</table>
+</div>
+<a name="constantSummary"></a><a name="protectedConstantSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Protected Constants</div>
+<div class="showHideLinks">
+<div class="hideInheritedProtectedConstant" id="hideInheritedProtectedConstant">
+<a onclick="javascript:setInheritedVisible(false,'ProtectedConstant');" href="#protectedConstantSummary" class="showHideLink"><img src="../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Protected Constants</a>
+</div>
+<div class="showInheritedProtectedConstant" id="showInheritedProtectedConstant">
+<a onclick="javascript:setInheritedVisible(true,'ProtectedConstant');" href="#protectedConstantSummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Protected Constants</a>
+</div>
+</div>
+<table id="summaryTableProtectedConstant" class="summaryTable hideInheritedProtectedConstant" cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProtectedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#I2C_POWER_PINS_STARTUP_TIME">I2C_POWER_PINS_STARTUP_TIME</a> : uint = 500<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 </table>
 </div>

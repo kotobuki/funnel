@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="Gainer,funnel.Gainer,MODE1,MODE2,MODE3,MODE4,MODE5,MODE6,MODE7,MODE8,button,led,analogInput,analogOutput,digitalInput,digitalOutput" name="keywords">
+<meta content="Gainer,funnel.Gainer,MODE1,MODE2,MODE3,MODE4,MODE5,MODE6,MODE7,MODE8,button,gui,led,analogInput,analogOutput,digitalInput,digitalOutput" name="keywords">
 <title>funnel.Gainer</title>
 </head>
 <body>
@@ -19,7 +19,7 @@
 <td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?funnel/Gainer.html&amp;funnel/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Gainer</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a></td>
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Gainer</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
 </tr>
 <tr class="titleTableRow3">
 <td colspan="2">&nbsp;</td>
@@ -27,7 +27,7 @@
 </table>
 <script type="text/javascript" language="javascript">
 <!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Gainer"); titleBar_setSubNav(false,true,false,false,true,false,true,false,false,false,false,false,false,false);}
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Gainer"); titleBar_setSubNav(true,true,false,false,true,false,true,false,false,false,false,false,false,false);}
 --></script>
 <div class="MainContent">
 <table cellspacing="0" cellpadding="0" class="classHeaderTable">
@@ -64,21 +64,24 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="hideInheritedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#autoUpdate">autoUpdate</a> : Boolean<div class="summaryTableDescription">
-  出力ポートを手動で更新する場合はfalseにします。
-  </div>
+   出力ポートを手動で更新する場合はfalseにします。
+   </div>
 </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#button">button</a> : <a href="funnel/Pin.html">Pin</a>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#button">button</a> : <a href="ui/Button.html">Button</a>
 <div class="summaryTableDescription">[read-only]
-   I/Oモジュール上のボタンを表すピン
    </div>
 </td><td class="summaryTableOwnerCol">Gainer</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#led">led</a> : <a href="funnel/Pin.html">Pin</a>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#gui">gui</a> : <a href="gui/IOModuleGUI.html">IOModuleGUI</a>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Gainer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#led">led</a> : <a href="ui/LED.html">LED</a>
 <div class="summaryTableDescription">[read-only]
-   I/Oモジュール上のLEDを表すピン
    </div>
 </td><td class="summaryTableOwnerCol">Gainer</td>
 </tr>
@@ -262,6 +265,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedEvent">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="IOSystem.html#event:i2cPowerPinsReady">i2cPowerPinsReady</a>
+</div>
+</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</tr>
+<tr class="hideInheritedEvent">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="IOSystem.html#event:ready">ready</a>
 </div>
 </td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
@@ -272,6 +282,27 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="IOSystem.html#event:rebootError">rebootError</a>
 </div>
 </td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
+</tr>
+</table>
+</div>
+<a name="constantSummary"></a><a name="protectedConstantSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Protected Constants</div>
+<div class="showHideLinks">
+<div class="hideInheritedProtectedConstant" id="hideInheritedProtectedConstant">
+<a onclick="javascript:setInheritedVisible(false,'ProtectedConstant');" href="#protectedConstantSummary" class="showHideLink"><img src="../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Protected Constants</a>
+</div>
+<div class="showInheritedProtectedConstant" id="showInheritedProtectedConstant">
+<a onclick="javascript:setInheritedVisible(true,'ProtectedConstant');" href="#protectedConstantSummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Protected Constants</a>
+</div>
+</div>
+<table id="summaryTableProtectedConstant" class="summaryTable hideInheritedProtectedConstant" cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProtectedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#I2C_POWER_PINS_STARTUP_TIME">I2C_POWER_PINS_STARTUP_TIME</a> : uint = 500<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
 </tr>
 </table>
 </div>
@@ -289,11 +320,30 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>button:<a href="funnel/Pin.html">Pin</a></code>&nbsp;&nbsp;[read-only]<p>
-   I/Oモジュール上のボタンを表すピン
+<code>button:<a href="ui/Button.html">Button</a></code>&nbsp;&nbsp;[read-only]<p>
    </p><span class="label">Implementation</span>
 <br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get button():<a href="funnel/Pin.html">Pin</a></code>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get button():<a href="ui/Button.html">Button</a></code>
+<br>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="ui/Button.html" target="">funnel.ui.Button</a>
+</div>
+</div>
+<a name="gui"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">gui</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>gui:<a href="gui/IOModuleGUI.html">IOModuleGUI</a></code>&nbsp;&nbsp;[read-write]<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get gui():<a href="gui/IOModuleGUI.html">IOModuleGUI</a></code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set gui(value:<a href="gui/IOModuleGUI.html">IOModuleGUI</a>):void</code>
 <br>
 </div>
 <a name="led"></a>
@@ -303,12 +353,17 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>led:<a href="funnel/Pin.html">Pin</a></code>&nbsp;&nbsp;[read-only]<p>
-   I/Oモジュール上のLEDを表すピン
+<code>led:<a href="ui/LED.html">LED</a></code>&nbsp;&nbsp;[read-only]<p>
    </p><span class="label">Implementation</span>
 <br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get led():<a href="funnel/Pin.html">Pin</a></code>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get led():<a href="ui/LED.html">LED</a></code>
 <br>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="ui/LED.html" target="">funnel.ui.LED</a>
+</div>
 </div>
 <a name="MODE1"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -457,7 +512,7 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">samplingInterval</span>:int</code> (default = <code>33</code>)<code></code> &mdash; サンプリング間隔(ms)
+<td width="20px"></td><td><code><span class="label">samplingInterval</span>:int</code> (default = <code>33</code>)<code></code> &mdash; Gainerオブジェクトのオーナー（Spriteなど）
    </td>
 </tr>
 </table>
