@@ -38,6 +38,8 @@ package funnel.ui {
 
 		private var _value:Number = 0;
 
+		private var _isPressed:Boolean = false;
+
 		private var _wasPressed:Boolean = false;
 
 		private var _pressedValue:Number = 0;
@@ -63,6 +65,14 @@ package funnel.ui {
 
 		/**
 		 * 
+		 * @return whether pressed or not pressed
+		 */
+		public function get isPressed():Boolean {
+			return _isPressed;
+		}
+
+		/**
+		 * 
 		 * @return the current distance from the pressed point
 		 */
 		public function get distanceFromPressed():Number {
@@ -82,20 +92,20 @@ package funnel.ui {
 		private function changed(e:PinEvent):void {
 			_value = e.target.value;
 
-			var isPressed:Boolean = (_value < -0.02) ? false : true;
+			_isPressed = (_value < -0.02) ? false : true;
 
-			if (!_wasPressed && isPressed) {
+			if (!_wasPressed && _isPressed) {
 				dispatchEvent(new SoftPotEvent(SoftPotEvent.PRESS));
 				_pressedValue = _value;
 				_distanceFromPressed = 0;
-			} else if (_wasPressed && isPressed) {
+			} else if (_wasPressed && _isPressed) {
 				dispatchEvent(new SoftPotEvent(SoftPotEvent.DRAG));
 				_distanceFromPressed = _value - _pressedValue;
-			} else if (_wasPressed && !isPressed) {
+			} else if (_wasPressed && !_isPressed) {
 				dispatchEvent(new SoftPotEvent(SoftPotEvent.RELEASE));
 			}
 
-			_wasPressed = isPressed;
+			_wasPressed = _isPressed;
 		}
 	}
 }
