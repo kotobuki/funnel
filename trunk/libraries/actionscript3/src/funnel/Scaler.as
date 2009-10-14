@@ -51,7 +51,7 @@ package funnel
 		 * @param limiter 入力値を制限するか
 		 * 
 		 */		
-		public function Scaler(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, type:Function = null, limiter:Boolean = false) {
+		public function Scaler(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, type:Function = null, limiter:Boolean = true) {
 			this.inMin = inMin;
 			this.inMax = inMax;
 			this.outMin = outMin;
