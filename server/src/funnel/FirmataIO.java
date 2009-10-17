@@ -225,8 +225,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		rearmostAnalogInputPin = -1;
 
 		if (config.length != totalDigitalPins) {
-			throw new IllegalArgumentException(
-					"The number of pins does not match to that of the Arduino I/O module"); //$NON-NLS-1$
+			throw new IllegalArgumentException("The number of pins does not match to that of the Arduino I/O module"); //$NON-NLS-1$
 		}
 
 		beginPacketIfNeeded(moduleId);
@@ -235,22 +234,19 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				throw new IllegalArgumentException("Argument of the following pin is null: " + i);
 			}
 			if (!(config[i] instanceof Integer)) {
-				throw new IllegalArgumentException(
-						"Argument of the following pin is not an integer value: " + i);
+				throw new IllegalArgumentException("Argument of the following pin is not an integer value: " + i);
 			}
 			if (digitalPinRange.contains(i)) {
 				if (PIN_AIN.equals(config[i])) {
 					if (!analogPinRange.contains(i)) {
-						throw new IllegalArgumentException(
-								"AIN is not available on the following pin: " + i);
+						throw new IllegalArgumentException("AIN is not available on the following pin: " + i);
 					}
 					setPinMode(i, ARD_PIN_MODE_IN);
 					pinMode[i] = ARD_PIN_MODE_AIN;
 					rearmostAnalogInputPin = i - analogPinRange.getMin();
 				} else if (PIN_AOUT.equals(config[i])) {
 					if (Arrays.binarySearch(pwmCapablePins, i) < 0) {
-						throw new IllegalArgumentException(
-								"PWM is not available on the following pin: " + i);
+						throw new IllegalArgumentException("PWM is not available on the following pin: " + i);
 					}
 					setPinMode(i, ARD_PIN_MODE_PWM);
 					pinMode[i] = ARD_PIN_MODE_PWM;
@@ -264,8 +260,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 					setPinMode(i, ARD_PIN_MODE_SERVO);
 					pinMode[i] = ARD_PIN_MODE_SERVO;
 				} else {
-					throw new IllegalArgumentException(
-							"A wrong pin mode is specified for the following pin: " + i);
+					throw new IllegalArgumentException("A wrong pin mode is specified for the following pin: " + i);
 				}
 			} else {
 				throw new IllegalArgumentException("The following pin number is out of range: " + i);
@@ -351,8 +346,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				stopPolling();
 			}
 		} else {
-			throw new IllegalArgumentException(
-					"The first argument of /polling is not an integer value"); //$NON-NLS-1$
+			throw new IllegalArgumentException("The first argument of /polling is not an integer value"); //$NON-NLS-1$
 		}
 	}
 
@@ -413,8 +407,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		if (command == SYSEX_I2C_REQUEST) {
 			int slaveAddress = ((Integer) arguments[3]).intValue();
 			if ((slaveAddress < 0) || (slaveAddress > 127)) {
-				throw new IllegalArgumentException("the slave address is out of range: "
-						+ Integer.toHexString(slaveAddress));
+				throw new IllegalArgumentException("the slave address is out of range: " + Integer.toHexString(slaveAddress));
 			}
 
 			int readWriteMode = ((Integer) arguments[2]).intValue();
@@ -426,6 +419,13 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			writeByte(slaveAddress); // slave address
 			writeByte(readWriteMode << 3); // read/write
 			for (int i = 4; i < arguments.length; i++) {
+				int value = ((Integer) arguments[i]).intValue();
+				writeValueAsTwo7bitBytes(value);
+			}
+		} else if (command == SERVO_CONFIG) {
+			int pinNumber = ((Integer) arguments[2]).intValue();
+			writeByte(pinNumber); // slave address
+			for (int i = 3; i < arguments.length; i++) {
 				int value = ((Integer) arguments[i]).intValue();
 				writeValueAsTwo7bitBytes(value);
 			}
@@ -499,14 +499,12 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				// We got everything
 				switch (executeMultiByteCommand[source]) {
 				case ARD_DIGITAL_MESSAGE:
-					processDigitalBytes(source, multiByteChannel[source],
-							((storedInputData[source][0] << 7) | storedInputData[source][1]));
+					processDigitalBytes(source, multiByteChannel[source], ((storedInputData[source][0] << 7) | storedInputData[source][1]));
 					break;
 				case ARD_REPORT_VERSION: // Report version
 					protocolVersion[0] = storedInputData[source][0]; // minor
 					protocolVersion[1] = storedInputData[source][1]; // major
-					printMessage("Firmata Protocol Version: " + protocolVersion[1] + "."
-							+ protocolVersion[0]);
+					printMessage("Firmata Protocol Version: " + protocolVersion[1] + "." + protocolVersion[0]);
 					firmwareVersionQueue.add(protocolVersion[1] + "." + protocolVersion[0]);
 					break;
 				case ARD_ANALOG_MESSAGE:
