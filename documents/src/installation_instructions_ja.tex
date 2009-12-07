@@ -68,10 +68,10 @@ lineskip={-2pt}
 \end{itemize}
 
 \section{ドライバのインストール}
-Gainer I/Oモジュール、Arduino I/Oボード、およびXBee無線モデムやFIOモジュールとの接続に使用するUSB⇔XBee変換モジュール\footnote{SparkFun ElectronicsのXBee Explorer USB（パーツナンバーWRL-08687）など}のほとんどはFTDI社のUSB-to-UART変換ブリッジチップFT232Rシリーズを搭載しています。このため、最初にこのドライバをセットアップすればほとんどの全てのハードウェアを利用できます\footnote{Arduinoを使用する場合には配布パッケージの\texttt{drivers}フォルダ（例：\texttt{arduino-0017/drivers}）にも含まれています。}。
+Gainer I/Oモジュール、Arduino I/Oボード、およびXBee無線モデムやFIOモジュールとの接続に使用するUSB⇔XBee変換モジュール\footnote{SparkFun ElectronicsのXBee Explorer USB（パーツナンバーWRL-08687）など}のほとんどはFTDI社のUSB-to-UART変換ブリッジチップFT232Rシリーズを搭載しています。このため、最初にこのドライバをセットアップすればほとんどの全てのハードウェアを利用できます\footnote{Arduinoを使用する場合には配布パッケージにも含まれています。}。
 
 \subsection{WIndows XP/Vistaの場合}
-まず最初にドライバをダウンロードします。ウェブブラウザで次のURLにアクセスし、Operating System（オペレーティング・システム）の欄がWindows XPと書かれているドライバをダウンロードします。
+まず最初にドライバをダウンロードします。ウェブブラウザで次のURLにアクセスし、Operating System（オペレーティング・システム）の欄にWindows XPやVistaなどと書かれているドライバをダウンロードします。
 
 \vspace{8pt}
 http://www.ftdichip.com/Drivers/VCP.htm
@@ -240,18 +240,15 @@ FIOはLilyPad Arduino Main Board v1.6\footnote{http://www.sparkfun.com/commerce/p
 \end{figure}
 
 \subsubsection{XBeeの設定}
-無線でスケッチをアップロードするには、XBeeのファームウェアのバージョンが1.0.A.5または1.0.C.Dである必要があります。XBeeは1.0.8.4などの古いバージョンで販売されていることが多いため、その場合にはX-CTUを使用して1.0.C.Dにアップデートしてください。
-
-次に、XBeeに設定を書込みます。X-CTUを利用する場合には、\texttt{hardware/fio/xbee}に入っている\texttt{coordinator\_auto\_reset.pro}（自動リセットあり）または\texttt{coordinator.pro}（自動リセットなし）をPCに接続するコーディネータに、\texttt{enddevice.pro}をFIOに搭載するエンドデバイスに（必要に応じて設定を変更した上で）それぞれ書き込んでください\footnote{自動リセットの設定方法はhttp://www.ladyada.net/make/xbee/arduino.htmlで紹介されていた方法を参考に一部改変したものです。}。
-
-X-CTUを利用しない場合には、\texttt{hardware/fio/tool/XBeeConfigTool}を使用して設定してください。このツールの使用方法は以下の通りです。
+無線でスケッチをアップロードするには、XBeeのファームウェアのバージョンが1.0.A.5または1.0.C.Dである必要があります。XBeeは1.0.8.4などの古いバージョンで販売されていることが多いため、その場合にはX-CTUを使用して1.0.C.Dにアップデートしてください。次に、XBeeに設定を書込みます。設定を書き込みには、\texttt{hardware/fio/tool/XBeeConfigTool}をを使うとよいでしょう。このツールの使用方法は以下の通りです。
 
 \newpage
 \begin{enumerate}
 \item Serial PortでXBee USB Explorerなどが接続されているシリアルポートを選択します。
 \item ModeとしてCoordinatorかEnd Devicesを選択します。
+\item Baud rateとして適切な値を選択します（ATmega168であれば19200bps、ATmega328であれば57600bps）。
 \item PAN IDを適切な値に設定します。
-\item MY IDを適切な値に設定します。
+\item MY IDを適切な値に設定します（エンドデバイスの場合のみ）。
 \item Configureボタンを押すと数秒間で書込みが完了します。
 \end{enumerate}
 
@@ -265,7 +262,9 @@ X-CTUを利用しない場合には、\texttt{hardware/fio/tool/XBeeConfigTool}を使用して設
 \end{center}
 \end{figure}
 
-XBeeConfigToolは、FIOのファームウェアを無線で書き換えることを想定して、Arduinoのブートローダで使用される通信速度と同じ19200bpsに設定します。複数のFIOを同時に使用する場合など、コーディネータ側の通信速度が不足する時はコーディネータ側の通信速度を57600bpsなどに変更してください（ファームウェアをアップデートする際には戻してください）。
+%XBeeConfigToolは、FIOのファームウェアを無線で書き換えることを想定して、Arduinoのブートローダで使用される通信速度と同じ19200bpsに設定します。複数のFIOを同時に使用する場合など、コーディネータ側の通信速度が不足する時はコーディネータ側の通信速度を57600bpsなどに変更してください（ファームウェアをアップデートする際には戻してください）。
+
+これ以外の方法として、WindowsであればX-CTUを使う方法があります。\texttt{hardware/fio/xbee}に入っている\texttt{coordinator\_auto\_reset.pro}（自動リセットあり）または\texttt{coordinator.pro}（自動リセットなし）をPCに接続するコーディネータに、\texttt{enddevice.pro}をFIOに搭載するエンドデバイスに（必要に応じて設定を変更した上で）それぞれ書き込んでください\footnote{自動リセットの設定方法はhttp://www.ladyada.net/make/xbee/arduino.htmlで紹介されていた方法を参考に一部改変したものです。}。
 
 以下は参考用として手動で設定を書き込む際の手順です。手動で設定を書き込む場合には、XBeeConfigTerminalを使用すると便利です。
 
