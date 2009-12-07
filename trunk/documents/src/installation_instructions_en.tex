@@ -69,7 +69,7 @@ lineskip={-2pt}
 \end{itemize}
 
 \section{How to install a device driver}
-Gainer I/O modules, Arduino I/O boards, XBee RF modems, FIO boards and most USB-to-XBee bridge modules \footnote{SparkFun Electronics: XBee Explorer USB (part number WRL-08687)} are equipped with an FTDI FT232RL (a very famous USB-to-UART bridge chip). So you can use virtually any hardware device by installing the device driver for the bridge chip\footnote{The drivers are also included in a `\texttt{drivers}' folder  (e.g. \texttt{arduino-0017/drivers}) of an Arduino distribution package}.
+Gainer I/O modules, Arduino I/O boards, XBee RF modems, FIO boards and most USB-to-XBee bridge modules \footnote{SparkFun Electronics: XBee Explorer USB (part number WRL-08687)} are equipped with an FTDI FT232RL (a very famous USB-to-UART bridge chip). So you can use virtually any hardware device by installing the device driver for the bridge chip\footnote{The drivers are also included in an Arduino distribution package}.
 
 \subsection{Windows XP/Vista}
 First, install the device driver from the following URL. Point your web browser to the following URL, and download a device driver for Windows XP or Vista.
@@ -175,15 +175,14 @@ Write \texttt{coordinator.pro} in \texttt{hardware/xbee/zb} for a coordinator, a
 Since FIO is an Arduino clone I/O board with an XBee module based on the LilyPad Arduino Main Board v1.6\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8465}, you have to configure the XBee modem and upload sketches through the Arduino IDE. Though both XBee series are supported, we recommend that you to use the 802.15.4 series for simplicity and clarity.
 
 \subsubsection{How to configure XBee modems}
-On Windows, write \texttt{coordinator\_auto\_reset.pro} or \texttt{coordinator.pro} (if you don't want to enable the auto reset function) in \texttt{hardware/fio/xbee} to a coordinator, and \texttt{router.pro} to end devices (i.e. XBee modems for FIO boards) using X-CTU. Please change parameters if needed.
-
-On Mac OS X, XBeeConfigTool (available in \texttt{hardware/fio/tool}) will be your friend. To use the tools you mush:
+On Windows and Mac OS X, XBeeConfigTool (available in \texttt{hardware/fio/tool}) will be your friend. To use the tools you must:
 
 \begin{enumerate}
 \item choose a proper serial port
-\item set a proper PAN ID
-\item set a proper MY ID
 \item choose a proper mode (Coordinator or End Devices)
+\item choose a proper baud rate (19200bps for ATmega168, 57600bps for ATmega328)
+\item set a proper PAN ID
+\item set a proper MY ID (for end devices only)
 \item press the Configure button to configure the XBee modem 
 \end{enumerate}
 
@@ -197,7 +196,9 @@ On Mac OS X, XBeeConfigTool (available in \texttt{hardware/fio/tool}) will be yo
 \end{center}
 \end{figure}
 
-The baud rate setting in configuration files and the table is 19,200 bps because that is the baud rate used by the boot loader in the Arduino IDE. If you have to handle several FIO boards and the baud rate is not fast enough, increase the baud rate of the coordinator (e.g. 57,600 bps). Please don't forget to revert the baud rate to 19,200 bps to upload sketches to FIO boards.
+%The baud rate setting in configuration files and the table is 19,200 bps because that is the baud rate used by the boot loader in the Arduino IDE. If you have to handle several FIO boards and the baud rate is not fast enough, increase the baud rate of the coordinator (e.g. 57,600 bps). Please don't forget to revert the baud rate to 19,200 bps to upload sketches to FIO boards.
+
+On Windows, using X-CTU will be an alternative way to configure XBee modems. Write \texttt{coordinator\_auto\_reset.pro} or \texttt{coordinator.pro} (if you don't want to enable the auto reset function) in \texttt{hardware/fio/xbee} to a coordinator, and \texttt{router.pro} to end devices (i.e. XBee modems for FIO boards) using X-CTU. Please change parameters if needed.
 
 \begin{table}[htdp]
 \begin{center}
