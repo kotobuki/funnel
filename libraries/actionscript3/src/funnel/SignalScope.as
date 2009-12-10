@@ -65,10 +65,6 @@ package funnel {
 			format.color = CURRENT_VALUE_COLOR;
 			_descriptionLabel.defaultTextFormat = format;
 			_descriptionLabel.autoSize = TextFieldAutoSize.LEFT;
-			_currentValueText.text = "current: 0.0";
-			_maximumValueText.text = "maximum: 0.0";
-			_minimumValueText.text = "minimum: 0.0";
-			_averageValueText.text = "average: 0.0";
 			_descriptionLabel.text = description;
 			_currentValueText.x = x + 210;
 			_currentValueText.y = y + 32 - 4;

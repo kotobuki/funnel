@@ -6,7 +6,7 @@ package funnel
 	 */
 	public class SetPoint implements IFilter
 	{
-		private var _points:Object;
+		private var _points:Array;
 		private var _range:Array;
 		private var _lastStatus:int;
 
@@ -66,6 +66,11 @@ package funnel
 		 */
 		public function removePoint(threshold:Number):void {
 			delete _points[threshold];
+			updateRange();
+		}
+
+		public function removeAllPoints():void {
+			_points = new Array();
 			updateRange();
 		}
 
