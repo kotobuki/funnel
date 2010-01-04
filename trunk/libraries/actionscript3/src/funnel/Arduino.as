@@ -95,6 +95,14 @@ package funnel
 			ioModule(0).setServoPulseRange(pinNumber, minPulse, maxPulse);
 		}
 
+		public override function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void {
+			if (type == FunnelEvent.FIRMATA_STRING) {
+				ioModule(0).addEventListener(type, listener, useCapture, priority, useWeakReference);
+			} else {
+				super.addEventListener(type, listener, useCapture, priority, useWeakReference);
+			}
+		}
+
 		public function get gui():IOModuleGUI {
 			return ioModule(0).gui;
 		}
