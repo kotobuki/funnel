@@ -26,7 +26,7 @@ public class FunnelServer extends Frame {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel Server 010 (r698) [BETA]";
+	private static final String buildName = "Funnel Server 010 (r702) [BETA]";
 
 	private CommandPortServer server;
 	private IOModule ioModule = null;
@@ -38,6 +38,8 @@ public class FunnelServer extends Frame {
 	static public boolean embeddedMode = false;
 	static public boolean initialized = false;
 
+	static public String serialPort = null;
+	
 	public FunnelServer(String configFileName) {
 		super();
 		Runtime.getRuntime().addShutdownHook(new Shutdown());
@@ -72,7 +74,7 @@ public class FunnelServer extends Frame {
 
 		String type = ""; //$NON-NLS-1$
 		String networkPort = "9000"; //$NON-NLS-1$
-		String serialPort = null;
+		
 		int baudRate = -1;
 
 		System.out.println("current directory: " //$NON-NLS-1$
@@ -95,19 +97,21 @@ public class FunnelServer extends Frame {
 				type = modules.get("type").toString(); //$NON-NLS-1$
 			}
 
-			if (modules.get("port") == null) { //$NON-NLS-1$
-				printMessage(Messages.getString("FunnelServer.PortIsNotSpecified")); //$NON-NLS-1$
-				if (!type.equalsIgnoreCase("Gainer")) {
-					serialPort = IOModule.getSerialPortName();
-					if (serialPort == null) {
-						printMessage(Messages.getString("FunnelServer.NoSerialPorts")); //$NON-NLS-1$
-						return;
+			if(serialPort == null){
+				if (modules.get("port") == null) { //$NON-NLS-1$
+					printMessage(Messages.getString("FunnelServer.PortIsNotSpecified")); //$NON-NLS-1$
+					if (!type.equalsIgnoreCase("Gainer")) {
+						serialPort = IOModule.getSerialPortName();
+						if (serialPort == null) {
+							printMessage(Messages.getString("FunnelServer.NoSerialPorts")); //$NON-NLS-1$
+							return;
+						}
 					}
+				} else {
+					serialPort = modules.get("port").toString(); //$NON-NLS-1$
 				}
-			} else {
-				serialPort = modules.get("port").toString(); //$NON-NLS-1$
 			}
-
+			
 			if (modules.get("baudrate") != null) { //$NON-NLS-1$
 				baudRate = Integer.valueOf(modules.get("baudrate").toString()).intValue();
 			}
