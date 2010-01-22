@@ -121,23 +121,40 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		buttonPortRange = new funnel.PortRange();
 
 		try {
-			Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
-
-			while (portList.hasMoreElements()) {
-				CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
+			
+			if(serialPortName!=null){
+				CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(serialPortName);
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-					if (openSerialPort(portId)) {
-						if (isGainerIO(serialPortName)) {
+					if (openSerialPort(portId))	{
+						if (isGainerIO(portId)) {
 							parent.printMessage(Messages.getString("IOModule.Started") //$NON-NLS-1$
-									+ portId.getName());
-							break;
+									+ serialPortName);
 						} else {
-							parent.printMessage("tried: " + portId.getName());
+							parent.printMessage("Directly tried: " + serialPortName);
 							closeSerialPort();
 						}
 					}
 				}
+			}else{
+				Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
+				while (portList.hasMoreElements()) {
+					CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
+					if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+						if (openSerialPort(portId)) {
+							if (isGainerIO(portId)) {
+								parent.printMessage(Messages.getString("IOModule.Started") //$NON-NLS-1$
+										+ portId.getName());
+								break;
+							} else {
+								parent.printMessage("tried: " + portId.getName() + serialPortName);
+								closeSerialPort();
+							}
+						}
+					}
+				}
 			}
+
+
 		} catch (Exception e) {
 			printMessage(Messages.getString("IOModule.InsideSerialError")); //$NON-NLS-1$
 			e.printStackTrace();
@@ -852,11 +869,9 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		port = null;
 	}
 
-	private boolean isGainerIO(String specifiedName) {
-		String portName = port.getName();
-		if (specifiedName != null) {
-			return portName.equals(specifiedName);
-		} else {
+	private boolean isGainerIO(CommPortIdentifier specifiedPort) {
+
+		if(specifiedPort.isCurrentlyOwned()){
 			try {
 				write("Q*"); //$NON-NLS-1$
 				rebootCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
@@ -874,5 +889,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 				return false;
 			}
 		}
+		return false;
 	}
 }
