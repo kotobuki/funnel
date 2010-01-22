@@ -121,9 +121,9 @@ public final class Gainer extends IOSystem{
 
 	
 
-	public Gainer(PApplet parent, String hostName,
+	public Gainer(PApplet parent, String hostName,String serverPortName,
 			int commandPortNumber,int samplingInterval,Configuration config){
-		super(parent,hostName,commandPortNumber,samplingInterval,config);
+		super(parent,hostName,serverPortName,commandPortNumber,samplingInterval,config);
 		
 		if(!initialize(config)){
 			errorMessage("Funnel configuration error!");
@@ -134,27 +134,30 @@ public final class Gainer extends IOSystem{
 		initPorts(config.pinsStatus);
 		
 		startIOSystem();
-		
-		
-
 	}
 	
 	public Gainer(PApplet parent,Configuration config){
 		
-		this(parent,"localhost",CommandPort.defaultPort,
+		this(parent,"localhost",null,CommandPort.defaultPort,
+				33,config);
+	}
+	
+	public Gainer(PApplet parent,Configuration config,String serverPortName){
+		
+		this(parent,"localhost",serverPortName,CommandPort.defaultPort,
 				33,config);
 	}
 
-	public Gainer(PApplet parent, int samplingInterval, Configuration config ){
+	public Gainer(PApplet parent, int samplingInterval, Configuration config,String serverPortName ){
 		
-		this(parent,"localhost",CommandPort.defaultPort,
+		this(parent,"localhost",serverPortName,CommandPort.defaultPort,
 				samplingInterval,config);
 	}
 
 	public Gainer(PApplet parent,
-			int commandPortNumber, int samplingInterval,Configuration config ){
+			int commandPortNumber, int samplingInterval,Configuration config,String serverPortName ){
 		
-		this(parent,"localhost",commandPortNumber,
+		this(parent,"localhost",serverPortName,commandPortNumber,
 				samplingInterval,config);
 	}
 	
@@ -302,31 +305,32 @@ public final class Gainer extends IOSystem{
 	
 	
 	//Gainerショートカット
-	public IOModule.Pin analogOutput(int nPort){
+	public IOModule.ModulePin analogOutput(int nPort){
 		return iomodule(0).pin(analogOutput[nPort]);
 	}
 	
-	public IOModule.Pin analogInput(int nPort){
+	public IOModule.ModulePin analogInput(int nPort){
 		return iomodule(0).pin(analogInput[nPort]);
 	}
 	
-	public IOModule.Pin digitalOutput(int nPort){
+	public IOModule.ModulePin digitalOutput(int nPort){
 		return iomodule(0).pin(digitalOutput[nPort]);
 	}
 	
-	public IOModule.Pin digitalInput(int nPort){
+	public IOModule.ModulePin digitalInput(int nPort){
 		return iomodule(0).pin(digitalInput[nPort]);
 	}
 	
-	public IOModule.Pin led(){
+	public IOModule.ModulePin led(){
 		return iomodule(0).pin(led);
 	}
 	
-	public IOModule.Pin button(){
+	public IOModule.ModulePin button(){
 		return iomodule(0).pin(button);
 	}
 	
-	protected void startingServer(){
-		waitingServer(moduleName);
+	@Override
+	protected void startingServer(String serverSerialName){
+		waitingServer(moduleName,serverSerialName);
 	}
 }

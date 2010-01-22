@@ -1,15 +1,19 @@
 /*
 Gainer
+din0 
 */
 
 import processing.funnel.*;
 
 Gainer gainer;
+Pin buttonPin;
 
 void setup()
 {
  size(200, 200);
  gainer= new Gainer(this, Gainer.MODE1);
+ 
+ buttonPin = gainer.digitalInput(0);
 }
 
 void draw()
@@ -17,10 +21,10 @@ void draw()
  background(100);
 }
 
-void risingEdge(PinEvent e)
+void change(PinEvent e)
 {
- if (e.target.number == Gainer.digitalInput[0]) {
-
-   println("* " + e.target.value);
+ if (e.target == buttonPin){
+   print("* " + buttonPin.value + "   ");
+   println("! " + buttonPin.lastValue);
  }
 }

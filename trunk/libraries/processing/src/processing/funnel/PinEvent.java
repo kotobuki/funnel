@@ -6,9 +6,9 @@ package processing.funnel;
  * 
  */
 public class PinEvent {
-	public IOModule.Pin target;
+	public IOModule.ModulePin target;
 	
-	public PinEvent (IOModule.Pin target){
+	public PinEvent (IOModule.ModulePin target){
 		this.target = target;
 	}
 }

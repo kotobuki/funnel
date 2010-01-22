@@ -68,7 +68,7 @@ public final class OSCClient {
 		return true;
 	}
 	
-	public boolean waitFunnel(String address) throws IOException{
+	public boolean waitFunnel(String address) throws IOException,ArrayIndexOutOfBoundsException{
 
 		commandPort.receive();
 

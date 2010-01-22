@@ -39,9 +39,9 @@ public final class Arduino extends Firmata{
 	static final int[] _d = {0,1,2,3,4,5,6,7,8,9,10,11,12,13};
 	
 
-	public Arduino(PApplet parent, String hostName,
+	public Arduino(PApplet parent, String hostName, String serverPortName,
 			int commandPortNumber ,int samplingInterval,Configuration config){
-		super(parent,hostName,commandPortNumber,samplingInterval,config);
+		super(parent,hostName,serverPortName ,commandPortNumber,samplingInterval,config);
 		
 		
 		if(!initialize(config)){
@@ -57,30 +57,42 @@ public final class Arduino extends Firmata{
 	
 	public Arduino(PApplet parent,Configuration config){
 		
-		this(parent,"localhost",CommandPort.defaultPort,
+		this(parent,"localhost",null,CommandPort.defaultPort,
+				33,config);
+	}
+	
+	public Arduino(PApplet parent,Configuration config,String serverPortName){
+		
+		this(parent,"localhost",serverPortName,CommandPort.defaultPort,
 				33,config);
 	}
 
 	public Arduino(PApplet parent, int samplingInterval, Configuration config ){
 		
-		this(parent,"localhost",CommandPort.defaultPort,
+		this(parent,"localhost",null,CommandPort.defaultPort,
+				samplingInterval,config);
+	}
+	
+	public Arduino(PApplet parent, int samplingInterval, Configuration config, String serverPortName){
+		
+		this(parent,"localhost",serverPortName,CommandPort.defaultPort,
 				samplingInterval,config);
 	}
 
 	public Arduino(PApplet parent,
-			int commandPortNumber, int samplingInterval,Configuration config ){
+			int commandPortNumber, int samplingInterval,Configuration config, String serverPortName ){
 		
-		this(parent,"localhost",commandPortNumber,
+		this(parent,"localhost",serverPortName,commandPortNumber,
 				samplingInterval,config);
 	}
 	
 	
 	//Arduinoショートカット
-	public IOModule.Pin analogPin(int nPort){
+	public IOModule.ModulePin analogPin(int nPort){
 		return iomodule(moduleID).analogPin(nPort);
 	}
 	
-	public IOModule.Pin digitalPin(int nPort){
+	public IOModule.ModulePin digitalPin(int nPort){
 		return iomodule(moduleID).digitalPin(nPort);
 	} 
 	
@@ -88,9 +100,9 @@ public final class Arduino extends Firmata{
 		return iomodule(moduleID);
 	}
 	
-	
-	protected void startingServer(){
-		waitingServer(moduleName);
+	@Override
+	protected void startingServer(String serverSerialName){
+		waitingServer(moduleName,serverSerialName);
 	}
 }
 
