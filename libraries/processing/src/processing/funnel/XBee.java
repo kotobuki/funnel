@@ -47,9 +47,9 @@ public final class XBee extends IOSystem{
 	static final int[] _a = {0,1,2,3,4,5};
 	static final int[] _d = {6,7};
 	
-	public XBee(PApplet parent, String hostName,
+	public XBee(PApplet parent, String hostName, String serverPortName,
 			int commandPortNumber,int samplingInterval,int[] IDs,Configuration config){
-		super(parent,hostName,commandPortNumber,samplingInterval,config);
+		super(parent,hostName,serverPortName,commandPortNumber,samplingInterval,config);
 		
 		regModule(IDs,config);
 		this.IDs = IDs;
@@ -71,25 +71,32 @@ public final class XBee extends IOSystem{
 	}
 	
 	public XBee(PApplet parent,int[] IDs){	
-		this(parent,"localhost",CommandPort.defaultPort,
+		this(parent,"localhost",null,CommandPort.defaultPort,
 				33,IDs, MULTIPOINT);
 	}
 	
 	public XBee(PApplet parent, int[] IDs, Configuration config){
-		this(parent,"localhost",CommandPort.defaultPort,
+		this(parent,"localhost",null,CommandPort.defaultPort,
 				33,IDs,config);
 	}
 	
-	public XBee(PApplet parent, int samplingInterval,int[] IDs, Configuration config ){
+	public XBee(PApplet parent, int[] IDs, Configuration config, String serverPortName){
+	
+		this(parent,"localhost",serverPortName, CommandPort.defaultPort,
+				33,IDs,config);
 		
-		this(parent,"localhost",CommandPort.defaultPort,
+	}
+	
+	public XBee(PApplet parent, int samplingInterval,int[] IDs, Configuration config, String serverPortName ){
+		
+		this(parent,"localhost",serverPortName,CommandPort.defaultPort,
 				samplingInterval,IDs,config);
 	}
 
 	public XBee(PApplet parent,
-			int commandPortNumber, int samplingInterval,int[] IDs, Configuration config ){
+			int commandPortNumber, int samplingInterval,int[] IDs, Configuration config, String serverPortName ){
 		
-		this(parent,"localhost",commandPortNumber,
+		this(parent,"localhost",serverPortName ,commandPortNumber,
 				samplingInterval,IDs,config);
 	}
 	
@@ -180,7 +187,7 @@ public final class XBee extends IOSystem{
 	}
 	
 	@Override
-	protected void startingServer(){
-		waitingServer(moduleName);
+	protected void startingServer(String serverSerialName){
+		waitingServer(moduleName,serverSerialName);
 	}
 }

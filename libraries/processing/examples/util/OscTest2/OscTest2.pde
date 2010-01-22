@@ -1,9 +1,5 @@
 /*
-Osc Test 2
-draw()‚ÌŠÔŠu‚Å update()‚ğŒÄ‚Ño‚µ‚ÄOsc‚ğƒAƒbƒvƒf[ƒg
-
-’ˆÓ@Osc.start()‚µ‚È‚­‚Ä‚æ‚¢B
-Osc.stop()‚µ‚Ä‚àupdate()‚ÅXV‚³‚ê‚é
+Osc Test2
 */
 
 import processing.funnel.*;
@@ -16,10 +12,9 @@ void setup()
   frameRate(25);
   
   background(255); 
-  //üŠú 2.0/s : ‰ñ” forever
+  //å‘¨æœŸ 2.0/s : å›æ•° forever
   osc = new Osc(this,Osc.SQUARE,1.0,0);
   osc.reset();
-  
 }
 
 void draw()
@@ -27,7 +22,7 @@ void draw()
   translate(0,10);
   
   float oldValue = osc.value;
-  osc.update();  //update wave
+  osc.update();
   float rate = 150;
   line(width/2,rate*oldValue,width/2,rate*osc.value);
 
@@ -40,6 +35,7 @@ void mousePressed()
 {
     osc.reset();
 }
+
 
 
 

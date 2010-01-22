@@ -64,13 +64,13 @@ public class IOSystem implements Runnable{
 
 
 	
-	public IOSystem(PApplet parent, String hostName,
+	public IOSystem(PApplet parent, String hostName, String serverPortName,
 			int commandPortNumber,int samplingInterval,Configuration config){
 		
 		this.parent = parent;
 		this.samplingInterval = samplingInterval;
 
-		startingServer();
+		startingServer(serverPortName);
 
 		client = new OSCClient();
 		if(client.openFunnel(hostName, commandPortNumber)){
@@ -87,25 +87,32 @@ public class IOSystem implements Runnable{
 	
 	public IOSystem(PApplet parent,Configuration config){
 		
-		this(parent,"localhost",CommandPort.defaultPort,
+		this(parent,"localhost",null,CommandPort.defaultPort,
 				33,config);
 	}
-
-	public IOSystem(PApplet parent, int samplingInterval, Configuration config ){
+	
+	public IOSystem(PApplet parent, Configuration config, String serverPortName){
 		
-		this(parent,"localhost",CommandPort.defaultPort,
+		this(parent,"localhost",serverPortName,CommandPort.defaultPort,33,config);
+		
+	}
+
+	public IOSystem(PApplet parent, int samplingInterval, Configuration config ,String serverPortName){
+		
+		this(parent,"localhost",serverPortName,CommandPort.defaultPort,
 				samplingInterval,config);
 	}
 
 	public IOSystem(PApplet parent,
-			int commandPortNumber, int samplingInterval,Configuration config ){
+			int commandPortNumber, int samplingInterval,Configuration config , String serverPortName){
 		
-		this(parent,"localhost",commandPortNumber,
+		this(parent,"localhost",serverPortName,commandPortNumber,
 				samplingInterval,config);
 	}
+	
 
 	//必ずオーバーライドする
-	protected void startingServer(){
+	protected void startingServer(String serverSerialName){
 		//System.out.println("Initializing IOSystem. starting funnel server. ");
 
 	}
@@ -129,7 +136,7 @@ public class IOSystem implements Runnable{
 		return configFileName;
 	}
 	
-	protected void waitingServer(String moduleName){
+	protected void waitingServer(String moduleName,String serverSerialName){
 		
 
 		String configFileName = getServerConfigFilePath(moduleName);
@@ -139,6 +146,7 @@ public class IOSystem implements Runnable{
 		if(!withoutServer){
 			//
 			//サーバーを起動させて待つ
+			FunnelServer.serialPort = serverSerialName;
 			FunnelServer server = new FunnelServer(configFileName); 
 			
 
@@ -305,7 +313,10 @@ public class IOSystem implements Runnable{
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	
+		} catch(ArrayIndexOutOfBoundsException e){
+			//catch recived wrong packet
+			
+		}
 	}
 	
 	//answer : 戻り値を確認する

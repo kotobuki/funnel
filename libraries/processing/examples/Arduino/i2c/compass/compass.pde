@@ -2,7 +2,7 @@ import processing.funnel.*;
 import processing.funnel.i2c.*;
 
 Arduino arduino;
-HMC6325 compass;
+HMC6352 compass;
 float heading;
 
 void setup()
@@ -12,7 +12,7 @@ void setup()
   Configuration config = Arduino.FIRMATA;
  
   arduino = new Arduino(this,config);
-  compass = new HMC6325(arduino.iomodule());
+  compass = new HMC6352(arduino.iomodule());
 
   smooth();
   strokeWeight(2.0f);

@@ -1,6 +1,7 @@
 /*
 Arduino 
 pwm (digital 9pin)
+ mouse positon
 */
 
 import processing.funnel.*;
@@ -17,7 +18,6 @@ void setup()
   Configuration config = Arduino.FIRMATA;
   config.setDigitalPinMode(pwmPin,Arduino.PWM);
   arduino = new Arduino(this,config);
-  arduino.autoUpdate = true;
 
 }
 

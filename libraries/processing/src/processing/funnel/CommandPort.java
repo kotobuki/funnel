@@ -119,7 +119,7 @@ public final class CommandPort extends TcpOSCPort implements Runnable{
 	}
 	
 	//
-	public synchronized void receive() throws IOException{
+	public synchronized void receive() throws IOException,ArrayIndexOutOfBoundsException{
 
 		byte[] buffer = new byte[1536]; // this is a common MTU
 		OSCMessage message = new OSCMessage("nil");
@@ -127,15 +127,12 @@ public final class CommandPort extends TcpOSCPort implements Runnable{
 		int readBytes = in.read(buffer,0,1536);
 		int processedSize = 0;
 
-		
 		while (processedSize < readBytes) {
 			int packetSize = (buffer[processedSize + 0] & 0xFF << 24)
 					+ (buffer[processedSize + 1] & 0xFF << 16)
 					+ (buffer[processedSize + 2] & 0xFF << 8)
 					+ buffer[processedSize + 3] & 0xFF;
-
 			
-		
 			byte[] packet = new byte[packetSize];
 			System.arraycopy(buffer, processedSize + 4, packet, 0,packetSize);
 			message = (OSCMessage)converter.convert(packet, packetSize);

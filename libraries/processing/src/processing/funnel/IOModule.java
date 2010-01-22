@@ -25,7 +25,7 @@ public class IOModule{
 
 	public IOSystem system;
 	
-	protected Pin pin[];
+	protected ModulePin pin[];
 	protected int id;
 	protected Configuration config;
 	
@@ -55,9 +55,9 @@ public class IOModule{
 		
 		int[] conf = config.getPortStatus();
 		
-		pin = new Pin[conf.length];
+		pin = new ModulePin[conf.length];
 		for(int i=0;i<pin.length;i++){
-			pin[i] = new Pin(parent,conf[i],i);
+			pin[i] = new ModulePin(parent,conf[i],i);
 		}
 
 		
@@ -91,17 +91,17 @@ public class IOModule{
 		digitalPin = _d;
 	}
 	
-	public Pin analogPin(int nPort){
+	public ModulePin analogPin(int nPort){
 		return pin(analogPin[nPort]);
 	}
 	
-	public Pin digitalPin(int nPort){
+	public ModulePin digitalPin(int nPort){
 		return pin(digitalPin[nPort]);
 	}
 	
 	
 	//Port‚»‚Ì‚à‚Ì‚ð•Ô‚·
-	public Pin pin(int nPort){
+	public ModulePin pin(int nPort){
 		if(nPort<pin.length){
 			return pin[nPort];
 		}
@@ -147,20 +147,19 @@ public class IOModule{
 	
 	//
 	// 
-	public class Pin {
+	public class ModulePin extends Pin{
 
 		PApplet parent;
-		
 
 		public final int number;//pin ’Ê‚µ”Ô†
 		
-		public float value;
-		public float lastValue;
+		//public float value;
+		//public float lastValue;
 		
 		//
-		public float average = 0;
-		public float minimum = Float.MAX_VALUE;
-		public float maximum = 0;
+		//public float average = 0;
+		//public float minimum = Float.MAX_VALUE;
+		//public float maximum = 0;
 		
 		private Filter filters[];
 		
@@ -173,7 +172,7 @@ public class IOModule{
 		private final int bufferSize = 8;
 		
 		
-		public Pin(PApplet parent, int type, int n){
+		public ModulePin(PApplet parent, int type, int n){
 			this.parent = parent;
 			number = n;
 			
@@ -293,7 +292,8 @@ public class IOModule{
 			if(this.value != value){
 				this.value = value;
 
-				if(onChange != null && lastValue != this.value){
+				//onChange‚Í‚¢‚Â‚àŒÄ‚Ño‚·
+				if(onChange != null /*&& lastValue != this.value*/){
 					try{
 						onChange.invoke(parent,new Object[]{ new PinEvent(this) });
 					}catch(Exception e){

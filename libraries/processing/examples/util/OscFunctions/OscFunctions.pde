@@ -1,6 +1,6 @@
 /*
 Osc with handler
-
+Osc.start()したあとは
 自分でOsc.update()を呼び出してはいけません
 */
 
@@ -33,8 +33,6 @@ float oldValue;
 
 void oscUpdated(Osc osc)
 {
-
-  
   float rate=150;
   line(width/2,rate*oldValue,width/2,rate*osc.value);
   //shift screen

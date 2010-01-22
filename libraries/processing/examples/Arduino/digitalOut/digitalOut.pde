@@ -12,14 +12,11 @@ int ledPin = 13;
 void setup()
 {
   size(200,200);
-  frameRate(25);
-  
+
   Configuration config = Arduino.FIRMATA;
   config.setDigitalPinMode(ledPin,Arduino.OUT);
 
   arduino = new Arduino(this,config);
-  arduino.autoUpdate = true;
-
 }
 
 void draw()

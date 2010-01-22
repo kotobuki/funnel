@@ -11,11 +11,10 @@ PFont myFont;
 void setup()
 {
   size(400,330);
-  frameRate(25);
-  
+
   myFont = loadFont("CourierNewPSMT-24.vlw");
   textFont(myFont, 24);
-  
+
   arduino = new Arduino(this,Arduino.FIRMATA);
  
 }

@@ -8,7 +8,7 @@ import processing.funnel.*;
 Arduino arduino;
 PFont myFont;
 
-int ledPin = 13;
+int dinPin = 13;
 
 void setup()
 {
@@ -19,7 +19,7 @@ void setup()
   textFont(myFont, 24);
   
   Configuration config = Arduino.FIRMATA;
-  config.setDigitalPinMode(ledPin,Arduino.IN);
+  config.setDigitalPinMode(dinPin,Arduino.IN);
   
   arduino = new Arduino(this,config);
  
@@ -28,7 +28,7 @@ void setup()
 void draw()
 {
   background(0);
-  text("digitalInput["+ledPin+"]: " + arduino.digitalPin(ledPin).value,10,80); 
+  text("digitalInput["+dinPin+"]: " + arduino.digitalPin(dinPin).value,10,80); 
 }
   
 
