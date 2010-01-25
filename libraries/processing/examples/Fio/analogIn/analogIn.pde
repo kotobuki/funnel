@@ -2,12 +2,10 @@
 Fio 
 analog in
 */
-
 import processing.funnel.*;
 
 Fio fio;
 PFont myFont;
-
 
 void setup()
 {

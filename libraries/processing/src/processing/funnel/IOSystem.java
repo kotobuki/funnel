@@ -38,7 +38,7 @@ public class IOSystem implements Runnable{
 	/**
 	 * autoUpdate=trueの送信時の更新間隔
 	 */
-	private int updateInterval = 33;	
+	private int updateInterval = 1;	
 
 	protected Thread thread=null;
 	protected boolean initialized = false;
@@ -186,22 +186,15 @@ public class IOSystem implements Runnable{
 
 		while(initialized){
 			long processMillis = System.currentTimeMillis() - updateTickMillis;
-
 			
 			if((processMillis > updateInterval) && autoUpdate){
-				//OUTPUTのポートの処理
+				//OUTPUTのピンの処理
 				//System.out.println("update " + processMillis);
 				update();
 				
 				updateTickMillis = System.currentTimeMillis();
-				
 			}
 
-			try{
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		
 		}
 		
@@ -209,9 +202,8 @@ public class IOSystem implements Runnable{
 	}
 	
 	public void dispose(){
-		System.out.println("dispose funnel");
+		System.out.println("dispose funnel library");
 		endPolling();
-		
 		
 		//reboot();
 
@@ -230,8 +222,7 @@ public class IOSystem implements Runnable{
 
 
 		client.cleanOSCPort();	
-		
-		System.out.println("dispose funnel");
+
 	}
 	
 	protected void errorMessage(String message){
@@ -505,14 +496,13 @@ public class IOSystem implements Runnable{
 
 	
 	protected boolean addModule(int id,Configuration config,String name){
-
 		
 		Set<?> key = iomodules.entrySet();
 		if(!key.contains(id)){
 			IOModule io =  new IOModule(this,id,config,name);
 			iomodules.put(id, io);
 			
-			System.out.println("   addModule() " + name);
+			System.out.println("  addModule() " + name +" " + id);
 			
 			//dinにSetPointを自動でつける
 			int[] portStatus = config.getPortStatus();
