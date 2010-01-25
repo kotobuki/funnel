@@ -44,7 +44,9 @@ public final class Configuration{
 		
 		if(moduleName.equalsIgnoreCase(Arduino.moduleName) || moduleName.equalsIgnoreCase(Fio.moduleName)){
 			if(pinType!=IOSystem.PORT_AIN){
-				System.out.println("portStatus[]" + n + " type " + pinType );
+
+				String portType[] = {"ain","din","aout","dout"};
+				System.out.println("change pin type[" + n + "] -> " + portType[pinType] );
 				pinsStatus[n] = pinType;
 				
 				return true;

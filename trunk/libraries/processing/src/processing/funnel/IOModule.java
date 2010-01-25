@@ -193,7 +193,7 @@ public class IOModule{
 			history = 0;
 		}
 		
-		public void checkOutputUpdated(){
+		protected void checkOutputUpdated(){
 			if(this.value != lastValue){
 				lastValue = value;
 				config.outputPins.add(number);
@@ -202,7 +202,7 @@ public class IOModule{
 
 	
 		//“ü—Í’l‚ðXV‚·‚é
-		public void updateInput(float value){
+		protected void updateInput(float value){
 			times++;
 			if(times > maxCount){
 				history = average;

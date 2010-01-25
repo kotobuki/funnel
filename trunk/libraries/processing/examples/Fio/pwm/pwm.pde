@@ -11,7 +11,6 @@ int ledPin = 11;
 void setup()
 {
   size(200,200);
-  frameRate(25);
   
   Configuration config = Fio.FIRMATA;
   config.setDigitalPinMode(ledPin,Fio.PWM);

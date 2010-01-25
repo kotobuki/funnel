@@ -13,7 +13,6 @@ int pwmPin = 9;
 void setup()
 {
   size(200,200);
-  frameRate(25);
   
   Configuration config = Arduino.FIRMATA;
   config.setDigitalPinMode(pwmPin,Arduino.PWM);

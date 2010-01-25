@@ -5,24 +5,33 @@ digital out (d13)
 import processing.funnel.*;
 
 Fio fio;
-int outPin = 13;
+int ledPinNumber = 13;
+Pin ledPin;
 
 void setup()
 {
   size(200,200);
   
   int[] fioIDs = {1};
-  fio = new Fio(this,fioIDs,Fio.FIRMATA);
+  Configuration config = Fio.FIRMATA;
+  config.setDigitalPinMode(ledPinNumber,Fio.OUT);
+  
+  fio = new Fio(this,fioIDs,config);
+  ledPin = fio.iomodule(1).digitalPin(ledPinNumber);
 }
 
 void draw()
 {
   background(170);
-  
-  if(mousePressed){
-    fio.iomodule(1).digitalPin(outPin).value = 1.0;
-  }else{
-    fio.iomodule(1).digitalPin(outPin).value = 0.0;
-  }
-  
+
+}
+
+void mousePressed()
+{
+  ledPin.value = 1.0;
+}
+
+void mouseReleased()
+{
+  ledPin.value = 0.0;
 }

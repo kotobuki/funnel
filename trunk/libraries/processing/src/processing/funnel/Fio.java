@@ -54,26 +54,34 @@ public final class Fio extends Firmata{
 		regModule(IDs,config);
 		this.IDs = IDs;
 
-
 		this.config = config;
 		
 		initPorts(_a,_d);
 
-		startIOSystem();
+		startIOSystem();// /inÇ∆/nodeÇì«ÇﬂÇÈÇÊÇ§Ç…Ç∑ÇÈ
 		
 		if(withoutServer){
 			if(!initialize(config)){
 				errorMessage("Funnel configuration error!");
 			}else{
+				beginPolling();
 				thread = new Thread(this,"funnelServiceThread");
 				thread.start();
+
 			}
 		}
 		
 	}
 	
 	public Fio(PApplet parent,int[] IDs,Configuration config){	
+		
 		this(parent,"localhost",null,CommandPort.defaultPort,
+				33,IDs,config);
+	}
+	
+	public Fio(PApplet parent,int[] IDs,Configuration config,String serverPortName){
+		
+		this(parent,"localhost",serverPortName,CommandPort.defaultPort,
 				33,IDs,config);
 	}
 	
@@ -99,10 +107,8 @@ public final class Fio extends Firmata{
 	
 	protected boolean startIOSystem(){
 
-		beginPolling();
-		
+//		System.out.println("startIOSystem()");
 
-		
 		new NotifyTokenizer(this,client.commandPort);		
 		
 		return true;
@@ -167,12 +173,14 @@ public final class Fio extends Firmata{
 					}
 					
 					
-					if(nodes.size() == IDs.length){
+					if(nodes.size() == IDs.length){//ç≈å„ÇÃéÛêMÇ≈funnelServiceThreadÇäJén
 
 						if(!initialize(config)){
 							errorMessage("Funnel configuration error!");
 						}else{
-							thread = new Thread(this,"funnelServiceThread");
+							beginPolling();
+							
+							thread = new Thread(this,"funnelServiceThread fio");
 							thread.start();
 						}
 					}
@@ -180,6 +188,7 @@ public final class Fio extends Firmata{
 			}
 	
 		}
+
 
 
 	}
