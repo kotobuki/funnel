@@ -52,8 +52,7 @@ final String[] BAUD_RATES = {
 final String[] BAUD_RATES_FOR_CONFIG = {
   "9600", "19200", "38400", "57600", "115200", "1200", "2400", "4800"};
 
-final String[] SUPPORTED_FIRMWARE_VERSIONS = {
-  "10A5", "10CD"};
+final int SUPPORTED_FIRMWARE_VERSION = 0x10A5;
 
 void setup() {
   size(500, 600);
@@ -225,23 +224,10 @@ void configureXBeeModem() {
   statusTextLabel.setLabel("Entered command mode.");
 
   String reply = getReplyFromXBeeModemFor("VR");
-  boolean foundSupportedVersion = false;
-  for (int i = 0; i < SUPPORTED_FIRMWARE_VERSIONS.length; i++) {
-    if (reply.equals(SUPPORTED_FIRMWARE_VERSIONS[i])) {
-      foundSupportedVersion = true;
-      println("found: " + SUPPORTED_FIRMWARE_VERSIONS[i]);
-      break;
-    }
-  }
-  if (!foundSupportedVersion) {
-    String errorMessage = "Please update the modem firmware with X-CTU to supported versions:\n";
-    for (int i = 0; i < SUPPORTED_FIRMWARE_VERSIONS.length; i++) {
-      errorMessage += SUPPORTED_FIRMWARE_VERSIONS[i];
-      if (i < (SUPPORTED_FIRMWARE_VERSIONS.length - 1)) {
-        errorMessage += ", ";
-      }
-    }
-    errorMessage += "\n";
+  int firmwareVersion = Integer.parseInt(reply, 16);
+
+  if (firmwareVersion < SUPPORTED_FIRMWARE_VERSION) {
+    String errorMessage = "Please update the modem firmware with X-CTU to 10A5 or later\n";
     statusTextLabel.setLabel(errorMessage);
     exitCommandMode();
     return;
