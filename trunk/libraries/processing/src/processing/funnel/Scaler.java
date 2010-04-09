@@ -56,6 +56,10 @@ public class Scaler implements Filter{
 		
 	}
 	
+	public Scaler(float inMin, float inMax, float outMin, float outMax){
+		this(inMin, inMax, outMin, outMax, LINEAR, false);
+	}
+	
 	/**
 	 * return "Scaler"
 	 */
