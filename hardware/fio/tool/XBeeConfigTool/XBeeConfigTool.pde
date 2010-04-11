@@ -1,3 +1,30 @@
+/*
+  XBee Configuration Tool
+  
+  This sketch allows for the limited confuguration of XBee series 1 radios.
+  It configures the radios for use with the Arduino Fio, either as a programming
+  radio, or as a radio to put on a remote Arduino Fio unit.
+  
+  The program configures the following parameters of an XBee series 1 radio:
+  BD -  4 (Atmega168) or  6 (Atmega328)
+  ID - 1234 or  user's preference
+  MY - 0000 (programmer), 0001 (Fio) or  user's preference
+  DL - FFFF(programmer), 0001 (Fio)  or  user's preference
+  D3 - 3 (programmer) or  5 (Fio)
+  IC - 8  (programmer) or  not set (Fio)
+  RR - 3 (programmer) or not set (Fio)
+  IU - not set (programmer) or  0 (Fio)
+  IA - not set (programmer) or  FFFF (Fio)
+  RO - 10 (both)
+
+  created
+  by Shigeru Kobayashi
+
+  modified 27 Mar 2010
+  by Tom Igoe
+
+*/
+
 import processing.serial.*;
 import interfascia.*;
 
@@ -9,14 +36,17 @@ final int BAUDRATE_57600 = 6;
 
 GUIController gui;
 IFRadioController portRadioButtons;
+IFLookAndFeel arduinoLook;
 IFLabel l;
 
 IFRadioButton[] b;
 
 IFLabel idLabel;
 IFLabel myLabel;
+IFLabel dlLabel;
 IFTextField idTextField;
 IFTextField myTextField;
+IFTextField dlTextField;
 
 IFRadioController modeRadioButtons;
 IFLabel modeButtonsLabel;
@@ -55,12 +85,19 @@ final String[] BAUD_RATES_FOR_CONFIG = {
 final int SUPPORTED_FIRMWARE_VERSION = 0x10A5;
 
 void setup() {
-  size(500, 600);
-  background(150);
+  size(500, 500);
+  background(255);
 
   int y = 20;
 
   gui = new GUIController(this);
+  arduinoLook = new IFLookAndFeel(this, IFLookAndFeel.DEFAULT);
+  arduinoLook.baseColor = color(104,165,178);
+ //  arduinoLook.lightGrayColor = color(33,104,134);
+  arduinoLook.highlightColor = color(84,145,158);
+  arduinoLook.activeColor = color(33,104,134);
+  arduinoLook.selectionColor = color(33,104,134);
+  gui.setLookAndFeel(arduinoLook);
   portRadioButtons = new IFRadioController("Mode Selector");
   l = new IFLabel("Serial Port", 20, y, 12);
   gui.add(l);
@@ -87,10 +124,10 @@ void setup() {
   gui.add(modeButtonsLabel);
   y += 14;
   modeButton = new IFRadioButton[2];
-  modeButton[0] = new IFRadioButton("Coordinator", 20, y, modeRadioButtons);
+  modeButton[0] = new IFRadioButton("Programming radio", 20, y, modeRadioButtons);
   gui.add(modeButton[0]);
   y += 20;
-  modeButton[1] = new IFRadioButton("End Devices", 20, y, modeRadioButtons);
+  modeButton[1] = new IFRadioButton("Arduino Fio radio", 20, y, modeRadioButtons);
   gui.add(modeButton[1]);
 
   y += 38;
@@ -119,6 +156,13 @@ void setup() {
   myTextField = new IFTextField("MY", 20, y, 60, "0000");
   gui.add(myTextField);
 
+  y -= 14;
+  dlLabel = new IFLabel ("DL ID", 100, y);
+  gui.add(dlLabel);
+  y += 14;
+  dlTextField = new IFTextField("DL", 100, y, 60, "FFFF");
+  gui.add(dlTextField);
+  
   y += 38;
   configureButton = new IFButton("Configure", 20, y, 80, 20);
   configureButton.addActionListener(this);
@@ -152,14 +196,16 @@ void setup() {
 }
 
 void draw() {
-  background(200);
+  background(255);
 }
 
 void actionPerformed(GUIEvent e) {
   if (e.getSource() == configureButton) {
+    statusTextLabel.setLabel("Configuring...");
     configureXBeeModem();
   }
   else if (e.getSource() == readButton) {
+    statusTextLabel.setLabel("Reading  ...");
     readSettingsFromXBeeModem();
   }
   else if (e.getSource() == exitButton) {
@@ -167,8 +213,12 @@ void actionPerformed(GUIEvent e) {
   }
   else if (e.getSource() == modeButton[0]) {
     myTextField.setValue("0000");
-    myLabel.setX(width);
-    myTextField.setX(width);
+    // myLabel.setX(width);
+    // myTextField.setX(width);
+    
+    dlTextField.setValue("FFFF");
+    // dlLabel.setX(width);
+    // dlTextField.setX(width);
   }
   else if (e.getSource() == modeButton[1]) {
     if (Integer.parseInt(myTextField.getValue(), 16) == 0) {
@@ -176,6 +226,12 @@ void actionPerformed(GUIEvent e) {
     }
     myLabel.setX(20);
     myTextField.setX(20);
+    
+    if (Integer.parseInt(dlTextField.getValue(), 16) == 0xFFFF) {
+      dlTextField.setValue("0000");
+    }
+    dlLabel.setX(100);
+    dlTextField.setX(100);
   }
   else if (e.getSource() == baudRateButton[0]) {
     baudRate = BAUDRATE_19200;
@@ -203,6 +259,7 @@ void configureXBeeModem() {
 
   int id = Integer.parseInt(idTextField.getValue(), 16);
   int my = Integer.parseInt(myTextField.getValue(), 16);
+  int dl = Integer.parseInt(dlTextField.getValue(), 16);
 
   if (id < 0 || id > 0xFFFE) {
     statusTextLabel.setLabel("ID should be between 0 to FFFE.");
@@ -214,6 +271,10 @@ void configureXBeeModem() {
     return;
   }
 
+  if (dl < 0 || dl > 0xFFFF) {
+    statusTextLabel.setLabel("DL should be between 0 to FFFF.");
+    return;
+  }
   statusTextLabel.setLabel("Entering command mode...");
 
   String portName = portRadioButtons.getSelected().getLabel();
@@ -234,7 +295,7 @@ void configureXBeeModem() {
   }
 
   int mode = modeRadioButtons.getSelectedIndex();
-
+       
   switch (mode) {
   case COORDINATOR:
     serialPort.write("ATRE\r");
@@ -246,7 +307,8 @@ void configureXBeeModem() {
     serialPort.write("ATBD" + baudRate + ",");
     serialPort.write("ID" + Integer.toString(id, 16) + ",");
     serialPort.write("MY" + Integer.toString(my, 16) + ",");
-    serialPort.write("DLFFFF,D33,IC8,RR3,RO10,WR\r");
+    serialPort.write("DL" + Integer.toString(dl, 16) + ",");
+    serialPort.write("D33,IC8,RR3,RO10,WR\r");
     if (!gotOkayFromXBeeModem()) {
       statusTextLabel.setLabel("Can't configure.");
       return;

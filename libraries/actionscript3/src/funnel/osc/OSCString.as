@@ -27,8 +27,9 @@ package funnel.osc
 		public static function createWithBytes(bytes:ByteArray):OSCString {
 			var count:uint = 0;
 			var start:uint = bytes.position;
-			for (var i:uint = start; bytes[i] != 0; i++, count++)
-				;
+			for (var i:uint = start; bytes[i] != 0; i++, count++) {
+				// NOTHING TO DO
+			}
 			var str:String = bytes.readUTFBytes(count);
 			bytes.position = start + Math.floor((count + 4) / 4) * 4;
 			return new OSCString(str);

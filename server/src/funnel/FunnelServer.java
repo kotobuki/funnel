@@ -6,40 +6,71 @@ package funnel;
  * @author Funnel Development Team
  */
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Insets;
-import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Map;
+
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import org.jvyaml.YAML;
 
-public class FunnelServer extends Frame {
+import gnu.io.CommPortIdentifier;
+
+public class FunnelServer extends JFrame implements ActionListener {
 
 	/**
 	 * Generated serialVersionUID
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel Server 010 (r702) [BETA]";
+	private static final String buildName = "Funnel Server 010 (r707) [BETA]";
 
-	private CommandPortServer server;
-	private IOModule ioModule = null;
-	private TextArea loggingArea;
+	private final String BOARD_TYPE_ARDUINO = "Arduino (StandardFirmata)";
+	private final String BOARD_TYPE_ARDUINO_FIO = "Arduino Fio (57600 baud)";
+	private final String BOARD_TYPE_FIO = "FIO (19200 baud)";
+	private final String BOARD_TYPE_GAINER = "Gainer";
+	private final String BOARD_TYPE_XBEE_57600 = "XBee (57600 baud)";
+	private final String BOARD_TYPE_XBEE_19200 = "XBee (19200 baud)";
+
 	private final int width = 480;
 	private final int height = 270;
-	private boolean hasDisposed = false;
+
+	private final String[] boardTypeStrings = {
+			BOARD_TYPE_ARDUINO, BOARD_TYPE_ARDUINO_FIO, BOARD_TYPE_FIO, BOARD_TYPE_GAINER, BOARD_TYPE_XBEE_57600, BOARD_TYPE_XBEE_19200
+	};
+
+	private JComboBox boards;
+	private JComboBox serialPorts;
 
 	static public boolean embeddedMode = false;
 	static public boolean initialized = false;
-
 	static public String serialPort = null;
-	
+
+	private CommandPortServer server;
+	private IOModule ioModule = null;
+	private JTextArea loggingArea;
+	private boolean hasDisposed = false;
+	private int baudRate = -1;
+	private String boardType;
+
 	public FunnelServer(String configFileName) {
 		super();
 		Runtime.getRuntime().addShutdownHook(new Shutdown());
@@ -47,6 +78,7 @@ public class FunnelServer extends Frame {
 		if (!embeddedMode) {
 			// Close the I/O module when the window is closed
 			addWindowListener(new WindowAdapter() {
+				@Override
 				public void windowClosing(WindowEvent evt) {
 					if (ioModule != null) {
 						System.out.println("disposing...");
@@ -58,113 +90,134 @@ public class FunnelServer extends Frame {
 				}
 			});
 
-			// Create the GUI elements
+			Container contentPane = getContentPane();
+			contentPane.setLayout(new BorderLayout());
+
 			setTitle("Funnel Server"); //$NON-NLS-1$
 			setSize(width, height);
-			setVisible(true);
-			setLayout(null);
 			setResizable(false);
-			loggingArea = new TextArea(buildName + "\n\n", 5, 10, TextArea.SCROLLBARS_VERTICAL_ONLY); //$NON-NLS-1$
-			Insets insets = this.getInsets();
-			loggingArea.setBounds(insets.left, insets.top, width - (insets.left + insets.right), height - (insets.top + insets.bottom));
+
+			loggingArea = new JTextArea(16, 40); 
 			loggingArea.setEditable(false);
 			loggingArea.setFont(new Font("Monospaced", Font.PLAIN, 12)); //$NON-NLS-1$
-			this.add(loggingArea);
+			contentPane.add(new JScrollPane(loggingArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+					BorderLayout.CENTER);
+
+			loggingArea.append(buildName + "\n\n");
+
+			JPanel settingsMenuPane = new JPanel(new BorderLayout(4, 0));
+
+			boards = new JComboBox();
+			for (int i = 0; i < boardTypeStrings.length; i++) {
+				boards.addItem(boardTypeStrings[i]);
+			}
+			boards.addActionListener(this);
+
+			serialPorts = new JComboBox();
+			try {
+				Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
+				while (portList.hasMoreElements()) {
+					CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
+
+					if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+						String name = portId.getName();
+						if (!name.startsWith("/dev/tty.")) {
+							serialPorts.addItem(name);
+						}
+					}
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			serialPorts.addActionListener(this);
+
+			settingsMenuPane.add(boards, BorderLayout.WEST);
+			settingsMenuPane.add(serialPorts, BorderLayout.CENTER);
+			contentPane.add(settingsMenuPane, BorderLayout.AFTER_LAST_LINE);
+
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			setVisible(true);
 		}
 
 		String type = ""; //$NON-NLS-1$
 		String networkPort = "9000"; //$NON-NLS-1$
-		
-		int baudRate = -1;
 
 		System.out.println("current directory: " //$NON-NLS-1$
 				+ new File(".").getAbsolutePath()); //$NON-NLS-1$
 
 		try {
-			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader(configFileName)); //$NON-NLS-1$
-			Map<?, ?> serverSettings = (Map<?, ?>) settings.get("server"); //$NON-NLS-1$
-			if (serverSettings.get("port") == null) { //$NON-NLS-1$
-				networkPort = "9000"; //$NON-NLS-1$
-			} else {
-				networkPort = serverSettings.get("port").toString(); //$NON-NLS-1$
-			}
-
-			Map<?, ?> modules = (Map<?, ?>) settings.get("io"); //$NON-NLS-1$
-			if (modules.get("type") == null) { //$NON-NLS-1$
-				printMessage(Messages.getString("FunnelServer.TypeIsNotSpecified")); //$NON-NLS-1$
-				type = "Gainer"; //$NON-NLS-1$
-			} else {
-				type = modules.get("type").toString(); //$NON-NLS-1$
-			}
-
-			if(serialPort == null){
-				if (modules.get("port") == null) { //$NON-NLS-1$
-					printMessage(Messages.getString("FunnelServer.PortIsNotSpecified")); //$NON-NLS-1$
-					if (!type.equalsIgnoreCase("Gainer")) {
-						serialPort = IOModule.getSerialPortName();
-						if (serialPort == null) {
-							printMessage(Messages.getString("FunnelServer.NoSerialPorts")); //$NON-NLS-1$
-							return;
-						}
+			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader(configFileName)); 
+			if (settings != null) {
+				Map<?, ?> serverSettings = (Map<?, ?>) settings.get("server"); //$NON-NLS-1$
+				if (serverSettings != null) {
+					if (serverSettings.get("port") == null) { //$NON-NLS-1$
+						networkPort = "9000"; //$NON-NLS-1$
+					} else {
+						networkPort = serverSettings.get("port").toString(); //$NON-NLS-1$
 					}
-				} else {
-					serialPort = modules.get("port").toString(); //$NON-NLS-1$
 				}
-			}
-			
-			if (modules.get("baudrate") != null) { //$NON-NLS-1$
-				baudRate = Integer.valueOf(modules.get("baudrate").toString()).intValue();
+
+				Map<?, ?> modules = (Map<?, ?>) settings.get("io"); //$NON-NLS-1$
+				if (modules != null) {
+					if (modules.get("type") == null) { //$NON-NLS-1$
+						printMessage(Messages.getString("FunnelServer.TypeIsNotSpecified")); //$NON-NLS-1$
+						type = "Gainer"; //$NON-NLS-1$
+					} else {
+						type = modules.get("type").toString(); //$NON-NLS-1$
+					}
+				}
+				if (serialPort == null) {
+					if (modules.get("port") == null) { //$NON-NLS-1$
+						printMessage(Messages.getString("FunnelServer.PortIsNotSpecified")); //$NON-NLS-1$
+						if (!type.equalsIgnoreCase("Gainer")) {
+							serialPort = IOModule.getSerialPortName();
+							if (serialPort == null) {
+								printMessage(Messages.getString("FunnelServer.NoSerialPorts")); //$NON-NLS-1$
+								return;
+							}
+						}
+					} else {
+						serialPort = modules.get("port").toString(); //$NON-NLS-1$
+					}
+				}
+
+				if (modules.get("baudrate") != null) { //$NON-NLS-1$
+					baudRate = Integer.valueOf(modules.get("baudrate").toString()).intValue();
+				}
 			}
 		} catch (FileNotFoundException e) {
 			printMessage(Messages.getString("FunnelServer.NoSettingsFile")); //$NON-NLS-1$
-			networkPort = "9000"; //$NON-NLS-1$
-			serialPort = IOModule.getSerialPortName();
-		}
-
-		if (type.equalsIgnoreCase("gainer")) { //$NON-NLS-1$
-			try {
-				ioModule = new GainerIO(this, serialPort);
-				ioModule.reboot();
-			} catch (RuntimeException e) {
-				printMessage(Messages.getString("FunnelServer.CannotOpenGainer")); //$NON-NLS-1$
-				return;
-			} finally {
-				setTitle("Funnel Server: Gainer");
-			}
-		} else if (type.equalsIgnoreCase("arduino")) { //$NON-NLS-1$
-			try {
-				if (baudRate < 0) {
-					baudRate = 115200;
-				}
-				ioModule = new ArduinoIO(this, serialPort, baudRate);
-			} catch (RuntimeException e) {
-				printMessage(Messages.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
-				return;
-			} finally {
-				setTitle("Funnel Server: Arduino (Firmata v2)");
-			}
-		} else if (type.equalsIgnoreCase("xbee")) { //$NON-NLS-1$
-			try {
-				ioModule = new XbeeIO(this, serialPort, baudRate);
-			} catch (RuntimeException e) {
-				printMessage(Messages.getString("FunnelServer.CannotOpenXBee")); //$NON-NLS-1$
-				return;
-			} finally {
-				setTitle("Funnel Server: XBee");
-			}
-		} else if (type.equalsIgnoreCase("fio")) { //$NON-NLS-1$
-			try {
-				ioModule = new FunnelIO(this, serialPort, baudRate);
-			} catch (RuntimeException e) {
-				printMessage(Messages.getString("FunnelServer.CannotOpenFio")); //$NON-NLS-1$
-				return;
-			} finally {
-				setTitle("Funnel Server: FIO");
-			}
 		}
 
 		server = new CommandPortServer(this, Integer.parseInt(networkPort));
 		server.start();
+
+		serialPorts.setSelectedItem(serialPort);
+
+		if (type.equalsIgnoreCase("gainer") || type.equals(BOARD_TYPE_GAINER)) { //$NON-NLS-1$
+			boards.setSelectedItem(BOARD_TYPE_GAINER);
+		} else if (type.equalsIgnoreCase("arduino") || type.equals(BOARD_TYPE_ARDUINO)) { //$NON-NLS-1$
+			boards.setSelectedItem(BOARD_TYPE_ARDUINO);
+		} else if (type.equalsIgnoreCase("xbee") || type.equals(BOARD_TYPE_XBEE_19200) || type.equals(BOARD_TYPE_XBEE_57600)) { //$NON-NLS-1$
+			if (baudRate == 19200) {
+				boards.setSelectedItem(BOARD_TYPE_XBEE_19200);
+			} else if (baudRate == 57600) {
+				boards.setSelectedItem(BOARD_TYPE_XBEE_57600);
+			} else {
+				boards.setSelectedItem(BOARD_TYPE_XBEE_19200);
+			}
+		} else if (type.equalsIgnoreCase("fio") || type.equals(BOARD_TYPE_FIO) || type.equals(BOARD_TYPE_ARDUINO_FIO)) { //$NON-NLS-1$
+			if (baudRate == 19200) {
+				boards.setSelectedItem(BOARD_TYPE_FIO);
+			} else if (baudRate == 57600) {
+				boards.setSelectedItem(BOARD_TYPE_ARDUINO_FIO);
+			} else {
+				boards.setSelectedItem(BOARD_TYPE_ARDUINO_FIO);
+			}
+		} else {
+			boards.setSelectedIndex(-1);
+		}
 
 		initialized = true;
 	}
@@ -178,11 +231,15 @@ public class FunnelServer extends Frame {
 	}
 
 	// Print a message on the logging console
-	public void printMessage(String msg) {
+	public void printMessage(final String msg) {
 		if (!embeddedMode) {
-			loggingArea.append(msg + "\n"); //$NON-NLS-1$
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					loggingArea.append(msg + "\n"); //$NON-NLS-1$
+				}
+			});
 		} else {
-			System.out.println(msg); //$NON-NLS-1$
+			System.out.println(msg); 
 		}
 	}
 
@@ -223,7 +280,122 @@ public class FunnelServer extends Frame {
 		new FunnelServer(configFileName);
 	}
 
+	public void actionPerformed(ActionEvent event) {
+		if (event.getSource() == serialPorts) {
+			if (ioModule != null) {
+				baudRate = ioModule.getBaudRate();
+				ioModule.dispose();
+				ioModule = null;
+			}
+			connect(boardType, baudRate);
+			saveSettings();
+		} else if (event.getSource() == boards) {
+			boardType = (String) boards.getSelectedItem();
+			if (ioModule != null) {
+				baudRate = ioModule.getBaudRate();
+				ioModule.dispose();
+				ioModule = null;
+			}
+			if (serialPort != null) {
+				connect(boardType, baudRate);
+				saveSettings();
+			}
+		}
+	}
+
+	private void connect(String requestedBoardType, int requestedBaudRate) {
+		if (requestedBoardType == null) {
+			return;
+		}
+
+		if (serialPorts.getSelectedIndex() < 0) {
+			return;
+		}
+
+		serialPort = (String) serialPorts.getSelectedItem();
+
+		if (requestedBoardType.equals(BOARD_TYPE_GAINER)) { 
+			try {
+				ioModule = new GainerIO(this, serialPort);
+				ioModule.reboot();
+			} catch (RuntimeException e) {
+				printMessage(Messages.getString("FunnelServer.CannotOpenGainer")); //$NON-NLS-1$
+				return;
+			}
+		} else if (requestedBoardType.equals(BOARD_TYPE_ARDUINO)) { 
+			try {
+				if (requestedBaudRate < 0) {
+					baudRate = 57600;
+				}
+				ioModule = new ArduinoIO(this, serialPort, baudRate);
+			} catch (RuntimeException e) {
+				printMessage(Messages.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
+				return;
+			}
+		} else if (requestedBoardType.equals(BOARD_TYPE_XBEE_19200) || requestedBoardType.equals(BOARD_TYPE_XBEE_57600)) { 
+			try {
+				if (requestedBaudRate < 0) {
+					if (requestedBoardType.equals(BOARD_TYPE_XBEE_19200)) {
+						baudRate = 19200;
+					} else if (requestedBoardType.equals(BOARD_TYPE_XBEE_57600)) {
+						baudRate = 57600;
+					}
+				}
+				ioModule = new XbeeIO(this, serialPort, baudRate);
+			} catch (RuntimeException e) {
+				printMessage(Messages.getString("FunnelServer.CannotOpenXBee")); //$NON-NLS-1$
+				return;
+			}
+		} else if (requestedBoardType.equals(BOARD_TYPE_ARDUINO_FIO) || requestedBoardType.equals(BOARD_TYPE_FIO)) { 
+			try {
+				if (requestedBaudRate < 0) {
+					if (requestedBoardType.equals(BOARD_TYPE_FIO)) {
+						baudRate = 19200;
+					} else if (requestedBoardType.equals(BOARD_TYPE_ARDUINO_FIO)) {
+						baudRate = 57600;
+					}
+				}
+				ioModule = new FunnelIO(this, serialPort, baudRate);
+			} catch (RuntimeException e) {
+				printMessage(Messages.getString("FunnelServer.CannotOpenFio")); //$NON-NLS-1$
+				return;
+			}
+		}
+		setTitle("Funnel Server: " + (String) boards.getSelectedItem());
+	}
+
+	private void saveSettings() {
+		if (server == null) {
+			return;
+		}
+
+		if (ioModule == null) {
+			return;
+		}
+
+		if ((boards.getSelectedIndex() < 0) || (serialPorts.getSelectedIndex() < 0)) {
+			return;
+		}
+
+		try {
+			FileWriter settingsFileWriter = new FileWriter("settings.txt");
+			settingsFileWriter.write("server:\n");
+			settingsFileWriter.write("  port: " + server.port + "\n");
+			settingsFileWriter.write("\n");
+			settingsFileWriter.write("io:\n");
+			settingsFileWriter.write("  type: " + (String) boards.getSelectedItem() + "\n");
+			settingsFileWriter.write("  port: " + (String) serialPorts.getSelectedItem() + "\n");
+			settingsFileWriter.write("  baudrate: " + ioModule.getBaudRate() + "\n");
+			settingsFileWriter.flush();
+			settingsFileWriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	class Shutdown extends Thread {
+		@Override
 		public void run() {
 			if (ioModule != null && !hasDisposed) {
 				System.out.println("disposing...");

@@ -29,6 +29,12 @@ public abstract class IOModule {
 	protected boolean isPolling = false;
 	protected final Float FLOAT_ZERO = new Float(0.0f);
 
+	protected int baudRate = -1;
+
+	public int getBaudRate() {
+		return baudRate;
+	}
+
 	/**
 	 * Get the name of the first I/O module
 	 * 

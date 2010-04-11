@@ -55,6 +55,7 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 
 	public XbeeIO(FunnelServer server, String serialPortName, int baudRate) {
 		this.parent = server;
+		this.baudRate = baudRate;
 
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 		nodes = new Hashtable<Integer, String>();
@@ -99,8 +100,12 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 		} else {
 			parent.printMessage("Configuring the XBee module...");
 			// NOTE: the following procedure is only valid for XBee 802.15.4
-			byte[] command = new byte[] { '+', '+', '+' };
-			byte[] apiModeCommand = new byte[] { 'A', 'T', 'A', 'P', '2', ',', ' ', 'C', 'N', 13 };
+			byte[] command = new byte[] {
+					'+', '+', '+'
+			};
+			byte[] apiModeCommand = new byte[] {
+					'A', 'T', 'A', 'P', '2', ',', ' ', 'C', 'N', 13
+			};
 			try {
 				output.write(command);
 				sleep(1500);
@@ -127,8 +132,12 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 
 	public void dispose() {
 		if (xbee != null) {
-			byte[] command = new byte[] { '+', '+', '+' };
-			byte[] apiModeCommand = new byte[] { 'A', 'T', 'A', 'P', '0', ',', ' ', 'C', 'N', 13 };
+			byte[] command = new byte[] {
+					'+', '+', '+'
+			};
+			byte[] apiModeCommand = new byte[] {
+					'A', 'T', 'A', 'P', '0', ',', ' ', 'C', 'N', 13
+			};
 			try {
 				printMessage("Reverteing the API mode setting to 0"); //$NON-NLS-1$
 				output.write(command);
@@ -275,8 +284,8 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 	}
 
 	public void networkingIdentificationEvent(int my, int sh, int sl, int db, String ni) {
-		String info = "NODE: MY=" + Integer.toHexString(my) + ", SH=" + Integer.toHexString(sh)
-				+ ", SL=" + Integer.toHexString(sl) + ", dB=" + db + ", NI=\'" + ni + "\'";
+		String info = "NODE: MY=" + Integer.toHexString(my) + ", SH=" + Integer.toHexString(sh) + ", SL=" + Integer.toHexString(sl) + ", dB=" + db
+				+ ", NI=\'" + ni + "\'";
 		OSCMessage message = new OSCMessage("/node");
 		message.addArgument(new Integer(my));
 		message.addArgument(new String(ni));

@@ -45,26 +45,33 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	private funnel.PortRange doutPortRange;
 	private funnel.PortRange buttonPortRange;
 
-	private final static Integer CONFIGURATION_1[] = { PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN,
-			PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT,
-			PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DIN };
-	private final static Integer CONFIGURATION_2[] = { PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN,
-			PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT,
-			PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DIN };
-	private final static Integer CONFIGURATION_3[] = { PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN,
-			PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT,
-			PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_DOUT, PIN_DIN };
-	private final static Integer CONFIGURATION_4[] = { PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN,
-			PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT,
-			PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_DOUT, PIN_DIN };
-	private final static Integer CONFIGURATION_5[] = { PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN,
-			PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN,
-			PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, };
-	private final static Integer CONFIGURATION_6[] = { PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT,
-			PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT,
-			PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, };
-	private final static Integer CONFIGURATION_7[] = { PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT,
-			PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, // [0..7, 0]
+	private final static Integer CONFIGURATION_1[] = {
+			PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_DOUT, PIN_DOUT,
+			PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DIN
+	};
+	private final static Integer CONFIGURATION_2[] = {
+			PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_DOUT, PIN_DOUT,
+			PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DIN
+	};
+	private final static Integer CONFIGURATION_3[] = {
+			PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT,
+			PIN_AOUT, PIN_AOUT, PIN_DOUT, PIN_DIN
+	};
+	private final static Integer CONFIGURATION_4[] = {
+			PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AIN, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT,
+			PIN_AOUT, PIN_AOUT, PIN_DOUT, PIN_DIN
+	};
+	private final static Integer CONFIGURATION_5[] = {
+			PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN,
+			PIN_DIN,
+	};
+	private final static Integer CONFIGURATION_6[] = {
+			PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT,
+			PIN_DOUT, PIN_DOUT, PIN_DOUT,
+	};
+	private final static Integer CONFIGURATION_7[] = {
+			PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, // [0..7,
+																							// 0]
 			PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, // [0..7,
 			// 1]
 			PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, // [0..7,
@@ -80,9 +87,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 			PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, PIN_AOUT, // [0..7,
 	// 7]
 	};
-	private final static Integer CONFIGURATION_8[] = { PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN,
-			PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT,
-			PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, };
+	private final static Integer CONFIGURATION_8[] = {
+			PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DIN, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT, PIN_DOUT,
+			PIN_DOUT, PIN_DOUT,
+	};
 
 	static private final String version = "?1.";
 
@@ -105,6 +113,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	public GainerIO(FunnelServer server, String serialPortName) {
 
 		this.parent = server;
+		this.baudRate = this.rate;
 		parent.printMessage(Messages.getString("IOModule.Starting")); //$NON-NLS-1$
 
 		rebootCommandQueue = new LinkedBlockingQueue<String>(1);
@@ -121,11 +130,11 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		buttonPortRange = new funnel.PortRange();
 
 		try {
-			
-			if(serialPortName!=null){
+
+			if (serialPortName != null) {
 				CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(serialPortName);
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-					if (openSerialPort(portId))	{
+					if (openSerialPort(portId)) {
 						if (isGainerIO(portId)) {
 							parent.printMessage(Messages.getString("IOModule.Started") //$NON-NLS-1$
 									+ serialPortName);
@@ -135,7 +144,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 						}
 					}
 				}
-			}else{
+			} else {
 				Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
 				while (portList.hasMoreElements()) {
 					CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
@@ -153,7 +162,6 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 					}
 				}
 			}
-
 
 		} catch (Exception e) {
 			printMessage(Messages.getString("IOModule.InsideSerialError")); //$NON-NLS-1$
@@ -456,8 +464,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 					}
 					hasDigitalValues = true;
 				} else if (aoutPortRange.contains(port)) {
-					analogValues[port - aoutPortRange.getMin()] = (int) (((Float) arguments[index])
-							.floatValue() * depth);
+					analogValues[port - aoutPortRange.getMin()] = (int) (((Float) arguments[index]).floatValue() * depth);
 					inputs[port] = ((Float) arguments[index]).floatValue();
 					hasAnalogValues = true;
 				} else if (LED_PORT.intValue() == port) {
@@ -515,8 +522,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 				stopPolling();
 			}
 		} else {
-			throw new IllegalArgumentException(
-					"The first argument of /polling is not an integer value"); //$NON-NLS-1$
+			throw new IllegalArgumentException("The first argument of /polling is not an integer value"); //$NON-NLS-1$
 		}
 	}
 
@@ -714,8 +720,7 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		String sv = "";
 
 		if (aoutPortRange.getCounts() != values.length) {
-			throw new IndexOutOfBoundsException(
-					"Gainer error!! - number of analog outputs are wrong");
+			throw new IndexOutOfBoundsException("Gainer error!! - number of analog outputs are wrong");
 		}
 
 		for (int i = 0; i < values.length; i++) {
@@ -871,14 +876,13 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 
 	private boolean isGainerIO(CommPortIdentifier specifiedPort) {
 
-		if(specifiedPort.isCurrentlyOwned()){
+		if (specifiedPort.isCurrentlyOwned()) {
 			try {
 				write("Q*"); //$NON-NLS-1$
 				rebootCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
 				sleep(100);
 				write("?*"); //$NON-NLS-1$
-				String versionString = (String) versionCommandQueue.poll(1000,
-						TimeUnit.MILLISECONDS);
+				String versionString = (String) versionCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
 				if (versionString == null) {
 					return false;
 				} else {
