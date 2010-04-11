@@ -24,11 +24,14 @@ import gnu.io.SerialPortEventListener;
 public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 	private static final int TOTAL_ANALOG_PINS = 8;
 	private static final int TOTAL_DIGITAL_PINS = 22;
-	private static final int[] PWM_CAPABLE_PINS = new int[] { 3, 5, 6, 9, 10, 11 };
+	private static final int[] PWM_CAPABLE_PINS = new int[] {
+			3, 5, 6, 9, 10, 11
+	};
 
 	public ArduinoIO(FunnelServer server, String serialPortName, int baudRate) {
 		super(TOTAL_ANALOG_PINS, TOTAL_DIGITAL_PINS, PWM_CAPABLE_PINS);
 		this.parent = server;
+		this.baudRate = baudRate;
 
 		begin(serialPortName, baudRate);
 

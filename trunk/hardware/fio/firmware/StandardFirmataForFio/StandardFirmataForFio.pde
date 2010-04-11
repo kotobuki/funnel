@@ -1,5 +1,5 @@
 /*
- * Standard Firmata firmware for Funnel I/O modules
+ * Standard Firmata firmware for Arduino Fio boards
  *
  * Written by Shigeru Kobayashi (kotobuki@yapan.org)
  *

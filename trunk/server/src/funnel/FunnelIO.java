@@ -29,7 +29,9 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 
 	private static final int TOTAL_ANALOG_PINS = 8;
 	private static final int TOTAL_DIGITAL_PINS = 22;
-	private static final int[] PWM_CAPABLE_PINS = new int[] { 3, 5, 6, 9, 10, 11 };
+	private static final int[] PWM_CAPABLE_PINS = new int[] {
+			3, 5, 6, 9, 10, 11
+	};
 
 	private int[] rssi = new int[MAX_NODES];
 	private Hashtable<Integer, String> nodes;
@@ -41,10 +43,15 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	public FunnelIO(FunnelServer server, String serialPortName, int baudRate) {
 		super(TOTAL_ANALOG_PINS, TOTAL_DIGITAL_PINS, PWM_CAPABLE_PINS);
 		this.parent = server;
+		this.baudRate = baudRate;
 
 		begin(serialPortName, baudRate);
-		byte[] command = new byte[] { '+', '+', '+' };
-		byte[] apiModeCommand = new byte[] { 'A', 'T', 'A', 'P', '2', ',', ' ', 'C', 'N', 13 };
+		byte[] command = new byte[] {
+				'+', '+', '+'
+		};
+		byte[] apiModeCommand = new byte[] {
+				'A', 'T', 'A', 'P', '2', ',', ' ', 'C', 'N', 13
+		};
 		try {
 			output.write(command);
 			sleep(1500);
@@ -85,8 +92,12 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	public void dispose() {
 		if (xbee != null) {
 			printMessage("Reverteing the API mode setting to 0"); //$NON-NLS-1$
-			byte[] command = new byte[] { '+', '+', '+' };
-			byte[] apiModeCommand = new byte[] { 'A', 'T', 'A', 'P', '0', ',', ' ', 'C', 'N', 13 };
+			byte[] command = new byte[] {
+					'+', '+', '+'
+			};
+			byte[] apiModeCommand = new byte[] {
+					'A', 'T', 'A', 'P', '0', ',', ' ', 'C', 'N', 13
+			};
 			try {
 				output.write(command);
 				sleep(1500);
@@ -167,8 +178,7 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	}
 
 	public void networkingIdentificationEvent(int my, int sh, int sl, int db, String ni) {
-		String info = "NODE: MY=" + my + ", SH=" + Integer.toHexString(sh) + ", SL="
-				+ Integer.toHexString(sl) + ", dB=" + db + ", NI=\'" + ni + "\'";
+		String info = "NODE: MY=" + my + ", SH=" + Integer.toHexString(sh) + ", SL=" + Integer.toHexString(sl) + ", dB=" + db + ", NI=\'" + ni + "\'";
 
 		OSCMessage message = new OSCMessage("/node");
 		message.addArgument(new Integer(my));
