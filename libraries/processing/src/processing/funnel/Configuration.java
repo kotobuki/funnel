@@ -13,6 +13,9 @@ public final class Configuration{
 	public final int moduleID;
 	public final String moduleName;
 	
+	public boolean powerPinSetting = false;
+	
+	
 	public Vector<Integer> outputPins = new Vector<Integer>();
 	
 	public Configuration(int moduleID, int[] config,String moduleName){
@@ -64,6 +67,14 @@ public final class Configuration{
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * AIN2‚ğGNDAAIN3‚ğVCC‚Æ‚µ‚Äİ’è‚·‚é
+	 * iIOSystemì¬ŒãÄİ’è‚Í‚Å‚«‚Ü‚¹‚ñj
+	 */
+	public void enablePowerPins(){
+		powerPinSetting = true;
 	}
 	
 	

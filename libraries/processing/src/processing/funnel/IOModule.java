@@ -32,6 +32,8 @@ public class IOModule{
 	public String name;
 	
 	protected HashMap<Integer,I2CInterface> i2cDevs = new HashMap<Integer,I2CInterface>();
+	public boolean powerPinSetting;//ain2=GND,ain3=VCCとして使うかどうか
+	
 	
 	//ポートの機能(参照する名前)
 	private int analogPin[];
@@ -59,6 +61,8 @@ public class IOModule{
 		for(int i=0;i<pin.length;i++){
 			pin[i] = new ModulePin(parent,conf[i],i);
 		}
+		
+		this.powerPinSetting = config.powerPinSetting;
 
 		
 		//イベントハンドラのリフレクション
