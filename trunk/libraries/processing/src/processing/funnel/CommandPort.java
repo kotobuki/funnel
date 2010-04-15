@@ -101,7 +101,13 @@ public final class CommandPort extends TcpOSCPort implements Runnable{
 	public void send(OSCPacket aPacket) throws IOException {
 		byte[] byteArray = aPacket.getByteArray();
 		  
-	
+//		OSCMessage mes = (OSCMessage)aPacket;
+//		System.out.print("mes send " + mes.getAddress() + "   ");
+//		for(int i=0;i<mes.getArguments().length;i++){
+//			System.out.print(mes.getArguments()[i] + "   " );
+//		}
+//		System.out.println( " " );
+		
 		byte[] tcpPacket = new byte[byteArray.length+4];
 		//System.out.println(" byteArray.length " + byteArray.length);
 		// Reference: http://opensoundcontrol.org/spec-1_0
@@ -135,7 +141,11 @@ public final class CommandPort extends TcpOSCPort implements Runnable{
 			byte[] packet = new byte[packetSize];
 			System.arraycopy(buffer, processedSize + 4, packet, 0,packetSize);
 			message = (OSCMessage)converter.convert(packet, packetSize);
-
+//			System.out.print("mes recv " + message.getAddress() + "   ");
+//			for(int i=0;i<message.getArguments().length;i++){
+//				System.out.print(message.getArguments()[i] + "   " );
+//			}
+//			System.out.println( " " );
 			dispatcher.dispatchPacket(message);
 
 			processedSize += packetSize + 4;

@@ -22,7 +22,8 @@ public class HMC6352 extends I2CDevice implements I2CInterface{
 	public HMC6352(IOModule io){
 		super(io);
 		
-		io.addI2CDevice(this);
+		io.addI2CDevice(this);		
+		
 		initialize();
 	}
 	
@@ -36,8 +37,12 @@ public class HMC6352 extends I2CDevice implements I2CInterface{
 //	}
 	
 	private void initialize(){
+		
+		System.out.println("init compasss");
 
 		Firmata io = (Firmata)conectedModule.system;
+		
+
 		
 		byte[] bu = {COM_I2C_REQUEST,COM_WRITE,slaveAddress,'G',0x74,0x51};
 		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
