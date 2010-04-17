@@ -41,7 +41,7 @@ public class FunnelServer extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel Server 010 (r707) [BETA]";
+	private static final String buildName = "Funnel Server 010 (r709) [BETA]";
 
 	private final String BOARD_TYPE_ARDUINO = "Arduino (StandardFirmata)";
 	private final String BOARD_TYPE_ARDUINO_FIO = "Arduino Fio (57600 baud)";
@@ -97,11 +97,11 @@ public class FunnelServer extends JFrame implements ActionListener {
 			setSize(width, height);
 			setResizable(false);
 
-			loggingArea = new JTextArea(16, 40); 
+			loggingArea = new JTextArea(16, 40);
 			loggingArea.setEditable(false);
 			loggingArea.setFont(new Font("Monospaced", Font.PLAIN, 12)); //$NON-NLS-1$
-			contentPane.add(new JScrollPane(loggingArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-					BorderLayout.CENTER);
+			contentPane.add(new JScrollPane(loggingArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 
 			loggingArea.append(buildName + "\n\n");
 
@@ -143,11 +143,8 @@ public class FunnelServer extends JFrame implements ActionListener {
 		String type = ""; //$NON-NLS-1$
 		String networkPort = "9000"; //$NON-NLS-1$
 
-		System.out.println("current directory: " //$NON-NLS-1$
-				+ new File(".").getAbsolutePath()); //$NON-NLS-1$
-
 		try {
-			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader(configFileName)); 
+			Map<?, ?> settings = (Map<?, ?>) YAML.load(new FileReader(configFileName));
 			if (settings != null) {
 				Map<?, ?> serverSettings = (Map<?, ?>) settings.get("server"); //$NON-NLS-1$
 				if (serverSettings != null) {
@@ -193,30 +190,53 @@ public class FunnelServer extends JFrame implements ActionListener {
 		server = new CommandPortServer(this, Integer.parseInt(networkPort));
 		server.start();
 
-		serialPorts.setSelectedItem(serialPort);
-
-		if (type.equalsIgnoreCase("gainer") || type.equals(BOARD_TYPE_GAINER)) { //$NON-NLS-1$
-			boards.setSelectedItem(BOARD_TYPE_GAINER);
-		} else if (type.equalsIgnoreCase("arduino") || type.equals(BOARD_TYPE_ARDUINO)) { //$NON-NLS-1$
-			boards.setSelectedItem(BOARD_TYPE_ARDUINO);
-		} else if (type.equalsIgnoreCase("xbee") || type.equals(BOARD_TYPE_XBEE_19200) || type.equals(BOARD_TYPE_XBEE_57600)) { //$NON-NLS-1$
-			if (baudRate == 19200) {
-				boards.setSelectedItem(BOARD_TYPE_XBEE_19200);
-			} else if (baudRate == 57600) {
-				boards.setSelectedItem(BOARD_TYPE_XBEE_57600);
+		if (!FunnelServer.embeddedMode) {
+			serialPorts.setSelectedItem(serialPort);
+			if (type.equalsIgnoreCase("gainer") || type.equals(BOARD_TYPE_GAINER)) { //$NON-NLS-1$
+				boards.setSelectedItem(BOARD_TYPE_GAINER);
+			} else if (type.equalsIgnoreCase("arduino") || type.equals(BOARD_TYPE_ARDUINO)) { //$NON-NLS-1$
+				boards.setSelectedItem(BOARD_TYPE_ARDUINO);
+			} else if (type.equalsIgnoreCase("xbee") || type.equals(BOARD_TYPE_XBEE_19200) || type.equals(BOARD_TYPE_XBEE_57600)) { //$NON-NLS-1$
+				if (baudRate == 19200) {
+					boards.setSelectedItem(BOARD_TYPE_XBEE_19200);
+				} else if (baudRate == 57600) {
+					boards.setSelectedItem(BOARD_TYPE_XBEE_57600);
+				} else {
+					boards.setSelectedItem(BOARD_TYPE_XBEE_19200);
+				}
+			} else if (type.equalsIgnoreCase("fio") || type.equals(BOARD_TYPE_FIO) || type.equals(BOARD_TYPE_ARDUINO_FIO)) { //$NON-NLS-1$
+				if (baudRate == 19200) {
+					boards.setSelectedItem(BOARD_TYPE_FIO);
+				} else if (baudRate == 57600) {
+					boards.setSelectedItem(BOARD_TYPE_ARDUINO_FIO);
+				} else {
+					boards.setSelectedItem(BOARD_TYPE_ARDUINO_FIO);
+				}
 			} else {
-				boards.setSelectedItem(BOARD_TYPE_XBEE_19200);
-			}
-		} else if (type.equalsIgnoreCase("fio") || type.equals(BOARD_TYPE_FIO) || type.equals(BOARD_TYPE_ARDUINO_FIO)) { //$NON-NLS-1$
-			if (baudRate == 19200) {
-				boards.setSelectedItem(BOARD_TYPE_FIO);
-			} else if (baudRate == 57600) {
-				boards.setSelectedItem(BOARD_TYPE_ARDUINO_FIO);
-			} else {
-				boards.setSelectedItem(BOARD_TYPE_ARDUINO_FIO);
+				boards.setSelectedIndex(-1);
 			}
 		} else {
-			boards.setSelectedIndex(-1);
+			if (type.equalsIgnoreCase("gainer") || type.equals(BOARD_TYPE_GAINER)) { //$NON-NLS-1$
+				connect(BOARD_TYPE_GAINER);
+			} else if (type.equalsIgnoreCase("arduino") || type.equals(BOARD_TYPE_ARDUINO)) { //$NON-NLS-1$
+				connect(BOARD_TYPE_ARDUINO);
+			} else if (type.equalsIgnoreCase("xbee") || type.equals(BOARD_TYPE_XBEE_19200) || type.equals(BOARD_TYPE_XBEE_57600)) { //$NON-NLS-1$
+				if (baudRate == 19200) {
+					connect(BOARD_TYPE_XBEE_19200);
+				} else if (baudRate == 57600) {
+					connect(BOARD_TYPE_XBEE_57600);
+				} else {
+					connect(BOARD_TYPE_XBEE_19200, baudRate);
+				}
+			} else if (type.equalsIgnoreCase("fio") || type.equals(BOARD_TYPE_FIO) || type.equals(BOARD_TYPE_ARDUINO_FIO)) { //$NON-NLS-1$
+				if (baudRate == 19200) {
+					connect(BOARD_TYPE_FIO);
+				} else if (baudRate == 57600) {
+					connect(BOARD_TYPE_ARDUINO_FIO);
+				} else {
+					connect(BOARD_TYPE_ARDUINO_FIO, baudRate);
+				}
+			}
 		}
 
 		initialized = true;
@@ -239,19 +259,12 @@ public class FunnelServer extends JFrame implements ActionListener {
 				}
 			});
 		} else {
-			System.out.println(msg); 
+			System.out.println(msg);
 		}
 	}
 
 	// This is the start point of this application
 	public static void main(String[] args) {
-		String libPath = System.getProperty("java.library.path"); //$NON-NLS-1$
-		System.out.println("library path: " + libPath); //$NON-NLS-1$
-		String classPath = System.getProperty("java.class.path"); //$NON-NLS-1$
-		System.out.println("class path: " + classPath); //$NON-NLS-1$
-		System.out.println("current directory: " //$NON-NLS-1$
-				+ new File(".").getAbsolutePath()); //$NON-NLS-1$
-
 		String configFileName = "settings.txt";
 
 		if ((args.length > 0) && (args[0] != null)) {
@@ -303,18 +316,24 @@ public class FunnelServer extends JFrame implements ActionListener {
 		}
 	}
 
+	private void connect(String requestedBoardType) {
+		connect(requestedBoardType, -1);
+	}
+
 	private void connect(String requestedBoardType, int requestedBaudRate) {
 		if (requestedBoardType == null) {
 			return;
 		}
 
-		if (serialPorts.getSelectedIndex() < 0) {
-			return;
+		if (serialPorts != null) {
+			if (serialPorts.getSelectedIndex() < 0) {
+				return;
+			}
+
+			serialPort = (String) serialPorts.getSelectedItem();
 		}
 
-		serialPort = (String) serialPorts.getSelectedItem();
-
-		if (requestedBoardType.equals(BOARD_TYPE_GAINER)) { 
+		if (requestedBoardType.equals(BOARD_TYPE_GAINER)) {
 			try {
 				ioModule = new GainerIO(this, serialPort);
 				ioModule.reboot();
@@ -322,7 +341,7 @@ public class FunnelServer extends JFrame implements ActionListener {
 				printMessage(Messages.getString("FunnelServer.CannotOpenGainer")); //$NON-NLS-1$
 				return;
 			}
-		} else if (requestedBoardType.equals(BOARD_TYPE_ARDUINO)) { 
+		} else if (requestedBoardType.equals(BOARD_TYPE_ARDUINO)) {
 			try {
 				if (requestedBaudRate < 0) {
 					baudRate = 57600;
@@ -332,7 +351,7 @@ public class FunnelServer extends JFrame implements ActionListener {
 				printMessage(Messages.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
 				return;
 			}
-		} else if (requestedBoardType.equals(BOARD_TYPE_XBEE_19200) || requestedBoardType.equals(BOARD_TYPE_XBEE_57600)) { 
+		} else if (requestedBoardType.equals(BOARD_TYPE_XBEE_19200) || requestedBoardType.equals(BOARD_TYPE_XBEE_57600)) {
 			try {
 				if (requestedBaudRate < 0) {
 					if (requestedBoardType.equals(BOARD_TYPE_XBEE_19200)) {
@@ -346,7 +365,7 @@ public class FunnelServer extends JFrame implements ActionListener {
 				printMessage(Messages.getString("FunnelServer.CannotOpenXBee")); //$NON-NLS-1$
 				return;
 			}
-		} else if (requestedBoardType.equals(BOARD_TYPE_ARDUINO_FIO) || requestedBoardType.equals(BOARD_TYPE_FIO)) { 
+		} else if (requestedBoardType.equals(BOARD_TYPE_ARDUINO_FIO) || requestedBoardType.equals(BOARD_TYPE_FIO)) {
 			try {
 				if (requestedBaudRate < 0) {
 					if (requestedBoardType.equals(BOARD_TYPE_FIO)) {
@@ -361,7 +380,10 @@ public class FunnelServer extends JFrame implements ActionListener {
 				return;
 			}
 		}
-		setTitle("Funnel Server: " + (String) boards.getSelectedItem());
+
+		if (!FunnelServer.embeddedMode) {
+			setTitle("Funnel Server: " + (String) boards.getSelectedItem());
+		}
 	}
 
 	private void saveSettings() {
