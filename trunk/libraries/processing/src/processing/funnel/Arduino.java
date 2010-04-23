@@ -23,6 +23,8 @@ public final class Arduino extends Firmata{
 	public static final int PWM = PORT_AOUT;
 	
 	
+	
+	
 	private static final int[] firmata = {
 		PORT_DOUT,PORT_DOUT,PORT_DOUT,PORT_AOUT,PORT_DOUT,PORT_AOUT,PORT_AOUT,
 		PORT_DOUT,PORT_DOUT,PORT_AOUT,PORT_AOUT,PORT_AOUT,PORT_DOUT,PORT_DOUT,

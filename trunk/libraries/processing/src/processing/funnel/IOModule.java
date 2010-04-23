@@ -123,7 +123,7 @@ public class IOModule{
 	public void checkOutputPortsUpdated(){
 		int[] conf = config.pinsStatus;
 		for(int i=0;i<conf.length;i++){
-			if((conf[i] & 0x02)==0x2){
+			if(conf[i] >= 0x2){//
 				pin(i).checkOutputUpdated();
 			}
 		}
