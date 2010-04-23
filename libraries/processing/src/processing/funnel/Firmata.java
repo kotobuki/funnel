@@ -15,6 +15,8 @@ import processing.funnel.i2c.I2CInterface;
 
 public abstract class Firmata extends IOSystem{
 
+	public static final int SERVO = 4;
+	
 	public Firmata(PApplet parent, String hostName, String serverPortName, 
 			int commandPortNumber, int samplingInterval, Configuration config) {
 		super(parent, hostName,serverPortName, commandPortNumber, samplingInterval, config);
