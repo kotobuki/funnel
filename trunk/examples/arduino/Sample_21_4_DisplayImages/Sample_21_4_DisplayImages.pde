@@ -4,7 +4,7 @@
 // ボタンに接続したピンの番号
 const int buttonPin = 8;
 
-// 1 枚目と2 枚目のセクタアドレス
+// 1枚目と2枚目のセクタアドレス
 const unsigned long sectorAddress[] = {
   0x001000,
   0x001040
