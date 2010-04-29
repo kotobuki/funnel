@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
-<plist version="0.9">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
 	<string>Funnel Server</string>
 	<key>CFBundleIdentifier</key>
 	<string>cc.funnel</string>
 	<key>CFBundleVersion</key>
-	<string>0.0.9</string>
+	<string>0.1.0</string>
 	<key>CFBundleAllowMixedLocalizations</key>
 	<string>true</string>
 	<key>CFBundleExecutable</key>
@@ -31,12 +31,12 @@
 		<key>JVMVersion</key>
 		<string>1.5+</string>
 		<key>ClassPath</key>
-			<array>
+		<array>
 			<string>$JAVAROOT/funnel_server.jar</string>
 			<string>$JAVAROOT/javaosc.jar</string>
 			<string>$JAVAROOT/jvyaml.jar</string>
 			<string>$JAVAROOT/RXTXcomm.jar</string>
-			</array>
+		</array>
 	</dict>
 </dict>
 </plist>
