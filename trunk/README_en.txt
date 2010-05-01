@@ -1,8 +1,8 @@
 INTRODUCTION
 --------------------------------------------------------------------
 Funnel is a toolkit for physical computing. Funnel supports 
-Arduino I/O boards, Gainer I/O modules, XBee wireless modems and 
-FIO (Funnel I/O) boards. The user can set filters for input or 
+Arduino boards, Gainer I/O modules, XBee wireless modems and 
+Arduino Fio or FIO boards. The user can set filters for input or 
 outputs ports. Filtering can include range division, 
 filters like LPF & HPF, scaling and oscillators.
 
@@ -13,12 +13,12 @@ For the latest information, please refer to:
 REQUIREMENTS
 --------------------------------------------------------------------
 * OS
-  * Windows XP SP2/3 or Vista
-  * Mac OS X 10.4 or 10.5
+  * Windows XP SP2/3, Vista or 7
+  * Mac OS X 10.4, 10.5 or 10.6
 
 * Runtime environments for software libraries
-  * ActionScript 3 (e.g. Flash CS3/4, Flex Builder 3, Flex SDK 3)
-  * Processing 1.0
+  * ActionScript 3 (e.g. Flash CS3/4/5, Flex Builder 3, Flash Builder 4 or Flex SDK 3/4)
+  * Processing 1.1
   * Ruby 1.8.* with OSC library by Tadayoshi Funaba
     http://raa.ruby-lang.org/project/osc/
 
@@ -26,11 +26,11 @@ REQUIREMENTS
   * Java Runtime Environment 1.5 or higher
 
 * Hardware
-  * Arduino or clones via Firmata v2 (http://firmata.org/)
+  * Arduino or clone board via Firmata v2.1 (http://firmata.org/)
   * Gainer I/O module v1.0
 
 * Optional environments
-  * Arduino 0015 (required for Arduino and FIO)
+  * Arduino 0018 (required for Arduino, Arduino Fio or FIO boards)
   * action-coding
     http://code.google.com/p/action-coding/
 
@@ -65,10 +65,16 @@ Bini and RXTX by Keane Jarvi.
 Contributors
 * Jeff Hoefs: I2C support for related classes and improvements to the AS3 library
 * Kazuyoshi Kato: matrix LED (Gainer I/O's mode 7) support for the Ruby library
+* Kazushi Mukaiyama: LIS302DL class for the AS3 library
 
 
 UPDATES
 --------------------------------------------------------------------
+Funnel v1.0 (010, 2010.05.22)
+* the user can choose a proper board type and a serial port in GUI (finally!)
+* added examples developed for the book "Prototyping Lab" (O'Reilly Japan, 2010)
+* various enhancements and bug fixing to be released as v1.0
+
 Funnel 009 (2009.04.16)
 * released FIO (Funnel I/O) v1.3 in cooperation with Nathan Seidle (SparkFun Electronics)
   http://www.sparkfun.com/commerce/product_info.php?products_id=8957

@@ -21,7 +21,7 @@ lineskip={-2pt}
 
 \vspace{8pt}
 
-\hspace{-8.5pt}\textsf{{\large The Installation Instructions for Build 010}\\Developers: Shigeru Kobayashi, Takanori Endo and Ichitaro Masuda}
+\hspace{-8.5pt}\textsf{{\large The Installation Instructions for v1.0}\\Developers: Shigeru Kobayashi, Takanori Endo and Ichitaro Masuda}
 
 \vspace{8pt}
 
@@ -29,27 +29,28 @@ lineskip={-2pt}
 \begin{itemize}
 \item OS
 	\begin{itemize}
-	\item Windows XP SP2/3 or Vista
-	\item Mac OS X Tiger 10.4 or Leopard 10.5
+	\item Windows XP SP2/3, Vista or 7
+	\item Mac OS X 10.4, 10.5 or 10.6
 	\end{itemize}
 \item Software
 	\begin{itemize}
 	\item Java Runtime Environment (J2SE 5.0 or above)
-	\item Flash Professional CS3/4, Flex Builder 3 or Flex 2/3 SDK\footnote{http://www.adobe.com/products/flex/flexdownloads/index.html}
+	\item Flash Professional CS3/4/5, Flex Builder 3, Flash Builder 4 or Flex 3/4 SDK\footnote{http://www.adobe.com/products/flex/flexdownloads/index.html}
 	\item Processing v1.0\footnote{http://processing.org/download/index.html}
 	\item Ruby (1.8.6, not tested on 1.9)\footnote{http://www.ruby-lang.org/en/downloads/} and OSC library\footnote{http://raa.ruby-lang.org/project/osc/}
 	\end{itemize}
 \item Hardware
 	\begin{itemize}
 	\item Gainer I/O module\footnote{http://www.triggerdevice.com/items/}\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8480} or clones
-	\item Arduino Diecimila/Duemilanove/LilyPad/Nano/Pro/Pro Mini\footnote{http://www.arduino.cc/en/Main/Hardware} or clones like Boarduino
+	\item Arduino board\footnote{http://www.arduino.cc/en/Main/Hardware} or clones like Boarduino
 	\item XBee 802.15.4 OEM\footnote{http://www.digi.com/products/wireless/point-multipoint/xbee-series1-module.jsp} or ZB ZigBee PRO\footnote{http://www.digi.com/products/wireless/zigbee-mesh/xbee-zb-module.jsp} RF modems
-	\item FIO board\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8957}
+	\item Arduino Fio\footnote{http://arduino.cc/en/Main/ArduinoBoardFio} or FIO board
 	\end{itemize}
 \end{itemize}
 
 \section{Contents of a distribution package}
 \begin{itemize}
+\item \texttt{examples/} Examples for Arduino and Processing
 \item \texttt{documents/} Specifications and manuals
 \item \texttt{hardware/} Hardware design data and firmware
 \item \texttt{libraries/} Software libraries
@@ -61,17 +62,14 @@ lineskip={-2pt}
 \item \texttt{LICENSE.txt} License information
 \item \texttt{README\_en.txt} Overview in English
 \item \texttt{README\_ja.txt} Overview in Japanese
-\item \texttt{server/} Funnel Server
-	\begin{itemize}
-	\item \texttt{Funnel Server.app} and \texttt{Funnel Server.exe} Funnel Server's main file
-	\item \texttt{settings.txt} Funnel Server's settings file
-	\end{itemize}
+\item \texttt{server/} Funnel Server's main file (compressed, for Windows and Mac OS X)
+\item \texttt{tools/} Tools such as XBeeConfigTool (for Windows and Mac OS X)
 \end{itemize}
 
 \section{How to install a device driver}
 Gainer I/O modules, Arduino I/O boards, XBee RF modems, FIO boards and most USB-to-XBee bridge modules \footnote{SparkFun Electronics: XBee Explorer USB (part number WRL-08687)} are equipped with an FTDI FT232RL (a very famous USB-to-UART bridge chip). So you can use virtually any hardware device by installing the device driver for the bridge chip\footnote{The drivers are also included in an Arduino distribution package}.
 
-\subsection{Windows XP/Vista}
+\subsection{Windows XP/Vista/7}
 First, install the device driver from the following URL. Point your web browser to the following URL, and download a device driver for Windows XP or Vista.
 
 \vspace{8pt}
@@ -95,12 +93,12 @@ In case of Gainer I/O modules, you have nothing to do. Just connect your module 
 
 \subsection{Arduino I/O boards}
 \label{uploading_firmata_arduino}
-To connect Arduino I/O boards, Firmata\footnote{http://www.arduino.cc/playground/Interfacing/Firmata/} is needed. Firmata is a MIDI like protocol proposed by Hans-Christoph Steiner. Since Arduino 0017 includes the Firmata library by default, you can easily start using your Arduino I/O board as an I/O module for Funnel just by uploading the example sketch as follows.
+To connect Arduino I/O boards, Firmata\footnote{http://www.arduino.cc/playground/Interfacing/Firmata/} is needed. Firmata is a MIDI like protocol proposed by Hans-Christoph Steiner. Since Arduino 0018 includes the Firmata library by default, you can easily start using your Arduino I/O board as an I/O module for Funnel just by uploading the example sketch as follows.
 
 \begin{enumerate}
 \item Choose an appropriate model in Tools/Board menu
 \item Choose an appropriate serial port in Tools/Serial Port menu
-\item Choose \texttt{StandardFirmata} in File/Sketchbook/Examples/Library-Firmata
+\item Choose \texttt{StandardFirmata} in File/Examples/Firmata
 \item Press the Upload button to upload the sketch to your board\footnote{You might have to press the reset button before pressing the Upload button}
 \end{enumerate}
 
@@ -111,7 +109,7 @@ The upload process should finish after 10 seconds or so. If you see error messag
 \subsubsection{802.15.4 series}
 On Windows, you can get X-CTU\footnote{http://www.digi.com/support/productdetl.jsp?pid=3352\&osvid=57\&tp=4\&s=316} from Digi's web site. Then write \texttt{coordinator.pro} in \texttt{hardware/xbee/multipoint} to a coordinator, and \texttt{enddevice.pro} to end devices. Please change parameters if needed.
 
-On Mac OS X, you can configure XBee modems using \texttt{XBeeConfigTerminal} in \texttt{hardware/fio/tool}. Default settings are described in table 1. You have to upgrade the firmware to 1.0.C.D to use the output side.
+On Mac OS X, you can configure XBee modems using \texttt{XBeeConfigTerminal} in \texttt{tools}. Default settings are described in table 1. You have to upgrade the firmware to 1.0.C.D or later to use the output side.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -171,34 +169,35 @@ Write \texttt{coordinator.pro} in \texttt{hardware/xbee/zb} for a coordinator, a
 \end{table}
 
 \clearpage
-\subsection{FIO boards}
-Since FIO is an Arduino clone I/O board with an XBee module based on the LilyPad Arduino Main Board v1.6\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8465}, you have to configure the XBee modem and upload sketches through the Arduino IDE. Though both XBee series are supported, we recommend that you to use the 802.15.4 series for simplicity and clarity.
+\subsection{Arduino Fio or FIO boards}
+FIO is an Arduino clone I/O board with an XBee module based on the LilyPad Arduino Main Board v1.6\footnote{http://www.sparkfun.com/commerce/product\_info.php?products\_id=8465}. Arduino Fio is based on FIO, and a member of Arduino boards. You have to configure the XBee modem to upload sketches wirelessly through the Arduino IDE. We strongly recommend that you to use the 802.15.4 series for simplicity and clarity.
 
 \subsubsection{How to configure XBee modems}
-On Windows and Mac OS X, XBeeConfigTool (available in \texttt{hardware/fio/tool}) will be your friend. To use the tools you must:
+On Windows and Mac OS X, XBeeConfigTool (available in \texttt{tools}) will be your friend. To use the tools you must:
 
 \begin{enumerate}
 \item choose a proper serial port
-\item choose a proper mode (Coordinator or End Devices)
-\item choose a proper baud rate (19200bps for ATmega168, 57600bps for ATmega328)
+\item choose a proper mode (Programming radio or Arduino Fio radio)
+\item choose a proper baud rate (57600bps for Arduino Fio boards, 19200bps for FIO boards)
 \item set a proper PAN ID
 \item set a proper MY ID (for end devices only)
 \item press the Configure button to configure the XBee modem 
 \end{enumerate}
 
+
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[mediaboxonly, width=0.495\textwidth]{XBeeConfigTool_coordinator.pdf}
-\includegraphics[mediaboxonly, width=0.495\textwidth]{XBeeConfigTool_end_devices.pdf}
+\includegraphics[mediaboxonly, width=0.495\textwidth]{XBeeConfigTool_ProgrammingRadio.pdf}
+\includegraphics[mediaboxonly, width=0.495\textwidth]{XBeeConfigTool_FioRadio.pdf}
 \vskip -\lastskip \vskip -3pt
-\caption{Screenshots of XBeeConfigTool: a coordinator side (left) and end devices side (right)}
+\caption{Screenshots of XBeeConfigTool: a programming radio side (left) and a Fio radio side (right)}
 \label{default}
 \end{center}
 \end{figure}
 
 %The baud rate setting in configuration files and the table is 19,200 bps because that is the baud rate used by the boot loader in the Arduino IDE. If you have to handle several FIO boards and the baud rate is not fast enough, increase the baud rate of the coordinator (e.g. 57,600 bps). Please don't forget to revert the baud rate to 19,200 bps to upload sketches to FIO boards.
 
-On Windows, using X-CTU will be an alternative way to configure XBee modems. Write \texttt{coordinator\_auto\_reset.pro} or \texttt{coordinator.pro} (if you don't want to enable the auto reset function) in \texttt{hardware/fio/xbee} to a coordinator, and \texttt{router.pro} to end devices (i.e. XBee modems for FIO boards) using X-CTU. Please change parameters if needed.
+On Windows, using X-CTU will be an alternative way to configure XBee modems. Write \texttt{coordinator\_auto\_reset.pro} or \texttt{coordinator.pro} (if you don't want to enable the auto reset function) in \texttt{hardware/fio/xbee} to a programming radio, and \texttt{router.pro} to a board radio (i.e. XBee modems for Arduino Fio or FIO boards) using X-CTU. Please change parameters if needed.
 
 \begin{table}[htdp]
 \begin{center}
@@ -206,7 +205,7 @@ On Windows, using X-CTU will be an alternative way to configure XBee modems. Wri
 \begin{tabular}{|r|c|c|l|}
 \hline   & Coordinator & End devices & Remarks \\\hline
 \hline \texttt{ATRE} & - & - & reset settings \\
-\hline \texttt{ATBD} & \texttt{4} & \texttt{4} & set baud rate to 19,200 bps \\
+\hline \texttt{ATBD} & \texttt{6 or 4} & \texttt{6 or 4} & set baud rate for Arduino Fio boards (BD6: 57,600 bps) or FIO boards (BD4: 19,200) \\
 \hline \texttt{ATID} & \texttt{1234} & \texttt{1234} & PAN ID \\
 \hline \texttt{ATMY} & \texttt{0} & \texttt{1} &  \\
 \hline \texttt{ATDL} & \texttt{FFFF} & \texttt{0} & destination ID \\
@@ -228,10 +227,10 @@ On Windows, using X-CTU will be an alternative way to configure XBee modems. Wri
 \label{uploading_firmata_fio}
 Please follow instructions below to upload the firmware to FIO boards.
 \begin{enumerate}
-\item Choose `Arduino Pro or Pro Mini (8MHz)' in Tools/Board menu
+\item Choose `Arduino Pro or Pro Mini (8MHz) w/ ATmega328' for Arduino Fio boards or `Arduino Pro or Pro Mini (8MHz) w/ ATmega168' for FIO boards in Tools/Board menu
 \item Choose an appropriate serial port in Tools/Serial Port menu
-\item Open \texttt{FioStandardFirmata} in \texttt{hardware/fio/firmware/}
-\item Turn off and on the power switch of your FIO module, or press the reset button, then press the Upload button to start uploading
+\item Open \texttt{StandardFirmataForFio} in \texttt{hardware/fio/firmware/}
+\item Turn off and on the power switch of your Arduino Fio or FIO board, or press the reset button, then press the Upload button to start uploading
 \end{enumerate}
 
 The upload process should finish after 10 seconds or so. If you see error messages, please try again from the 4th step.
@@ -261,6 +260,8 @@ The folder \texttt{libraries/ruby/examples} contains examples for Gainer, Arduin
 \section{How to configure and run Funnel Server}
 Regarding ActionScript 3 and Ruby, the files mentioned below are located in \texttt{server/}. If you are using Processing, the files are are located in the library folder (i.e. \texttt{Processing/libraries/funnel/}). 
 
+
+
 \subsection{Configure settings (except for Gainer I/O modules)}
 By default, Funnel Server is configured to use with Gainer I/O modules. So you have to configure the settings file to use Funnel with other boards. For your reference, example files are included in a distribution package as follows.
 \begin{itemize}
@@ -269,50 +270,17 @@ By default, Funnel Server is configured to use with Gainer I/O modules. So you h
 \item \texttt{settings.gainer.txt} for Gainer I/O modules
 \item \texttt{settings.xbee.txt} for XBee modems
 \end{itemize}
-Funnel Server will use single network port, and the default value is 9000. If another application is already using port 9000, please choose an open port. On Windows, you have to configure io/com setting. On Mac OS X, if your I/O module is equipped with FTDI's USB-to-UART bridge chip, Funnel Server will try to open an appropriate port. So you might not need to configure the serial port settings.
 
-\begin{lstlisting}[caption={An example of settings.txt for Gainer I/O modules},label=useless]
-server:
-  port: 9000
 
-io:
-  type: Gainer
-  com: 
-  baudrate: 
-\end{lstlisting}
-
-\begin{lstlisting}[caption={An example of settings.txt for Arduino I/O boards (Mac OS X)},label=useless]
-server:
-  port: 9000
-
-io:
-  type: Arduino
-  com: /dev/cu.usbserial-A*******
-  baudrate: 57600
-\end{lstlisting}
-
-\begin{lstlisting}[caption={An example of settings.txt for Arduino I/O boards (Windows)},label=useless]
-server:
-  port: 9000
-
-io:
-  type: Arduino
-  com: COM3
-  baudrate: 57600
-\end{lstlisting}
-
-\clearpage
 \subsection{Start-up}
-If you finished setting up your configurations, double click on \texttt{Funnel Server.app} or \texttt{Funnel Server.exe} to launch Funnel Server. Funnel Server will connect with the hardware, and print messages in the terminal window. If Funnel Server won't run, please confirm that a Java runtime environment (J2SE 5 or above) is installed.
-
-\subsection{Gainer I/O modules}
-If a Funnel Server launches successfully, messages will be printed as follows. If you find any error messages, please check your environment (i.e. settings file and hardware) using the error messages as reference.
+Double click on \texttt{Funnel Server} to launch Funnel Server. Then select a proper board type (e.g. `Arduino (StandardFirmata)') in the left menu then select a proper sereial port in the right menu. Funnel Server will connect with the hardware, and print messages in the terminal window. If Funnel Server won't run, please confirm that a Java runtime environment (J2SE 5 or above) is installed.
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_gainer_successful_en.pdf}
+\includegraphics[mediaboxonly, width=0.497\textwidth, clip]{fs_first_launch_en.pdf}
+\includegraphics[mediaboxonly, width=0.497\textwidth, clip]{fs_launch_arduino_en.pdf}
 \vskip -\lastskip \vskip -3pt
-\caption{A typical screenshot of a Funnel Server launching with a Gainer I/O module connected}
+\caption{A typical screenshot of a first launch of a Funnel Server (left) and when connected to an Arduino board (right)}
 \label{default}
 \end{center}
 \end{figure}
@@ -327,115 +295,7 @@ If you see any error messages, please make sure about following points:
 \item An appropriate serial port (e.g. COM3) is specified (if needed)
 \end{itemize}
 
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_gainer_unconnected_en.pdf}
-\vskip -\lastskip \vskip -3pt
-\caption{A typical screenshot of a Funnel Server launching without a Gainer I/O module attached}
-\label{default}
-\end{center}
-\end{figure}
-
-\clearpage
-\subsection{Arduino I/O boards}
-If a Funnel Server launches successfully, messages will be printed as follows. If you find any error messages, please check your environment (i.e. settings file and hardware) using the error messages as reference points.
-
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_arduino_successful_en.pdf}
-\vskip -\lastskip \vskip -3pt
-\caption{A typical screenshot of a Funnel Server launching with an Arduino I/O board attached}
-\label{default}
-\end{center}
-\end{figure}
-
-If you can't see a string like `\texttt{Firmata Protocol Version: 2.1}', the firmware might have failed to upload. Please refer the section \ref{uploading_firmata_arduino} to try again. If you see any error messages, please make sure that:
-
-\begin{itemize}
-\item The FTDI USB driver is installed
-\item The USB cable is connected to the PC and the I/O board
-\item The power LED on the I/O board lights up
-\item The appropriate type (i.e. Arduino) is specified
-\item An appropriate serial port (e.g. COM3) is specified (if needed)
-\item An appropriate baud rate (e.g. 57600) is specified
-\end{itemize}
-
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_arduino_unconnected_en.pdf}
-\vskip -\lastskip \vskip -3pt
-\caption{A typical screenshot of a Funnel Server launching without an Arduino I/O board attached}
-\label{default}
-\end{center}
-\end{figure}
-
-\clearpage
-\subsection{XBee RF modems}
-If a Funnel Server launches successfully, messages will be printed as follows. If you find any error messages, please check your environment (i.e. settings file and hardware) using the error messages as reference points.
-
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_xbee_successful_en.pdf}
-\vskip -\lastskip \vskip -3pt
-\caption{A typical screenshot of a Funnel Server launching with an XBee RF modem attached}
-\label{default}
-\end{center}
-\end{figure}
-
-If you see any error messages, please make sure that:
-
-\begin{itemize}
-\item The FTDI USB driver is installed
-\item The USB cable is connected to the PC and the I/O board
-\item The power LED on the XBee-to-USB module lights up
-\item The appropriate type (i.e. XBee) is specified (if needed)
-\item An appropriate serial port (e.g. COM3) is specified
-\item An appropriate baud rate (e.g. 57600) is specified
-\end{itemize}
-
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_xbee_unconnected_en.pdf}
-\vskip -\lastskip \vskip -3pt
-\caption{A typical screenshot of a Funnel Server launching without an XBee RF modem attached}
-\label{default}
-\end{center}
-\end{figure}
-
-\clearpage
-\subsection{FIO boards}
-If a Funnel Server launches successfully, messages will be printed as follows. If you find any error messages, please check your environment (i.e. settings file and hardware) using the error messages as reference points.
-
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_fio_successful_en.pdf}
-\vskip -\lastskip \vskip -3pt
-\caption{A typical screenshot of a Funnel Server launching with a FIO board attached}
-\label{default}
-\end{center}
-\end{figure}
-
-If you can't see a string like `\texttt{Firmata Protocol Version: 2.1}', the firmware might have failed to upload. Please refer the section \ref{uploading_firmata_fio} to try again. If you see any error messages, please make sure that:
-
-\begin{itemize}
-\item The FTDI USB driver is installed
-\item The USB cable is connected to the PC and the I/O board
-\item The power LED on the XBee-to-USB module lights up
-\item The appropriate type (i.e. FIO) is specified
-\item An appropriate serial port (e.g. COM3) is specified (if needed)
-\item An appropriate baud rate (e.g. 19200) is specified
-\end{itemize}
-
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[mediaboxonly, height=5.5cm, clip]{fs_launch_fio_unconnected_en.pdf}
-\vskip -\lastskip \vskip -3pt
-\caption{A typical screenshot of a Funnel Server launching without an FIO board attached}
-\label{default}
-\end{center}
-\end{figure}
-
-\clearpage
+%\clearpage
 \section{Testing the software libraries}
 \subsection{ActionScript 3}
 Run an appropriate example in \texttt{libraries/actionscript3/examples/} with Flash Player. As for details, please refer to the comments in examples.
