@@ -1,6 +1,6 @@
 ■はじめに
 Funnelはフィジカルコンピューティングのためのツールキットです。Gainer I/O
-モジュール、Arduino I/Oボード、XBee無線モデムとFIO（Funnel I/O）ボードに
+モジュール、Arduinoボード、XBee無線モデムとArduino FioまたはFIOボードに
 対応し、それぞれの入出力ポートに対して閾（しきい）値による分割、LPFやHPF
 などのフィルタ処理、スケーリング、オシレータなどのフィルタをセットすること
 ができます。
@@ -11,13 +11,13 @@ http://funnel.cc
 
 ■動作環境
 □OS
-・Windows XP SP2/3またはVista
-・Mac OS X 10.4または10.5
+・Windows XP SP2/3、Vistaまたは7
+・Mac OS X 10.4、10.5または10.6
 
 □ライブラリの動作環境
-・Flash CS3/4、Flex Builder 3、Flex 3 SDKなどActionScript 3で
-　プログラミングできる環境
-・Processing 1.0
+・Flash CS3/4/5、Flex Builder 3、Flash Builder 4、Flex 3/4 SDKなど
+　ActionScript 3でプログラミングできる環境
+・Processing 1.1
 ・Ruby 1.8.*（1.9では未確認）＋ふなばただよしさんのOSCライブラリ
 　http://raa.ruby-lang.org/project/osc/
 
@@ -26,12 +26,12 @@ http://funnel.cc
 
 □ハードウェア
 ・Gainer I/Oモジュール
-・Arduinoまたは互換機＋Firmata v2（http://firmata.org/）
-・XBee 802.15.4またはZB ZigBee PRO
+・Arduinoボードまたは互換機＋Firmata v2.1（http://firmata.org/）
+・XBee 802.15.4無線モデムまたはZB ZigBee PRO無線モデム
 ・FIO（Funnel I/O）モジュール
 
 □オプションの環境
-・Arduino 0015（ArduinoまたはFioを使用する場合）
+・Arduino 0018（Arduino、Arduino FioまたはFIOを使用する場合）
 ・action-coding
 　http://code.google.com/p/action-coding/
 
@@ -60,9 +60,14 @@ Keane Jarvi氏によるRXTXを使用しています。
 コントリビュータ
 ・Jeff Hoefsさん：I2C関連クラスおよびAS3ライブラリの改善
 ・加藤和良さん：RubyライブラリでのマトリクスLED（Gainer I/Oのモード7）のサポート
-
+・迎山和司さん：AS3ライブラリでのLIS302DLクラス
 
 ■更新履歴
+Funnel v1.0（010、2010.05.22）
+・ボードのタイプとシリアルポートをGUIで設定できるように変更
+・書籍「Prototyping Lab」（オライリー・ジャパン、2010年）用のサンプルを追加
+・その他v1.0としてリリースするためのさまざまな改良とバグ修正
+
 Funnel  009（2009.04.16）
 ・Nathan Seidle（SparkFun Electronics）の協力によりFIO（Funnel I/O）v1.3をリリース
 　http://www.sparkfun.com/commerce/product_info.php?products_id=8957
