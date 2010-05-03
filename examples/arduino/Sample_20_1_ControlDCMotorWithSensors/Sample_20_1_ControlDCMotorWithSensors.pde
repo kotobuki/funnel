@@ -32,11 +32,12 @@ void despin(boolean useBrake = true) {
   if (useBrake) {
     digitalWrite(in1Pin, HIGH);
     digitalWrite(in2Pin, HIGH);
+    analogWrite(pwmPin, 255);
   }
   else {
     digitalWrite(in1Pin, LOW);
     digitalWrite(in2Pin, LOW);
-    analogWrite(pwmPin, 255);
+    analogWrite(pwmPin, 0);
   }
 }
 

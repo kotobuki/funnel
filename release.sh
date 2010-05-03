@@ -24,5 +24,6 @@ hdiutil create -format UDRO -fs HFS+ -srcfolder ./funnel_server-mac -volname "fu
 zip -r funnel_server-win.zip ./funnel_server-win/
 rm -r ./funnel_server-mac/
 rm -r ./funnel_server-win/
-rm -r ./server/
+cp ./funnel_server-win.zip ./server/win.zip
+cp ./funnel_server-mac.dmg ./server/mac.dmg
 rm ./release.sh
