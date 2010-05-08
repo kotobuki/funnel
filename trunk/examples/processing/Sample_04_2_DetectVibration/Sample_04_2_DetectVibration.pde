@@ -1,4 +1,4 @@
-DetectVibrationimport processing.funnel.*;
+import processing.funnel.*;
 
 // Arduino
 Arduino arduino;
@@ -15,14 +15,13 @@ void setup() {
   // LEDに接続したピンのモードを出力にセット
   Configuration config = Arduino.FIRMATA;
   config.setDigitalPinMode(13, Arduino.OUT);
-  arduino = new Arduino(this, config);
+
+  // 2番目の引数でサンプリング間隔を10msにセット
+  arduino = new Arduino(this, 10, config);
 
   // ピエゾ素子とLEDに接続したピンを表す変数を初期化
   sensorPin = arduino.analogPin(0);
   ledPin = arduino.digitalPin(13);
-
-  // サンプリング間隔を10msに変更
-  arduino.samplingInterval = 10;
 
   // センサに接続したピンにSetPointフィルタをセット
   sensorPin.addFilter(new SetPoint(0.2, 0.05));
