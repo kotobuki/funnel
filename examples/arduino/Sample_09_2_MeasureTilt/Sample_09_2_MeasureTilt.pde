@@ -34,7 +34,7 @@ void loop() {
   // LCDの表示をクリアしてそれぞれの軸のラベルをプリント
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("x: y:");
+  lcd.print("x:    y:");
 
   // それぞれの軸の値をプリント
   lcd.setCursor(0, 1);
