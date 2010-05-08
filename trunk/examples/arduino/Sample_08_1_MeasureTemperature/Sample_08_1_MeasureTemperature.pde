@@ -1,10 +1,10 @@
 #include <LiquidCrystal.h>
 
-// センサを接続したピンの番号
-int sensorPin = 5;
+// センサに接続したアナログピンの番号
+int sensorPin = 0;
 
 // LCD
-LiquidCrystal lcd(13, 12, 11, 10, 14, 15, 16);
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 void setup() {
   // LCDの桁数と行数をセットする
