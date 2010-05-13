@@ -10,10 +10,11 @@ const int firstLedPin = 7;
 const int updateInterval = 3000;
 
 // パターンの行数
-const int numPatterns = 14;
+const int numPatterns = 15;
 
 // パターンを収める配列
 int pattern[numPatterns] = {
+  B0000000,
   B0000000,
   B0000000,
   B0000000,
@@ -74,6 +75,11 @@ void loop() {
   // 現在の時刻を取得する
   unsigned long currentMicros = micros();
 
+  // ホストから受信したメッセージがあれば処理
+  while (Firmata.available()) {
+    Firmata.processInput();
+  }
+
   // スイッチに接続したピンがロー（押された状態）であれば
   if (digitalRead(switchPin) == LOW) {
     // 前回押されてから10000uS経過していたら
@@ -86,11 +92,6 @@ void loop() {
     }
     // 前回押された時刻として現在の時刻をセット
     lastPressed = currentMicros;
-  }
-
-  // ホストから受信したメッセージがあれば処理
-  while (Firmata.available()) {
-    Firmata.processInput();
   }
 
   // 更新の時刻になっていたら
