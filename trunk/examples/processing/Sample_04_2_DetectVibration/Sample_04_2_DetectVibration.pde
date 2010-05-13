@@ -16,7 +16,9 @@ void setup() {
   Configuration config = Arduino.FIRMATA;
   config.setDigitalPinMode(13, Arduino.OUT);
 
-  // 2番目の引数でサンプリング間隔を10msにセット
+  // 2番目の引数でサンプリング間隔を10msにセット。この形式でさらに
+  // シリアルポートを指定する場合には、次のように4つ目の引数で指定
+  // arduino = new Arduino(this, 10, config, "COM3");
   arduino = new Arduino(this, 10, config);
 
   // ピエゾ素子とLEDに接続したピンを表す変数を初期化
