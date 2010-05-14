@@ -1,3 +1,24 @@
+/*
+  JapaninoPOVFirmata
+ 
+  The circuit
+  * P.O.V. kit connected to digital pins (from D6 to GND)
+ 
+  [Credits]
+  Created 14 May 2010
+  By Shigeru Kobayashi
+ 
+  [References]
+  Otona no Kagaku Magazine Vol.27
+  http://otonanokagaku.net/magazine/vol27/
+ 
+  Otona no Kagaku x wonderfl contest
+  http://wonderfl.net/event/japanino/
+ 
+  Japanino Test (on wonderfl: Build Flash Online)
+  http://wonderfl.net/c/4LF4
+*/
+
 #include <Firmata.h>
 
 // スイッチに接続したピンの番号
@@ -75,11 +96,6 @@ void loop() {
   // 現在の時刻を取得する
   unsigned long currentMicros = micros();
 
-  // ホストから受信したメッセージがあれば処理
-  while (Firmata.available()) {
-    Firmata.processInput();
-  }
-
   // スイッチに接続したピンがロー（押された状態）であれば
   if (digitalRead(switchPin) == LOW) {
     // 前回押されてから10000uS経過していたら
@@ -92,6 +108,11 @@ void loop() {
     }
     // 前回押された時刻として現在の時刻をセット
     lastPressed = currentMicros;
+  }
+
+  // ホストから受信したメッセージがあれば処理
+  while (Firmata.available()) {
+    Firmata.processInput();
   }
 
   // 更新の時刻になっていたら
@@ -125,3 +146,4 @@ void loop() {
     index = min(index + 1, numPatterns);
   }
 }
+
