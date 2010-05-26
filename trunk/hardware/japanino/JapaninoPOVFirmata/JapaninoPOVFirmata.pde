@@ -89,7 +89,7 @@ void setup() {
   // システム・エクスクルーシブ・メッセージのコールバックをセットして
   // Firmataをスタート
   Firmata.attach(START_SYSEX, sysexCallback);
-  Firmata.begin(57600);
+  Firmata.begin(38400);
 }
 
 void loop() {

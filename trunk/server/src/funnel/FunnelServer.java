@@ -41,20 +41,22 @@ public class FunnelServer extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel Server 010 (r718) [BETA]";
+	private static final String buildName = "Funnel Server v1.0 (r735)";
 
-	private final String BOARD_TYPE_ARDUINO = "Arduino (StandardFirmata)";
-	private final String BOARD_TYPE_ARDUINO_FIO = "Arduino Fio (57600 baud)";
-	private final String BOARD_TYPE_FIO = "FIO (19200 baud)";
+	private final String BOARD_TYPE_ARDUINO = "Arduino (StandardFirmata, 57600 baud)";
+	private final String BOARD_TYPE_ARDUINO_FIO = "Arduino Fio (StandardFirmataForFio, 57600 baud)";
+	private final String BOARD_TYPE_FIO = "FIO (StandardFirmataForFio, 19200 baud)";
 	private final String BOARD_TYPE_GAINER = "Gainer";
 	private final String BOARD_TYPE_XBEE_57600 = "XBee (57600 baud)";
 	private final String BOARD_TYPE_XBEE_19200 = "XBee (19200 baud)";
+	private final String BOARD_TYPE_JAPANINO = "Japanino (JapaninoPOVFirmata, 38400 baud)";
 
 	private final int width = 480;
 	private final int height = 270;
 
 	private final String[] boardTypeStrings = {
-			BOARD_TYPE_ARDUINO, BOARD_TYPE_ARDUINO_FIO, BOARD_TYPE_FIO, BOARD_TYPE_GAINER, BOARD_TYPE_XBEE_57600, BOARD_TYPE_XBEE_19200
+			BOARD_TYPE_ARDUINO, BOARD_TYPE_ARDUINO_FIO, BOARD_TYPE_FIO, BOARD_TYPE_GAINER, BOARD_TYPE_XBEE_57600, BOARD_TYPE_XBEE_19200,
+			BOARD_TYPE_JAPANINO
 	};
 
 	private JComboBox boards;
@@ -196,6 +198,8 @@ public class FunnelServer extends JFrame implements ActionListener {
 				boards.setSelectedItem(BOARD_TYPE_GAINER);
 			} else if (type.equalsIgnoreCase("arduino") || type.equals(BOARD_TYPE_ARDUINO)) { //$NON-NLS-1$
 				boards.setSelectedItem(BOARD_TYPE_ARDUINO);
+			} else if (type.equalsIgnoreCase("japanino") || type.equals(BOARD_TYPE_JAPANINO)) { //$NON-NLS-1$
+				boards.setSelectedItem(BOARD_TYPE_JAPANINO);
 			} else if (type.equalsIgnoreCase("xbee") || type.equals(BOARD_TYPE_XBEE_19200) || type.equals(BOARD_TYPE_XBEE_57600)) { //$NON-NLS-1$
 				if (baudRate == 19200) {
 					boards.setSelectedItem(BOARD_TYPE_XBEE_19200);
@@ -346,6 +350,14 @@ public class FunnelServer extends JFrame implements ActionListener {
 				if (requestedBaudRate < 0) {
 					baudRate = 57600;
 				}
+				ioModule = new ArduinoIO(this, serialPort, baudRate);
+			} catch (RuntimeException e) {
+				printMessage(Messages.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
+				return;
+			}
+		} else if (requestedBoardType.equals(BOARD_TYPE_JAPANINO)) {
+			try {
+				baudRate = 38400;
 				ioModule = new ArduinoIO(this, serialPort, baudRate);
 			} catch (RuntimeException e) {
 				printMessage(Messages.getString("FunnelServer.CannotOpenArduino")); //$NON-NLS-1$
