@@ -17,7 +17,7 @@ const int ledPin = 9;
 byte macAddress[] = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB };
 
 // PachubeのIPアドレス
-byte serverIpAddress[] = { 209, 40, 205, 190 };
+byte serverIpAddress[] = { 173, 203, 98, 29 };
 
 // 次にフィードを更新する時刻
 unsigned long nextExecuteMillis;

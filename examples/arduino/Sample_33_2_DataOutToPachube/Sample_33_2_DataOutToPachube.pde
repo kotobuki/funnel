@@ -16,7 +16,7 @@ byte macAddress[] = {
 
 // PachubeのIPアドレス
 byte serverIpAddress[] = { 
-  209, 40, 205, 190 };
+  173, 203, 98, 29 };
 
 // クライアント
 Client client(serverIpAddress, 80);
