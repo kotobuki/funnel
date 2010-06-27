@@ -204,6 +204,8 @@ module Funnel
         @config[@digital_pins.at(pin)] = Pin::DOUT
       when Pin::AOUT
         @config[@digital_pins.at(pin)] = Pin::AOUT
+      when Pin::SERVO
+        @config[@digital_pins.at(pin)] = Pin::SERVO
       else
         raise ArgumentError, "mode #{mode} is not available"
       end
