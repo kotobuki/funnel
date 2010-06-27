@@ -29,5 +29,6 @@ module Funnel
   READY = FunnelEvent::READY
   REBOOT_ERROR = FunnelErrorEvent::REBOOT_ERROR
   RISING_EDGE = PinEvent::RISING_EDGE
+  SERVO = Pin::SERVO
   UPDATE = GeneratorEvent::UPDATE
 end

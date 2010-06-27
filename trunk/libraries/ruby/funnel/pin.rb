@@ -6,6 +6,7 @@ module Funnel
     DIN   = 1
     AOUT  = 2
     DOUT  = 3
+    SERVO = 4
 
     attr_reader :number
     attr_reader :type
@@ -17,7 +18,7 @@ module Funnel
     def initialize(id, type)
       @number = id
 
-      if (type == AIN) or (type == DIN) or (type == AOUT) or (type == DOUT) then
+      if (type == AIN) or (type == DIN) or (type == AOUT) or (type == DOUT) or (type == SERVO) then
         @type = type
       else
         raise ArgumentError, "unknown type: #{type}"
