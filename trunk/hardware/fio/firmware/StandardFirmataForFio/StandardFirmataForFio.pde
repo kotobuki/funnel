@@ -115,7 +115,7 @@ void setup() {
     reportPINs[i] = false;
   }
 
-  Firmata.begin(19200);
+  Firmata.begin(57600);
 }
 
 void loop()
