@@ -39,6 +39,14 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 
 		try {
 			firmwareVersionQueue.poll(10000, TimeUnit.MILLISECONDS);
+
+			if ((protocolVersion[1] == 2) && (protocolVersion[0] == 1)) {
+				analogPinOffset = 0;
+			} else if ((protocolVersion[1] == 2) && (protocolVersion[0] == 2)) {
+				analogPinOffset = 2;
+			} else {
+				printMessage("WARNING: Untested Firmata protocol version!!");
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

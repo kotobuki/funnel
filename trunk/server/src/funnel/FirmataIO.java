@@ -74,6 +74,8 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected BlockingQueue<String> firmwareVersionQueue;
 	protected ArrayList<ArrayList<Integer>> sysExDataList;
 
+	protected int analogPinOffset = 0;
+
 	public FirmataIO(int analogPins, int digitalPins, int[] pwmPins) {
 		super();
 
@@ -241,7 +243,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 					if (!analogPinRange.contains(i)) {
 						throw new IllegalArgumentException("AIN is not available on the following pin: " + i);
 					}
-					setPinMode(i, ARD_PIN_MODE_IN);
+					setPinMode(i + analogPinOffset, ARD_PIN_MODE_AIN);
 					pinMode[i] = ARD_PIN_MODE_AIN;
 					rearmostAnalogInputPin = i - analogPinRange.getMin();
 				} else if (PIN_AOUT.equals(config[i])) {
