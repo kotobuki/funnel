@@ -4,4 +4,4 @@ server:
 io:
   type: Fio
   port: 
-  baudrate: 19200
+  baudrate: 57600
