@@ -8,19 +8,26 @@ import processing.funnel.*;
  * テスト用 RTC-8564NB
  */
 
+
+
+//bu[0] = 0x76
+//bu[1] = read
+//bu[2] = スレーブアドレス
+//bu[3] = レジスタ
+//bu[4] = 読むバイト数
 public class RTC8564NB extends I2CDevice implements I2CInterface{
 
-	public String name = "RTC-8564NB";
+	static public final String name = "RTC-8564NB";
 	
-	private byte slaveAddress = 0x51;
+	static private final int slaveAddress = 0x51;
 	
 	public int second;
 	
 	
-	public RTC8564NB(IOModule io){
-		super(io);
+	public RTC8564NB(IOModule iomodule){
+		super(iomodule,slaveAddress, name);
 		
-		io.addI2CDevice(this);
+		iomodule.addI2CDevice(this);
 	}
 	
 	
@@ -48,16 +55,7 @@ public class RTC8564NB extends I2CDevice implements I2CInterface{
 	   
 
 	}
-	
-	
-	
-	public int getSlaveAddress(){
-		return slaveAddress;
-	}
-	
-	public String getName(){
-		return name;
-	}
+
 	
 }
 

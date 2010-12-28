@@ -131,7 +131,7 @@ public final class Gainer extends IOSystem{
 		
 		addModule(moduleID,config,config.getModuleName());
 		
-		initPorts(config.pinsStatus);
+		initPins(config.pinsStatus);
 		
 		startIOSystem();
 	}
@@ -163,7 +163,7 @@ public final class Gainer extends IOSystem{
 	
 	
 	//出力ポート番号などを決める
-	private void initPorts(int[] conf){
+	private void initPins(int[] conf){
 		if(Arrays.equals(conf,conf1)){
 
 			int[] ain = {0,1,2,3};

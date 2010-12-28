@@ -156,14 +156,8 @@ public class IOModule{
 		PApplet parent;
 
 		public final int number;//pin 通し番号
+		//public final int type;
 		
-		//public float value;
-		//public float lastValue;
-		
-		//
-		//public float average = 0;
-		//public float minimum = Float.MAX_VALUE;
-		//public float maximum = 0;
 		
 		private Filter filters[];
 		
@@ -179,6 +173,7 @@ public class IOModule{
 		public ModulePin(PApplet parent, int type, int n){
 			this.parent = parent;
 			number = n;
+			//this.type = type;
 			
 			filters = new Filter[0];
 			buffer = new LinkedList<Float>();
@@ -223,6 +218,7 @@ public class IOModule{
 			//もしフィルターがセットされていたら
 			//bufferが必要なのはConvolutionのみ
 			if(filters.length == 0 ){
+
 				updateValueInput(value);				
 
 			}else{
@@ -293,18 +289,17 @@ public class IOModule{
 		//入力値を更新する
 		protected void updateValueInput(float value){
 			lastValue = this.value;
-			if(this.value != value){
-				this.value = value;
 
-				//onChangeはいつも呼び出す
-				if(onChange != null /*&& lastValue != this.value*/){
-					try{
-						onChange.invoke(parent,new Object[]{ new PinEvent(this) });
-					}catch(Exception e){
-						e.printStackTrace();
-						onChange = null;
-						errorMessage("onChange handler error !!");
-					}
+			this.value = value;
+
+			//onChangeはいつも呼び出す
+			if(onChange != null /*&& lastValue != this.value*/){
+				try{
+					onChange.invoke(parent,new Object[]{ new PinEvent(this) });
+				}catch(Exception e){
+					e.printStackTrace();
+					onChange = null;
+					errorMessage("onChange handler error !!");
 				}
 			}
 		}

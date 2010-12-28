@@ -51,7 +51,7 @@ public final class Arduino extends Firmata{
 		}
 		addModule(moduleID,config,config.getModuleName());
 		
-		initPorts(_a,_d);
+		initPins(_a,_d);
 		
 		startIOSystem();
 		

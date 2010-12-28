@@ -54,33 +54,32 @@ public class GainerIOModule extends IOModule{
 		
 		public void updateValueInput(float value){
 			lastValue = this.value;
-			if(this.value != value){
-				this.value = value;
+			this.value = value;
 
-				if(onChange != null && lastValue != this.value){
-					try{
-						onChange.invoke(parent,new Object[]{ new PinEvent(this) });
-					}catch(Exception e){
-						e.printStackTrace();
-						onChange = null;
-						errorMessage("onChange handler error !!");
-					}
-				}
-				
-				if(gainerButtonEventMethod != null && lastValue != this.value && number == Gainer.button){
-					try{
-						if(this.value==0){
-							gainerButtonEventMethod.invoke(parent,new Object[]{ new Boolean(false) });
-						}else{
-							gainerButtonEventMethod.invoke(parent,new Object[]{ new Boolean(true) });
-						}
-					}catch(Exception e){
-						e.printStackTrace();
-						onChange = null;
-						errorMessage("gainerButtonEvent handler error !!");
-					}
+			if(onChange != null/* && lastValue != this.value*/){
+				try{
+					onChange.invoke(parent,new Object[]{ new PinEvent(this) });
+				}catch(Exception e){
+					e.printStackTrace();
+					onChange = null;
+					errorMessage("onChange handler error !!");
 				}
 			}
+			
+			if(gainerButtonEventMethod != null && lastValue != this.value && number == Gainer.button){
+				try{
+					if(this.value==0){
+						gainerButtonEventMethod.invoke(parent,new Object[]{ new Boolean(false) });
+					}else{
+						gainerButtonEventMethod.invoke(parent,new Object[]{ new Boolean(true) });
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+					onChange = null;
+					errorMessage("gainerButtonEvent handler error !!");
+				}
+			}
+
 		}
 		
 

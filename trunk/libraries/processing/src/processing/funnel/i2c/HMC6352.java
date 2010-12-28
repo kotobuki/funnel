@@ -3,56 +3,31 @@ package processing.funnel.i2c;
 import processing.funnel.*;
 /**
  * @author endo
- * @version 1.0
+ * @version 1.1
  * 
  */
 public class HMC6352 extends I2CDevice implements I2CInterface{
 
-	public String name = "HMC6352";
+	public final static String name = "HMC6352";
 	
-	private byte slaveAddress = 0x21;
-	
+	public final static byte slaveAddress = 0x21;
 	
 	public float heading;
+
 	
-	public int operationalMode = 1;
-	
-	
-	
-	public HMC6352(IOModule io){
-		super(io);
+	public HMC6352(IOModule iomodule){
+		super(iomodule,slaveAddress, name);
 		
-		io.addI2CDevice(this);		
+		iomodule.addI2CDevice(this);		
 		
 		initialize();
 	}
 	
-//	public HMC6325(IOModule io,byte slaveAddress){
-//		super(io);
-//		this.slaveAddress = slaveAddress;
-//		
-//		io.addI2CDevice(this);
-//		
-//		initialize();
-//	}
 	
+	//•K—v‚È‚ç
 	private void initialize(){
 		
-		System.out.println("init compasss");
-
-		Firmata io = (Firmata)conectedModule.system;
-		
-
-		
-		byte[] bu = {COM_I2C_REQUEST,COM_WRITE,slaveAddress,'G',0x74,0x51};
-		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
-		
-		byte[] tu = {COM_I2C_REQUEST,COM_WRITE,slaveAddress,'A'};
-		io.sendSysex(conectedModule.getModuleID(),tu.length,tu);
-		
-		byte[] nu = {COM_I2C_REQUEST,COM_READ_CONTINUOUS,slaveAddress,0x7F,0x02};
-		io.sendSysex(conectedModule.getModuleID(),nu.length,nu);
-
+		System.out.println("initialize " + name);
 	}
 	
 	public void update(){
@@ -63,32 +38,42 @@ public class HMC6352 extends I2CDevice implements I2CInterface{
 
 		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
 	}
-	
+
+
+	//
 	public void beginUpdate(){
-		initialize();
+
+		//Query Mode
+		beginTransmission();
+		send((byte)'G');
+		send((byte)0x74);
+		send((byte)0x01);
+		send((byte)'A');
+		endTransmission();
+		
+		//request data
+		requestFromRegister(0x7F,2,true);
+
 	}
 	
 	public void endUpdate(){
-		Firmata io = (Firmata)conectedModule.system;
-		byte[] bu = {COM_I2C_REQUEST,COM_STOP_READING,slaveAddress,'G',0x74,0x51};
-		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
+	
+		stopRequest();
+		
 	}
 	
 	public void enterCalibrationMode(){
-		System.out.println("enterCalibrationMode()");
-		Firmata io = (Firmata)conectedModule.system;
-		
-		byte[] bu = {COM_I2C_REQUEST,COM_WRITE,slaveAddress,'C'};
-
-		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
+		//System.out.println("enterCalibrationMode()");
+		beginTransmission();
+		send((byte)'C');
+		endTransmission();
 	}
 	
 	public void exitCalibrationMode(){
-		System.out.println("exitCalibrationMode()");
-		Firmata io = (Firmata)conectedModule.system;
-		byte[] bu = {COM_I2C_REQUEST,COM_WRITE,slaveAddress,'E'};
-
-		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);		
+		//System.out.println("exitCalibrationMode()");
+		beginTransmission();
+		send((byte)'E');
+		endTransmission();	
 	}
 	
 	public void receiveData(int regAddress,byte[] data){
@@ -99,13 +84,5 @@ public class HMC6352 extends I2CDevice implements I2CInterface{
 			break;
 		}
 	}
-	
-	
-	public int getSlaveAddress(){
-		return slaveAddress;
-	}
-	
-	public String getName(){
-		return name;
-	}
+
 }
