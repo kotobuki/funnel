@@ -55,7 +55,7 @@ public final class XBee extends IOSystem{
 		this.IDs = IDs;
 		this.config = config;
 		
-		initPorts(_a,_d);
+		initPins(_a,_d);
 
 		startIOSystem();
 		

@@ -44,7 +44,9 @@ public class IOSystem implements Runnable{
 	protected boolean initialized = false;
 	
 
-	private boolean quitServer = true;//終了時サーバーを終了するか
+	//private boolean quitServer = true;//終了時サーバーを終了するか
+	
+	private boolean rebootIsWaited = false;
 	
 	//定数
 	private int NO_ERROR = 0;
@@ -63,6 +65,10 @@ public class IOSystem implements Runnable{
 	private LinkedList<String> waitQueue;
 
 
+	//setup()が終わっているかどうか
+	private boolean doneWithSetup(){
+		return !parent.defaultSize;
+	}
 	
 	public IOSystem(PApplet parent, String hostName, String serverPortName,
 			int commandPortNumber,int samplingInterval,Configuration config){
@@ -70,14 +76,16 @@ public class IOSystem implements Runnable{
 		this.parent = parent;
 		this.samplingInterval = samplingInterval;
 
-		startingServer(serverPortName);
-
+		if(!withoutServer){
+			startingServer(serverPortName);
+		}
+		
 		client = new OSCClient();
 		if(client.openFunnel(hostName, commandPortNumber)){
-
+			
 			new CommandTokenizer(this,client.commandPort);
 			waitQueue = new LinkedList<String>();
-
+			
 			reboot();
 		}else{
 			errorMessage("Funnel server could not open !");
@@ -121,9 +129,12 @@ public class IOSystem implements Runnable{
 		String configFileName;
 
 		if(P5util.isPDE()){
+			//System.out.println("working on PDE");
 			FunnelServer.embeddedMode = true;
 			configFileName = P5util.getFunnelLibraryPath() + "settings." + moduleName.toLowerCase() + ".txt";
 		}else{
+			//working on exported application
+			//System.out.println("Not working on PDE");
 			if(P5util.isMac()){
 
 				configFileName = P5util.getFunnelLibraryPath() + "../../../../" + "settings." + moduleName.toLowerCase() + ".txt";
@@ -138,36 +149,15 @@ public class IOSystem implements Runnable{
 	
 	protected void waitingServer(String moduleName,String serverSerialName){
 		
-
 		String configFileName = getServerConfigFilePath(moduleName);
-		
+		System.out.println("read this config file.");
 		System.out.println(configFileName);
 
-		if(!withoutServer){
-			//
 			//サーバーを起動させて待つ
 			FunnelServer.serialPort = serverSerialName;
 			FunnelServer server = new FunnelServer(configFileName); 
 			
 
-			int waitCount = 10;
-			while(!FunnelServer.initialized){
-				try {
-					Thread.sleep(100);
-					System.out.println("waiting server");
-					waitCount--;
-					if(waitCount <0){
-						System.err.println("Check to connect " + moduleName + " or settings.txt " + configFileName);
-						quitServer(server);
-						parent.exit();
-						break;
-					}
-				} catch (InterruptedException e) {
-					// TODO 自動生成された catch ブロック
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 	
 	protected void quitServer(FunnelServer server){
@@ -182,7 +172,12 @@ public class IOSystem implements Runnable{
 	//funnelのautupdate==trueに依存
 	public void run(){
 		long updateTickMillis = 0;
-		System.out.println("funnelServiceThread start");
+		
+		if(initialized){
+			System.out.println(thread.getName() + " start");
+		}else{
+			errorMessage("IOSystem not initialized.");
+		}
 
 		while(initialized){
 			long processMillis = System.currentTimeMillis() - updateTickMillis;
@@ -194,11 +189,9 @@ public class IOSystem implements Runnable{
 				
 				updateTickMillis = System.currentTimeMillis();
 			}
-
-		
 		}
 		
-		System.out.println("funnelServiceThread out");
+		System.out.println(thread.getName() + " out");
 	}
 	
 	public void dispose(){
@@ -216,9 +209,9 @@ public class IOSystem implements Runnable{
 			}
 
 
-		if(quitServer && !withoutServer){
-			quit();
-		}
+//		if(quitServer && !withoutServer){
+//			quit();
+//		}
 
 
 		client.cleanOSCPort();	
@@ -234,7 +227,7 @@ public class IOSystem implements Runnable{
 	//の分だけ呼び出される（複数回呼び出される）
 	protected void interpretMessage(OSCMessage message){
 		
-//			System.out.print("interpret " + message.getAddress() + "   ");
+//			System.out.print("iosytem interpret " + message.getAddress() + "   ");
 //			for(int i=0;i<message.getArguments().length;i++){
 //				System.out.print(message.getArguments()[i] + "   " );
 //			}
@@ -258,7 +251,7 @@ public class IOSystem implements Runnable{
 
 	protected void waitMessage(OSCMessage message){
 		
-//		System.out.print("   waitMessage recieve " + message.getAddress() + "   ");
+//		System.out.print(" ..  waitMessage recieve " + message.getAddress() + "   ");
 //		for(int i=0;i<message.getArguments().length;i++){
 //			System.out.print(message.getArguments()[i] + "   " );
 //		}
@@ -285,6 +278,7 @@ public class IOSystem implements Runnable{
 		if(message.getAddress().equals("/reset")){
 			int returnCode = ((Integer)message.getArguments()[0]).intValue();
 			if( returnCode == NO_ERROR){
+				rebootIsWaited = false;
 				System.out.println("reboot OK ");
 			}else if( returnCode == REBOOT_ERROR){
 				errorMessage((String)message.getArguments()[1]);
@@ -294,13 +288,30 @@ public class IOSystem implements Runnable{
 		}
 		
 	}
+	
+	protected void waitAnswer(String code) throws ArrayIndexOutOfBoundsException, IOException{
+		waitAnswer = true;
+		waitQueue.addLast(code);
+		long start = System.currentTimeMillis();
+		do{
+			long now = System.currentTimeMillis();
+			long rest = TIMEOUT - (now-start);
+			
+			if(rest <= 0){
+				System.out.println("timeout return   " +  Thread.currentThread().getName() );
+				//throw new TimeoutException("TimeoutException!! " + (now - start));
+			}
+			client.waitFunnel(code);//!message.getAddress().equals(address)
+		}while(waitAnswer);
+		
+	}
 
+	
 	protected void execCode(String code,boolean answer){
-		System.out.println("ececCode  " + code);
 		try {
 			client.sendFunnel(code);
 			if(answer){
-				client.waitFunnel(code);		
+				waitAnswer(code);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -310,26 +321,12 @@ public class IOSystem implements Runnable{
 		}
 	}
 	
-	//answer : 戻り値を確認する
+	
 	protected boolean execCode(String code,Object args[],boolean answer){
 		try {
-	
 			client.sendFunnel(code,args);
 			if(answer){
-				waitAnswer = true;
-				waitQueue.addLast(code);
-				long start = System.currentTimeMillis();
-				do{
-					long now = System.currentTimeMillis();
-					long rest = TIMEOUT - (now-start);
-					
-					if(rest <= 0){
-						System.out.println("timeout return   " +  Thread.currentThread().getName() );
-						//throw new TimeoutException("TimeoutException!! " + (now - start));
-					}
-					client.waitFunnel(code);//!message.getAddress().equals(address)
-				}while(waitAnswer);
-				
+				waitAnswer(code);
 			}				
 
 		}catch (IOException e) {
@@ -358,7 +355,6 @@ public class IOSystem implements Runnable{
 		beginPolling();
 		
 		thread = new Thread(this,"funnelServiceThread");
-
 		thread.start();
 		
 		new NotifyTokenizer(this,client.commandPort);		
@@ -370,6 +366,7 @@ public class IOSystem implements Runnable{
 	protected void reboot(){
 
 		execCode("/reset",true);
+		rebootIsWaited = true;
 
 	}
 	
@@ -502,7 +499,7 @@ public class IOSystem implements Runnable{
 			IOModule io =  new IOModule(this,id,config,name);
 			iomodules.put(id, io);
 			
-			System.out.println("  addModule() " + name +" " + id);
+			System.out.println("  addModule() " + name +" -> " + id);
 			
 			//dinにSetPointを自動でつける
 			int[] portStatus = config.getPortStatus();
@@ -518,14 +515,17 @@ public class IOSystem implements Runnable{
 	}
 	
 	public IOModule iomodule(int id){
-		IOModule io = (IOModule)iomodules.get(new Integer(id)); 
+		IOModule io = (IOModule)iomodules.get(new Integer(id));
+		if(io==null){
+			errorMessage("Wrong iomodule name(id).");
+		}
 		return io;
 	}
 
 	
 	
 	//ポートの機能(参照する名前)を割り当てる
-	protected void initPorts(int[] _a,int[] _d){
+	protected void initPins(int[] _a,int[] _d){
 		
 		Collection<IOModule> c = iomodules.values();
 		Iterator<IOModule> it = c.iterator();
@@ -553,7 +553,9 @@ public class IOSystem implements Runnable{
 		}
 		public void acceptMessage(Date time, OSCMessage message){
 
-			io.interpretMessage(message);
+			if(doneWithSetup()){
+				io.interpretMessage(message);
+			}
 			
 		}
 	}
@@ -575,6 +577,7 @@ public class IOSystem implements Runnable{
 			port.addListener("/sysex/reply", this);
 		}
 		public void acceptMessage(Date time, OSCMessage message){
+			
 			io.waitMessage(message);
 			
 		}

@@ -12,7 +12,7 @@ import processing.core.PApplet;
 
 /**
  * @author endo
- * @version 1.2
+ * @version 1.3
  * 
  */
 public final class Fio extends Firmata{
@@ -51,25 +51,19 @@ public final class Fio extends Firmata{
 			int commandPortNumber,int samplingInterval,int[] IDs,Configuration config){
 		super(parent,hostName,serverPortName,commandPortNumber,samplingInterval,config);
 
-		regModule(IDs,config);
-		this.IDs = IDs;
 
+		this.IDs = IDs;
 		this.config = config;
 		
-		initPorts(_a,_d);
-
+		
+		if(!initialize(config)){
+			errorMessage("Funnel configuration error!");
+		}
+		
+		regModule(IDs,config);
+		
 		startIOSystem();// /inと/nodeを読めるようにする
 		
-		if(withoutServer){
-			if(!initialize(config)){
-				errorMessage("Funnel configuration error!");
-			}else{
-				beginPolling();
-				thread = new Thread(this,"funnelServiceThread");
-				thread.start();
-
-			}
-		}
 		
 	}
 	
@@ -107,8 +101,8 @@ public final class Fio extends Firmata{
 	
 	protected boolean startIOSystem(){
 
-//		System.out.println("startIOSystem()");
-
+		thread = new Thread(this,"Fio funnelServiceThread");
+		thread.start();
 		new NotifyTokenizer(this,client.commandPort);		
 		
 		return true;
@@ -116,7 +110,7 @@ public final class Fio extends Firmata{
 
 	//それぞれのエンドデバイス
 	private void regModule(int[] IDs,Configuration config){
-		System.out.println("module registerd  [Fio]");
+		System.out.println("modules registerd  [Fio]");
 		NumberFormat nf = NumberFormat.getInstance();
 		nf.setMinimumIntegerDigits(2);
 		
@@ -124,12 +118,17 @@ public final class Fio extends Firmata{
 		
 			String name = "Fio.ID" + nf.format(IDs[i]);
 			addModule(IDs[i],config,name);
+
+			nodes.add(IDs[i]);
 		}
+		
+		initPins(_a,_d);
 	}
+	
 	
 	protected void interpretMessage(OSCMessage message){
 		
-//		System.out.print("interpret " + message.getAddress() + "   ");
+//		System.out.print("fio interpret " + message.getAddress() + "   ");
 //		for(int i=0;i<message.getArguments().length;i++){
 //			System.out.print(message.getArguments()[i] + "   " );
 //		}
@@ -149,7 +148,7 @@ public final class Fio extends Firmata{
 						//入力ポートを更新する
 						int nPort = n+i-2;
 						io.pin(nPort).updateInput(((Float)message.getArguments()[i]).floatValue());
-			
+
 					}
 				}catch(NullPointerException e){
 					errorMessage("Not match your end device MY.");
@@ -160,7 +159,7 @@ public final class Fio extends Firmata{
 		
 		if(message.getAddress().equals("/node")){
 			
-			if(!initialized){
+
 				int n = message.getArguments().length;
 
 				if(n == 2){
@@ -173,21 +172,15 @@ public final class Fio extends Firmata{
 					}
 					
 					
-					if(nodes.size() == IDs.length){//最後の受信でfunnelServiceThreadを開始
+					if(nodes.size() == IDs.length){//全部そろった
 
-						if(!initialize(config)){
-							errorMessage("Funnel configuration error!");
-						}else{
-							beginPolling();
-							
-							thread = new Thread(this,"funnelServiceThread fio");
-							thread.start();
-						}
+						beginPolling();
+
 					}
 				}
 			}
 	
-		}
+
 
 
 
