@@ -1,10 +1,11 @@
 #!/bin/sh
-mv ./server/funnel_server.jar ./libraries/processing/library
-cp ./server/rxtxSerial.dll ./libraries/processing/library
-cp ./server/librxtxSerial.* ./libraries/processing/library
-cp ./server/settings.*.txt ./libraries/processing/library
-cp ./server/lib/RXTXcomm.jar ./libraries/processing/library
-cp ./server/lib/jvyaml.jar ./libraries/processing/library
+mv ./server/funnel_server.jar ./libraries/processing/funnel/library
+cp ./server/rxtxSerial.dll ./libraries/processing/funnel/library
+cp ./server/librxtxSerial.* ./libraries/processing/funnel/library
+cp ./server/settings.*.txt ./libraries/processing/funnel/library
+cp ./server/lib/RXTXcomm.jar ./libraries/processing/funnel/library
+cp ./server/lib/javaosc.jar ./libraries/processing/funnel/library
+cp ./server/lib/jvyaml.jar ./libraries/processing/funnel/library
 cp ./documents/src/installation_instructions_*.pdf ./documents
 rm -r ./documents/src/
 rm -r ./release/
