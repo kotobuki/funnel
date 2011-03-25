@@ -3,21 +3,25 @@ package funnel
 	import flash.display.BitmapData;
 	
 	/**
-	 * Gainer I/Oモジュールに接続したマトリクスLEDをコントロールするクラスです。
+	 * Controls an LED matrix connected to a Gainer I/O module.
+	 * 
+	 * <p>Gainer I/Oモジュールに接続したマトリクスLEDをコントロールするクラスです。</p>
 	 */ 
 	public class MatrixLED extends IOSystem
 	{
 		/**
-		 * @param host ホスト名
-		 * @param portNum ポート番号
+		 * @param host host name
+		 * @param portNum port number
 		 */		
 		public function MatrixLED(host:String = "localhost", portNum:Number = 9000) {
 			super([Gainer.MODE7], host, portNum);
 		}
 		
 		/**
-		 * 8x8画素のBitmapDataか、64要素のNumber配列からマトリクスLEDの表示内容を更新します。
-		 * @param image 8x8画素のBitmapData or 64要素のNumber配列
+		 * BitmapData or 8x8 pixel array of 64 elements used to update the display of the LED matrix.
+		 * 
+		 * <p>8x8画素のBitmapDataか、64要素のNumber配列からマトリクスLEDの表示内容を更新します。</p>
+		 * @param image BitmapData or 8x8 pixel array of 64 elements
 		 * @see flash.display.BitmapData
 		 */		
 		public function scanMatrix(image:*):void {

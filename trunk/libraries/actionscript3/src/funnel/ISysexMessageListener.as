@@ -1,1 +1,1 @@
-﻿package funnel{	public interface ISysexMessageListener	{		function handleSysex(command:uint, data:Array):void;		function get command():uint;	}}
+﻿package funnel {			/**	 * <p>Interface for objects that implement SysexMessages.</p>	 */ 		public interface ISysexMessageListener {		function handleSysex(command:uint, data:Array):void;		function get command():uint;	}}

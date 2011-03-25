@@ -1,6 +1,6 @@
 package funnel {
 	/**
-	* @see Pin#AIN
-	*/	
+	 * @see Pin#AIN
+	 */	
 	public var AIN:uint = Pin.AIN;
 }

@@ -3,22 +3,30 @@ package funnel
 	import flash.events.ErrorEvent;
 
 	/**
-	 * IOSystemのエラーイベントを表すクラスです。
+	 * The error event for the IOSystem.
+	 * 
+	 * <p>IOSystemのエラーイベントを表すクラスです。</p>
 	 */ 
 	public class FunnelErrorEvent extends ErrorEvent
 	{
 		/**
-		* エラーが起きたとき送出されます。
-		*/		
+		 * Dispatched when an error occurs.
+		 * 
+		 * <p>エラーが起きたとき送出されます。</p>
+		 */		
 		public static const ERROR:String = "error";
 		
 		/**
-		* 指定したコンフィギュレーションの設定に失敗したとき送出されます。
-		*/
+		 * Dispatched when configuration settings are not specified.
+		 * 
+		 * <p>指定したコンフィギュレーションの設定に失敗したとき送出されます</p>。
+		 */
 		public static const CONFIGURATION_ERROR:String = "configurationError";
 		
 		/**
-		* I/Oモジュールの再起動に失敗したとき送出されます。
+		 * Dispatched when an IO error results from a module failing to restart.
+		 * 
+		* <p>I/Oモジュールの再起動に失敗したとき送出されます。</p>
 		*/
 		public static const REBOOT_ERROR:String = "rebootError";
 		

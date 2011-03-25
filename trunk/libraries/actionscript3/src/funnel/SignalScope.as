@@ -5,8 +5,10 @@ package funnel {
 	import flash.text.TextFormat;
 
 	/**
-	 * 入力の状態を表示するためのスコープクラス
-	 * A signal scope class to show changes of inputs.
+	 * A signal scope class to show changes of inputs. Create an instance of this class 
+	 * and add it to the stage to view the input signal.
+	 * 
+	 * <p>入力の状態を表示するためのスコープクラス</p>
 	 */
 	public class SignalScope extends Sprite {
 		private var _values:Array;
@@ -86,6 +88,11 @@ package funnel {
 			_rangeMax = rangeMax;
 		}
 
+		/**
+		 * update the graph with the input value
+		 * 
+		 * @param input the input value to be plotted by the signal scope
+		 */
 		public function update(input:*):void {
 			this.graphics.clear();
 			this.graphics.beginFill(0x000000, 0.5);

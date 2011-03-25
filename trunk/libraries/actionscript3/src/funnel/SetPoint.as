@@ -1,7 +1,10 @@
 package funnel
 {
 	/**
-	 * アナログの値に対して閾値とヒステリシスを持つポイントをセットし、現在の状態を段階化して返します。ポイントが1つの場合の出力は0または1の2種類、ポイントが2つの場合は0または1または2の3種類、ポイントがn個の場合は0からnまでのn種類になります。
+	 * Divides an input to 0 or 1 based on the threshold and hysteresis. You can also
+	 * use multiple points by providing a nested array such as [[0.4, 0.1], [0.7, 0.05]].
+	 * 
+	 * <p>アナログの値に対して閾値とヒステリシスを持つポイントをセットし、現在の状態を段階化して返します。ポイントが1つの場合の出力は0または1の2種類、ポイントが2つの場合は0または1または2の3種類、ポイントがn個の場合は0からnまでのn種類になります。</p>
 	 *
 	 */
 	public class SetPoint implements IFilter
@@ -11,9 +14,10 @@ package funnel
 		private var _lastStatus:int;
 
 		/**
-		 *
-		 * @param points 閾値とヒステリシスの2要素からなる配列または配列の配列
-		 *
+		 * Pass array to set initial point. Default threshold is 0.5.
+		 * <p>閾値とヒステリシスの2要素からなる配列または配列の配列</p>
+		 * 
+		 * @param points a two-element array or an array of threshold and hysteresis
 		 */
 		public function SetPoint(points:Array = null) {
 			if (points == null) points = [[0.5, 0]];
@@ -49,10 +53,11 @@ package funnel
 		}
 
 		/**
-		 * 新しいポイントを追加する
-		 * @param threshold 閾値
-		 * @param hysteresis ヒステリシス
-		 *
+		 * Add a new point.
+		 * <p>新しいポイントを追加する</p>
+		 * 
+		 * @param threshold the threshold to divide an input to 0 or 1
+		 * @param hysteresis the allowance for the threshold
 		 */
 		public function addPoint(threshold:Number, hysteresis:Number = 0):void {
 			_points[threshold] = hysteresis;
@@ -60,9 +65,10 @@ package funnel
 		}
 
 		/**
-		 * 指定した閾値に設定されているポイントを削除する
-		 * @param threshold 削除するポイントのキーとなる閾値
-		 *
+		 * Remove and delete a point specified by the threshold.
+		 * <p>指定した閾値に設定されているポイントを削除する</p>
+		 * 
+		 * @param threshold the key to remove the threshold point
 		 */
 		public function removePoint(threshold:Number):void {
 			delete _points[threshold];
