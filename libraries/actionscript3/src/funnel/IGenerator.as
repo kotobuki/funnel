@@ -8,13 +8,17 @@ package funnel
 	[Event(name="update",type="GeneratorEvent")]
 
 	/**
-	 * ジェネレーターのインタフェースです。
+	 * Interface for a Generator object.
+	 * 
+	 * <p>ジェネレーターのインタフェースです。</p>
 	 */ 
 	public interface IGenerator extends IEventDispatcher
 	{
 		/**
-		 * 生成された数値を取得します。
-		 * @return 生成された数値
+		 * Get a number that is generated.
+		 * 
+		 * <p>生成された数値を取得します。</p>
+		 * @return number generated
 		 * 
 		 */		
 		function get value():Number;

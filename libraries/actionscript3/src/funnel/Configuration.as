@@ -1,31 +1,35 @@
 package funnel
 {
 	/**
-	 * I/Oモジュールのコンフィギュレーションを設定するためのクラスです。コンフィギュレーションはI/Oモジュールとの通信を開始する段階で決定する必要があるため、IOSystemのコンストラクタの引数で指定します。
+	 * Use this class to configure the IO module. Configuration sets up by an argument of 
+	 * IOSystem constructor in order to decide at a stage of starting communication with
+	 * the IOModule.
+	 * 
+	 * <p>I/Oモジュールのコンフィギュレーションを設定するためのクラスです。コンフィギュレーションはI/Oモジュールとの通信を開始する段階で決定する必要があるため、IOSystemのコンストラクタの引数で指定します。</p>
 	 * @see IOSystem#IOSystem()
 	 */
 	public class Configuration
 	{
 		/**
-		* Gainer.analogInputを実際のピン番号に対応させるテーブル
+		* Gainer.analogInput an array of the analog input pin numbers
 		* @see Gainer#analogInput
 		*/
 		public var ainPins:Array;
 
 		/**
-		* Gainer.digitalInputを実際のピン番号に対応させるテーブル
+		* Gainer.digitalInput an array of the digital input pin numbers
 		* @see Gainer#digitalInput
 		*/
 		public var dinPins:Array;
 
 		/**
-		* Gainer.analogOutputを実際のピン番号に対応させるテーブル
+		* Gainer.analogOutput an array of the analog output pin numbers
 		* @see Gainer#analogOutput
 		*/
 		public var aoutPins:Array;
 
 		/**
-		* Gainer.digitalOutputを実際のピン番号に対応させるテーブル
+		* Gainer.digitalOutput an array of the digital output pin numbers
 		* @see Gainer#digitalOutput
 		*/
 		public var doutPins:Array;
@@ -33,31 +37,31 @@ package funnel
 		public var servoPins:Array;
 
 		/**
-		* Gainer.buttonを実際のピン番号に対応させるテーブル
+		* Gainer.button the Pin object of the on-board button
 		* @see Gainer#button
 		*/
 		public var button:uint;
 
 		/**
-		* Gainer.ledを実際のピン番号に対応させるテーブル
+		* Gainer.led the Pin object for the on-board LED
 		* @see Gainer#led
 		*/
 		public var led:uint;
 
 		/**
-		* Arduino.analogPinを実際のピン番号に対応させるテーブル
+		* Arduino.analogPin an array of the analog input pin numbers
 		* @see Arduino#analogPin
 		*/
 		public var analogPins:Array;
 
 		/**
-		* Arduino.digitsalPinを実際のピン番号に対応させるテーブル
-		* @see Arduino#digitsalPin
+		* Arduino.digitalPin an array of the digital input pin numbers
+		* @see Arduino#digitalPin
 		*/
 		public var digitalPins:Array;
 
 		/**
-		* ピンのタイプ(AIN、DIN、AOUT、DOUT)の配列
+		* pin type (AIN、DIN、AOUT、DOUT) array
 		* @see Pin#DIN
 		* @see Pin#DOUT
 		* @see Pin#AIN
@@ -68,16 +72,19 @@ package funnel
 		public var config:Array;
 
 		/**
-		* モジュールのID
+		* module ID
 		*/
 		public var moduleID:uint;
 
 		private var _powerPinsEnabled:Boolean = false;
 
 		/**
-		 * デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。
-		 * @param pinNum ピン番号
-		 * @param mode 通常はデジタル入力(IN)、デジタル出力(OUT)、PWM(疑似アナログ出力)のいずれかを指定。ただし、アナログピンに対してアナログ入力(AIN)を設定することも可能。
+		 * Set a digital pin to input, output or PWM mode (DIN, DOUT, AIN, or PWM)
+		 * 
+		 * <p>デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。</p>
+		 * 
+		 * @param pinNum pin number
+		 * @param mode normally accepts digital input, digital output, or PWM. However, analog input values can also be set.
 		 */
 		public function setDigitalPinMode(pinNum:uint, mode:uint):void {
 			if (digitalPins == null) throw new ArgumentError("digital pins are not available");
@@ -97,10 +104,21 @@ package funnel
 			}
 		}
 
+		/**
+		 * Enables pins A2 and A3 on the arduino board to be used as GND and Power respectively
+		 * as a convenience for some I2C devices (such as a BlinkM module).
+		 * A2 will be set to GND and A3 will be set to VCC.
+		 * 
+		 * <p>WARNING: do not use this function unless you are sure you know what you are doing
+		 * or you could damage your I2C device.</p>
+		 */
 		public function enablePowerPins():void {
 			_powerPinsEnabled = true;
 		}
 
+		/**
+		 * @return whether or not power pins are enabled
+		 */
 		public function get powerPinsEnabled():Boolean {
 			return _powerPinsEnabled;
 		}

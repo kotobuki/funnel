@@ -6,8 +6,11 @@ package funnel
 	import funnel.gui.IOModuleGUI;
 	
 	/**
-	 * ArduinoクラスはファームウェアとしてFirmataを搭載したArduinoをI/Oモジュールとして扱うためのクラスです。
+	 * A class for working with an Arduino board that is running either 
+	 * StandardFirmata to act as an I/O module, or is otherwise using Firmata as 
+	 * the communication protocol.
 	 * 
+	 * <p>ArduinoクラスはファームウェアとしてFirmataを搭載したArduinoをI/Oモジュールとして扱うためのクラスです</p>
 	 */ 
 	public class Arduino extends IOSystem
 	{
@@ -16,8 +19,11 @@ package funnel
 		private var _digitalPins:Array;
 		
 		/**
-		 * Arduino用のデフォルトのコンフィギュレーションを取得します。戻り値のコンフィギュレーションを変更するにはsetDigitalPinModeを利用します。
-		 * @return Configurationオブジェクト
+		 * Gets the default Arduino configuration. Use setDigitalPinMode To set the pin IO configuration.
+		 *
+		 * <p>Arduino用のデフォルトのコンフィギュレーションを取得します。戻り値のコンフィギュレーションを変更するにはsetDigitalPinModeを利用します</p>
+		 *
+		 * @return Configuration object
 		 * @see Arduino#Arduino()
 		 * @see Configuration#setDigitalPinMode()
 		 */		
@@ -35,10 +41,10 @@ package funnel
 		}
 		
 		/**
-		 * @param config コンフィギュレーション。指定しない場合はArduino.FIRMATA
-		 * @param host ホスト名
-		 * @param portNum ポート番号
-		 * @param samplingInterval サンプリング間隔(ms)
+		 * @param config Configuration of the Arduino such as Arduino.FIRMATA
+		 * @param host IP address of the Funnel Server (default is "localhost")
+		 * @param portNum port number of the Funnel Server (default is 9000)
+		 * @param samplingInterval the sampling interval in milliseconds for inputs (default is 33)
 		 */			
 		public function Arduino(config:Configuration = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
 			if (config == null) config = FIRMATA;
@@ -64,9 +70,8 @@ package funnel
 		}
 		
 		/**
-		 * pinNumで指定したピンを取得します。
-		 * @param pinNum ピン番号
-		 * @return pinNumで指定したPinオブジェクト
+		 * @param pinNum pin number
+		 * @return Pin a reference to the specified analog pin object
 		 * @see Pin
 		 */		
 		public function analogPin(pinNum:uint):Pin {
@@ -74,23 +79,38 @@ package funnel
 		}
 		
 		/**
-		 * pinNumで指定したピンを取得します。
-		 * @param pinNum ピン番号
-		 * @return pinNumで指定したPinオブジェクト
+		 * @param pinNum pin number
+		 * @return Pin a reference to the specified digital pin object
 		 * @see Pin
 		 */
 		public function digitalPin(pinNum:uint):Pin {
 			return _pin(_digitalPins[pinNum]);
 		}
 
+		/**
+		 * send a string to the Arduino
+		 * @param String
+		 */
 		public function sendFirmataString(stringToSend:String):void {
 			ioModule(0).sendFirmataString(stringToSend);
 		}
 
+		/**
+		 * send a sysex message to the arduino see firmata.org for details
+		 * @param command the message command
+		 * @param message the message body as an Array
+		 */
 		public function sendSysexMessage(command:uint, message:Array):void {
 			ioModule(0).sendSysex(command, message);
 		}
 
+		/**
+		 * set the minimum and maximum servo pulse range for the servo attached to the
+		 * specified pin number
+		 * @param pinNumber the pin number of the attached servo
+		 * @param minPulse the minimum pulse for the attached servo (see servo datasheet)
+		 * @param maxPulse the maximum pulse for the attached servo (see servo datasheet)
+		 */
 		public function setServoPulseRange(pinNumber:uint, minPulse:uint, maxPulse:uint):void {
 			ioModule(0).setServoPulseRange(pinNumber, minPulse, maxPulse);
 		}

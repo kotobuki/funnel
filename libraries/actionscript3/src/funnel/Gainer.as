@@ -4,7 +4,9 @@ package funnel
 	import funnel.ui.*;
 	
 	/**
-	 * Gainer I/Oモジュールを扱うためのクラスです。
+	 * Gainer I/O module.
+	 * 
+	 * <p>Gainer I/Oモジュールを扱うためのクラスです。</p>
 	 */ 
 	public class Gainer extends IOSystem
 	{
@@ -17,8 +19,11 @@ package funnel
 		private var _led:LED;
 		
 		/**
+		 * Eight different configurations are available. The mode is set as the first argument
+		 * to the Gainer constructor.
+		 * 
 		 * GAINERに用意されている8種類のコンフィギュレーションのうちの一つです。通常、Gainerのコンストラクタの引数で指定します。
-		 * @return Configurationオブジェクト
+		 * @return Configuration object
 		 * @see http://gainer.cc/Cookbook/ChangeConfiguration?p=2
 		 * @see Gainer#Gainer()
 		 */
@@ -174,10 +179,10 @@ package funnel
 		}
 		
 		/**
-		 * @param config コンフィギュレーション。指定しない場合はGainer.MODE1
-		 * @param host ホスト名
-		 * @param portNum ポート番号
-		 * @param parent Gainerオブジェクトのオーナー（Spriteなど）
+		 * @param config Configuration such as Gainer.MODE1
+		 * @param host IP address of the Funnel Server (default is "localhost")
+		 * @param portNum port number of the Funnel Server (default is 9000)
+		 * @param samplingInterval the sampling interval in milliseconds for inputs (default is 33)
 		 */
 		public function Gainer(config:Configuration = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33) {
 			if (config == null) config = MODE1;
@@ -198,29 +203,26 @@ package funnel
 		}
 		
 		/**
-		 * pinNumで指定したピンを取得します。
-		 * @param pinNum ピン番号
-		 * @return pinNumで指定したPinオブジェクト
+		 * @param pinNum pin number
+		 * @return Pin a reference to the specified analog pin object
 		 * @see Pin
-		 */ 
+		 */	
 		public function analogInput(pinNum:uint):Pin {
 			return _pin(_ainPins[pinNum]);
 		}
 		
 		/**
-		 * pinNumで指定したピンを取得します。
-		 * @param pinNum ピン番号
-		 * @return pinNumで指定したPinオブジェクト
+		 * @param pinNum pin number
+		 * @return Pin a reference to the specified digital pin object
 		 * @see Pin
-		 */ 
+		 */
 		public function digitalInput(pinNum:uint):Pin {
 			return _pin(_dinPins[pinNum]);
 		}
 		
 		/**
-		 * pinNumで指定したピンを取得します。
-		 * @param pinNum ピン番号
-		 * @return pinNumで指定したPinオブジェクト
+		 * @param pinNum pin number
+		 * @return Pin a reference to the specified analog output pin object
 		 * @see Pin
 		 */ 
 		public function analogOutput(pinNum:uint):Pin {
@@ -228,9 +230,8 @@ package funnel
 		}
 		
 		/**
-		 * pinNumで指定したピンを取得します。
-		 * @param pinNum ピン番号
-		 * @return pinNumで指定したPinオブジェクト
+		 * @param pinNum pin number
+		 * @return Pin a reference to the specified digital output pin object
 		 * @see Pin
 		 */ 
 		public function digitalOutput(pinNum:uint):Pin {

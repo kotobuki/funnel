@@ -1,54 +1,69 @@
 package funnel
 {
 	/**
-	 * ある範囲の入力をある範囲にスケーリングするためのクラスです。直線でのスケーリング以外に、よく使われるカーブも用意されています。
+	 * Scales up an input value from its min and max range to a specified minimum to maximum range. 
+	 * A number of scaling functions are provided.
+	 * 
+	 * <p>ある範囲の入力をある範囲にスケーリングするためのクラスです。直線でのスケーリング以外に、よく使われるカーブも用意されています。</p>
 	 */ 
 	public class Scaler implements IFilter
 	{
 		/**
-		* 入力の最小値
-		* @default 0
-		*/		
+		 * minimum input
+		 * 
+		 * <p>入力の最小値</p>
+		 * @default 0
+		 */		
 		public var inMin:Number;
 		
 		/**
-		* 入力の最大値
-		* @default 1
-		*/		
+		 * maximum input
+		 * 
+		 * <p>入力の最大値</p>
+		 * @default 1
+		 */		
 		public var inMax:Number;
 		
 		/**
-		* 出力の最小値
-		* @default 0
-		*/		
+		 * minimum output
+		 * 
+		 * <p>出力の最小値</p>
+		 * @default 0
+		 */		
 		public var outMin:Number;
 		
 		/**
-		* 出力の最大値
-		* @default 1
-		*/		
+		 * maximum output
+		 * 
+		 * <p>出力の最大値</p>
+		 * @default 1
+		 */		
 		public var outMax:Number;
 		
 		/**
-		* マッピングに使用する曲線を表す関数
+		 * The function used to map the input curve.
+		 * 
+		* <p>マッピングに使用する曲線を表す関数</p>
 		* @default Scaler.LINEAR
 		*/		
 		public var type:Function;
 		
 		/**
-		* 指定した範囲を超えた入力値を制限するか否か
+		 * Sets whether or not to restrict the input value if it exceeds the specified range.
+		 * 
+		* <p>指定した範囲を超えた入力値を制限するか否か</p>
 		* @default false
 		*/		
 		public var limiter:Boolean;
 		
 		/**
 		 * 
-		 * @param inMin 入力の最小値
-		 * @param inMax 入力の最大値
-		 * @param outMin 出力の最小値
-		 * @param outMax 出力の最大値
-		 * @param type マッピングに使用する曲線
-		 * @param limiter 入力値を制限するか
+		 * @param inMin minimum input
+		 * @param inMax maximum input
+		 * @param outMin minimum output
+		 * @param outMax maximum output
+		 * @param type used to map the input curve
+		 * @param limiter whether or not to restrict the input value if it exceeds the specified range
 		 * 
 		 */		
 		public function Scaler(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, type:Function = null, limiter:Boolean = true) {

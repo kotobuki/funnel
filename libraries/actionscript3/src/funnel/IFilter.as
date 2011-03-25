@@ -1,14 +1,18 @@
 package funnel
 {
 	/**
-	 * フィルタのインタフェースです。
+	 * Interface for filter objects.
+	 * 
+	 * <p>フィルタのインタフェースです。</p>
 	 */ 
 	public interface IFilter
 	{
 		/**
-		 * フィルタを適応します
-		 * @param val 入力値
-		 * @return フィルタ適応後の値
+		 * The adaptive filter.
+		 * 
+		 * <p>フィルタを適応します</p>
+		 * @param val input value
+		 * @return resulting value after applying the adaptive filter
 		 * 
 		 */		
 		function processSample(val:Number):Number;
