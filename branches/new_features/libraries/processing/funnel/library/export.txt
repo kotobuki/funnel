@@ -1,0 +1,3 @@
+application.macosx =  funnel.jar,javaosc.jar, RXTXcomm.jar, funnel_server.jar,jvyaml.jar,librxtxSerial.jnilib,settings.arduino.txt,settings.fio.txt,settings.gainer.txt,settings.xbee.txt
+application.windows = funnel.jar,javaosc.jar, RXTXcomm.jar, funnel_server.jar,jvyaml.jar,rxtxSerial.dll,      settings.arduino.txt,settings.fio.txt,settings.gainer.txt,settings.xbee.txt
+application.linux =   funnel.jar,javaosc.jar, RXTXcomm.jar, funnel_server.jar,jvyaml.jar,librxtxSerial.so,    settings.arduino.txt,settings.fio.txt,settings.gainer.txt,settings.xbee.txt

@@ -1,0 +1,7 @@
+server:
+  port: 9000
+
+io:
+  type: Fio
+  port: 
+  baudrate: 57600

@@ -1,0 +1,1 @@
+﻿package funnel.i2c {	import flash.events.Event;	public class HMC6343Event extends Event {		public static const HMC6343_ACCL:String = "hmc6343Accl";		public static const HMC6343_HEADING:String = "hmc6343Heading";		public function HMC6343Event(type:String) {			super(type);		}		override public function clone():Event {			return new HMC6343Event(type);		}	}}
