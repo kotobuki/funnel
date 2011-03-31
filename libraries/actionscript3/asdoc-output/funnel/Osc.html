@@ -1,657 +1,170 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="Osc,funnel.Osc,amplitude,freq,offset,phase,times,wave,serviceInterval,value,IMPULSE,LINEAR,SAW,SIN,SQUARE,TRIANGLE,reset,start,stop,update" name="keywords">
-<title>funnel.Osc</title>
-</head>
-<body>
-<script type="text/javascript" language="javascript" src="../asdoc.js"></script><script type="text/javascript" language="javascript" src="../cookies.js"></script><script type="text/javascript" language="javascript">
-<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- saved from url=(0014)about:internet --><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="../style.css" type="text/css" media="screen"><link rel="stylesheet" href="../print.css" type="text/css" media="print"><link rel="stylesheet" href="../override.css" type="text/css"><meta name="keywords" content="Osc,funnel.Osc,AIN,AIN,ALL,ALL,AOUT,AOUT,CHANGE,CHANGE,COMMAND_OFFSET_MULTIPLIER,CONFIGURATION_ERROR,CONFIGURATION_ERROR,DIN,DIN,DOUT,DOUT,ERROR,ERROR,FALLING_EDGE,FALLING_EDGE,FIRMATA,FIRMATA,FIRMATA_STRING,FIRMATA_STRING,HPF,I2C,I2C_POWER_PINS_READY,I2C_POWER_PINS_READY,I2C_POWER_PINS_STARTUP_TIME,I2C,IN,LPF,MODE1,MODE2,MODE3,MODE4,MODE5,MODE6,MODE7,MODE8,MOVING_AVERAGE,MOVING_AVERAGE,MULTIPOINT,OUT,PWM,PWM,READY,READY,REBOOT_ERROR,REBOOT_ERROR,RISING_EDGE,RISING_EDGE,SERVO,SERVO,SERVO_CONFIG,STRING,SYSEX,UPDATE,UPDATE,VERSION,ZB,_io,ainPins,amplitude,analogPins,aoutPins,autoUpdate,average,button,button,coef,command,command,config,configuration,digitalPins,dinPins,doutPins,filters,freq,gui,gui,gui,id,inMax,inMin,lastValue,led,led,limiter,maximum,message,minimum,moduleID,moduleId,number,offset,outMax,outMin,phase,pinCount,powerPinsEnabled,preFilterValue,samplingInterval,serviceInterval,servoPins,times,type,type,value,value,value,wave,CUBE,CUBE_ROOT,IMPULSE,LINEAR,LINEAR,SAW,SIN,SQUARE,SQUARE,SQUARE_ROOT,TRIANGLE,addEventListener,addFilter,addPoint,addSysexListener,analogInput,analogOutput,analogPin,analogPin,clear,clone,clone,digitalInput,digitalOutput,digitalPin,digitalPin,enablePowerPins,handleInput,handleSysex,handleSysex,handleSysex,ioModule,pin,processSample,processSample,processSample,processSample,removeAllFilters,removeAllPoints,removePoint,reset,scanMatrix,sendFirmataString,sendFirmataString,sendSysexMessage,sendSysex,sendSysex,setDigitalPinMode,setFilters,setServoPulseRange,setServoPulseRange,start,stop,update,update,update"><title>funnel.Osc</title></head><body><script language="javascript" type="text/javascript" src="../asdoc.js"></script><script language="javascript" type="text/javascript" src="../help.js"></script><script language="javascript" type="text/javascript" src="../cookies.js"></script><script language="javascript" type="text/javascript"><!--
 				asdocTitle = 'Osc - API Documentation';
 				var baseRef = '../';
 				window.onload = configPage;
 			--></script>
-<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
-<tr>
-<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?funnel/Osc.html&amp;funnel/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../images/logo.jpg"></td>
-</tr>
-<tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Osc</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a></td>
-</tr>
-<tr class="titleTableRow3">
-<td colspan="2">&nbsp;</td>
-</tr>
-</table>
-<script type="text/javascript" language="javascript">
-<!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Osc"); titleBar_setSubNav(false,true,false,false,true,false,true,false,false,false,false,false,false,false);}
---></script>
-<div class="MainContent">
-<table cellspacing="0" cellpadding="0" class="classHeaderTable">
-<tr>
-<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">funnel</a></td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Osc</td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Osc <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../images/inherit-arrow.gif"> flash.events.EventDispatcher</td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Implements</td><td><a href="IGenerator.html">IGenerator</a></td>
-</tr>
-</table>
-<p></p>
-  LEDをふわふわ点滅させたりする時などに使います。回数を1回に設定すると、ワンショットの制御にも使えます。サービス間隔はOsc.serviceIntervalの設定に従います。
-  
-  <p></p>
-<br>
-<hr>
-</div>
-<a name="propertySummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Properties</div>
-<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#amplitude">amplitude</a> : Number<div class="summaryTableDescription">
-  振幅
-  </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#freq">freq</a> : Number<div class="summaryTableDescription">
-  周波数
-  </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#offset">offset</a> : Number<div class="summaryTableDescription">
-  オフセット
-  </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#phase">phase</a> : Number<div class="summaryTableDescription">
-  位相
-  </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#serviceInterval">serviceInterval</a> : uint<div class="summaryTableDescription">[static]</div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#times">times</a> : Number<div class="summaryTableDescription">
-  リピート回数(0で無限回)
-  </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#value">value</a> : Number<div class="summaryTableDescription">[read-only]
-   
-   生成された数値を取得します。
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#wave">wave</a> : Function<div class="summaryTableDescription">
-  波形の関数
-  </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-</table>
-</div>
-<a name="methodSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Methods</div>
-<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#Osc()">Osc</a>(wave:Function = null, freq:Number = 1, amplitude:Number = 1, offset:Number = 0, phase:Number = 0, times:Number = 0)</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#IMPULSE()">IMPULSE</a>(val:Number, lastVal:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   インパルス
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#LINEAR()">LINEAR</a>(val:Number, lastVal:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   Linear
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#reset()">reset</a>():void</div>
-<div class="summaryTableDescription">
-   Oscの状態をリセットします。
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#SAW()">SAW</a>(val:Number, lastVal:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   ノコギリ波
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#SIN()">SIN</a>(val:Number, lastVal:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   サイン波
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#SQUARE()">SQUARE</a>(val:Number, lastVal:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   矩形波
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#start()">start</a>():void</div>
-<div class="summaryTableDescription">
-   Oscの動作を開始します。
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#stop()">stop</a>():void</div>
-<div class="summaryTableDescription">
-   Oscの動作を停止します。
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#TRIANGLE()">TRIANGLE</a>(val:Number, lastVal:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   三角波
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#update()">update</a>(interval:int = -1):void</div>
-<div class="summaryTableDescription">
-   指定したインターバルだけ時間を進めます。引数を省略するとOsc.serviceIntervalだけ時間を進めます。
-   </div>
-</td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-</table>
-</div>
-<a name="eventSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Events</div>
-<table id="summaryTableEvent" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Event</th><th>Summary</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#event:update">update</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  出力値が更新されたときに送出されます。
-  </td><td class="summaryTableOwnerCol">Osc</td>
-</tr>
-</table>
-</div>
-<script type="text/javascript" language="javascript">
-<!--
-showHideInherited();
---></script>
-<div class="MainContent">
-<a name="propertyDetail"></a>
-<div class="detailSectionHeader">Property detail</div>
-<a name="amplitude"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">amplitude</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var amplitude:Number</code><p>
-  振幅
-  </p><p>The default value is <code>1</code>.</p>
-</div>
-<a name="freq"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">freq</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var freq:Number</code><p>
-  周波数
-  </p><p>The default value is <code>1</code>.</p>
-</div>
-<a name="offset"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">offset</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var offset:Number</code><p>
-  オフセット
-  </p><p>The default value is <code>0</code>.</p>
-</div>
-<a name="phase"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">phase</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var phase:Number</code><p>
-  位相
-  </p><p>The default value is <code>0</code>.</p>
-</div>
-<a name="serviceInterval"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">serviceInterval</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>serviceInterval:uint</code>&nbsp;&nbsp;[read-write]<span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get serviceInterval():uint</code>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set serviceInterval(value:uint):void</code>
-<br>
-</div>
-<a name="times"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">times</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var times:Number</code><p>
-  リピート回数(0で無限回)
-  </p><p>The default value is <code>0</code>.</p>
-</div>
-<a name="value"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">value</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>value:Number</code>&nbsp;&nbsp;[read-only]<p>
-   
-   生成された数値を取得します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get value():Number</code>
-<br>
-</div>
-<a name="wave"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">wave</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var wave:Function</code><p>
-  波形の関数
-  </p><p>The default value is <code>Osc.SIN</code>.</p>
-</div>
-<a name="constructorDetail"></a>
-<div class="detailSectionHeader">Constructor detail</div>
-<a name="Osc()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">Osc</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function Osc(wave:Function = null, freq:Number = 1, amplitude:Number = 1, offset:Number = 0, phase:Number = 0, times:Number = 0)</code><p>
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">wave</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; 波形
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">freq</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; 周波数
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">amplitude</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; 振幅
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">offset</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; オフセット
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">phase</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; 位相
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">times</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; リピート回数
-   
-   </td>
-</tr>
-</table>
-</div>
-<a name="methodDetail"></a>
-<div class="detailSectionHeader">Method detail</div>
-<a name="IMPULSE()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">IMPULSE</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function IMPULSE(val:Number, lastVal:Number):Number</code><p>
-   インパルス
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<a name="LINEAR()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">LINEAR</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function LINEAR(val:Number, lastVal:Number):Number</code><p>
-   Linear
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<a name="reset()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">reset</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function reset():void</code><p>
-   Oscの状態をリセットします。
-   
-   </p></div>
-<a name="SAW()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">SAW</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function SAW(val:Number, lastVal:Number):Number</code><p>
-   ノコギリ波
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<a name="SIN()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">SIN</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function SIN(val:Number, lastVal:Number):Number</code><p>
-   サイン波
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<a name="SQUARE()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">SQUARE</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function SQUARE(val:Number, lastVal:Number):Number</code><p>
-   矩形波
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<a name="start()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">start</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function start():void</code><p>
-   Oscの動作を開始します。
-   
-   </p></div>
-<a name="stop()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">stop</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function stop():void</code><p>
-   Oscの動作を停止します。
-   
-   </p></div>
-<a name="TRIANGLE()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">TRIANGLE</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function TRIANGLE(val:Number, lastVal:Number):Number</code><p>
-   三角波
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<a name="update()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">update</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function update(interval:int = -1):void</code><p>
-   指定したインターバルだけ時間を進めます。引数を省略するとOsc.serviceIntervalだけ時間を進めます。
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">interval</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; 間隔(ms)
-   </td>
-</tr>
-</table>
-</div>
-<div class="detailSectionHeader">Event detail</div>
-<a name="event:update"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">update</td><td class="detailHeaderType">event&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<span class="label">Event object type: </span><a href="GeneratorEvent.html"><code>GeneratorEvent</code></a>
-<br>
-<p></p><p>
-  出力値が更新されたときに送出されます。
-  </p></div>
-<br>
-<br>
-<hr>
-<br>
-<p></p>
-<center class="copyright"> 
-</center>
-</div>
-</body>
-</html>
-<!-- -->
+<script type="text/javascript">
+			scrollToNameAnchor();
+		</script><table class="titleTable" cellpadding="0" cellspacing="0" id="titleTable" style="display:none"><tr><td class="titleTableTitle" align="left">API Documentation</td><td class="titleTableTopNav" align="right"><a href="../package-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Packages</a>&nbsp;|&nbsp;<a href="../class-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Classes</a>&nbsp;|&nbsp;<a href="../all-index-A.html" onclick="loadClassListFrame('../index-list.html')">Index</a>&nbsp;|&nbsp;<a id="framesLink1" href="../index.html?funnel/Osc.html&amp;funnel/class-list.html">Frames</a><a id="noFramesLink1" style="display:none" href="" onclick="parent.location=document.location"> No Frames </a></td><td class="titleTableLogo" align="right" rowspan="3"><img src="../images/logo.jpg" class="logoImage" alt=" Adobe Logo " title=" Adobe Logo "></td></tr><tr class="titleTableRow2"><td class="titleTableSubTitle" id="subTitle" align="left">Osc</td><td class="titleTableSubNav" id="subNav" align="right"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a></td></tr><tr class="titleTableRow3"><td colspan="3">&nbsp;</td></tr></table><script language="javascript" type="text/javascript" xml:space="preserve">
+				<!--
+				
+					if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Osc"); titleBar_setSubNav(false,true,false,false,false,false,true,false,true,false,false	,false,false,false,false,false);}	
+				-->
+			</script><div xmlns:fn="http://www.w3.org/2005/xpath-functions" class="MainContent"><table class="classHeaderTable" cellpadding="0" cellspacing="0"><tr><td class="classHeaderTableLabel">Package</td><td><a href="package-detail.html" onclick="javascript:loadClassListFrame('class-list.html')">funnel</a></td></tr><tr><td class="classHeaderTableLabel">Class</td><td class="classSignature">public  class  Osc</td></tr><tr><td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Osc  <img src="../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> flash.events.EventDispatcher</td></tr><tr><td class="classHeaderTableLabel">Implements</td><td> <a href="../funnel/IGenerator.html">IGenerator</a></td></tr></table><p></p><p></p><p></p>
+	 Osc outputs a waveform on the associated PWM pin. For example, this can be used to blink or fade
+	 an LED on or off.
+	 
+	 <p>LEDをふわふわ点滅させたりする時などに使います。回数を1回に設定すると、ワンショットの制御にも使えます。サービス間隔はOsc.serviceIntervalの設定に従います。</p>
+	 
+	           <p></p><br/><hr></div><a name="propertySummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Properties</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableProperty"><tr><th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#amplitude" class="signatureLink">amplitude</a> : Number<div class="summaryTableDescription">
+		 amplitude
+		 振幅
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#freq" class="signatureLink">freq</a> : Number<div class="summaryTableDescription">
+		 frequency
+		 周波数
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#offset" class="signatureLink">offset</a> : Number<div class="summaryTableDescription">
+		 offset
+		 オフセット
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#phase" class="signatureLink">phase</a> : Number<div class="summaryTableDescription">
+		 phase
+		 位相
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#serviceInterval" class="signatureLink">serviceInterval</a> : uint<div class="summaryTableDescription">[static] 
+		 sets the service interval in milliseconds
+		 
+		 サービス間隔(ms)
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#times" class="signatureLink">times</a> : Number<div class="summaryTableDescription">
+		 repeat count from 0 to infinite times
+		 リピート回数(0で無限回)
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#value" class="signatureLink">value</a> : Number<div class="summaryTableDescription">[read-only] 
+		 
+		 Get a number that is generated.</div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#wave" class="signatureLink">wave</a> : Function<div class="summaryTableDescription">
+		 wave function
+		 波形の関数
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr></table></div><a name="methodSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Methods </div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableMethod"><tr><th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#Osc()" class="signatureLink">Osc</a>(wave:Function = null, freq:Number = 1, amplitude:Number = 1, offset:Number = 0, phase:Number = 0, times:Number = 0)</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#IMPULSE()" class="signatureLink">IMPULSE</a>(val:Number, lastVal:Number):Number</div><div class="summaryTableDescription">[static] 
+		 impulse
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#LINEAR()" class="signatureLink">LINEAR</a>(val:Number, lastVal:Number):Number</div><div class="summaryTableDescription">[static] 
+		 linear
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#reset()" class="signatureLink">reset</a>():void</div><div class="summaryTableDescription">
+		 resets oscillator
+		 
+		 Oscの状態をリセットします。
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#SAW()" class="signatureLink">SAW</a>(val:Number, lastVal:Number):Number</div><div class="summaryTableDescription">[static] 
+		 saw wave
+		 ノコギリ波
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#SIN()" class="signatureLink">SIN</a>(val:Number, lastVal:Number):Number</div><div class="summaryTableDescription">[static] 
+		 sine wave
+		 サイン波
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#SQUARE()" class="signatureLink">SQUARE</a>(val:Number, lastVal:Number):Number</div><div class="summaryTableDescription">[static] 
+		 square wave
+		 矩形波
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#start()" class="signatureLink">start</a>():void</div><div class="summaryTableDescription">
+		 starts oscillator
+		 
+		 Oscの動作を開始します。
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#stop()" class="signatureLink">stop</a>():void</div><div class="summaryTableDescription">
+		 stops oscillator
+		 
+		 Oscの動作を停止します。
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#TRIANGLE()" class="signatureLink">TRIANGLE</a>(val:Number, lastVal:Number):Number</div><div class="summaryTableDescription">[static] 
+		 triangle wave
+		 三角波
+		 
+		 </div></td><td class="summaryTableOwnerCol">Osc</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#update()" class="signatureLink">update</a>(interval:int = -1):void</div><div class="summaryTableDescription">
+		 By default the interval is 33 milliseconds.</div></td><td class="summaryTableOwnerCol">Osc</td></tr></table></div><a name="eventSummary"></a><div class="summarySection"><div class="summaryTableTitle">Events</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableEvent"><tr><th>&nbsp;</th><th colspan="2">Event</th><th> Summary </th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#event:update" class="signatureLink">update</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol">Osc</td></tr></table></div><script language="javascript" type="text/javascript"><!--
+										showHideInherited();
+										--></script><div class="MainContent"><div class="detailSectionHeader">Property Detail</div><a name="propertyDetail"></a><a name="amplitude"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">amplitude</td><td class="detailHeaderType">property</td></tr></table><div class="detailBody"><code>public var amplitude:Number</code><p></p><p></p><p>
+		 amplitude
+		 <p>振幅</p>
+		 </p><p> The default value is <code>1</code>.</p></div><a name="propertyDetail"></a><a name="freq"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">freq</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var freq:Number</code><p></p><p></p><p>
+		 frequency
+		 <p>周波数</p>
+		 </p><p> The default value is <code>1</code>.</p></div><a name="propertyDetail"></a><a name="offset"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">offset</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var offset:Number</code><p></p><p></p><p>
+		 offset
+		 <p>オフセット</p>
+		 </p><p> The default value is <code>0</code>.</p></div><a name="propertyDetail"></a><a name="phase"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">phase</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var phase:Number</code><p></p><p></p><p>
+		 phase
+		 <p>位相</p>
+		 </p><p> The default value is <code>0</code>.</p></div><a name="propertyDetail"></a><a name="serviceInterval"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">serviceInterval</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>serviceInterval:uint</code><p></p><p></p><p>
+		 sets the service interval in milliseconds
+		 
+		 <p>サービス間隔(ms)</p>
+		 
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get serviceInterval():uint</code><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public static function set serviceInterval(value:uint):void</code><br/></div><a name="propertyDetail"></a><a name="times"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">times</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var times:Number</code><p></p><p></p><p>
+		 repeat count from 0 to infinite times
+		 <p>リピート回数(0で無限回)</p>
+		 </p><p> The default value is <code>0</code>.</p></div><a name="propertyDetail"></a><a name="value"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">value</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>value:Number</code>&nbsp;&nbsp;[read-only] <p></p><p></p><p>
+		 
+		 Get a number that is generated.
+		 
+		 <p>生成された数値を取得します。</p>
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get value():Number</code><br/></div><a name="propertyDetail"></a><a name="wave"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">wave</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var wave:Function</code><p></p><p></p><p>
+		 wave function
+		 <p>波形の関数</p>
+		 </p><p> The default value is <code>Osc.SIN</code>.</p></div><a name="constructorDetail"></a><div class="detailSectionHeader">Constructor Detail</div><a name="Osc()"></a><a name="Osc(Function,Number,Number,Number,Number,Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">Osc</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">Constructor</td></tr></table><div class="detailBody"><code>public function Osc(wave:Function = null, freq:Number = 1, amplitude:Number = 1, offset:Number = 0, phase:Number = 0, times:Number = 0)</code><p></p><p>
+		 
+		 </p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">wave</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; waveform
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">freq</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; frequency
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">amplitude</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; amplitude
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">offset</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; offset
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">phase</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; phase
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">times</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; repeat count
+		 
+		 </td></tr></table></div><a name="methodDetail"></a><div class="detailSectionHeader">Method Detail</div><a name="IMPULSE()"></a><a name="IMPULSE(Number,Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">IMPULSE</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td></tr></table><div class="detailBody"><code> public static function IMPULSE(val:Number, lastVal:Number):Number</code><p></p><p></p><p>
+		 impulse
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><a name="LINEAR()"></a><a name="LINEAR(Number,Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">LINEAR</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function LINEAR(val:Number, lastVal:Number):Number</code><p></p><p></p><p>
+		 linear
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><a name="reset()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">reset</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function reset():void</code><p></p><p></p><p>
+		 resets oscillator
+		 
+		 <p>Oscの状態をリセットします。</p>
+		 
+		 </p></div><a name="SAW()"></a><a name="SAW(Number,Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">SAW</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function SAW(val:Number, lastVal:Number):Number</code><p></p><p></p><p>
+		 saw wave
+		 <p>ノコギリ波</p>
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><a name="SIN()"></a><a name="SIN(Number,Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">SIN</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function SIN(val:Number, lastVal:Number):Number</code><p></p><p></p><p>
+		 sine wave
+		 <p>サイン波</p>
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><a name="SQUARE()"></a><a name="SQUARE(Number,Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">SQUARE</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function SQUARE(val:Number, lastVal:Number):Number</code><p></p><p></p><p>
+		 square wave
+		 <p>矩形波</p>
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><a name="start()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">start</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function start():void</code><p></p><p></p><p>
+		 starts oscillator
+		 
+		 <p>Oscの動作を開始します。</p>
+		 
+		 </p></div><a name="stop()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">stop</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function stop():void</code><p></p><p></p><p>
+		 stops oscillator
+		 
+		 <p>Oscの動作を停止します。</p>
+		 
+		 </p></div><a name="TRIANGLE()"></a><a name="TRIANGLE(Number,Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">TRIANGLE</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function TRIANGLE(val:Number, lastVal:Number):Number</code><p></p><p></p><p>
+		 triangle wave
+		 <p>三角波</p>
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">lastVal</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><a name="update()"></a><a name="update(int)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">update</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function update(interval:int = -1):void</code><p></p><p></p><p>
+		 By default the interval is 33 milliseconds. The Osc is updated every 33ms.
+		 
+		 <p>指定したインターバルだけ時間を進めます。引数を省略するとOsc.serviceIntervalだけ時間を進めます。</p>
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">interval</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; update interval in milliseconds
+		 </td></tr></table></p></div><div class="detailSectionHeader"> Event Detail </div><a name="event:update"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">update</td><td class="detailHeaderType"> Event </td></tr></table><div class="detailBody"><span class="label">Event Object Type: </span><code>GeneratorEvent</code><br/><p></p><p></p><p>
+		 Dispatched when the output value is updated.
+		 
+		 <p>出力値が更新されたときに送出されます。</p>
+		 </p><p>
+	 </p></div><br/><br/><hr><br/><p></p><center class="copyright"><footer></footer><br/>Thu Mar 31 2011, 01:45 PM +09:00  </center></div></body></html><!--<br/>Thu Mar 31 2011, 01:45 PM +09:00  -->

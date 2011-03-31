@@ -1,450 +1,103 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="Scaler,funnel.Scaler,inMax,inMin,limiter,outMax,outMin,type,CUBE,CUBE_ROOT,LINEAR,SQUARE,SQUARE_ROOT,processSample" name="keywords">
-<title>funnel.Scaler</title>
-</head>
-<body>
-<script type="text/javascript" language="javascript" src="../asdoc.js"></script><script type="text/javascript" language="javascript" src="../cookies.js"></script><script type="text/javascript" language="javascript">
-<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- saved from url=(0014)about:internet --><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="../style.css" type="text/css" media="screen"><link rel="stylesheet" href="../print.css" type="text/css" media="print"><link rel="stylesheet" href="../override.css" type="text/css"><meta name="keywords" content="Scaler,funnel.Scaler,AIN,AIN,ALL,ALL,AOUT,AOUT,CHANGE,CHANGE,COMMAND_OFFSET_MULTIPLIER,CONFIGURATION_ERROR,CONFIGURATION_ERROR,DIN,DIN,DOUT,DOUT,ERROR,ERROR,FALLING_EDGE,FALLING_EDGE,FIRMATA,FIRMATA,FIRMATA_STRING,FIRMATA_STRING,HPF,I2C,I2C_POWER_PINS_READY,I2C_POWER_PINS_READY,I2C_POWER_PINS_STARTUP_TIME,I2C,IN,LPF,MODE1,MODE2,MODE3,MODE4,MODE5,MODE6,MODE7,MODE8,MOVING_AVERAGE,MOVING_AVERAGE,MULTIPOINT,OUT,PWM,PWM,READY,READY,REBOOT_ERROR,REBOOT_ERROR,RISING_EDGE,RISING_EDGE,SERVO,SERVO,SERVO_CONFIG,STRING,SYSEX,UPDATE,UPDATE,VERSION,ZB,_io,ainPins,amplitude,analogPins,aoutPins,autoUpdate,average,button,button,coef,command,command,config,configuration,digitalPins,dinPins,doutPins,filters,freq,gui,gui,gui,id,inMax,inMin,lastValue,led,led,limiter,maximum,message,minimum,moduleID,moduleId,number,offset,outMax,outMin,phase,pinCount,powerPinsEnabled,preFilterValue,samplingInterval,serviceInterval,servoPins,times,type,type,value,value,value,wave,CUBE,CUBE_ROOT,IMPULSE,LINEAR,LINEAR,SAW,SIN,SQUARE,SQUARE,SQUARE_ROOT,TRIANGLE,addEventListener,addFilter,addPoint,addSysexListener,analogInput,analogOutput,analogPin,analogPin,clear,clone,clone,digitalInput,digitalOutput,digitalPin,digitalPin,enablePowerPins,handleInput,handleSysex,handleSysex,handleSysex,ioModule,pin,processSample,processSample,processSample,processSample,removeAllFilters,removeAllPoints,removePoint,reset,scanMatrix,sendFirmataString,sendFirmataString,sendSysexMessage,sendSysex,sendSysex,setDigitalPinMode,setFilters,setServoPulseRange,setServoPulseRange,start,stop,update,update,update"><title>funnel.Scaler</title></head><body><script language="javascript" type="text/javascript" src="../asdoc.js"></script><script language="javascript" type="text/javascript" src="../help.js"></script><script language="javascript" type="text/javascript" src="../cookies.js"></script><script language="javascript" type="text/javascript"><!--
 				asdocTitle = 'Scaler - API Documentation';
 				var baseRef = '../';
 				window.onload = configPage;
 			--></script>
-<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
-<tr>
-<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?funnel/Scaler.html&amp;funnel/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../images/logo.jpg"></td>
-</tr>
-<tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Scaler</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
-</tr>
-<tr class="titleTableRow3">
-<td colspan="2">&nbsp;</td>
-</tr>
-</table>
-<script type="text/javascript" language="javascript">
-<!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Scaler"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
---></script>
-<div class="MainContent">
-<table cellspacing="0" cellpadding="0" class="classHeaderTable">
-<tr>
-<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">funnel</a></td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Scaler</td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Implements</td><td><a href="IFilter.html">IFilter</a></td>
-</tr>
-</table>
-<p></p>
-  ある範囲の入力をある範囲にスケーリングするためのクラスです。直線でのスケーリング以外に、よく使われるカーブも用意されています。
-  <p></p>
-<br>
-<hr>
-</div>
-<a name="propertySummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Properties</div>
-<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#inMax">inMax</a> : Number<div class="summaryTableDescription">
-  入力の最大値
-  </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#inMin">inMin</a> : Number<div class="summaryTableDescription">
-  入力の最小値
-  </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#limiter">limiter</a> : Boolean<div class="summaryTableDescription">
-  指定した範囲を超えた入力値を制限するか否か
-  </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#outMax">outMax</a> : Number<div class="summaryTableDescription">
-  出力の最大値
-  </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#outMin">outMin</a> : Number<div class="summaryTableDescription">
-  出力の最小値
-  </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#type">type</a> : Function<div class="summaryTableDescription">
-  マッピングに使用する曲線を表す関数
-  </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-</table>
-</div>
-<a name="methodSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Methods</div>
-<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#Scaler()">Scaler</a>(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, type:Function = null, limiter:Boolean = true)</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#CUBE()">CUBE</a>(val:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   y = x^4
-   </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#CUBE_ROOT()">CUBE_ROOT</a>(val:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   y = pow(x, 1/4)
-   </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#LINEAR()">LINEAR</a>(val:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   y = x
-   </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#processSample()">processSample</a>(val:Number):Number</div>
-<div class="summaryTableDescription">
-   
-   フィルタを適応します
-   </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#SQUARE()">SQUARE</a>(val:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   y = x x
-   </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#SQUARE_ROOT()">SQUARE_ROOT</a>(val:Number):Number</div>
-<div class="summaryTableDescription">[static]
-   y = sqrt(x);
-   </div>
-</td><td class="summaryTableOwnerCol">Scaler</td>
-</tr>
-</table>
-</div>
-<script type="text/javascript" language="javascript">
-<!--
-showHideInherited();
---></script>
-<div class="MainContent">
-<a name="propertyDetail"></a>
-<div class="detailSectionHeader">Property detail</div>
-<a name="inMax"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">inMax</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var inMax:Number</code><p>
-  入力の最大値
-  </p><p>The default value is <code>1</code>.</p>
-</div>
-<a name="inMin"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">inMin</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var inMin:Number</code><p>
-  入力の最小値
-  </p><p>The default value is <code>0</code>.</p>
-</div>
-<a name="limiter"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">limiter</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var limiter:Boolean</code><p>
-  指定した範囲を超えた入力値を制限するか否か
-  </p><p>The default value is <code>false</code>.</p>
-</div>
-<a name="outMax"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">outMax</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var outMax:Number</code><p>
-  出力の最大値
-  </p><p>The default value is <code>1</code>.</p>
-</div>
-<a name="outMin"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">outMin</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var outMin:Number</code><p>
-  出力の最小値
-  </p><p>The default value is <code>0</code>.</p>
-</div>
-<a name="type"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">type</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var type:Function</code><p>
-  マッピングに使用する曲線を表す関数
-  </p><p>The default value is <code>Scaler.LINEAR</code>.</p>
-</div>
-<a name="constructorDetail"></a>
-<div class="detailSectionHeader">Constructor detail</div>
-<a name="Scaler()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">Scaler</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function Scaler(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, type:Function = null, limiter:Boolean = true)</code><p>
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">inMin</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; 入力の最小値
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">inMax</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; 入力の最大値
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">outMin</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; 出力の最小値
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">outMax</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; 出力の最大値
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">type</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; マッピングに使用する曲線
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">limiter</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; 入力値を制限するか
-   
-   </td>
-</tr>
-</table>
-</div>
-<a name="methodDetail"></a>
-<div class="detailSectionHeader">Method detail</div>
-<a name="CUBE()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">CUBE</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function CUBE(val:Number):Number</code><p>
-   y = x^4
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<a name="CUBE_ROOT()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">CUBE_ROOT</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function CUBE_ROOT(val:Number):Number</code><p>
-   y = pow(x, 1/4)
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<a name="LINEAR()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">LINEAR</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function LINEAR(val:Number):Number</code><p>
-   y = x
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<a name="processSample()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">processSample</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function processSample(val:Number):Number</code><p>
-   
-   フィルタを適応します
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code> &mdash; 入力値
-   </td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code> &mdash; フィルタ適応後の値
-   
-   </td>
-</tr>
-</table>
-</div>
-<a name="SQUARE()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">SQUARE</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function SQUARE(val:Number):Number</code><p>
-   y = x x
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<a name="SQUARE_ROOT()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">SQUARE_ROOT</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function SQUARE_ROOT(val:Number):Number</code><p>
-   y = sqrt(x);
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Number</code></td>
-</tr>
-</table>
-</div>
-<br>
-<br>
-<hr>
-<br>
-<p></p>
-<center class="copyright"> 
-</center>
-</div>
-</body>
-</html>
-<!-- -->
+<script type="text/javascript">
+			scrollToNameAnchor();
+		</script><table class="titleTable" cellpadding="0" cellspacing="0" id="titleTable" style="display:none"><tr><td class="titleTableTitle" align="left">API Documentation</td><td class="titleTableTopNav" align="right"><a href="../package-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Packages</a>&nbsp;|&nbsp;<a href="../class-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Classes</a>&nbsp;|&nbsp;<a href="../all-index-A.html" onclick="loadClassListFrame('../index-list.html')">Index</a>&nbsp;|&nbsp;<a id="framesLink1" href="../index.html?funnel/Scaler.html&amp;funnel/class-list.html">Frames</a><a id="noFramesLink1" style="display:none" href="" onclick="parent.location=document.location"> No Frames </a></td><td class="titleTableLogo" align="right" rowspan="3"><img src="../images/logo.jpg" class="logoImage" alt=" Adobe Logo " title=" Adobe Logo "></td></tr><tr class="titleTableRow2"><td class="titleTableSubTitle" id="subTitle" align="left">Scaler</td><td class="titleTableSubNav" id="subNav" align="right"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td></tr><tr class="titleTableRow3"><td colspan="3">&nbsp;</td></tr></table><script language="javascript" type="text/javascript" xml:space="preserve">
+				<!--
+				
+					if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Scaler"); titleBar_setSubNav(false,true,false,false,false,false,false,false,true,false,false	,false,false,false,false,false);}	
+				-->
+			</script><div xmlns:fn="http://www.w3.org/2005/xpath-functions" class="MainContent"><table class="classHeaderTable" cellpadding="0" cellspacing="0"><tr><td class="classHeaderTableLabel">Package</td><td><a href="package-detail.html" onclick="javascript:loadClassListFrame('class-list.html')">funnel</a></td></tr><tr><td class="classHeaderTableLabel">Class</td><td class="classSignature">public  class  Scaler</td></tr><tr><td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Scaler  <img src="../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> Object</td></tr><tr><td class="classHeaderTableLabel">Implements</td><td> <a href="../funnel/IFilter.html">IFilter</a></td></tr></table><p></p><p></p><p></p>
+	 Scales up an input value from its min and max range to a specified minimum to maximum range. 
+	 A number of scaling functions are provided.
+	 
+	 <p>ある範囲の入力をある範囲にスケーリングするためのクラスです。直線でのスケーリング以外に、よく使われるカーブも用意されています。</p>
+	           <p></p><br/><hr></div><a name="propertySummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Properties</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableProperty"><tr><th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#inMax" class="signatureLink">inMax</a> : Number<div class="summaryTableDescription">
+		 maximum input
+		 
+		 入力の最大値
+		 </div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#inMin" class="signatureLink">inMin</a> : Number<div class="summaryTableDescription">
+		 minimum input
+		 
+		 入力の最小値
+		 </div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#limiter" class="signatureLink">limiter</a> : Boolean<div class="summaryTableDescription">
+		 Sets whether or not to restrict the input value if it exceeds the specified range.</div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#outMax" class="signatureLink">outMax</a> : Number<div class="summaryTableDescription">
+		 maximum output
+		 
+		 出力の最大値
+		 </div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#outMin" class="signatureLink">outMin</a> : Number<div class="summaryTableDescription">
+		 minimum output
+		 
+		 出力の最小値
+		 </div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#type" class="signatureLink">type</a> : Function<div class="summaryTableDescription">
+		 The function used to map the input curve.</div></td><td class="summaryTableOwnerCol">Scaler</td></tr></table></div><a name="methodSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Methods </div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableMethod"><tr><th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#Scaler()" class="signatureLink">Scaler</a>(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, type:Function = null, limiter:Boolean = true)</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#CUBE()" class="signatureLink">CUBE</a>(val:Number):Number</div><div class="summaryTableDescription">[static] 
+		 y = x^4
+		 </div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#CUBE_ROOT()" class="signatureLink">CUBE_ROOT</a>(val:Number):Number</div><div class="summaryTableDescription">[static] 
+		 y = pow(x, 1/4)
+		 </div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#LINEAR()" class="signatureLink">LINEAR</a>(val:Number):Number</div><div class="summaryTableDescription">[static] 
+		 y = x
+		 </div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#processSample()" class="signatureLink">processSample</a>(val:Number):Number</div><div class="summaryTableDescription">
+		 
+		 The adaptive filter.</div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#SQUARE()" class="signatureLink">SQUARE</a>(val:Number):Number</div><div class="summaryTableDescription">[static] 
+		 y = x x
+		 </div></td><td class="summaryTableOwnerCol">Scaler</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#SQUARE_ROOT()" class="signatureLink">SQUARE_ROOT</a>(val:Number):Number</div><div class="summaryTableDescription">[static] 
+		 y = sqrt(x);
+		 </div></td><td class="summaryTableOwnerCol">Scaler</td></tr></table></div><script language="javascript" type="text/javascript"><!--
+										showHideInherited();
+										--></script><div class="MainContent"><div class="detailSectionHeader">Property Detail</div><a name="propertyDetail"></a><a name="inMax"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">inMax</td><td class="detailHeaderType">property</td></tr></table><div class="detailBody"><code>public var inMax:Number</code><p></p><p></p><p>
+		 maximum input
+		 
+		 <p>入力の最大値</p>
+		 </p><p> The default value is <code>1</code>.</p></div><a name="propertyDetail"></a><a name="inMin"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">inMin</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var inMin:Number</code><p></p><p></p><p>
+		 minimum input
+		 
+		 <p>入力の最小値</p>
+		 </p><p> The default value is <code>0</code>.</p></div><a name="propertyDetail"></a><a name="limiter"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">limiter</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var limiter:Boolean</code><p></p><p></p><p>
+		 Sets whether or not to restrict the input value if it exceeds the specified range.
+		 
+		<p>指定した範囲を超えた入力値を制限するか否か</p>
+		</p><p> The default value is <code>false</code>.</p></div><a name="propertyDetail"></a><a name="outMax"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">outMax</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var outMax:Number</code><p></p><p></p><p>
+		 maximum output
+		 
+		 <p>出力の最大値</p>
+		 </p><p> The default value is <code>1</code>.</p></div><a name="propertyDetail"></a><a name="outMin"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">outMin</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var outMin:Number</code><p></p><p></p><p>
+		 minimum output
+		 
+		 <p>出力の最小値</p>
+		 </p><p> The default value is <code>0</code>.</p></div><a name="propertyDetail"></a><a name="type"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">type</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var type:Function</code><p></p><p></p><p>
+		 The function used to map the input curve.
+		 
+		<p>マッピングに使用する曲線を表す関数</p>
+		</p><p> The default value is <code>Scaler.LINEAR</code>.</p></div><a name="constructorDetail"></a><div class="detailSectionHeader">Constructor Detail</div><a name="Scaler()"></a><a name="Scaler(Number,Number,Number,Number,Function,Boolean)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">Scaler</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">Constructor</td></tr></table><div class="detailBody"><code>public function Scaler(inMin:Number = 0, inMax:Number = 1, outMin:Number = 0, outMax:Number = 1, type:Function = null, limiter:Boolean = true)</code><p></p><p>
+		 
+		 </p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">inMin</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; minimum input
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">inMax</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; maximum input
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">outMin</span>:Number</code> (default = <code>0</code>)<code></code> &mdash; minimum output
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">outMax</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; maximum output
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">type</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; used to map the input curve
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">limiter</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; whether or not to restrict the input value if it exceeds the specified range
+		 
+		 </td></tr></table></div><a name="methodDetail"></a><div class="detailSectionHeader">Method Detail</div><a name="CUBE()"></a><a name="CUBE(Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">CUBE</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td></tr></table><div class="detailBody"><code> public static function CUBE(val:Number):Number</code><p></p><p></p><p>
+		 y = x^4
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><a name="CUBE_ROOT()"></a><a name="CUBE_ROOT(Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">CUBE_ROOT</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function CUBE_ROOT(val:Number):Number</code><p></p><p></p><p>
+		 y = pow(x, 1/4)
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><a name="LINEAR()"></a><a name="LINEAR(Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">LINEAR</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function LINEAR(val:Number):Number</code><p></p><p></p><p>
+		 y = x
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><a name="processSample()"></a><a name="processSample(Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">processSample</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function processSample(val:Number):Number</code><p></p><p></p><p>
+		 
+		 The adaptive filter.
+		 
+		 <p>フィルタを適応します</p>
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code> &mdash; input value
+		 </td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code> &mdash; resulting value after applying the adaptive filter
+		 
+		 </td></tr></table></div><a name="SQUARE()"></a><a name="SQUARE(Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">SQUARE</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function SQUARE(val:Number):Number</code><p></p><p></p><p>
+		 y = x x
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><a name="SQUARE_ROOT()"></a><a name="SQUARE_ROOT(Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">SQUARE_ROOT</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public static function SQUARE_ROOT(val:Number):Number</code><p></p><p></p><p>
+		 y = sqrt(x);
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code></td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Number</code></td></tr></table></div><br/><br/><hr><br/><p></p><center class="copyright"><footer></footer><br/>Thu Mar 31 2011, 01:45 PM +09:00  </center></div></body></html><!--<br/>Thu Mar 31 2011, 01:45 PM +09:00  -->

@@ -1,416 +1,84 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="Configuration,funnel.Configuration,ainPins,analogPins,aoutPins,button,config,digitalPins,dinPins,doutPins,led,moduleID,servoPins,powerPinsEnabled,clone,enablePowerPins,setDigitalPinMode" name="keywords">
-<title>funnel.Configuration</title>
-</head>
-<body>
-<script type="text/javascript" language="javascript" src="../asdoc.js"></script><script type="text/javascript" language="javascript" src="../cookies.js"></script><script type="text/javascript" language="javascript">
-<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- saved from url=(0014)about:internet --><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="../style.css" type="text/css" media="screen"><link rel="stylesheet" href="../print.css" type="text/css" media="print"><link rel="stylesheet" href="../override.css" type="text/css"><meta name="keywords" content="Configuration,funnel.Configuration,AIN,AIN,ALL,ALL,AOUT,AOUT,CHANGE,CHANGE,COMMAND_OFFSET_MULTIPLIER,CONFIGURATION_ERROR,CONFIGURATION_ERROR,DIN,DIN,DOUT,DOUT,ERROR,ERROR,FALLING_EDGE,FALLING_EDGE,FIRMATA,FIRMATA,FIRMATA_STRING,FIRMATA_STRING,HPF,I2C,I2C_POWER_PINS_READY,I2C_POWER_PINS_READY,I2C_POWER_PINS_STARTUP_TIME,I2C,IN,LPF,MODE1,MODE2,MODE3,MODE4,MODE5,MODE6,MODE7,MODE8,MOVING_AVERAGE,MOVING_AVERAGE,MULTIPOINT,OUT,PWM,PWM,READY,READY,REBOOT_ERROR,REBOOT_ERROR,RISING_EDGE,RISING_EDGE,SERVO,SERVO,SERVO_CONFIG,STRING,SYSEX,UPDATE,UPDATE,VERSION,ZB,_io,ainPins,amplitude,analogPins,aoutPins,autoUpdate,average,button,button,coef,command,command,config,configuration,digitalPins,dinPins,doutPins,filters,freq,gui,gui,gui,id,inMax,inMin,lastValue,led,led,limiter,maximum,message,minimum,moduleID,moduleId,number,offset,outMax,outMin,phase,pinCount,powerPinsEnabled,preFilterValue,samplingInterval,serviceInterval,servoPins,times,type,type,value,value,value,wave,CUBE,CUBE_ROOT,IMPULSE,LINEAR,LINEAR,SAW,SIN,SQUARE,SQUARE,SQUARE_ROOT,TRIANGLE,addEventListener,addFilter,addPoint,addSysexListener,analogInput,analogOutput,analogPin,analogPin,clear,clone,clone,digitalInput,digitalOutput,digitalPin,digitalPin,enablePowerPins,handleInput,handleSysex,handleSysex,handleSysex,ioModule,pin,processSample,processSample,processSample,processSample,removeAllFilters,removeAllPoints,removePoint,reset,scanMatrix,sendFirmataString,sendFirmataString,sendSysexMessage,sendSysex,sendSysex,setDigitalPinMode,setFilters,setServoPulseRange,setServoPulseRange,start,stop,update,update,update"><title>funnel.Configuration</title></head><body><script language="javascript" type="text/javascript" src="../asdoc.js"></script><script language="javascript" type="text/javascript" src="../help.js"></script><script language="javascript" type="text/javascript" src="../cookies.js"></script><script language="javascript" type="text/javascript"><!--
 				asdocTitle = 'Configuration - API Documentation';
 				var baseRef = '../';
 				window.onload = configPage;
 			--></script>
-<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
-<tr>
-<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?funnel/Configuration.html&amp;funnel/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../images/logo.jpg"></td>
-</tr>
-<tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Configuration</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
-</tr>
-<tr class="titleTableRow3">
-<td colspan="2">&nbsp;</td>
-</tr>
-</table>
-<script type="text/javascript" language="javascript">
-<!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Configuration"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
---></script>
-<div class="MainContent">
-<table cellspacing="0" cellpadding="0" class="classHeaderTable">
-<tr>
-<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">funnel</a></td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Configuration</td>
-</tr>
-</table>
-<p></p>
-  I/Oモジュールのコンフィギュレーションを設定するためのクラスです。コンフィギュレーションはI/Oモジュールとの通信を開始する段階で決定する必要があるため、IOSystemのコンストラクタの引数で指定します。
-  <p></p>
-<p>
-<span class="classHeaderTableLabel">See also</span>
-</p>
-<div class="seeAlso">
-<a href="IOSystem.html#IOSystem()" target="">IOSystem.IOSystem()</a>
-</div>
-<br>
-<hr>
-</div>
-<a name="propertySummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Properties</div>
-<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#ainPins">ainPins</a> : Array<div class="summaryTableDescription">
-  Gainer.analogInputを実際のピン番号に対応させるテーブル
-  </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#analogPins">analogPins</a> : Array<div class="summaryTableDescription">
-  Arduino.analogPinを実際のピン番号に対応させるテーブル
-  </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#aoutPins">aoutPins</a> : Array<div class="summaryTableDescription">
-  Gainer.analogOutputを実際のピン番号に対応させるテーブル
-  </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#button">button</a> : uint<div class="summaryTableDescription">
-  Gainer.buttonを実際のピン番号に対応させるテーブル
-  </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#config">config</a> : Array<div class="summaryTableDescription">
-  ピンのタイプ(AIN、DIN、AOUT、DOUT)の配列
-  </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#digitalPins">digitalPins</a> : Array<div class="summaryTableDescription">
-  Arduino.digitsalPinを実際のピン番号に対応させるテーブル
-  </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#dinPins">dinPins</a> : Array<div class="summaryTableDescription">
-  Gainer.digitalInputを実際のピン番号に対応させるテーブル
-  </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#doutPins">doutPins</a> : Array<div class="summaryTableDescription">
-  Gainer.digitalOutputを実際のピン番号に対応させるテーブル
-  </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#led">led</a> : uint<div class="summaryTableDescription">
-  Gainer.ledを実際のピン番号に対応させるテーブル
-  </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#moduleID">moduleID</a> : uint<div class="summaryTableDescription">
-  モジュールのID
-  </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#powerPinsEnabled">powerPinsEnabled</a> : Boolean<div class="summaryTableDescription">[read-only]</div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#servoPins">servoPins</a> : Array<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-</table>
-</div>
-<a name="methodSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Methods</div>
-<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#clone()">clone</a>():<a href="funnel/Configuration.html">Configuration</a>
-</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#enablePowerPins()">enablePowerPins</a>():void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#setDigitalPinMode()">setDigitalPinMode</a>(pinNum:uint, mode:uint):void</div>
-<div class="summaryTableDescription">
-   デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。
-   </div>
-</td><td class="summaryTableOwnerCol">Configuration</td>
-</tr>
-</table>
-</div>
-<script type="text/javascript" language="javascript">
-<!--
-showHideInherited();
---></script>
-<div class="MainContent">
-<a name="propertyDetail"></a>
-<div class="detailSectionHeader">Property detail</div>
-<a name="ainPins"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">ainPins</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var ainPins:Array</code><p>
-  Gainer.analogInputを実際のピン番号に対応させるテーブル
-  </p><p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Gainer.html#analogInput" target="">Gainer.analogInput</a>
-</div>
-</div>
-<a name="analogPins"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">analogPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var analogPins:Array</code><p>
-  Arduino.analogPinを実際のピン番号に対応させるテーブル
-  </p><p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Arduino.html#analogPin" target="">Arduino.analogPin</a>
-</div>
-</div>
-<a name="aoutPins"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">aoutPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var aoutPins:Array</code><p>
-  Gainer.analogOutputを実際のピン番号に対応させるテーブル
-  </p><p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Gainer.html#analogOutput" target="">Gainer.analogOutput</a>
-</div>
-</div>
-<a name="button"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">button</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var button:uint</code><p>
-  Gainer.buttonを実際のピン番号に対応させるテーブル
-  </p><p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Gainer.html#button" target="">Gainer.button</a>
-</div>
-</div>
-<a name="config"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">config</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var config:Array</code><p>
-  ピンのタイプ(AIN、DIN、AOUT、DOUT)の配列
-  </p><p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Pin.html#DIN" target="">Pin.DIN</a>
-<br>
-<a href="Pin.html#DOUT" target="">Pin.DOUT</a>
-<br>
-<a href="Pin.html#AIN" target="">Pin.AIN</a>
-<br>
-<a href="Pin.html#AOUT" target="">Pin.AOUT</a>
-<br>
-<a href="Pin.html#PWM" target="">Pin.PWM</a>
-<br>
-<a href="Pin.html#SERVO" target="">Pin.SERVO</a>
-</div>
-</div>
-<a name="digitalPins"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">digitalPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var digitalPins:Array</code><p>
-  Arduino.digitsalPinを実際のピン番号に対応させるテーブル
-  </p><p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Arduino.html#digitsalPin" target="">Arduino.digitsalPin</a>
-</div>
-</div>
-<a name="dinPins"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">dinPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var dinPins:Array</code><p>
-  Gainer.digitalInputを実際のピン番号に対応させるテーブル
-  </p><p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Gainer.html#digitalInput" target="">Gainer.digitalInput</a>
-</div>
-</div>
-<a name="doutPins"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">doutPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var doutPins:Array</code><p>
-  Gainer.digitalOutputを実際のピン番号に対応させるテーブル
-  </p><p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Gainer.html#digitalOutput" target="">Gainer.digitalOutput</a>
-</div>
-</div>
-<a name="led"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">led</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var led:uint</code><p>
-  Gainer.ledを実際のピン番号に対応させるテーブル
-  </p><p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Gainer.html#led" target="">Gainer.led</a>
-</div>
-</div>
-<a name="moduleID"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">moduleID</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var moduleID:uint</code><p>
-  モジュールのID
-  </p></div>
-<a name="powerPinsEnabled"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">powerPinsEnabled</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>powerPinsEnabled:Boolean</code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get powerPinsEnabled():Boolean</code>
-<br>
-</div>
-<a name="servoPins"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">servoPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var servoPins:Array</code>
-</div>
-<a name="methodDetail"></a>
-<div class="detailSectionHeader">Method detail</div>
-<a name="clone()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">clone</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function clone():<a href="funnel/Configuration.html">Configuration</a></code>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code><a href="funnel/Configuration.html">Configuration</a></code></td>
-</tr>
-</table>
-</div>
-<a name="enablePowerPins()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">enablePowerPins</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function enablePowerPins():void</code>
-</div>
-<a name="setDigitalPinMode()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">setDigitalPinMode</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function setDigitalPinMode(pinNum:uint, mode:uint):void</code><p>
-   デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">pinNum</span>:uint</code> &mdash; ピン番号
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">mode</span>:uint</code> &mdash; 通常はデジタル入力(IN)、デジタル出力(OUT)、PWM(疑似アナログ出力)のいずれかを指定。ただし、アナログピンに対してアナログ入力(AIN)を設定することも可能。
-   </td>
-</tr>
-</table>
-</div>
-<br>
-<br>
-<hr>
-<br>
-<p></p>
-<center class="copyright"> 
-</center>
-</div>
-</body>
-</html>
-<!-- -->
+<script type="text/javascript">
+			scrollToNameAnchor();
+		</script><table class="titleTable" cellpadding="0" cellspacing="0" id="titleTable" style="display:none"><tr><td class="titleTableTitle" align="left">API Documentation</td><td class="titleTableTopNav" align="right"><a href="../package-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Packages</a>&nbsp;|&nbsp;<a href="../class-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Classes</a>&nbsp;|&nbsp;<a href="../all-index-A.html" onclick="loadClassListFrame('../index-list.html')">Index</a>&nbsp;|&nbsp;<a id="framesLink1" href="../index.html?funnel/Configuration.html&amp;funnel/class-list.html">Frames</a><a id="noFramesLink1" style="display:none" href="" onclick="parent.location=document.location"> No Frames </a></td><td class="titleTableLogo" align="right" rowspan="3"><img src="../images/logo.jpg" class="logoImage" alt=" Adobe Logo " title=" Adobe Logo "></td></tr><tr class="titleTableRow2"><td class="titleTableSubTitle" id="subTitle" align="left">Configuration</td><td class="titleTableSubNav" id="subNav" align="right"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td></tr><tr class="titleTableRow3"><td colspan="3">&nbsp;</td></tr></table><script language="javascript" type="text/javascript" xml:space="preserve">
+				<!--
+				
+					if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Configuration"); titleBar_setSubNav(false,true,false,false,false,false,false,false,true,false,false	,false,false,false,false,false);}	
+				-->
+			</script><div xmlns:fn="http://www.w3.org/2005/xpath-functions" class="MainContent"><table class="classHeaderTable" cellpadding="0" cellspacing="0"><tr><td class="classHeaderTableLabel">Package</td><td><a href="package-detail.html" onclick="javascript:loadClassListFrame('class-list.html')">funnel</a></td></tr><tr><td class="classHeaderTableLabel">Class</td><td class="classSignature">public  class  Configuration</td></tr><tr><td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Configuration  <img src="../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> Object</td></tr></table><p></p><p></p><p></p>
+	 Use this class to configure the IO module. Configuration sets up by an argument of 
+	 IOSystem constructor in order to decide at a stage of starting communication with
+	 the IOModule.
+	 
+	 <p>I/Oモジュールのコンフィギュレーションを設定するためのクラスです。コンフィギュレーションはI/Oモジュールとの通信を開始する段階で決定する必要があるため、IOSystemのコンストラクタの引数で指定します。</p>
+	           <p></p><p><span class="classHeaderTableLabel">See also</span></p><div class="seeAlso"><a href="IOSystem.html#IOSystem()" target="">IOSystem.IOSystem()</a></div><br/><hr></div><a name="propertySummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Properties</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableProperty"><tr><th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#ainPins" class="signatureLink">ainPins</a> : Array<div class="summaryTableDescription">
+		Gainer.analogInput an array of the analog input pin numbers
+		</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#analogPins" class="signatureLink">analogPins</a> : Array<div class="summaryTableDescription">
+		Arduino.analogPin an array of the analog input pin numbers
+		</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#aoutPins" class="signatureLink">aoutPins</a> : Array<div class="summaryTableDescription">
+		Gainer.analogOutput an array of the analog output pin numbers
+		</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#button" class="signatureLink">button</a> : uint<div class="summaryTableDescription">
+		Gainer.button the Pin object of the on-board button
+		</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#config" class="signatureLink">config</a> : Array<div class="summaryTableDescription">
+		pin type (AIN、DIN、AOUT、DOUT) array
+		</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#digitalPins" class="signatureLink">digitalPins</a> : Array<div class="summaryTableDescription">
+		Arduino.digitalPin an array of the digital input pin numbers
+		</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#dinPins" class="signatureLink">dinPins</a> : Array<div class="summaryTableDescription">
+		Gainer.digitalInput an array of the digital input pin numbers
+		</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#doutPins" class="signatureLink">doutPins</a> : Array<div class="summaryTableDescription">
+		Gainer.digitalOutput an array of the digital output pin numbers
+		</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#led" class="signatureLink">led</a> : uint<div class="summaryTableDescription">
+		Gainer.led the Pin object for the on-board LED
+		</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#moduleID" class="signatureLink">moduleID</a> : uint<div class="summaryTableDescription">
+		module ID
+		</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#powerPinsEnabled" class="signatureLink">powerPinsEnabled</a> : Boolean<div class="summaryTableDescription">[read-only] 
+		 </div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#servoPins" class="signatureLink">servoPins</a> : Array<div class="summaryTableDescription"></div></td><td class="summaryTableOwnerCol">Configuration</td></tr></table></div><a name="methodSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Methods </div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableMethod"><tr><th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#clone()" class="signatureLink">clone</a>():<a href="../funnel:Configuration.html">Configuration</a></div><div class="summaryTableDescription"></div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#enablePowerPins()" class="signatureLink">enablePowerPins</a>():void</div><div class="summaryTableDescription">
+		 Enables pins A2 and A3 on the arduino board to be used as GND and Power respectively
+		 as a convenience for some I2C devices (such as a BlinkM module).</div></td><td class="summaryTableOwnerCol">Configuration</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#setDigitalPinMode()" class="signatureLink">setDigitalPinMode</a>(pinNum:uint, mode:uint):void</div><div class="summaryTableDescription">
+		 Set a digital pin to input, output or PWM mode (DIN, DOUT, AIN, or PWM)
+		 
+		 デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。
+		 
+		 </div></td><td class="summaryTableOwnerCol">Configuration</td></tr></table></div><script language="javascript" type="text/javascript"><!--
+										showHideInherited();
+										--></script><div class="MainContent"><div class="detailSectionHeader">Property Detail</div><a name="propertyDetail"></a><a name="ainPins"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">ainPins</td><td class="detailHeaderType">property</td></tr></table><div class="detailBody"><code>public var ainPins:Array</code><p></p><p></p><p>
+		Gainer.analogInput an array of the analog input pin numbers
+		</p><p><span class="label">See also</span></p><div class="seeAlso"><a href="Gainer.html#analogInput" target="">Gainer.analogInput</a></div></div><a name="propertyDetail"></a><a name="analogPins"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">analogPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var analogPins:Array</code><p></p><p></p><p>
+		Arduino.analogPin an array of the analog input pin numbers
+		</p><p><span class="label">See also</span></p><div class="seeAlso"><a href="Arduino.html#analogPin" target="">Arduino.analogPin</a></div></div><a name="propertyDetail"></a><a name="aoutPins"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">aoutPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var aoutPins:Array</code><p></p><p></p><p>
+		Gainer.analogOutput an array of the analog output pin numbers
+		</p><p><span class="label">See also</span></p><div class="seeAlso"><a href="Gainer.html#analogOutput" target="">Gainer.analogOutput</a></div></div><a name="propertyDetail"></a><a name="button"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">button</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var button:uint</code><p></p><p></p><p>
+		Gainer.button the Pin object of the on-board button
+		</p><p><span class="label">See also</span></p><div class="seeAlso"><a href="Gainer.html#button" target="">Gainer.button</a></div></div><a name="propertyDetail"></a><a name="config"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">config</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var config:Array</code><p></p><p></p><p>
+		pin type (AIN、DIN、AOUT、DOUT) array
+		</p><p><span class="label">See also</span></p><div class="seeAlso"><a href="Pin.html#DIN" target="">Pin.DIN</a><br/><a href="Pin.html#DOUT" target="">Pin.DOUT</a><br/><a href="Pin.html#AIN" target="">Pin.AIN</a><br/><a href="Pin.html#AOUT" target="">Pin.AOUT</a><br/><a href="Pin.html#PWM" target="">Pin.PWM</a><br/><a href="Pin.html#SERVO" target="">Pin.SERVO</a></div></div><a name="propertyDetail"></a><a name="digitalPins"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">digitalPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var digitalPins:Array</code><p></p><p></p><p>
+		Arduino.digitalPin an array of the digital input pin numbers
+		</p><p><span class="label">See also</span></p><div class="seeAlso"><a href="Arduino.html#digitalPin" target="">Arduino.digitalPin</a></div></div><a name="propertyDetail"></a><a name="dinPins"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">dinPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var dinPins:Array</code><p></p><p></p><p>
+		Gainer.digitalInput an array of the digital input pin numbers
+		</p><p><span class="label">See also</span></p><div class="seeAlso"><a href="Gainer.html#digitalInput" target="">Gainer.digitalInput</a></div></div><a name="propertyDetail"></a><a name="doutPins"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">doutPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var doutPins:Array</code><p></p><p></p><p>
+		Gainer.digitalOutput an array of the digital output pin numbers
+		</p><p><span class="label">See also</span></p><div class="seeAlso"><a href="Gainer.html#digitalOutput" target="">Gainer.digitalOutput</a></div></div><a name="propertyDetail"></a><a name="led"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">led</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var led:uint</code><p></p><p></p><p>
+		Gainer.led the Pin object for the on-board LED
+		</p><p><span class="label">See also</span></p><div class="seeAlso"><a href="Gainer.html#led" target="">Gainer.led</a></div></div><a name="propertyDetail"></a><a name="moduleID"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">moduleID</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var moduleID:uint</code><p></p><p></p><p>
+		module ID
+		</p></div><a name="propertyDetail"></a><a name="powerPinsEnabled"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">powerPinsEnabled</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>powerPinsEnabled:Boolean</code>&nbsp;&nbsp;[read-only] <p></p><p></p><p>
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get powerPinsEnabled():Boolean</code><br/></div><a name="propertyDetail"></a><a name="servoPins"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">servoPins</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public var servoPins:Array</code><p></p></div><a name="methodDetail"></a><div class="detailSectionHeader">Method Detail</div><a name="clone()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">clone</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td></tr></table><div class="detailBody"><code> public function clone():<a href="../funnel:Configuration.html">Configuration</a></code><p></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code><a href="../funnel:Configuration.html">Configuration</a></code></td></tr></table></div><a name="enablePowerPins()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">enablePowerPins</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function enablePowerPins():void</code><p></p><p></p><p>
+		 Enables pins A2 and A3 on the arduino board to be used as GND and Power respectively
+		 as a convenience for some I2C devices (such as a BlinkM module).
+		 A2 will be set to GND and A3 will be set to VCC.
+		 
+		 <p>WARNING: do not use this function unless you are sure you know what you are doing
+		 or you could damage your I2C device.</p>
+		 </p></div><a name="setDigitalPinMode()"></a><a name="setDigitalPinMode(uint,uint)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">setDigitalPinMode</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function setDigitalPinMode(pinNum:uint, mode:uint):void</code><p></p><p></p><p>
+		 Set a digital pin to input, output or PWM mode (DIN, DOUT, AIN, or PWM)
+		 
+		 <p>デジタルピンのモードを設定します。Arduino、Fio、XBee使用時に利用します。</p>
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">pinNum</span>:uint</code> &mdash; pin number
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">mode</span>:uint</code> &mdash; normally accepts digital input, digital output, or PWM. However, analog input values can also be set.
+		 </td></tr></table></p></div><br/><br/><hr><br/><p></p><center class="copyright"><footer></footer><br/>Thu Mar 31 2011, 01:45 PM +09:00  </center></div></body></html><!--<br/>Thu Mar 31 2011, 01:45 PM +09:00  -->

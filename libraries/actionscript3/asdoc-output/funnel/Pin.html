@@ -1,597 +1,122 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="Pin,funnel.Pin,AIN,AOUT,DIN,DOUT,I2C,PWM,SERVO,average,filters,lastValue,maximum,minimum,number,preFilterValue,type,value,addFilter,clear,removeAllFilters,setFilters" name="keywords">
-<title>funnel.Pin</title>
-</head>
-<body>
-<script type="text/javascript" language="javascript" src="../asdoc.js"></script><script type="text/javascript" language="javascript" src="../cookies.js"></script><script type="text/javascript" language="javascript">
-<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- saved from url=(0014)about:internet --><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="../style.css" type="text/css" media="screen"><link rel="stylesheet" href="../print.css" type="text/css" media="print"><link rel="stylesheet" href="../override.css" type="text/css"><meta name="keywords" content="Pin,funnel.Pin,AIN,AIN,ALL,ALL,AOUT,AOUT,CHANGE,CHANGE,COMMAND_OFFSET_MULTIPLIER,CONFIGURATION_ERROR,CONFIGURATION_ERROR,DIN,DIN,DOUT,DOUT,ERROR,ERROR,FALLING_EDGE,FALLING_EDGE,FIRMATA,FIRMATA,FIRMATA_STRING,FIRMATA_STRING,HPF,I2C,I2C_POWER_PINS_READY,I2C_POWER_PINS_READY,I2C_POWER_PINS_STARTUP_TIME,I2C,IN,LPF,MODE1,MODE2,MODE3,MODE4,MODE5,MODE6,MODE7,MODE8,MOVING_AVERAGE,MOVING_AVERAGE,MULTIPOINT,OUT,PWM,PWM,READY,READY,REBOOT_ERROR,REBOOT_ERROR,RISING_EDGE,RISING_EDGE,SERVO,SERVO,SERVO_CONFIG,STRING,SYSEX,UPDATE,UPDATE,VERSION,ZB,_io,ainPins,amplitude,analogPins,aoutPins,autoUpdate,average,button,button,coef,command,command,config,configuration,digitalPins,dinPins,doutPins,filters,freq,gui,gui,gui,id,inMax,inMin,lastValue,led,led,limiter,maximum,message,minimum,moduleID,moduleId,number,offset,outMax,outMin,phase,pinCount,powerPinsEnabled,preFilterValue,samplingInterval,serviceInterval,servoPins,times,type,type,value,value,value,wave,CUBE,CUBE_ROOT,IMPULSE,LINEAR,LINEAR,SAW,SIN,SQUARE,SQUARE,SQUARE_ROOT,TRIANGLE,addEventListener,addFilter,addPoint,addSysexListener,analogInput,analogOutput,analogPin,analogPin,clear,clone,clone,digitalInput,digitalOutput,digitalPin,digitalPin,enablePowerPins,handleInput,handleSysex,handleSysex,handleSysex,ioModule,pin,processSample,processSample,processSample,processSample,removeAllFilters,removeAllPoints,removePoint,reset,scanMatrix,sendFirmataString,sendFirmataString,sendSysexMessage,sendSysex,sendSysex,setDigitalPinMode,setFilters,setServoPulseRange,setServoPulseRange,start,stop,update,update,update"><title>funnel.Pin</title></head><body><script language="javascript" type="text/javascript" src="../asdoc.js"></script><script language="javascript" type="text/javascript" src="../help.js"></script><script language="javascript" type="text/javascript" src="../cookies.js"></script><script language="javascript" type="text/javascript"><!--
 				asdocTitle = 'Pin - API Documentation';
 				var baseRef = '../';
 				window.onload = configPage;
 			--></script>
-<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
-<tr>
-<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?funnel/Pin.html&amp;funnel/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../images/logo.jpg"></td>
-</tr>
-<tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Pin</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
-</tr>
-<tr class="titleTableRow3">
-<td colspan="2">&nbsp;</td>
-</tr>
-</table>
-<script type="text/javascript" language="javascript">
-<!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Pin"); titleBar_setSubNav(true,true,false,false,true,false,true,false,false,false,false,false,false,false);}
---></script>
-<div class="MainContent">
-<table cellspacing="0" cellpadding="0" class="classHeaderTable">
-<tr>
-<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">funnel</a></td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Pin</td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Pin <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../images/inherit-arrow.gif"> flash.events.EventDispatcher</td>
-</tr>
-</table>
-<p></p>
-  I/Oモジュールの入出力ポートを表すクラスです。
-  <p></p>
-<br>
-<hr>
-</div>
-<a name="propertySummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Properties</div>
-<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#average">average</a> : Number<div class="summaryTableDescription">[read-only]
-   
-   平均値
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#filters">filters</a> : Array<div class="summaryTableDescription">
-   ポートに適応するフィルタ配列
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lastValue">lastValue</a> : Number<div class="summaryTableDescription">[read-only]
-   ポートの変化する前の値
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#maximum">maximum</a> : Number<div class="summaryTableDescription">[read-only]
-   
-   最大値
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#minimum">minimum</a> : Number<div class="summaryTableDescription">[read-only]
-   
-   最小値
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#number">number</a> : uint<div class="summaryTableDescription">[read-only]
-   ポート番号
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#preFilterValue">preFilterValue</a> : Number<div class="summaryTableDescription">[read-only]</div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#type">type</a> : uint<div class="summaryTableDescription">[read-only]
-   ポートのタイプ(AIN、DIN、AOUT、DOUT)
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#value">value</a> : Number<div class="summaryTableDescription">
-   センサからの入力値、またはアクチュエータへの出力値
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-</table>
-</div>
-<a name="methodSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Methods</div>
-<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#Pin()">Pin</a>(number:uint, type:uint)</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#addFilter()">addFilter</a>(newFilter:*):void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#clear()">clear</a>():void</div>
-<div class="summaryTableDescription">
-   ヒストリをリセットします。
-   
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#removeAllFilters()">removeAllFilters</a>():void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#setFilters()">setFilters</a>(newFilters:Array):void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-</table>
-</div>
-<a name="eventSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Events</div>
-<table id="summaryTableEvent" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Event</th><th>Summary</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#event:change">change</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  ポートの値が変化
-  </td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#event:fallingEdge">fallingEdge</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  ポートの値が0以外から0に変化
-  </td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#event:risingEdge">risingEdge</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  ポートの値が0から0以外に変化
-  </td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-</table>
-</div>
-<a name="constantSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Constants</div>
-<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#AIN">AIN</a> : uint = 0<div class="summaryTableDescription">[static]
-   アナログ入力
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#AOUT">AOUT</a> : uint = 2<div class="summaryTableDescription">[static]
-   アナログ出力
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DIN">DIN</a> : uint = 1<div class="summaryTableDescription">[static]
-   デジタル入力
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DOUT">DOUT</a> : uint = 3<div class="summaryTableDescription">[static]
-   デジタル出力
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#I2C">I2C</a> : uint = 6<div class="summaryTableDescription">[static]
-   Pins for I2C
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#PWM">PWM</a> : uint = 2<div class="summaryTableDescription">[static]</div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SERVO">SERVO</a> : uint = 4<div class="summaryTableDescription">[static]
-   Pins for servo
-   </div>
-</td><td class="summaryTableOwnerCol">Pin</td>
-</tr>
-</table>
-</div>
-<script type="text/javascript" language="javascript">
-<!--
-showHideInherited();
---></script>
-<div class="MainContent">
-<a name="propertyDetail"></a>
-<div class="detailSectionHeader">Property detail</div>
-<a name="average"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">average</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>average:Number</code>&nbsp;&nbsp;[read-only]<p>
-   
-   平均値
-   
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get average():Number</code>
-<br>
-</div>
-<a name="filters"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">filters</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>filters:Array</code>&nbsp;&nbsp;[read-write]<p>
-   ポートに適応するフィルタ配列
-   
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get filters():Array</code>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set filters(value:Array):void</code>
-<br>
-</div>
-<a name="lastValue"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">lastValue</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>lastValue:Number</code>&nbsp;&nbsp;[read-only]<p>
-   ポートの変化する前の値
-   
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get lastValue():Number</code>
-<br>
-</div>
-<a name="maximum"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">maximum</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>maximum:Number</code>&nbsp;&nbsp;[read-only]<p>
-   
-   最大値
-   
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get maximum():Number</code>
-<br>
-</div>
-<a name="minimum"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">minimum</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>minimum:Number</code>&nbsp;&nbsp;[read-only]<p>
-   
-   最小値
-   
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get minimum():Number</code>
-<br>
-</div>
-<a name="number"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">number</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>number:uint</code>&nbsp;&nbsp;[read-only]<p>
-   ポート番号
-   
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get number():uint</code>
-<br>
-</div>
-<a name="preFilterValue"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">preFilterValue</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>preFilterValue:Number</code>&nbsp;&nbsp;[read-only]<span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get preFilterValue():Number</code>
-<br>
-</div>
-<a name="type"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">type</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>type:uint</code>&nbsp;&nbsp;[read-only]<p>
-   ポートのタイプ(AIN、DIN、AOUT、DOUT)
-   
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get type():uint</code>
-<br>
-</div>
-<a name="value"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">value</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>value:Number</code>&nbsp;&nbsp;[read-write]<p>
-   センサからの入力値、またはアクチュエータへの出力値
-   
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get value():Number</code>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set value(value:Number):void</code>
-<br>
-</div>
-<a name="constructorDetail"></a>
-<div class="detailSectionHeader">Constructor detail</div>
-<a name="Pin()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">Pin</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function Pin(number:uint, type:uint)</code><p>
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">number</span>:uint</code> &mdash; ポート番号
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">type</span>:uint</code> &mdash; ポートのタイプ(AIN、DIN、AOUT、DOUT)
-   
-   </td>
-</tr>
-</table>
-</div>
-<a name="methodDetail"></a>
-<div class="detailSectionHeader">Method detail</div>
-<a name="addFilter()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">addFilter</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function addFilter(newFilter:*):void</code><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">newFilter</span>:*</code></td>
-</tr>
-</table>
-</div>
-<a name="clear()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">clear</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function clear():void</code><p>
-   ヒストリをリセットします。
-   
-   </p></div>
-<a name="removeAllFilters()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">removeAllFilters</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function removeAllFilters():void</code>
-</div>
-<a name="setFilters()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">setFilters</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function setFilters(newFilters:Array):void</code><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">newFilters</span>:Array</code></td>
-</tr>
-</table>
-</div>
-<div class="detailSectionHeader">Event detail</div>
-<a name="event:change"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">change</td><td class="detailHeaderType">event&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<span class="label">Event object type: </span><a href="PinEvent.html"><code>PinEvent</code></a>
-<br>
-<p></p><p>
-  ポートの値が変化
-  </p></div>
-<a name="event:fallingEdge"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">fallingEdge</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<span class="label">Event object type: </span><a href="PinEvent.html"><code>PinEvent</code></a>
-<br>
-<p></p><p>
-  ポートの値が0以外から0に変化
-  </p></div>
-<a name="event:risingEdge"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">risingEdge</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<span class="label">Event object type: </span><a href="PinEvent.html"><code>PinEvent</code></a>
-<br>
-<p></p><p>
-  ポートの値が0から0以外に変化
-  </p></div>
-<a name="constantDetail"></a>
-<div class="detailSectionHeader">Constant detail</div>
-<a name="AIN"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">AIN</td><td class="detailHeaderType">constant</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static const AIN:uint = 0</code><p>
-   アナログ入力
-   </p></div>
-<a name="AOUT"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">AOUT</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static const AOUT:uint = 2</code><p>
-   アナログ出力
-   </p></div>
-<a name="DIN"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">DIN</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static const DIN:uint = 1</code><p>
-   デジタル入力
-   </p></div>
-<a name="DOUT"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">DOUT</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static const DOUT:uint = 3</code><p>
-   デジタル出力
-   </p></div>
-<a name="I2C"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">I2C</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static const I2C:uint = 6</code><p>
-   Pins for I2C
-   </p></div>
-<a name="PWM"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">PWM</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static const PWM:uint = 2</code>
-</div>
-<a name="SERVO"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">SERVO</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static const SERVO:uint = 4</code><p>
-   Pins for servo
-   </p></div>
-<br>
-<br>
-<hr>
-<br>
-<p></p>
-<center class="copyright"> 
-</center>
-</div>
-</body>
-</html>
-<!-- -->
+<script type="text/javascript">
+			scrollToNameAnchor();
+		</script><table class="titleTable" cellpadding="0" cellspacing="0" id="titleTable" style="display:none"><tr><td class="titleTableTitle" align="left">API Documentation</td><td class="titleTableTopNav" align="right"><a href="../package-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Packages</a>&nbsp;|&nbsp;<a href="../class-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Classes</a>&nbsp;|&nbsp;<a href="../all-index-A.html" onclick="loadClassListFrame('../index-list.html')">Index</a>&nbsp;|&nbsp;<a id="framesLink1" href="../index.html?funnel/Pin.html&amp;funnel/class-list.html">Frames</a><a id="noFramesLink1" style="display:none" href="" onclick="parent.location=document.location"> No Frames </a></td><td class="titleTableLogo" align="right" rowspan="3"><img src="../images/logo.jpg" class="logoImage" alt=" Adobe Logo " title=" Adobe Logo "></td></tr><tr class="titleTableRow2"><td class="titleTableSubTitle" id="subTitle" align="left">Pin</td><td class="titleTableSubNav" id="subNav" align="right"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a>&nbsp;| <a href="#constantSummary">Constants</a></td></tr><tr class="titleTableRow3"><td colspan="3">&nbsp;</td></tr></table><script language="javascript" type="text/javascript" xml:space="preserve">
+				<!--
+				
+					if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Pin"); titleBar_setSubNav(true,true,false,false,false,false,true,false,true,false,false	,false,false,false,false,false);}	
+				-->
+			</script><div xmlns:fn="http://www.w3.org/2005/xpath-functions" class="MainContent"><table class="classHeaderTable" cellpadding="0" cellspacing="0"><tr><td class="classHeaderTableLabel">Package</td><td><a href="package-detail.html" onclick="javascript:loadClassListFrame('class-list.html')">funnel</a></td></tr><tr><td class="classHeaderTableLabel">Class</td><td class="classSignature">public  class  Pin</td></tr><tr><td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Pin  <img src="../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> flash.events.EventDispatcher</td></tr></table><p></p><p></p><p></p>
+	 The Pin class represents the Input and Output pins of the I/O module.
+	 
+	 <p>I/Oモジュールの入出力ポートを表すクラスです。</p>
+	           <p></p><br/><hr></div><a name="propertySummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Properties</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableProperty"><tr><th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#average" class="signatureLink">average</a> : Number<div class="summaryTableDescription">[read-only] 
+		 average value
+		 平均値
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#filters" class="signatureLink">filters</a> : Array<div class="summaryTableDescription">
+		 Get filters for the pin.</div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#lastValue" class="signatureLink">lastValue</a> : Number<div class="summaryTableDescription">[read-only] 
+		 returns the last set velue
+		 ポートの変化する前の値
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#maximum" class="signatureLink">maximum</a> : Number<div class="summaryTableDescription">[read-only] 
+		 maximum value
+		 最大値
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#minimum" class="signatureLink">minimum</a> : Number<div class="summaryTableDescription">[read-only] 
+		 minimum value
+		 最小値
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#number" class="signatureLink">number</a> : uint<div class="summaryTableDescription">[read-only] 
+		 port number
+		 ポート番号
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#preFilterValue" class="signatureLink">preFilterValue</a> : Number<div class="summaryTableDescription">[read-only] </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#type" class="signatureLink">type</a> : uint<div class="summaryTableDescription">[read-only] 
+		 port type(AIN, DIN, AOUT/PWM, DOUT, SERVO, I2C)
+		 ポートのタイプ(AIN、DIN、AOUT/PWM、DOUT, SERVO, I2C)
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#value" class="signatureLink">value</a> : Number<div class="summaryTableDescription">
+		 Get input from a sensor or actuator.</div></td><td class="summaryTableOwnerCol">Pin</td></tr></table></div><a name="methodSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Methods </div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableMethod"><tr><th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#Pin()" class="signatureLink">Pin</a>(number:uint, type:uint)</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#addFilter()" class="signatureLink">addFilter</a>(newFilter:*):void</div><div class="summaryTableDescription">
+		 Add a new filter to the pin
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#clear()" class="signatureLink">clear</a>():void</div><div class="summaryTableDescription">
+		 Reset the history.</div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#removeAllFilters()" class="signatureLink">removeAllFilters</a>():void</div><div class="summaryTableDescription">
+		 Removes all filters from the pin
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#setFilters()" class="signatureLink">setFilters</a>(newFilters:Array):void</div><div class="summaryTableDescription">
+		 Sets new filters to the pin
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr></table></div><a name="eventSummary"></a><div class="summarySection"><div class="summaryTableTitle">Events</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableEvent"><tr><th>&nbsp;</th><th colspan="2">Event</th><th> Summary </th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#event:change" class="signatureLink">change</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#event:fallingEdge" class="signatureLink">fallingEdge</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#event:risingEdge" class="signatureLink">risingEdge</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol">Pin</td></tr></table></div><a name="constantSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Constants</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableConstant"><tr><th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#AIN" class="signatureLink">AIN</a> : uint = 0<div class="summaryTableDescription">[static] 
+		 analog input
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#AOUT" class="signatureLink">AOUT</a> : uint = 2<div class="summaryTableDescription">[static] 
+		 analog output and pwm output
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#DIN" class="signatureLink">DIN</a> : uint = 1<div class="summaryTableDescription">[static] 
+		 digital input
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#DOUT" class="signatureLink">DOUT</a> : uint = 3<div class="summaryTableDescription">[static] 
+		 digital output
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#I2C" class="signatureLink">I2C</a> : uint = 6<div class="summaryTableDescription">[static] 
+		 Pins for I2C
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#PWM" class="signatureLink">PWM</a> : uint = 2<div class="summaryTableDescription">[static] </div></td><td class="summaryTableOwnerCol">Pin</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#SERVO" class="signatureLink">SERVO</a> : uint = 4<div class="summaryTableDescription">[static] 
+		 Pins for servo
+		 </div></td><td class="summaryTableOwnerCol">Pin</td></tr></table></div><script language="javascript" type="text/javascript"><!--
+										showHideInherited();
+										--></script><div class="MainContent"><div class="detailSectionHeader">Property Detail</div><a name="propertyDetail"></a><a name="average"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">average</td><td class="detailHeaderType">property</td></tr></table><div class="detailBody"><code>average:Number</code>&nbsp;&nbsp;[read-only] <p></p><p></p><p>
+		 average value
+		 <p>平均値</p>
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get average():Number</code><br/></div><a name="propertyDetail"></a><a name="filters"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">filters</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>filters:Array</code><p></p><p></p><p>
+		 Get filters for the pin. Set filters for the pin.
+		 <p>ポートに適応するフィルタ配列</p>
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get filters():Array</code><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function set filters(value:Array):void</code><br/></div><a name="propertyDetail"></a><a name="lastValue"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">lastValue</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>lastValue:Number</code>&nbsp;&nbsp;[read-only] <p></p><p></p><p>
+		 returns the last set velue
+		 <p>ポートの変化する前の値</p>
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get lastValue():Number</code><br/></div><a name="propertyDetail"></a><a name="maximum"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">maximum</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>maximum:Number</code>&nbsp;&nbsp;[read-only] <p></p><p></p><p>
+		 maximum value
+		 <p>最大値</p>
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get maximum():Number</code><br/></div><a name="propertyDetail"></a><a name="minimum"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">minimum</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>minimum:Number</code>&nbsp;&nbsp;[read-only] <p></p><p></p><p>
+		 minimum value
+		 <p>最小値</p>
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get minimum():Number</code><br/></div><a name="propertyDetail"></a><a name="number"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">number</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>number:uint</code>&nbsp;&nbsp;[read-only] <p></p><p></p><p>
+		 port number
+		 <p>ポート番号</p>
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get number():uint</code><br/></div><a name="propertyDetail"></a><a name="preFilterValue"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">preFilterValue</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>preFilterValue:Number</code>&nbsp;&nbsp;[read-only] <p></p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get preFilterValue():Number</code><br/></div><a name="propertyDetail"></a><a name="type"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">type</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>type:uint</code>&nbsp;&nbsp;[read-only] <p></p><p></p><p>
+		 port type(AIN, DIN, AOUT/PWM, DOUT, SERVO, I2C)
+		 <p>ポートのタイプ(AIN、DIN、AOUT/PWM、DOUT, SERVO, I2C)</p>
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get type():uint</code><br/></div><a name="propertyDetail"></a><a name="value"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">value</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>value:Number</code><p></p><p></p><p>
+		 Get input from a sensor or actuator. Sets value of a pin from 0.0 to 1.0.
+		 <p>センサからの入力値、またはアクチュエータへの出力値</p>
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get value():Number</code><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function set value(value:Number):void</code><br/></div><a name="constructorDetail"></a><div class="detailSectionHeader">Constructor Detail</div><a name="Pin()"></a><a name="Pin(uint,uint)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">Pin</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">Constructor</td></tr></table><div class="detailBody"><code>public function Pin(number:uint, type:uint)</code><p></p><p>
+		 
+		 </p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">number</span>:uint</code> &mdash; port number
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">type</span>:uint</code> &mdash; port type(AIN、DIN、AOUT/PWM、DOUT, SERVO, I2C)
+		 
+		 </td></tr></table></div><a name="methodDetail"></a><div class="detailSectionHeader">Method Detail</div><a name="addFilter()"></a><a name="addFilter(any)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">addFilter</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td></tr></table><div class="detailBody"><code> public function addFilter(newFilter:*):void</code><p></p><p></p><p>
+		 Add a new filter to the pin
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">newFilter</span>:*</code></td></tr></table></p></div><a name="clear()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">clear</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function clear():void</code><p></p><p></p><p>
+		 Reset the history.
+		 <p>ヒストリをリセットします。</p>
+		 </p></div><a name="removeAllFilters()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">removeAllFilters</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function removeAllFilters():void</code><p></p><p></p><p>
+		 Removes all filters from the pin
+		 </p></div><a name="setFilters()"></a><a name="setFilters(Array)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">setFilters</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function setFilters(newFilters:Array):void</code><p></p><p></p><p>
+		 Sets new filters to the pin
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">newFilters</span>:Array</code></td></tr></table></p></div><div class="detailSectionHeader"> Event Detail </div><a name="event:change"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">change</td><td class="detailHeaderType"> Event </td></tr></table><div class="detailBody"><span class="label">Event Object Type: </span><code>PinEvent</code><br/><p></p><p></p><p>
+		 pin value changed
+		 <p>ポートの値が変化</p>
+		 </p><p>
+	 </p></div><a name="event:fallingEdge"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">fallingEdge</td><td class="detailHeaderType"> Event </td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><span class="label">Event Object Type: </span><code>PinEvent</code><br/><p></p><p></p><p>
+		 pin value decreasing
+		 <p>ポートの値が0以外から0に変化</p>
+		 </p><p>
+	 </p></div><a name="event:risingEdge"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">risingEdge</td><td class="detailHeaderType"> Event </td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><span class="label">Event Object Type: </span><code>PinEvent</code><br/><p></p><p></p><p>
+		 pin value increasing
+		 <p>ポートの値が0から0以外に変化</p>
+		 </p><p>
+	 </p></div><div class="detailSectionHeader">Constant Detail</div><a name="constantDetail"></a><a name="AIN"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">AIN</td><td class="detailHeaderType">Constant</td></tr></table><div class="detailBody"><code>public static const AIN:uint = 0</code><p></p><p></p><p>
+		 analog input
+		 </p></div><a name="constantDetail"></a><a name="AOUT"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">AOUT</td><td class="detailHeaderType">Constant</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public static const AOUT:uint = 2</code><p></p><p></p><p>
+		 analog output and pwm output
+		 </p></div><a name="constantDetail"></a><a name="DIN"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">DIN</td><td class="detailHeaderType">Constant</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public static const DIN:uint = 1</code><p></p><p></p><p>
+		 digital input
+		 </p></div><a name="constantDetail"></a><a name="DOUT"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">DOUT</td><td class="detailHeaderType">Constant</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public static const DOUT:uint = 3</code><p></p><p></p><p>
+		 digital output
+		 </p></div><a name="constantDetail"></a><a name="I2C"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">I2C</td><td class="detailHeaderType">Constant</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public static const I2C:uint = 6</code><p></p><p></p><p>
+		 Pins for I2C
+		 </p></div><a name="constantDetail"></a><a name="PWM"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">PWM</td><td class="detailHeaderType">Constant</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public static const PWM:uint = 2</code><p></p></div><a name="constantDetail"></a><a name="SERVO"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">SERVO</td><td class="detailHeaderType">Constant</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public static const SERVO:uint = 4</code><p></p><p></p><p>
+		 Pins for servo
+		 </p></div><br/><br/><hr><br/><p></p><center class="copyright"><footer></footer><br/>Thu Mar 31 2011, 01:45 PM +09:00  </center></div></body></html><!--<br/>Thu Mar 31 2011, 01:45 PM +09:00  -->

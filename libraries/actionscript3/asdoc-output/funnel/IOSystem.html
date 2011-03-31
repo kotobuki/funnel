@@ -1,441 +1,78 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="IOSystem,funnel.IOSystem,I2C_POWER_PINS_STARTUP_TIME,autoUpdate,samplingInterval,ioModule,sendSysex,update" name="keywords">
-<title>funnel.IOSystem</title>
-</head>
-<body>
-<script type="text/javascript" language="javascript" src="../asdoc.js"></script><script type="text/javascript" language="javascript" src="../cookies.js"></script><script type="text/javascript" language="javascript">
-<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- saved from url=(0014)about:internet --><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="../style.css" type="text/css" media="screen"><link rel="stylesheet" href="../print.css" type="text/css" media="print"><link rel="stylesheet" href="../override.css" type="text/css"><meta name="keywords" content="IOSystem,funnel.IOSystem,AIN,AIN,ALL,ALL,AOUT,AOUT,CHANGE,CHANGE,COMMAND_OFFSET_MULTIPLIER,CONFIGURATION_ERROR,CONFIGURATION_ERROR,DIN,DIN,DOUT,DOUT,ERROR,ERROR,FALLING_EDGE,FALLING_EDGE,FIRMATA,FIRMATA,FIRMATA_STRING,FIRMATA_STRING,HPF,I2C,I2C_POWER_PINS_READY,I2C_POWER_PINS_READY,I2C_POWER_PINS_STARTUP_TIME,I2C,IN,LPF,MODE1,MODE2,MODE3,MODE4,MODE5,MODE6,MODE7,MODE8,MOVING_AVERAGE,MOVING_AVERAGE,MULTIPOINT,OUT,PWM,PWM,READY,READY,REBOOT_ERROR,REBOOT_ERROR,RISING_EDGE,RISING_EDGE,SERVO,SERVO,SERVO_CONFIG,STRING,SYSEX,UPDATE,UPDATE,VERSION,ZB,_io,ainPins,amplitude,analogPins,aoutPins,autoUpdate,average,button,button,coef,command,command,config,configuration,digitalPins,dinPins,doutPins,filters,freq,gui,gui,gui,id,inMax,inMin,lastValue,led,led,limiter,maximum,message,minimum,moduleID,moduleId,number,offset,outMax,outMin,phase,pinCount,powerPinsEnabled,preFilterValue,samplingInterval,serviceInterval,servoPins,times,type,type,value,value,value,wave,CUBE,CUBE_ROOT,IMPULSE,LINEAR,LINEAR,SAW,SIN,SQUARE,SQUARE,SQUARE_ROOT,TRIANGLE,addEventListener,addFilter,addPoint,addSysexListener,analogInput,analogOutput,analogPin,analogPin,clear,clone,clone,digitalInput,digitalOutput,digitalPin,digitalPin,enablePowerPins,handleInput,handleSysex,handleSysex,handleSysex,ioModule,pin,processSample,processSample,processSample,processSample,removeAllFilters,removeAllPoints,removePoint,reset,scanMatrix,sendFirmataString,sendFirmataString,sendSysexMessage,sendSysex,sendSysex,setDigitalPinMode,setFilters,setServoPulseRange,setServoPulseRange,start,stop,update,update,update"><title>funnel.IOSystem</title></head><body><script language="javascript" type="text/javascript" src="../asdoc.js"></script><script language="javascript" type="text/javascript" src="../help.js"></script><script language="javascript" type="text/javascript" src="../cookies.js"></script><script language="javascript" type="text/javascript"><!--
 				asdocTitle = 'IOSystem - API Documentation';
 				var baseRef = '../';
 				window.onload = configPage;
 			--></script>
-<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
-<tr>
-<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?funnel/IOSystem.html&amp;funnel/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../images/logo.jpg"></td>
-</tr>
-<tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;IOSystem</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
-</tr>
-<tr class="titleTableRow3">
-<td colspan="2">&nbsp;</td>
-</tr>
-</table>
-<script type="text/javascript" language="javascript">
-<!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class IOSystem"); titleBar_setSubNav(true,true,false,false,true,false,true,false,false,false,false,false,false,false);}
---></script>
-<div class="MainContent">
-<table cellspacing="0" cellpadding="0" class="classHeaderTable">
-<tr>
-<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">funnel</a></td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class IOSystem</td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">IOSystem <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../images/inherit-arrow.gif"> flash.events.EventDispatcher</td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Subclasses</td><td><a href="funnel/Arduino.html">Arduino</a>, <a href="funnel/Fio.html">Fio</a>, <a href="funnel/Gainer.html">Gainer</a>, <a href="funnel/MatrixLED.html">MatrixLED</a>, <a href="funnel/XBee.html">XBee</a></td>
-</tr>
-</table>
-<p></p>
-  複数のI/Oモジュールから構成されるシステムを表現するためのクラスです。
-  <p></p>
-<br>
-<hr>
-</div>
-<a name="propertySummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Properties</div>
-<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#autoUpdate">autoUpdate</a> : Boolean<div class="summaryTableDescription">
-   出力ポートを手動で更新する場合はfalseにします。
-   </div>
-</td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#samplingInterval">samplingInterval</a> : int<div class="summaryTableDescription">
-   サンプリング間隔
-   </div>
-</td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-</table>
-</div>
-<a name="methodSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Methods</div>
-<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#IOSystem()">IOSystem</a>(configs:Array, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33)</div>
-<div class="summaryTableDescription">
-   </div>
-</td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#ioModule()">ioModule</a>(moduleNum:uint):<a href="funnel/IOModule.html">IOModule</a>
-</div>
-<div class="summaryTableDescription">
-   moduleNumで指定した番号のI/Oモジュールを取得します。
-   </div>
-</td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#sendSysex()">sendSysex</a>(moduleNum:uint, command:uint, sysexMessage:Array):void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#update()">update</a>():void</div>
-<div class="summaryTableDescription">
-   全ての出力ポートの値を更新します。通常、autoUpdateをfalseに設定して利用します。
-   </div>
-</td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-</table>
-</div>
-<a name="eventSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Events</div>
-<table id="summaryTableEvent" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Event</th><th>Summary</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#event:configurationError">configurationError</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  指定したコンフィギュレーションの設定に失敗したとき送出されます。
-  </td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#event:error">error</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  エラーが起きたとき送出されます。
-  </td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#event:firmataString">firmataString</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-   This event will be sent when a Firmata String is received from an I/O module
-   </td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#event:i2cPowerPinsReady">i2cPowerPinsReady</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-   This event will be sent when I2C power pins of an I/O module is ready
-   </td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#event:ready">ready</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-   This event will be sent when an I/O module is ready
-   </td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#event:rebootError">rebootError</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  I/Oモジュールの再起動に失敗したとき送出されます。
-  </td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-</table>
-</div>
-<a name="constantSummary"></a><a name="protectedConstantSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Protected Constants</div>
-<table id="summaryTableProtectedConstant" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#I2C_POWER_PINS_STARTUP_TIME">I2C_POWER_PINS_STARTUP_TIME</a> : uint = 500<div class="summaryTableDescription">[static]</div>
-</td><td class="summaryTableOwnerCol">IOSystem</td>
-</tr>
-</table>
-</div>
-<script type="text/javascript" language="javascript">
-<!--
-showHideInherited();
---></script>
-<div class="MainContent">
-<a name="propertyDetail"></a>
-<div class="detailSectionHeader">Property detail</div>
-<a name="autoUpdate"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">autoUpdate</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var autoUpdate:Boolean</code><p>
-   出力ポートを手動で更新する場合はfalseにします。
-   </p><p>The default value is <code>true</code>.</p>
-</div>
-<a name="samplingInterval"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">samplingInterval</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>samplingInterval:int</code>&nbsp;&nbsp;[read-write]<p>
-   サンプリング間隔
-   </p><p>The default value is <code>33</code>.</p>
-<span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get samplingInterval():int</code>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set samplingInterval(value:int):void</code>
-<br>
-</div>
-<a name="constructorDetail"></a>
-<div class="detailSectionHeader">Constructor detail</div>
-<a name="IOSystem()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">IOSystem</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function IOSystem(configs:Array, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33)</code><p>
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">configs</span>:Array</code> &mdash; Configuration配列
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">host</span>:String</code> (default = "<code>localhost</code>")<code></code> &mdash; ホスト名
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">portNum</span>:Number</code> (default = <code>9000</code>)<code></code> &mdash; ポート番号
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">samplingInterval</span>:int</code> (default = <code>33</code>)<code></code> &mdash; サンプリング間隔(ms)
-   </td>
-</tr>
-</table>
-</div>
-<a name="methodDetail"></a>
-<div class="detailSectionHeader">Method detail</div>
-<a name="ioModule()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">ioModule</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function ioModule(moduleNum:uint):<a href="funnel/IOModule.html">IOModule</a></code><p>
-   moduleNumで指定した番号のI/Oモジュールを取得します。
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">moduleNum</span>:uint</code> &mdash; I/Oモジュールの番号。このIDは、Configuration#moduleIDと同じものを指定します。
-   </td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code><a href="funnel/IOModule.html">IOModule</a></code> &mdash; 
-                        moduleNumで指定したIOModuleオブジェクト
-   
-                        
-                     </td>
-</tr>
-</table>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="IOModule.html" target="">IOModule</a>
-<br>
-<a href="Configuration.html#moduleID" target="">Configuration.moduleID</a>
-</div>
-</div>
-<a name="sendSysex()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">sendSysex</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function sendSysex(moduleNum:uint, command:uint, sysexMessage:Array):void</code><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">moduleNum</span>:uint</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">command</span>:uint</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">sysexMessage</span>:Array</code></td>
-</tr>
-</table>
-</div>
-<a name="update()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">update</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function update():void</code><p>
-   全ての出力ポートの値を更新します。通常、autoUpdateをfalseに設定して利用します。
-   </p><p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="IOSystem.html#autoUpdate" target="">IOSystem.autoUpdate</a>
-</div>
-</div>
-<div class="detailSectionHeader">Event detail</div>
-<a name="event:configurationError"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">configurationError</td><td class="detailHeaderType">event&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<span class="label">Event object type: </span><a href="FunnelErrorEvent.html"><code>FunnelErrorEvent</code></a>
-<br>
-<p></p><p>
-  指定したコンフィギュレーションの設定に失敗したとき送出されます。
-  </p></div>
-<a name="event:error"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">error</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<span class="label">Event object type: </span><a href="FunnelErrorEvent.html"><code>FunnelErrorEvent</code></a>
-<br>
-<p></p><p>
-  エラーが起きたとき送出されます。
-  </p></div>
-<a name="event:firmataString"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">firmataString</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<span class="label">Event object type: </span><a href="FunnelEvent.html"><code>FunnelEvent</code></a>
-<br>
-<p></p><p>
-   This event will be sent when a Firmata String is received from an I/O module
-   </p></div>
-<a name="event:i2cPowerPinsReady"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">i2cPowerPinsReady</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<span class="label">Event object type: </span><a href="FunnelEvent.html"><code>FunnelEvent</code></a>
-<br>
-<p></p><p>
-   This event will be sent when I2C power pins of an I/O module is ready
-   </p></div>
-<a name="event:ready"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">ready</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<span class="label">Event object type: </span><a href="FunnelEvent.html"><code>FunnelEvent</code></a>
-<br>
-<p></p><p>
-   This event will be sent when an I/O module is ready
-   </p></div>
-<a name="event:rebootError"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">rebootError</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<span class="label">Event object type: </span><a href="FunnelErrorEvent.html"><code>FunnelErrorEvent</code></a>
-<br>
-<p></p><p>
-  I/Oモジュールの再起動に失敗したとき送出されます。
-  </p></div>
-<a name="constantDetail"></a>
-<div class="detailSectionHeader">Constant detail</div>
-<a name="I2C_POWER_PINS_STARTUP_TIME"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">I2C_POWER_PINS_STARTUP_TIME</td><td class="detailHeaderType">constant</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>protected static const I2C_POWER_PINS_STARTUP_TIME:uint = 500</code>
-</div>
-<br>
-<br>
-<hr>
-<br>
-<p></p>
-<center class="copyright"> 
-</center>
-</div>
-</body>
-</html>
-<!-- -->
+<script type="text/javascript">
+			scrollToNameAnchor();
+		</script><table class="titleTable" cellpadding="0" cellspacing="0" id="titleTable" style="display:none"><tr><td class="titleTableTitle" align="left">API Documentation</td><td class="titleTableTopNav" align="right"><a href="../package-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Packages</a>&nbsp;|&nbsp;<a href="../class-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Classes</a>&nbsp;|&nbsp;<a href="../all-index-A.html" onclick="loadClassListFrame('../index-list.html')">Index</a>&nbsp;|&nbsp;<a id="framesLink1" href="../index.html?funnel/IOSystem.html&amp;funnel/class-list.html">Frames</a><a id="noFramesLink1" style="display:none" href="" onclick="parent.location=document.location"> No Frames </a></td><td class="titleTableLogo" align="right" rowspan="3"><img src="../images/logo.jpg" class="logoImage" alt=" Adobe Logo " title=" Adobe Logo "></td></tr><tr class="titleTableRow2"><td class="titleTableSubTitle" id="subTitle" align="left">IOSystem</td><td class="titleTableSubNav" id="subNav" align="right"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a>&nbsp;| <a href="#constantSummary">Constants</a></td></tr><tr class="titleTableRow3"><td colspan="3">&nbsp;</td></tr></table><script language="javascript" type="text/javascript" xml:space="preserve">
+				<!--
+				
+					if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("IOSystem"); titleBar_setSubNav(true,true,false,false,false,false,true,false,true,false,false	,false,false,false,false,false);}	
+				-->
+			</script><div xmlns:fn="http://www.w3.org/2005/xpath-functions" class="MainContent"><table class="classHeaderTable" cellpadding="0" cellspacing="0"><tr><td class="classHeaderTableLabel">Package</td><td><a href="package-detail.html" onclick="javascript:loadClassListFrame('class-list.html')">funnel</a></td></tr><tr><td class="classHeaderTableLabel">Class</td><td class="classSignature">public  class  IOSystem</td></tr><tr><td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">IOSystem  <img src="../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> flash.events.EventDispatcher</td></tr><tr><td class="classHeaderTableLabel">Subclasses</td><td> <a href="../funnel/Arduino.html">Arduino</a>,  <a href="../funnel/Fio.html">Fio</a>,  <a href="../funnel/Gainer.html">Gainer</a>,  <a href="../funnel/MatrixLED.html">MatrixLED</a>,  <a href="../funnel/XBee.html">XBee</a></td></tr></table><p></p><p></p><p></p>
+	 IOSystem for a module (Arduino, Fio, XBee, etc).
+	 
+	 <p>複数のI/Oモジュールから構成されるシステムを表現するためのクラスです。</p>
+	           <p></p><br/><hr></div><a name="propertySummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Properties</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableProperty"><tr><th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#autoUpdate" class="signatureLink">autoUpdate</a> : Boolean<div class="summaryTableDescription">
+		 Set to false if you want to manually update the output port.</div></td><td class="summaryTableOwnerCol">IOSystem</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#samplingInterval" class="signatureLink">samplingInterval</a> : int<div class="summaryTableDescription">
+		 sampling interval in milliseconds
+		 
+		 サンプリング間隔
+		 </div></td><td class="summaryTableOwnerCol">IOSystem</td></tr></table></div><a name="methodSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Methods </div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableMethod"><tr><th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#IOSystem()" class="signatureLink">IOSystem</a>(configs:Array, host:String = localhost, portNum:Number = 9000, samplingInterval:int = 33)</div><div class="summaryTableDescription">
+		 </div></td><td class="summaryTableOwnerCol">IOSystem</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#ioModule()" class="signatureLink">ioModule</a>(moduleNum:uint):<a href="../funnel:IOModule.html">IOModule</a></div><div class="summaryTableDescription">
+		 Returns a reference to the IOModule associated with the specified module number.</div></td><td class="summaryTableOwnerCol">IOSystem</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#sendSysex()" class="signatureLink">sendSysex</a>(moduleNum:uint, command:uint, sysexMessage:Array):void</div><div class="summaryTableDescription"></div></td><td class="summaryTableOwnerCol">IOSystem</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#update()" class="signatureLink">update</a>():void</div><div class="summaryTableDescription">
+		 Update the value of all output ports.</div></td><td class="summaryTableOwnerCol">IOSystem</td></tr></table></div><a name="eventSummary"></a><div class="summarySection"><div class="summaryTableTitle">Events</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableEvent"><tr><th>&nbsp;</th><th colspan="2">Event</th><th> Summary </th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#event:configurationError" class="signatureLink">configurationError</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol">IOSystem</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#event:error" class="signatureLink">error</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol">IOSystem</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#event:firmataString" class="signatureLink">firmataString</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol">IOSystem</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#event:i2cPowerPinsReady" class="signatureLink">i2cPowerPinsReady</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol">IOSystem</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#event:ready" class="signatureLink">ready</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol">IOSystem</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#event:rebootError" class="signatureLink">rebootError</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol">IOSystem</td></tr></table></div><a name="protectedConstantSummary"></a><div class="summarySection"><div class="summaryTableTitle">Protected Constants</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableProtectedConstant"><tr><th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#I2C_POWER_PINS_STARTUP_TIME" class="signatureLink">I2C_POWER_PINS_STARTUP_TIME</a> : uint = 500<div class="summaryTableDescription">[static] 
+		 If using I2C power pins, this is time duration for the pin change to settle on the IO module
+		 </div></td><td class="summaryTableOwnerCol">IOSystem</td></tr></table></div><script language="javascript" type="text/javascript"><!--
+										showHideInherited();
+										--></script><div class="MainContent"><div class="detailSectionHeader">Property Detail</div><a name="propertyDetail"></a><a name="autoUpdate"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">autoUpdate</td><td class="detailHeaderType">property</td></tr></table><div class="detailBody"><code>public var autoUpdate:Boolean</code><p></p><p></p><p>
+		 Set to false if you want to manually update the output port.
+		 
+		 <p>出力ポートを手動で更新する場合はfalseにします。</p>
+		 </p><p> The default value is <code>true</code>.</p></div><a name="propertyDetail"></a><a name="samplingInterval"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">samplingInterval</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>samplingInterval:int</code><p></p><p></p><p>
+		 sampling interval in milliseconds
+		 
+		 <p>サンプリング間隔</p>
+		 </p><p> The default value is <code>33</code>.</p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get samplingInterval():int</code><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function set samplingInterval(value:int):void</code><br/></div><a name="constructorDetail"></a><div class="detailSectionHeader">Constructor Detail</div><a name="IOSystem()"></a><a name="IOSystem(Array,String,Number,int)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">IOSystem</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">Constructor</td></tr></table><div class="detailBody"><code>public function IOSystem(configs:Array, host:String = localhost, portNum:Number = 9000, samplingInterval:int = 33)</code><p></p><p>
+		 </p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">configs</span>:Array</code> &mdash; Configuration array
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">host</span>:String</code> (default = <code>localhost</code>)<code></code> &mdash; host number
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">portNum</span>:Number</code> (default = <code>9000</code>)<code></code> &mdash; port number
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">samplingInterval</span>:int</code> (default = <code>33</code>)<code></code> &mdash; sampling interval in milliseconds
+		 </td></tr></table></div><a name="methodDetail"></a><div class="detailSectionHeader">Method Detail</div><a name="ioModule()"></a><a name="ioModule(uint)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">ioModule</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td></tr></table><div class="detailBody"><code> public function ioModule(moduleNum:uint):<a href="../funnel:IOModule.html">IOModule</a></code><p></p><p></p><p>
+		 Returns a reference to the IOModule associated with the specified module number.
+		 <p>moduleNumで指定した番号のI/Oモジュールを取得します。</p>
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">moduleNum</span>:uint</code> &mdash; The IO module number。Specify the same ID as the Configuration#moduleID.
+		 </td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code><a href="../funnel:IOModule.html">IOModule</a></code> &mdash; moduleNum IOModule object for the specified number
+		 </td></tr></table><p><span class="label">See also</span></p><div class="seeAlso"><a href="IOModule.html" target="">IOModule</a><br/><a href="Configuration.html#moduleID" target="">Configuration.moduleID</a></div></div><a name="sendSysex()"></a><a name="sendSysex(uint,uint,Array)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">sendSysex</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function sendSysex(moduleNum:uint, command:uint, sysexMessage:Array):void</code><p></p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">moduleNum</span>:uint</code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">command</span>:uint</code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">sysexMessage</span>:Array</code></td></tr></table></p></div><a name="update()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">update</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function update():void</code><p></p><p></p><p>
+		 Update the value of all output ports. Usually, set autoUpdate to false in order to use this method.
+		 
+		 <p>全ての出力ポートの値を更新します。通常、autoUpdateをfalseに設定して利用します。</p>
+		 </p><p><span class="label">See also</span></p><div class="seeAlso"><a href="IOSystem.html#autoUpdate" target="">IOSystem.autoUpdate</a></div></div><div class="detailSectionHeader"> Event Detail </div><a name="event:configurationError"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">configurationError</td><td class="detailHeaderType"> Event </td></tr></table><div class="detailBody"><span class="label">Event Object Type: </span><code>FunnelErrorEvent</code><br/><p></p><p></p><p>
+		 Dispatched when configuration settings are not specified.
+		 
+		 <p>指定したコンフィギュレーションの設定に失敗したとき送出されます</p>。
+		 </p><p>
+	 </p></div><a name="event:error"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">error</td><td class="detailHeaderType"> Event </td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><span class="label">Event Object Type: </span><code>FunnelErrorEvent</code><br/><p></p><p></p><p>
+		 Dispatched when an error occurs.
+		 
+		 <p>エラーが起きたとき送出されます。</p>
+		 </p><p>
+	 </p></div><a name="event:firmataString"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">firmataString</td><td class="detailHeaderType"> Event </td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><span class="label">Event Object Type: </span><code>FunnelEvent</code><br/><p></p><p></p><p>
+		 Dispatched when a Firmata String is received from an I/O module.
+		 </p><p>
+	 </p></div><a name="event:i2cPowerPinsReady"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">i2cPowerPinsReady</td><td class="detailHeaderType"> Event </td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><span class="label">Event Object Type: </span><code>FunnelEvent</code><br/><p></p><p></p><p>
+		 Dispatched when I2C power pins of an I/O module are ready.
+		 </p><p>
+	 </p></div><a name="event:ready"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">ready</td><td class="detailHeaderType"> Event </td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><span class="label">Event Object Type: </span><code>FunnelEvent</code><br/><p></p><p></p><p>
+		 Dispatched when an I/O module is ready.
+		 </p><p>
+	 </p></div><a name="event:rebootError"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">rebootError</td><td class="detailHeaderType"> Event </td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><span class="label">Event Object Type: </span><code>FunnelErrorEvent</code><br/><p></p><p></p><p>
+		 Dispatched when an IO error results from a module failing to restart.
+		 
+		<p>I/Oモジュールの再起動に失敗したとき送出されます。</p>
+		</p><p>
+	 </p></div><div class="detailSectionHeader">Constant Detail</div><a name="constantDetail"></a><a name="I2C_POWER_PINS_STARTUP_TIME"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">I2C_POWER_PINS_STARTUP_TIME</td><td class="detailHeaderType">Constant</td></tr></table><div class="detailBody"><code>protected static const I2C_POWER_PINS_STARTUP_TIME:uint = 500</code><p></p><p></p><p>
+		 If using I2C power pins, this is time duration for the pin change to settle on the IO module
+		 </p></div><br/><br/><hr><br/><p></p><center class="copyright"><footer></footer><br/>Thu Mar 31 2011, 01:45 PM +09:00  </center></div></body></html><!--<br/>Thu Mar 31 2011, 01:45 PM +09:00  -->

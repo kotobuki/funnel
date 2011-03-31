@@ -1,294 +1,38 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="MatrixLED,funnel.MatrixLED,scanMatrix" name="keywords">
-<title>funnel.MatrixLED</title>
-</head>
-<body>
-<script type="text/javascript" language="javascript" src="../asdoc.js"></script><script type="text/javascript" language="javascript" src="../cookies.js"></script><script type="text/javascript" language="javascript">
-<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- saved from url=(0014)about:internet --><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="../style.css" type="text/css" media="screen"><link rel="stylesheet" href="../print.css" type="text/css" media="print"><link rel="stylesheet" href="../override.css" type="text/css"><meta name="keywords" content="MatrixLED,funnel.MatrixLED,CUBE,CUBE_ROOT,IMPULSE,LINEAR,LINEAR,SAW,SIN,SQUARE,SQUARE,SQUARE_ROOT,TRIANGLE,addEventListener,addFilter,addPoint,addSysexListener,analogInput,analogOutput,analogPin,analogPin,clear,clone,clone,digitalInput,digitalOutput,digitalPin,digitalPin,enablePowerPins,handleInput,handleSysex,handleSysex,handleSysex,ioModule,pin,processSample,processSample,processSample,processSample,removeAllFilters,removeAllPoints,removePoint,reset,scanMatrix,sendFirmataString,sendFirmataString,sendSysexMessage,sendSysex,sendSysex,setDigitalPinMode,setFilters,setServoPulseRange,setServoPulseRange,start,stop,update,update,update"><title>funnel.MatrixLED</title></head><body><script language="javascript" type="text/javascript" src="../asdoc.js"></script><script language="javascript" type="text/javascript" src="../help.js"></script><script language="javascript" type="text/javascript" src="../cookies.js"></script><script language="javascript" type="text/javascript"><!--
 				asdocTitle = 'MatrixLED - API Documentation';
 				var baseRef = '../';
 				window.onload = configPage;
 			--></script>
-<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
-<tr>
-<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?funnel/MatrixLED.html&amp;funnel/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../images/logo.jpg"></td>
-</tr>
-<tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MatrixLED</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
-</tr>
-<tr class="titleTableRow3">
-<td colspan="2">&nbsp;</td>
-</tr>
-</table>
-<script type="text/javascript" language="javascript">
-<!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class MatrixLED"); titleBar_setSubNav(true,true,false,false,true,false,true,false,false,false,false,false,false,false);}
---></script>
-<div class="MainContent">
-<table cellspacing="0" cellpadding="0" class="classHeaderTable">
-<tr>
-<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">funnel</a></td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class MatrixLED</td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">MatrixLED <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../images/inherit-arrow.gif"> <a href="IOSystem.html">IOSystem</a> <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../images/inherit-arrow.gif"> flash.events.EventDispatcher</td>
-</tr>
-</table>
-<p></p>
-  Gainer I/Oモジュールに接続したマトリクスLEDをコントロールするクラスです。
-  <p></p>
-<br>
-<hr>
-</div>
-<a name="propertySummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Properties</div>
-<div class="showHideLinks">
-<div class="hideInheritedProperty" id="hideInheritedProperty">
-<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
-</div>
-<div class="showInheritedProperty" id="showInheritedProperty">
-<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
-</div>
-</div>
-<table id="summaryTableProperty" class="summaryTable hideInheritedProperty" cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#autoUpdate">autoUpdate</a> : Boolean<div class="summaryTableDescription">
-   出力ポートを手動で更新する場合はfalseにします。
-   </div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#samplingInterval">samplingInterval</a> : int<div class="summaryTableDescription">
-   サンプリング間隔
-   </div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-</table>
-</div>
-<a name="methodSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Methods</div>
-<div class="showHideLinks">
-<div class="hideInheritedMethod" id="hideInheritedMethod">
-<a onclick="javascript:setInheritedVisible(false,'Method');" href="#methodSummary" class="showHideLink"><img src="../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Methods</a>
-</div>
-<div class="showInheritedMethod" id="showInheritedMethod">
-<a onclick="javascript:setInheritedVisible(true,'Method');" href="#methodSummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Methods</a>
-</div>
-</div>
-<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#MatrixLED()">MatrixLED</a>(host:String = "localhost", portNum:Number = 9000)</div>
-<div class="summaryTableDescription">
-   </div>
-</td><td class="summaryTableOwnerCol">MatrixLED</td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#ioModule()">ioModule</a>(moduleNum:uint):<a href="funnel/IOModule.html">IOModule</a>
-</div>
-<div class="summaryTableDescription">
-   moduleNumで指定した番号のI/Oモジュールを取得します。
-   </div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#scanMatrix()">scanMatrix</a>(image:*):void</div>
-<div class="summaryTableDescription">
-   8x8画素のBitmapDataか、64要素のNumber配列からマトリクスLEDの表示内容を更新します。
-   </div>
-</td><td class="summaryTableOwnerCol">MatrixLED</td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#sendSysex()">sendSysex</a>(moduleNum:uint, command:uint, sysexMessage:Array):void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#update()">update</a>():void</div>
-<div class="summaryTableDescription">
-   全ての出力ポートの値を更新します。通常、autoUpdateをfalseに設定して利用します。
-   </div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-</table>
-</div>
-<a name="eventSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Events</div>
-<div class="showHideLinks">
-<div class="hideInheritedEvent" id="hideInheritedEvent">
-<a onclick="javascript:setInheritedVisible(false,'Event');" href="#eventSummary" class="showHideLink"><img src="../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Events</a>
-</div>
-<div class="showInheritedEvent" id="showInheritedEvent">
-<a onclick="javascript:setInheritedVisible(true,'Event');" href="#eventSummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Events</a>
-</div>
-</div>
-<table id="summaryTableEvent" class="summaryTable hideInheritedEvent" cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Event</th><th>Summary</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:configurationError">configurationError</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  指定したコンフィギュレーションの設定に失敗したとき送出されます。
-  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:error">error</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  エラーが起きたとき送出されます。
-  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:firmataString">firmataString</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-   This event will be sent when a Firmata String is received from an I/O module
-   </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:i2cPowerPinsReady">i2cPowerPinsReady</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-   This event will be sent when I2C power pins of an I/O module is ready
-   </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:ready">ready</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-   This event will be sent when an I/O module is ready
-   </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:rebootError">rebootError</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  I/Oモジュールの再起動に失敗したとき送出されます。
-  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-</table>
-</div>
-<a name="constantSummary"></a><a name="protectedConstantSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Protected Constants</div>
-<div class="showHideLinks">
-<div class="hideInheritedProtectedConstant" id="hideInheritedProtectedConstant">
-<a onclick="javascript:setInheritedVisible(false,'ProtectedConstant');" href="#protectedConstantSummary" class="showHideLink"><img src="../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Protected Constants</a>
-</div>
-<div class="showInheritedProtectedConstant" id="showInheritedProtectedConstant">
-<a onclick="javascript:setInheritedVisible(true,'ProtectedConstant');" href="#protectedConstantSummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Protected Constants</a>
-</div>
-</div>
-<table id="summaryTableProtectedConstant" class="summaryTable hideInheritedProtectedConstant" cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="hideInheritedProtectedConstant">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#I2C_POWER_PINS_STARTUP_TIME">I2C_POWER_PINS_STARTUP_TIME</a> : uint = 500<div class="summaryTableDescription">[static]</div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-</table>
-</div>
-<script type="text/javascript" language="javascript">
-<!--
-showHideInherited();
---></script>
-<div class="MainContent">
-<a name="constructorDetail"></a>
-<div class="detailSectionHeader">Constructor detail</div>
-<a name="MatrixLED()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">MatrixLED</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function MatrixLED(host:String = "localhost", portNum:Number = 9000)</code><p>
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">host</span>:String</code> (default = "<code>localhost</code>")<code></code> &mdash; ホスト名
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">portNum</span>:Number</code> (default = <code>9000</code>)<code></code> &mdash; ポート番号
-   </td>
-</tr>
-</table>
-</div>
-<a name="methodDetail"></a>
-<div class="detailSectionHeader">Method detail</div>
-<a name="scanMatrix()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">scanMatrix</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function scanMatrix(image:*):void</code><p>
-   8x8画素のBitmapDataか、64要素のNumber配列からマトリクスLEDの表示内容を更新します。
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">image</span>:*</code> &mdash; 8x8画素のBitmapData or 64要素のNumber配列
-   </td>
-</tr>
-</table>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">flash.display.BitmapData</div>
-</div>
-<br>
-<br>
-<hr>
-<br>
-<p></p>
-<center class="copyright"> 
-</center>
-</div>
-</body>
-</html>
-<!-- -->
+<script type="text/javascript">
+			scrollToNameAnchor();
+		</script><table class="titleTable" cellpadding="0" cellspacing="0" id="titleTable" style="display:none"><tr><td class="titleTableTitle" align="left">API Documentation</td><td class="titleTableTopNav" align="right"><a href="../package-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Packages</a>&nbsp;|&nbsp;<a href="../class-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Classes</a>&nbsp;|&nbsp;<a href="../all-index-A.html" onclick="loadClassListFrame('../index-list.html')">Index</a>&nbsp;|&nbsp;<a id="framesLink1" href="../index.html?funnel/MatrixLED.html&amp;funnel/class-list.html">Frames</a><a id="noFramesLink1" style="display:none" href="" onclick="parent.location=document.location"> No Frames </a></td><td class="titleTableLogo" align="right" rowspan="3"><img src="../images/logo.jpg" class="logoImage" alt=" Adobe Logo " title=" Adobe Logo "></td></tr><tr class="titleTableRow2"><td class="titleTableSubTitle" id="subTitle" align="left">MatrixLED</td><td class="titleTableSubNav" id="subNav" align="right"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a></td></tr><tr class="titleTableRow3"><td colspan="3">&nbsp;</td></tr></table><script language="javascript" type="text/javascript" xml:space="preserve">
+				<!--
+				
+					if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("MatrixLED"); titleBar_setSubNav(false,true,false,false,false,false,true,false,true,false,false	,false,false,false,false,false);}	
+				-->
+			</script><div xmlns:fn="http://www.w3.org/2005/xpath-functions" class="MainContent"><table class="classHeaderTable" cellpadding="0" cellspacing="0"><tr><td class="classHeaderTableLabel">Package</td><td><a href="package-detail.html" onclick="javascript:loadClassListFrame('class-list.html')">funnel</a></td></tr><tr><td class="classHeaderTableLabel">Class</td><td class="classSignature">public  class  MatrixLED</td></tr><tr><td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">MatrixLED  <img src="../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> <a href="../funnel/IOSystem.html">IOSystem</a> <img src="../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> flash.events.EventDispatcher</td></tr></table><p></p><p></p><p></p>
+	 Controls an LED matrix connected to a Gainer I/O module.
+	 
+	 <p>Gainer I/Oモジュールに接続したマトリクスLEDをコントロールするクラスです。</p>
+	           <p></p><br/><hr></div><a name="propertySummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Properties</div><div class="showHideLinks"><div id="hideInheritedProperty" class="hideInheritedProperty"><a class="showHideLink" href="#propertySummary" onclick="javascript:setInheritedVisible(false,'Property');"><img class="showHideLinkImage" src="../images/expanded.gif"> Hide Inherited Public Properties</a></div><div id="showInheritedProperty" class="showInheritedProperty"><a class="showHideLink" href="#propertySummary" onclick="javascript:setInheritedVisible(true,'Property');"><img class="showHideLinkImage" src="../images/collapsed.gif"> Show Inherited Public Properties</a></div></div><table cellspacing="0" cellpadding="3" class="summaryTable hideInheritedProperty" id="summaryTableProperty"><tr><th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class="hideInheritedProperty"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><a href="../funnel/IOSystem.html#autoUpdate" class="signatureLink">autoUpdate</a> : Boolean<div class="summaryTableDescription">
+		 Set to false if you want to manually update the output port.</div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedProperty"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><a href="../funnel/IOSystem.html#samplingInterval" class="signatureLink">samplingInterval</a> : int<div class="summaryTableDescription">
+		 sampling interval in milliseconds
+		 
+		 サンプリング間隔
+		 </div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr></table></div><a name="methodSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Methods </div><div class="showHideLinks"><div id="hideInheritedMethod" class="hideInheritedMethod"><a class="showHideLink" href="#methodSummary" onclick="javascript:setInheritedVisible(false,'Method');"><img class="showHideLinkImage" src="../images/expanded.gif"> Hide Inherited Public Methods</a></div><div id="showInheritedMethod" class="showInheritedMethod"><a class="showHideLink" href="#methodSummary" onclick="javascript:setInheritedVisible(true,'Method');"><img class="showHideLinkImage" src="../images/collapsed.gif"> Show Inherited Public Methods</a></div></div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableMethod"><tr><th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#MatrixLED()" class="signatureLink">MatrixLED</a>(host:String = localhost, portNum:Number = 9000)</div><div class="summaryTableDescription">
+		 </div></td><td class="summaryTableOwnerCol">MatrixLED</td></tr><tr class="hideInheritedMethod"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#ioModule()" class="signatureLink">ioModule</a>(moduleNum:uint):<a href="../funnel:IOModule.html">IOModule</a></div><div class="summaryTableDescription">
+		 Returns a reference to the IOModule associated with the specified module number.</div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#scanMatrix()" class="signatureLink">scanMatrix</a>(image:*):void</div><div class="summaryTableDescription">
+		 BitmapData or 8x8 pixel array of 64 elements used to update the display of the LED matrix.</div></td><td class="summaryTableOwnerCol">MatrixLED</td></tr><tr class="hideInheritedMethod"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#sendSysex()" class="signatureLink">sendSysex</a>(moduleNum:uint, command:uint, sysexMessage:Array):void</div><div class="summaryTableDescription"></div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedMethod"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#update()" class="signatureLink">update</a>():void</div><div class="summaryTableDescription">
+		 Update the value of all output ports.</div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr></table></div><a name="eventSummary"></a><div class="summarySection"><div class="summaryTableTitle">Events</div><div class="showHideLinks"><div id="hideInheritedEvent" class="hideInheritedEvent"><a class="showHideLink" href="#eventSummary" onclick="javascript:setInheritedVisible(false,'Event');"><img class="showHideLinkImage" src="../images/expanded.gif"> Hide Inherited Events</a></div><div id="showInheritedEvent" class="showInheritedEvent"><a class="showHideLink" href="#eventSummary" onclick="javascript:setInheritedVisible(true,'Event');"><img class="showHideLinkImage" src="../images/collapsed.gif"> Show Inherited Events</a></div></div><table cellspacing="0" cellpadding="3" class="summaryTable hideInheritedEvent" id="summaryTableEvent"><tr><th>&nbsp;</th><th colspan="2">Event</th><th> Summary </th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:configurationError" class="signatureLink">configurationError</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:error" class="signatureLink">error</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:firmataString" class="signatureLink">firmataString</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:i2cPowerPinsReady" class="signatureLink">i2cPowerPinsReady</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:ready" class="signatureLink">ready</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:rebootError" class="signatureLink">rebootError</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr></table></div><a name="protectedConstantSummary"></a><div class="summarySection"><div class="summaryTableTitle">Protected Constants</div><div class="showHideLinks"><div id="hideInheritedProtectedConstant" class="hideInheritedProtectedConstant"><a class="showHideLink" href="#protectedConstantSummary" onclick="javascript:setInheritedVisible(false,'ProtectedConstant');"><img class="showHideLinkImage" src="../images/expanded.gif"> Hide Inherited Protected Constants</a></div><div id="showInheritedProtectedConstant" class="showInheritedProtectedConstant"><a class="showHideLink" href="#protectedConstantSummary" onclick="javascript:setInheritedVisible(true,'ProtectedConstant');"><img class="showHideLinkImage" src="../images/collapsed.gif"> Show Inherited Protected Constants</a></div></div><table cellspacing="0" cellpadding="3" class="summaryTable hideInheritedProtectedConstant" id="summaryTableProtectedConstant"><tr><th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class="hideInheritedProtectedConstant"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><a href="../funnel/IOSystem.html#I2C_POWER_PINS_STARTUP_TIME" class="signatureLink">I2C_POWER_PINS_STARTUP_TIME</a> : uint = 500<div class="summaryTableDescription">[static] 
+		 If using I2C power pins, this is time duration for the pin change to settle on the IO module
+		 </div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr></table></div><script language="javascript" type="text/javascript"><!--
+										showHideInherited();
+										--></script><div class="MainContent"><a name="constructorDetail"></a><div class="detailSectionHeader">Constructor Detail</div><a name="MatrixLED()"></a><a name="MatrixLED(String,Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">MatrixLED</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">Constructor</td></tr></table><div class="detailBody"><code>public function MatrixLED(host:String = localhost, portNum:Number = 9000)</code><p></p><p>
+		 </p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">host</span>:String</code> (default = <code>localhost</code>)<code></code> &mdash; host name
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">portNum</span>:Number</code> (default = <code>9000</code>)<code></code> &mdash; port number
+		 </td></tr></table></div><a name="methodDetail"></a><div class="detailSectionHeader">Method Detail</div><a name="scanMatrix()"></a><a name="scanMatrix(any)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">scanMatrix</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td></tr></table><div class="detailBody"><code> public function scanMatrix(image:*):void</code><p></p><p></p><p>
+		 BitmapData or 8x8 pixel array of 64 elements used to update the display of the LED matrix.
+		 
+		 <p>8x8画素のBitmapDataか、64要素のNumber配列からマトリクスLEDの表示内容を更新します。</p>
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">image</span>:*</code> &mdash; BitmapData or 8x8 pixel array of 64 elements
+		 </td></tr></table></p><p><span class="label">See also</span></p><div class="seeAlso">flash.display.BitmapData</div></div><br/><br/><hr><br/><p></p><center class="copyright"><footer></footer><br/>Thu Mar 31 2011, 01:45 PM +09:00  </center></div></body></html><!--<br/>Thu Mar 31 2011, 01:45 PM +09:00  -->
