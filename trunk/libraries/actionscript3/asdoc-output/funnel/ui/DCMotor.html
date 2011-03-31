@@ -1,235 +1,34 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="DCMotor,funnel.ui.DCMotor,value,despin,forward,reverse" name="keywords">
-<title>funnel.ui.DCMotor</title>
-</head>
-<body>
-<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
-<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- saved from url=(0014)about:internet --><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="../../style.css" type="text/css" media="screen"><link rel="stylesheet" href="../../print.css" type="text/css" media="print"><link rel="stylesheet" href="../../override.css" type="text/css"><meta name="keywords" content="DCMotor,funnel.ui.DCMotor,ANODE_COMMON,CATHODE_COMMON,COMMON_ANODE,COMMON_CATHODE,COMMON_KATHODE,DRAG,FLICK_DOWN,FLICK_UP,KATHODE_COMMON,LONG_PRESS,PRESS,PRESS,PULL_DOWN,PULL_UP,RELEASE,RELEASE,SOURCE_DRIVE,SOURCE_DRIVE,SUSTAINED_PRESS,SYNC_DRIVE,SYNC_DRIVE,TAP,X_AXIS,Y_AXIS,Z_AXIS,angle,debounceInterval,distanceFromPressed,dynamicRange,intensity,isPressed,rotationX,rotationY,rotationZ,value,value,value,value,value,x,y,z,addEventListener,blink,clone,despin,dispatchEvent,fadeIn,fadeIn,fadeOut,fadeOut,fadeTo,fadeTo,forward,hasEventListener,isOn,off,on,removeEventListener,reverse,setColor,setMinFlickMovement,setRange,setRange,setRangeFor,stopBlinking,toogle,willTrigger"><title>funnel.ui.DCMotor</title></head><body><script language="javascript" type="text/javascript" src="../../asdoc.js"></script><script language="javascript" type="text/javascript" src="../../help.js"></script><script language="javascript" type="text/javascript" src="../../cookies.js"></script><script language="javascript" type="text/javascript"><!--
 				asdocTitle = 'DCMotor - API Documentation';
 				var baseRef = '../../';
 				window.onload = configPage;
 			--></script>
-<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
-<tr>
-<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?funnel/ui/DCMotor.html&amp;funnel/ui/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
-</tr>
-<tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;DCMotor</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
-</tr>
-<tr class="titleTableRow3">
-<td colspan="2">&nbsp;</td>
-</tr>
-</table>
-<script type="text/javascript" language="javascript">
-<!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class DCMotor"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
---></script>
-<div class="MainContent">
-<table cellspacing="0" cellpadding="0" class="classHeaderTable">
-<tr>
-<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">funnel.ui</a></td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class DCMotor</td>
-</tr>
-</table>
-<p></p>
-  This is the class to express a H-bridge
-    Compatible with:
-  TA7291P
-  SN754410
-  TB6612FNG
-  BD6211F
-    <p></p>
-<br>
-<hr>
-</div>
-<a name="propertySummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Properties</div>
-<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#value">value</a> : Number<div class="summaryTableDescription">
-      </div>
-</td><td class="summaryTableOwnerCol">DCMotor</td>
-</tr>
-</table>
-</div>
-<a name="methodSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Methods</div>
-<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#DCMotor()">DCMotor</a>(forwardPin:<a href="../Pin.html">Pin</a>, reversePin:<a href="../Pin.html">Pin</a>, pwmPin:<a href="../Pin.html">Pin</a>, minimumVoltage:Number = 1, maximumVoltage:Number = 9, supplyVoltage:Number = 9)</div>
-<div class="summaryTableDescription">
-      </div>
-</td><td class="summaryTableOwnerCol">DCMotor</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#despin()">despin</a>(useBrake:Boolean = true):void</div>
-<div class="summaryTableDescription">
-      </div>
-</td><td class="summaryTableOwnerCol">DCMotor</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#forward()">forward</a>(val:Number = 1):void</div>
-<div class="summaryTableDescription">
-      </div>
-</td><td class="summaryTableOwnerCol">DCMotor</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#reverse()">reverse</a>(val:Number = 1):void</div>
-<div class="summaryTableDescription">
-      </div>
-</td><td class="summaryTableOwnerCol">DCMotor</td>
-</tr>
-</table>
-</div>
-<script type="text/javascript" language="javascript">
-<!--
-showHideInherited();
---></script>
-<div class="MainContent">
-<a name="propertyDetail"></a>
-<div class="detailSectionHeader">Property detail</div>
-<a name="value"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">value</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>value:Number</code>&nbsp;&nbsp;[read-write]<p>
-      </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get value():Number</code>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set value(value:Number):void</code>
-<br>
-</div>
-<a name="constructorDetail"></a>
-<div class="detailSectionHeader">Constructor detail</div>
-<a name="DCMotor()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">DCMotor</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function DCMotor(forwardPin:<a href="../Pin.html">Pin</a>, reversePin:<a href="../Pin.html">Pin</a>, pwmPin:<a href="../Pin.html">Pin</a>, minimumVoltage:Number = 1, maximumVoltage:Number = 9, supplyVoltage:Number = 9)</code><p>
-      </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">forwardPin</span>:<a href="../Pin.html">Pin</a></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">reversePin</span>:<a href="../Pin.html">Pin</a></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">pwmPin</span>:<a href="../Pin.html">Pin</a></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">minimumVoltage</span>:Number</code> (default = <code>1</code>)<code></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">maximumVoltage</span>:Number</code> (default = <code>9</code>)<code></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">supplyVoltage</span>:Number</code> (default = <code>9</code>)<code></code></td>
-</tr>
-</table>
-</div>
-<a name="methodDetail"></a>
-<div class="detailSectionHeader">Method detail</div>
-<a name="despin()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">despin</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function despin(useBrake:Boolean = true):void</code><p>
-      </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">useBrake</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
-</tr>
-</table>
-</div>
-<a name="forward()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">forward</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function forward(val:Number = 1):void</code><p>
-      </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; the new voltage to set
-   </td>
-</tr>
-</table>
-</div>
-<a name="reverse()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">reverse</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function reverse(val:Number = 1):void</code><p>
-      </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">val</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; the new voltage to set
-   </td>
-</tr>
-</table>
-</div>
-<br>
-<br>
-<hr>
-<br>
-<p></p>
-<center class="copyright"> 
-</center>
-</div>
-</body>
-</html>
-<!-- -->
+<script type="text/javascript">
+			scrollToNameAnchor();
+		</script><table class="titleTable" cellpadding="0" cellspacing="0" id="titleTable" style="display:none"><tr><td class="titleTableTitle" align="left">API Documentation</td><td class="titleTableTopNav" align="right"><a href="../../package-summary.html" onclick="loadClassListFrame('../../all-classes.html')">All Packages</a>&nbsp;|&nbsp;<a href="../../class-summary.html" onclick="loadClassListFrame('../../all-classes.html')">All Classes</a>&nbsp;|&nbsp;<a href="../../all-index-A.html" onclick="loadClassListFrame('../../index-list.html')">Index</a>&nbsp;|&nbsp;<a id="framesLink1" href="../../index.html?funnel/ui/DCMotor.html&amp;funnel/ui/class-list.html">Frames</a><a id="noFramesLink1" style="display:none" href="" onclick="parent.location=document.location"> No Frames </a></td><td class="titleTableLogo" align="right" rowspan="3"><img src="../../images/logo.jpg" class="logoImage" alt=" Adobe Logo " title=" Adobe Logo "></td></tr><tr class="titleTableRow2"><td class="titleTableSubTitle" id="subTitle" align="left">DCMotor</td><td class="titleTableSubNav" id="subNav" align="right"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td></tr><tr class="titleTableRow3"><td colspan="3">&nbsp;</td></tr></table><script language="javascript" type="text/javascript" xml:space="preserve">
+				<!--
+				
+					if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("DCMotor"); titleBar_setSubNav(false,true,false,false,false,false,false,false,true,false,false	,false,false,false,false,false);}	
+				-->
+			</script><div xmlns:fn="http://www.w3.org/2005/xpath-functions" class="MainContent"><table class="classHeaderTable" cellpadding="0" cellspacing="0"><tr><td class="classHeaderTableLabel">Package</td><td><a href="package-detail.html" onclick="javascript:loadClassListFrame('class-list.html')">funnel.ui</a></td></tr><tr><td class="classHeaderTableLabel">Class</td><td class="classSignature">public  class  DCMotor</td></tr><tr><td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">DCMotor  <img src="../../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> Object</td></tr></table><p></p><p></p><p></p>
+	 This is the class to express a H-bridge
+	 	 Compatible with:
+	 TA7291P
+	 SN754410
+	 TB6612FNG
+	 BD6211F
+	 	 <p></p><br/><hr></div><a name="propertySummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Properties</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableProperty"><tr><th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#value" class="signatureLink">value</a> : Number<div class="summaryTableDescription">
+		 		 </div></td><td class="summaryTableOwnerCol">DCMotor</td></tr></table></div><a name="methodSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Methods </div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableMethod"><tr><th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#DCMotor()" class="signatureLink">DCMotor</a>(forwardPin:<a href="../../funnel:Pin.html">Pin</a>, reversePin:<a href="../../funnel:Pin.html">Pin</a>, pwmPin:<a href="../../funnel:Pin.html">Pin</a>, minimumVoltage:Number = 1, maximumVoltage:Number = 9, supplyVoltage:Number = 9)</div><div class="summaryTableDescription">
+		 		 </div></td><td class="summaryTableOwnerCol">DCMotor</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#despin()" class="signatureLink">despin</a>(useBrake:Boolean = true):void</div><div class="summaryTableDescription">
+		 		 </div></td><td class="summaryTableOwnerCol">DCMotor</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#forward()" class="signatureLink">forward</a>(val:Number = 1):void</div><div class="summaryTableDescription">
+		 		 </div></td><td class="summaryTableOwnerCol">DCMotor</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#reverse()" class="signatureLink">reverse</a>(val:Number = 1):void</div><div class="summaryTableDescription">
+		 		 </div></td><td class="summaryTableOwnerCol">DCMotor</td></tr></table></div><script language="javascript" type="text/javascript"><!--
+										showHideInherited();
+										--></script><div class="MainContent"><div class="detailSectionHeader">Property Detail</div><a name="propertyDetail"></a><a name="value"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">value</td><td class="detailHeaderType">property</td></tr></table><div class="detailBody"><code>value:Number</code><p></p><p></p><p>
+		 		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get value():Number</code><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function set value(value:Number):void</code><br/></div><a name="constructorDetail"></a><div class="detailSectionHeader">Constructor Detail</div><a name="DCMotor()"></a><a name="DCMotor(funnel.Pin,funnel.Pin,funnel.Pin,Number,Number,Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">DCMotor</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">Constructor</td></tr></table><div class="detailBody"><code>public function DCMotor(forwardPin:<a href="../../funnel:Pin.html">Pin</a>, reversePin:<a href="../../funnel:Pin.html">Pin</a>, pwmPin:<a href="../../funnel:Pin.html">Pin</a>, minimumVoltage:Number = 1, maximumVoltage:Number = 9, supplyVoltage:Number = 9)</code><p></p><p>
+		 		 </p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">forwardPin</span>:<a href="../../funnel:Pin.html">Pin</a></code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">reversePin</span>:<a href="../../funnel:Pin.html">Pin</a></code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">pwmPin</span>:<a href="../../funnel:Pin.html">Pin</a></code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">minimumVoltage</span>:Number</code> (default = <code>1</code>)<code></code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">maximumVoltage</span>:Number</code> (default = <code>9</code>)<code></code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">supplyVoltage</span>:Number</code> (default = <code>9</code>)<code></code></td></tr></table></div><a name="methodDetail"></a><div class="detailSectionHeader">Method Detail</div><a name="despin()"></a><a name="despin(Boolean)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">despin</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td></tr></table><div class="detailBody"><code> public function despin(useBrake:Boolean = true):void</code><p></p><p></p><p>
+		 		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">useBrake</span>:Boolean</code> (default = <code>true</code>)<code></code></td></tr></table></p></div><a name="forward()"></a><a name="forward(Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">forward</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function forward(val:Number = 1):void</code><p></p><p></p><p>
+		 		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; the new voltage to set
+		 </td></tr></table></p></div><a name="reverse()"></a><a name="reverse(Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">reverse</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function reverse(val:Number = 1):void</code><p></p><p></p><p>
+		 		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">val</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; the new voltage to set
+		 </td></tr></table></p></div><br/><br/><hr><br/><p></p><center class="copyright"><footer></footer><br/>Thu Mar 31 2011, 01:45 PM +09:00  </center></div></body></html><!--<br/>Thu Mar 31 2011, 01:45 PM +09:00  -->

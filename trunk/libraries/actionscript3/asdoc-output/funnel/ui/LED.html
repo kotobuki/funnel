@@ -1,439 +1,75 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="LED,funnel.ui.LED,SOURCE_DRIVE,SYNC_DRIVE,intensity,value,blink,fadeIn,fadeOut,fadeTo,isOn,off,on,stopBlinking,toogle" name="keywords">
-<title>funnel.ui.LED</title>
-</head>
-<body>
-<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
-<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- saved from url=(0014)about:internet --><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="../../style.css" type="text/css" media="screen"><link rel="stylesheet" href="../../print.css" type="text/css" media="print"><link rel="stylesheet" href="../../override.css" type="text/css"><meta name="keywords" content="LED,funnel.ui.LED,ANODE_COMMON,CATHODE_COMMON,COMMON_ANODE,COMMON_CATHODE,COMMON_KATHODE,DRAG,FLICK_DOWN,FLICK_UP,KATHODE_COMMON,LONG_PRESS,PRESS,PRESS,PULL_DOWN,PULL_UP,RELEASE,RELEASE,SOURCE_DRIVE,SOURCE_DRIVE,SUSTAINED_PRESS,SYNC_DRIVE,SYNC_DRIVE,TAP,X_AXIS,Y_AXIS,Z_AXIS,angle,debounceInterval,distanceFromPressed,dynamicRange,intensity,isPressed,rotationX,rotationY,rotationZ,value,value,value,value,value,x,y,z,addEventListener,blink,clone,despin,dispatchEvent,fadeIn,fadeIn,fadeOut,fadeOut,fadeTo,fadeTo,forward,hasEventListener,isOn,off,on,removeEventListener,reverse,setColor,setMinFlickMovement,setRange,setRange,setRangeFor,stopBlinking,toogle,willTrigger"><title>funnel.ui.LED</title></head><body><script language="javascript" type="text/javascript" src="../../asdoc.js"></script><script language="javascript" type="text/javascript" src="../../help.js"></script><script language="javascript" type="text/javascript" src="../../cookies.js"></script><script language="javascript" type="text/javascript"><!--
 				asdocTitle = 'LED - API Documentation';
 				var baseRef = '../../';
 				window.onload = configPage;
 			--></script>
-<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
-<tr>
-<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?funnel/ui/LED.html&amp;funnel/ui/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
-</tr>
-<tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;LED</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
-</tr>
-<tr class="titleTableRow3">
-<td colspan="2">&nbsp;</td>
-</tr>
-</table>
-<script type="text/javascript" language="javascript">
-<!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class LED"); titleBar_setSubNav(true,true,false,false,false,false,true,false,false,false,false,false,false,false);}
---></script>
-<div class="MainContent">
-<table cellspacing="0" cellpadding="0" class="classHeaderTable">
-<tr>
-<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">funnel.ui</a></td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class LED</td>
-</tr>
-</table>
-<p></p>
-  This is the class to express a LED
-  
-  <p></p>
-<br>
-<hr>
-</div>
-<a name="propertySummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Properties</div>
-<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#intensity">intensity</a> : Number<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#value">value</a> : Number<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-</table>
-</div>
-<a name="methodSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Methods</div>
-<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#LED()">LED</a>(ledPin:<a href="../Pin.html">Pin</a>, driveMode:uint)</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#blink()">blink</a>(interval:Number, times:Number = 1, wave:Function = null):void</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#fadeIn()">fadeIn</a>(time:Number = 1000):void</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#fadeOut()">fadeOut</a>(time:Number = 1000):void</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#fadeTo()">fadeTo</a>(to:Number, time:Number = 1000):void</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#isOn()">isOn</a>():Boolean</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#off()">off</a>():void</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#on()">on</a>():void</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#stopBlinking()">stopBlinking</a>():void</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#toogle()">toogle</a>():void</div>
-<div class="summaryTableDescription">
-   
-   </div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-</table>
-</div>
-<a name="constantSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Constants</div>
-<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SOURCE_DRIVE">SOURCE_DRIVE</a> : uint = 0<div class="summaryTableDescription">[static]</div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SYNC_DRIVE">SYNC_DRIVE</a> : uint = 1<div class="summaryTableDescription">[static]</div>
-</td><td class="summaryTableOwnerCol">LED</td>
-</tr>
-</table>
-</div>
-<script type="text/javascript" language="javascript">
-<!--
-showHideInherited();
---></script>
-<div class="MainContent">
-<a name="propertyDetail"></a>
-<div class="detailSectionHeader">Property detail</div>
-<a name="intensity"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">intensity</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>intensity:Number</code>&nbsp;&nbsp;[read-write]<p>
-   
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get intensity():Number</code>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set intensity(value:Number):void</code>
-<br>
-</div>
-<a name="value"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">value</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>value:Number</code>&nbsp;&nbsp;[read-write]<p>
-   
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get value():Number</code>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set value(value:Number):void</code>
-<br>
-</div>
-<a name="constructorDetail"></a>
-<div class="detailSectionHeader">Constructor detail</div>
-<a name="LED()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">LED</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function LED(ledPin:<a href="../Pin.html">Pin</a>, driveMode:uint)</code><p>
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">ledPin</span>:<a href="../Pin.html">Pin</a></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">driveMode</span>:uint</code></td>
-</tr>
-</table>
-<br>
-<span class="label">Throws</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code></code> &mdash; should be SOURCE_DRIVE or SYNC_DRIVE"))
-   </td>
-</tr>
-</table>
-</div>
-<a name="methodDetail"></a>
-<div class="detailSectionHeader">Method detail</div>
-<a name="blink()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">blink</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function blink(interval:Number, times:Number = 1, wave:Function = null):void</code><p>
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">interval</span>:Number</code> &mdash; the time interval
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">times</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; the times of blink
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">wave</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; the wave (default is Osc.SQUARE)
-   </td>
-</tr>
-</table>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">Osc</div>
-</div>
-<a name="fadeIn()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">fadeIn</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function fadeIn(time:Number = 1000):void</code><p>
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">time</span>:Number</code> (default = <code>1000</code>)<code></code> &mdash; the fade-in time (in milliseconds)
-   </td>
-</tr>
-</table>
-</div>
-<a name="fadeOut()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">fadeOut</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function fadeOut(time:Number = 1000):void</code><p>
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">time</span>:Number</code> (default = <code>1000</code>)<code></code> &mdash; the fade-in time (in milliseconds)
-   </td>
-</tr>
-</table>
-</div>
-<a name="fadeTo()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">fadeTo</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function fadeTo(to:Number, time:Number = 1000):void</code><p>
-   
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">to</span>:Number</code> &mdash; the new intensity to fade
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">time</span>:Number</code> (default = <code>1000</code>)<code></code> &mdash; the fade time (in milliseconds)
-   </td>
-</tr>
-</table>
-</div>
-<a name="isOn()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">isOn</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function isOn():Boolean</code><p>
-   
-   </p><p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>Boolean</code> &mdash; the LED is turned on or not
-   </td>
-</tr>
-</table>
-</div>
-<a name="off()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">off</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function off():void</code><p>
-   
-   </p></div>
-<a name="on()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">on</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function on():void</code><p>
-   
-   </p></div>
-<a name="stopBlinking()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">stopBlinking</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function stopBlinking():void</code><p>
-   
-   </p></div>
-<a name="toogle()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">toogle</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function toogle():void</code><p>
-   
-   </p></div>
-<a name="constantDetail"></a>
-<div class="detailSectionHeader">Constant detail</div>
-<a name="SOURCE_DRIVE"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">SOURCE_DRIVE</td><td class="detailHeaderType">constant</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static const SOURCE_DRIVE:uint = 0</code>
-</div>
-<a name="SYNC_DRIVE"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">SYNC_DRIVE</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static const SYNC_DRIVE:uint = 1</code>
-</div>
-<br>
-<br>
-<hr>
-<br>
-<p></p>
-<center class="copyright"> 
-</center>
-</div>
-</body>
-</html>
-<!-- -->
+<script type="text/javascript">
+			scrollToNameAnchor();
+		</script><table class="titleTable" cellpadding="0" cellspacing="0" id="titleTable" style="display:none"><tr><td class="titleTableTitle" align="left">API Documentation</td><td class="titleTableTopNav" align="right"><a href="../../package-summary.html" onclick="loadClassListFrame('../../all-classes.html')">All Packages</a>&nbsp;|&nbsp;<a href="../../class-summary.html" onclick="loadClassListFrame('../../all-classes.html')">All Classes</a>&nbsp;|&nbsp;<a href="../../all-index-A.html" onclick="loadClassListFrame('../../index-list.html')">Index</a>&nbsp;|&nbsp;<a id="framesLink1" href="../../index.html?funnel/ui/LED.html&amp;funnel/ui/class-list.html">Frames</a><a id="noFramesLink1" style="display:none" href="" onclick="parent.location=document.location"> No Frames </a></td><td class="titleTableLogo" align="right" rowspan="3"><img src="../../images/logo.jpg" class="logoImage" alt=" Adobe Logo " title=" Adobe Logo "></td></tr><tr class="titleTableRow2"><td class="titleTableSubTitle" id="subTitle" align="left">LED</td><td class="titleTableSubNav" id="subNav" align="right"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td></tr><tr class="titleTableRow3"><td colspan="3">&nbsp;</td></tr></table><script language="javascript" type="text/javascript" xml:space="preserve">
+				<!--
+				
+					if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("LED"); titleBar_setSubNav(true,true,false,false,false,false,false,false,true,false,false	,false,false,false,false,false);}	
+				-->
+			</script><div xmlns:fn="http://www.w3.org/2005/xpath-functions" class="MainContent"><table class="classHeaderTable" cellpadding="0" cellspacing="0"><tr><td class="classHeaderTableLabel">Package</td><td><a href="package-detail.html" onclick="javascript:loadClassListFrame('class-list.html')">funnel.ui</a></td></tr><tr><td class="classHeaderTableLabel">Class</td><td class="classSignature">public  class  LED</td></tr><tr><td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">LED  <img src="../../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> Object</td></tr></table><p></p><p></p><p></p>
+	 This is the class to express a LED
+	 
+	 <p></p><br/><hr></div><a name="propertySummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Properties</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableProperty"><tr><th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#intensity" class="signatureLink">intensity</a> : Number<div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#value" class="signatureLink">value</a> : Number<div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr></table></div><a name="methodSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Methods </div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableMethod"><tr><th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#LED()" class="signatureLink">LED</a>(ledPin:<a href="../../funnel:Pin.html">Pin</a>, driveMode:uint)</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#blink()" class="signatureLink">blink</a>(interval:Number, times:Number = 1, wave:Function = null):void</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#fadeIn()" class="signatureLink">fadeIn</a>(time:Number = 1000):void</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#fadeOut()" class="signatureLink">fadeOut</a>(time:Number = 1000):void</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#fadeTo()" class="signatureLink">fadeTo</a>(to:Number, time:Number = 1000):void</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#isOn()" class="signatureLink">isOn</a>():Boolean</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#off()" class="signatureLink">off</a>():void</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#on()" class="signatureLink">on</a>():void</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#stopBlinking()" class="signatureLink">stopBlinking</a>():void</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#toogle()" class="signatureLink">toogle</a>():void</div><div class="summaryTableDescription">
+		 
+		 </div></td><td class="summaryTableOwnerCol">LED</td></tr></table></div><a name="constantSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Constants</div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableConstant"><tr><th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#SOURCE_DRIVE" class="signatureLink">SOURCE_DRIVE</a> : uint = 0<div class="summaryTableDescription">[static] </div></td><td class="summaryTableOwnerCol">LED</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#SYNC_DRIVE" class="signatureLink">SYNC_DRIVE</a> : uint = 1<div class="summaryTableDescription">[static] </div></td><td class="summaryTableOwnerCol">LED</td></tr></table></div><script language="javascript" type="text/javascript"><!--
+										showHideInherited();
+										--></script><div class="MainContent"><div class="detailSectionHeader">Property Detail</div><a name="propertyDetail"></a><a name="intensity"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">intensity</td><td class="detailHeaderType">property</td></tr></table><div class="detailBody"><code>intensity:Number</code><p></p><p></p><p>
+		 
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get intensity():Number</code><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function set intensity(value:Number):void</code><br/></div><a name="propertyDetail"></a><a name="value"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">value</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>value:Number</code><p></p><p></p><p>
+		 
+		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get value():Number</code><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function set value(value:Number):void</code><br/></div><a name="constructorDetail"></a><div class="detailSectionHeader">Constructor Detail</div><a name="LED()"></a><a name="LED(funnel.Pin,uint)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">LED</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">Constructor</td></tr></table><div class="detailBody"><code>public function LED(ledPin:<a href="../../funnel:Pin.html">Pin</a>, driveMode:uint)</code><p></p><p>
+		 
+		 </p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">ledPin</span>:<a href="../../funnel:Pin.html">Pin</a></code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">driveMode</span>:uint</code> (default = <code>NaN</code>)<code></code></td></tr></table><br/><span class="label">Throws</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>(newArgumentError("driveMode </code> &mdash; should be SOURCE_DRIVE or SYNC_DRIVE"))
+		 </td></tr></table></div><a name="methodDetail"></a><div class="detailSectionHeader">Method Detail</div><a name="blink()"></a><a name="blink(Number,Number,Function)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">blink</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td></tr></table><div class="detailBody"><code> public function blink(interval:Number, times:Number = 1, wave:Function = null):void</code><p></p><p></p><p>
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">interval</span>:Number</code> &mdash; the time interval
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">times</span>:Number</code> (default = <code>1</code>)<code></code> &mdash; the times of blink
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">wave</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; the wave (default is Osc.SQUARE)
+		 </td></tr></table></p><p><span class="label">See also</span></p><div class="seeAlso">Osc</div></div><a name="fadeIn()"></a><a name="fadeIn(Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">fadeIn</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function fadeIn(time:Number = 1000):void</code><p></p><p></p><p>
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">time</span>:Number</code> (default = <code>1000</code>)<code></code> &mdash; the fade-in time (in milliseconds)
+		 </td></tr></table></p></div><a name="fadeOut()"></a><a name="fadeOut(Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">fadeOut</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function fadeOut(time:Number = 1000):void</code><p></p><p></p><p>
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">time</span>:Number</code> (default = <code>1000</code>)<code></code> &mdash; the fade-in time (in milliseconds)
+		 </td></tr></table></p></div><a name="fadeTo()"></a><a name="fadeTo(Number,Number)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">fadeTo</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function fadeTo(to:Number, time:Number = 1000):void</code><p></p><p></p><p>
+		 
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">to</span>:Number</code> &mdash; the new intensity to fade
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">time</span>:Number</code> (default = <code>1000</code>)<code></code> &mdash; the fade time (in milliseconds)
+		 </td></tr></table></p></div><a name="isOn()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">isOn</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function isOn():Boolean</code><p></p><p></p><p>
+		 
+		 </p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code>Boolean</code> &mdash; the LED is turned on or not
+		 </td></tr></table></div><a name="off()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">off</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function off():void</code><p></p><p></p><p>
+		 
+		 </p></div><a name="on()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">on</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function on():void</code><p></p><p></p><p>
+		 
+		 </p></div><a name="stopBlinking()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">stopBlinking</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function stopBlinking():void</code><p></p><p></p><p>
+		 
+		 </p></div><a name="toogle()"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">toogle</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function toogle():void</code><p></p><p></p><p>
+		 
+		 </p></div><div class="detailSectionHeader">Constant Detail</div><a name="constantDetail"></a><a name="SOURCE_DRIVE"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">SOURCE_DRIVE</td><td class="detailHeaderType">Constant</td></tr></table><div class="detailBody"><code>public static const SOURCE_DRIVE:uint = 0</code><p></p></div><a name="constantDetail"></a><a name="SYNC_DRIVE"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">SYNC_DRIVE</td><td class="detailHeaderType">Constant</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>public static const SYNC_DRIVE:uint = 1</code><p></p></div><br/><br/><hr><br/><p></p><center class="copyright"><footer></footer><br/>Thu Mar 31 2011, 01:45 PM +09:00  </center></div></body></html><!--<br/>Thu Mar 31 2011, 01:45 PM +09:00  -->

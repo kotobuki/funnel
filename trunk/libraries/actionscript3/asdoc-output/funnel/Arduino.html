@@ -1,543 +1,67 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../style.css" type="text/css" media="screen">
-<link rel="stylesheet" href="../print.css" type="text/css" media="print">
-<meta content="Arduino,funnel.Arduino,FIRMATA,gui,addEventListener,analogPin,digitalPin,sendFirmataString,sendSysexMessage,setServoPulseRange" name="keywords">
-<title>funnel.Arduino</title>
-</head>
-<body>
-<script type="text/javascript" language="javascript" src="../asdoc.js"></script><script type="text/javascript" language="javascript" src="../cookies.js"></script><script type="text/javascript" language="javascript">
-<!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><!-- saved from url=(0014)about:internet --><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" href="../style.css" type="text/css" media="screen"><link rel="stylesheet" href="../print.css" type="text/css" media="print"><link rel="stylesheet" href="../override.css" type="text/css"><meta name="keywords" content="Arduino,funnel.Arduino,AIN,AIN,ALL,ALL,AOUT,AOUT,CHANGE,CHANGE,COMMAND_OFFSET_MULTIPLIER,CONFIGURATION_ERROR,CONFIGURATION_ERROR,DIN,DIN,DOUT,DOUT,ERROR,ERROR,FALLING_EDGE,FALLING_EDGE,FIRMATA,FIRMATA,FIRMATA_STRING,FIRMATA_STRING,HPF,I2C,I2C_POWER_PINS_READY,I2C_POWER_PINS_READY,I2C_POWER_PINS_STARTUP_TIME,I2C,IN,LPF,MODE1,MODE2,MODE3,MODE4,MODE5,MODE6,MODE7,MODE8,MOVING_AVERAGE,MOVING_AVERAGE,MULTIPOINT,OUT,PWM,PWM,READY,READY,REBOOT_ERROR,REBOOT_ERROR,RISING_EDGE,RISING_EDGE,SERVO,SERVO,SERVO_CONFIG,STRING,SYSEX,UPDATE,UPDATE,VERSION,ZB,_io,ainPins,amplitude,analogPins,aoutPins,autoUpdate,average,button,button,coef,command,command,config,configuration,digitalPins,dinPins,doutPins,filters,freq,gui,gui,gui,id,inMax,inMin,lastValue,led,led,limiter,maximum,message,minimum,moduleID,moduleId,number,offset,outMax,outMin,phase,pinCount,powerPinsEnabled,preFilterValue,samplingInterval,serviceInterval,servoPins,times,type,type,value,value,value,wave,CUBE,CUBE_ROOT,IMPULSE,LINEAR,LINEAR,SAW,SIN,SQUARE,SQUARE,SQUARE_ROOT,TRIANGLE,addEventListener,addFilter,addPoint,addSysexListener,analogInput,analogOutput,analogPin,analogPin,clear,clone,clone,digitalInput,digitalOutput,digitalPin,digitalPin,enablePowerPins,handleInput,handleSysex,handleSysex,handleSysex,ioModule,pin,processSample,processSample,processSample,processSample,removeAllFilters,removeAllPoints,removePoint,reset,scanMatrix,sendFirmataString,sendFirmataString,sendSysexMessage,sendSysex,sendSysex,setDigitalPinMode,setFilters,setServoPulseRange,setServoPulseRange,start,stop,update,update,update"><title>funnel.Arduino</title></head><body><script language="javascript" type="text/javascript" src="../asdoc.js"></script><script language="javascript" type="text/javascript" src="../help.js"></script><script language="javascript" type="text/javascript" src="../cookies.js"></script><script language="javascript" type="text/javascript"><!--
 				asdocTitle = 'Arduino - API Documentation';
 				var baseRef = '../';
 				window.onload = configPage;
 			--></script>
-<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
-<tr>
-<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?funnel/Arduino.html&amp;funnel/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../images/logo.jpg"></td>
-</tr>
-<tr class="titleTableRow2">
-<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Arduino</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
-</tr>
-<tr class="titleTableRow3">
-<td colspan="2">&nbsp;</td>
-</tr>
-</table>
-<script type="text/javascript" language="javascript">
-<!--
-if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Arduino"); titleBar_setSubNav(true,true,false,false,true,false,true,false,false,false,false,false,false,false);}
---></script>
-<div class="MainContent">
-<table cellspacing="0" cellpadding="0" class="classHeaderTable">
-<tr>
-<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">funnel</a></td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Arduino</td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Arduino <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../images/inherit-arrow.gif"> <a href="IOSystem.html">IOSystem</a> <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../images/inherit-arrow.gif"> flash.events.EventDispatcher</td>
-</tr>
-</table>
-<p></p>
-  ArduinoクラスはファームウェアとしてFirmataを搭載したArduinoをI/Oモジュールとして扱うためのクラスです。
-  
-  <p></p>
-<br>
-<hr>
-</div>
-<a name="propertySummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Properties</div>
-<div class="showHideLinks">
-<div class="hideInheritedProperty" id="hideInheritedProperty">
-<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
-</div>
-<div class="showInheritedProperty" id="showInheritedProperty">
-<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
-</div>
-</div>
-<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#autoUpdate">autoUpdate</a> : Boolean<div class="summaryTableDescription">
-   出力ポートを手動で更新する場合はfalseにします。
-   </div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#FIRMATA">FIRMATA</a> : <a href="funnel/Configuration.html">Configuration</a>
-<div class="summaryTableDescription">[static][read-only]
-   Arduino用のデフォルトのコンフィギュレーションを取得します。戻り値のコンフィギュレーションを変更するにはsetDigitalPinModeを利用します。
-   </div>
-</td><td class="summaryTableOwnerCol">Arduino</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#gui">gui</a> : <a href="gui/IOModuleGUI.html">IOModuleGUI</a>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Arduino</td>
-</tr>
-<tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#samplingInterval">samplingInterval</a> : int<div class="summaryTableDescription">
-   サンプリング間隔
-   </div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-</table>
-</div>
-<a name="methodSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Public Methods</div>
-<div class="showHideLinks">
-<div class="hideInheritedMethod" id="hideInheritedMethod">
-<a onclick="javascript:setInheritedVisible(false,'Method');" href="#methodSummary" class="showHideLink"><img src="../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Methods</a>
-</div>
-<div class="showInheritedMethod" id="showInheritedMethod">
-<a onclick="javascript:setInheritedVisible(true,'Method');" href="#methodSummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Methods</a>
-</div>
-</div>
-<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#Arduino()">Arduino</a>(config:<a href="Configuration.html">Configuration</a> = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33)</div>
-<div class="summaryTableDescription">
-   </div>
-</td><td class="summaryTableOwnerCol">Arduino</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#addEventListener()">addEventListener</a>(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Arduino</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#analogPin()">analogPin</a>(pinNum:uint):<a href="funnel/Pin.html">Pin</a>
-</div>
-<div class="summaryTableDescription">
-   pinNumで指定したピンを取得します。
-   </div>
-</td><td class="summaryTableOwnerCol">Arduino</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#digitalPin()">digitalPin</a>(pinNum:uint):<a href="funnel/Pin.html">Pin</a>
-</div>
-<div class="summaryTableDescription">
-   pinNumで指定したピンを取得します。
-   </div>
-</td><td class="summaryTableOwnerCol">Arduino</td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#ioModule()">ioModule</a>(moduleNum:uint):<a href="funnel/IOModule.html">IOModule</a>
-</div>
-<div class="summaryTableDescription">
-   moduleNumで指定した番号のI/Oモジュールを取得します。
-   </div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#sendFirmataString()">sendFirmataString</a>(stringToSend:String):void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Arduino</td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#sendSysex()">sendSysex</a>(moduleNum:uint, command:uint, sysexMessage:Array):void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#sendSysexMessage()">sendSysexMessage</a>(command:uint, message:Array):void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Arduino</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#setServoPulseRange()">setServoPulseRange</a>(pinNumber:uint, minPulse:uint, maxPulse:uint):void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">Arduino</td>
-</tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#update()">update</a>():void</div>
-<div class="summaryTableDescription">
-   全ての出力ポートの値を更新します。通常、autoUpdateをfalseに設定して利用します。
-   </div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-</table>
-</div>
-<a name="eventSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Events</div>
-<div class="showHideLinks">
-<div class="hideInheritedEvent" id="hideInheritedEvent">
-<a onclick="javascript:setInheritedVisible(false,'Event');" href="#eventSummary" class="showHideLink"><img src="../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Events</a>
-</div>
-<div class="showInheritedEvent" id="showInheritedEvent">
-<a onclick="javascript:setInheritedVisible(true,'Event');" href="#eventSummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Events</a>
-</div>
-</div>
-<table id="summaryTableEvent" class="summaryTable hideInheritedEvent" cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Event</th><th>Summary</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:configurationError">configurationError</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  指定したコンフィギュレーションの設定に失敗したとき送出されます。
-  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:error">error</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  エラーが起きたとき送出されます。
-  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:firmataString">firmataString</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-   This event will be sent when a Firmata String is received from an I/O module
-   </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:i2cPowerPinsReady">i2cPowerPinsReady</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-   This event will be sent when I2C power pins of an I/O module is ready
-   </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:ready">ready</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-   This event will be sent when an I/O module is ready
-   </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-<tr class="hideInheritedEvent">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="IOSystem.html#event:rebootError">rebootError</a>
-</div>
-</td><td class="summaryTableDescription summaryTableCol">
-  I/Oモジュールの再起動に失敗したとき送出されます。
-  </td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-</table>
-</div>
-<a name="constantSummary"></a><a name="protectedConstantSummary"></a>
-<div class="summarySection">
-<div class="summaryTableTitle">Protected Constants</div>
-<div class="showHideLinks">
-<div class="hideInheritedProtectedConstant" id="hideInheritedProtectedConstant">
-<a onclick="javascript:setInheritedVisible(false,'ProtectedConstant');" href="#protectedConstantSummary" class="showHideLink"><img src="../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Protected Constants</a>
-</div>
-<div class="showInheritedProtectedConstant" id="showInheritedProtectedConstant">
-<a onclick="javascript:setInheritedVisible(true,'ProtectedConstant');" href="#protectedConstantSummary" class="showHideLink"><img src="../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Protected Constants</a>
-</div>
-</div>
-<table id="summaryTableProtectedConstant" class="summaryTable hideInheritedProtectedConstant" cellpadding="3" cellspacing="0">
-<tr>
-<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="hideInheritedProtectedConstant">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOSystem.html#I2C_POWER_PINS_STARTUP_TIME">I2C_POWER_PINS_STARTUP_TIME</a> : uint = 500<div class="summaryTableDescription">[static]</div>
-</td><td class="summaryTableOwnerCol"><a href="IOSystem.html">IOSystem</a></td>
-</tr>
-</table>
-</div>
-<script type="text/javascript" language="javascript">
-<!--
-showHideInherited();
---></script>
-<div class="MainContent">
-<a name="propertyDetail"></a>
-<div class="detailSectionHeader">Property detail</div>
-<a name="FIRMATA"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">FIRMATA</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>FIRMATA:<a href="funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only]<p>
-   Arduino用のデフォルトのコンフィギュレーションを取得します。戻り値のコンフィギュレーションを変更するにはsetDigitalPinModeを利用します。
-   </p><span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get FIRMATA():<a href="funnel/Configuration.html">Configuration</a></code>
-<br>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Arduino.html#Arduino()" target="">Arduino.Arduino()</a>
-<br>
-<a href="Configuration.html#setDigitalPinMode()" target="">Configuration.setDigitalPinMode()</a>
-</div>
-</div>
-<a name="gui"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">gui</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>gui:<a href="gui/IOModuleGUI.html">IOModuleGUI</a></code>&nbsp;&nbsp;[read-write]<span class="label">Implementation</span>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get gui():<a href="gui/IOModuleGUI.html">IOModuleGUI</a></code>
-<br>
-<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set gui(value:<a href="gui/IOModuleGUI.html">IOModuleGUI</a>):void</code>
-<br>
-</div>
-<a name="constructorDetail"></a>
-<div class="detailSectionHeader">Constructor detail</div>
-<a name="Arduino()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">Arduino</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function Arduino(config:<a href="Configuration.html">Configuration</a> = null, host:String = "localhost", portNum:Number = 9000, samplingInterval:int = 33)</code><p>
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">config</span>:<a href="Configuration.html">Configuration</a></code> (default = <code>null</code>)<code></code> &mdash; コンフィギュレーション。指定しない場合はArduino.FIRMATA
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">host</span>:String</code> (default = "<code>localhost</code>")<code></code> &mdash; ホスト名
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">portNum</span>:Number</code> (default = <code>9000</code>)<code></code> &mdash; ポート番号
-   </td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">samplingInterval</span>:int</code> (default = <code>33</code>)<code></code> &mdash; サンプリング間隔(ms)
-   </td>
-</tr>
-</table>
-</div>
-<a name="methodDetail"></a>
-<div class="detailSectionHeader">Method detail</div>
-<a name="addEventListener()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">addEventListener</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public override function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void</code><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">type</span>:String</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">listener</span>:Function</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">useCapture</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">priority</span>:int</code> (default = <code>0</code>)<code></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">useWeakReference</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
-</tr>
-</table>
-</div>
-<a name="analogPin()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">analogPin</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function analogPin(pinNum:uint):<a href="funnel/Pin.html">Pin</a></code><p>
-   pinNumで指定したピンを取得します。
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">pinNum</span>:uint</code> &mdash; ピン番号
-   </td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code><a href="funnel/Pin.html">Pin</a></code> &mdash; 
-                        pinNumで指定したPinオブジェクト
-   
-                        
-                     </td>
-</tr>
-</table>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Pin.html" target="">Pin</a>
-</div>
-</div>
-<a name="digitalPin()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">digitalPin</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function digitalPin(pinNum:uint):<a href="funnel/Pin.html">Pin</a></code><p>
-   pinNumで指定したピンを取得します。
-   </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">pinNum</span>:uint</code> &mdash; ピン番号
-   </td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code><a href="funnel/Pin.html">Pin</a></code> &mdash; 
-                        pinNumで指定したPinオブジェクト
-   
-                        
-                     </td>
-</tr>
-</table>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="Pin.html" target="">Pin</a>
-</div>
-</div>
-<a name="sendFirmataString()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">sendFirmataString</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function sendFirmataString(stringToSend:String):void</code><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">stringToSend</span>:String</code></td>
-</tr>
-</table>
-</div>
-<a name="sendSysexMessage()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">sendSysexMessage</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function sendSysexMessage(command:uint, message:Array):void</code><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">command</span>:uint</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">message</span>:Array</code></td>
-</tr>
-</table>
-</div>
-<a name="setServoPulseRange()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">setServoPulseRange</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public function setServoPulseRange(pinNumber:uint, minPulse:uint, maxPulse:uint):void</code><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">pinNumber</span>:uint</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">minPulse</span>:uint</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">maxPulse</span>:uint</code></td>
-</tr>
-</table>
-</div>
-<br>
-<br>
-<hr>
-<br>
-<p></p>
-<center class="copyright"> 
-</center>
-</div>
-</body>
-</html>
-<!-- -->
+<script type="text/javascript">
+			scrollToNameAnchor();
+		</script><table class="titleTable" cellpadding="0" cellspacing="0" id="titleTable" style="display:none"><tr><td class="titleTableTitle" align="left">API Documentation</td><td class="titleTableTopNav" align="right"><a href="../package-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Packages</a>&nbsp;|&nbsp;<a href="../class-summary.html" onclick="loadClassListFrame('../all-classes.html')">All Classes</a>&nbsp;|&nbsp;<a href="../all-index-A.html" onclick="loadClassListFrame('../index-list.html')">Index</a>&nbsp;|&nbsp;<a id="framesLink1" href="../index.html?funnel/Arduino.html&amp;funnel/class-list.html">Frames</a><a id="noFramesLink1" style="display:none" href="" onclick="parent.location=document.location"> No Frames </a></td><td class="titleTableLogo" align="right" rowspan="3"><img src="../images/logo.jpg" class="logoImage" alt=" Adobe Logo " title=" Adobe Logo "></td></tr><tr class="titleTableRow2"><td class="titleTableSubTitle" id="subTitle" align="left">Arduino</td><td class="titleTableSubNav" id="subNav" align="right"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a></td></tr><tr class="titleTableRow3"><td colspan="3">&nbsp;</td></tr></table><script language="javascript" type="text/javascript" xml:space="preserve">
+				<!--
+				
+					if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Arduino"); titleBar_setSubNav(false,true,false,false,false,false,true,false,true,false,false	,false,false,false,false,false);}	
+				-->
+			</script><div xmlns:fn="http://www.w3.org/2005/xpath-functions" class="MainContent"><table class="classHeaderTable" cellpadding="0" cellspacing="0"><tr><td class="classHeaderTableLabel">Package</td><td><a href="package-detail.html" onclick="javascript:loadClassListFrame('class-list.html')">funnel</a></td></tr><tr><td class="classHeaderTableLabel">Class</td><td class="classSignature">public  class  Arduino</td></tr><tr><td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Arduino  <img src="../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> <a href="../funnel/IOSystem.html">IOSystem</a> <img src="../images/inherit-arrow.gif" title="Inheritance" alt="Inheritance" class="inheritArrow"> flash.events.EventDispatcher</td></tr></table><p></p><p></p><p></p>
+	 A class for working with an Arduino board that is running either 
+	 StandardFirmata to act as an I/O module, or is otherwise using Firmata as 
+	 the communication protocol.
+	 
+	 <p>ArduinoクラスはファームウェアとしてFirmataを搭載したArduinoをI/Oモジュールとして扱うためのクラスです</p>
+	           <p></p><br/><hr></div><a name="propertySummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Properties</div><div class="showHideLinks"><div id="hideInheritedProperty" class="hideInheritedProperty"><a class="showHideLink" href="#propertySummary" onclick="javascript:setInheritedVisible(false,'Property');"><img class="showHideLinkImage" src="../images/expanded.gif"> Hide Inherited Public Properties</a></div><div id="showInheritedProperty" class="showInheritedProperty"><a class="showHideLink" href="#propertySummary" onclick="javascript:setInheritedVisible(true,'Property');"><img class="showHideLinkImage" src="../images/collapsed.gif"> Show Inherited Public Properties</a></div></div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableProperty"><tr><th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class="hideInheritedProperty"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><a href="../funnel/IOSystem.html#autoUpdate" class="signatureLink">autoUpdate</a> : Boolean<div class="summaryTableDescription">
+		 Set to false if you want to manually update the output port.</div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#FIRMATA" class="signatureLink">FIRMATA</a> : <a href="../funnel/Configuration.html">Configuration</a><div class="summaryTableDescription">[static] [read-only] 
+		 Gets the default Arduino configuration.</div></td><td class="summaryTableOwnerCol">Arduino</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a href="#gui" class="signatureLink">gui</a> : <a href="../funnel/gui/IOModuleGUI.html">IOModuleGUI</a><div class="summaryTableDescription"></div></td><td class="summaryTableOwnerCol">Arduino</td></tr><tr class="hideInheritedProperty"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><a href="../funnel/IOSystem.html#samplingInterval" class="signatureLink">samplingInterval</a> : int<div class="summaryTableDescription">
+		 sampling interval in milliseconds
+		 
+		 サンプリング間隔
+		 </div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr></table></div><a name="methodSummary"></a><div class="summarySection"><div class="summaryTableTitle">Public Methods </div><div class="showHideLinks"><div id="hideInheritedMethod" class="hideInheritedMethod"><a class="showHideLink" href="#methodSummary" onclick="javascript:setInheritedVisible(false,'Method');"><img class="showHideLinkImage" src="../images/expanded.gif"> Hide Inherited Public Methods</a></div><div id="showInheritedMethod" class="showInheritedMethod"><a class="showHideLink" href="#methodSummary" onclick="javascript:setInheritedVisible(true,'Method');"><img class="showHideLinkImage" src="../images/collapsed.gif"> Show Inherited Public Methods</a></div></div><table cellspacing="0" cellpadding="3" class="summaryTable " id="summaryTableMethod"><tr><th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#Arduino()" class="signatureLink">Arduino</a>(config:<a href="../funnel:Configuration.html">Configuration</a> = null, host:String = localhost, portNum:Number = 9000, samplingInterval:int = 33)</div><div class="summaryTableDescription">
+		 </div></td><td class="summaryTableOwnerCol">Arduino</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#addEventListener()" class="signatureLink">addEventListener</a>(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void</div><div class="summaryTableDescription">[override] </div></td><td class="summaryTableOwnerCol">Arduino</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#analogPin()" class="signatureLink">analogPin</a>(pinNum:uint):<a href="../funnel:Pin.html">Pin</a></div><div class="summaryTableDescription">
+		 </div></td><td class="summaryTableOwnerCol">Arduino</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#digitalPin()" class="signatureLink">digitalPin</a>(pinNum:uint):<a href="../funnel:Pin.html">Pin</a></div><div class="summaryTableDescription">
+		 </div></td><td class="summaryTableOwnerCol">Arduino</td></tr><tr class="hideInheritedMethod"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#ioModule()" class="signatureLink">ioModule</a>(moduleNum:uint):<a href="../funnel:IOModule.html">IOModule</a></div><div class="summaryTableDescription">
+		 Returns a reference to the IOModule associated with the specified module number.</div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#sendFirmataString()" class="signatureLink">sendFirmataString</a>(stringToSend:String):void</div><div class="summaryTableDescription">
+		 send a string to the Arduino
+		 </div></td><td class="summaryTableOwnerCol">Arduino</td></tr><tr class="hideInheritedMethod"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#sendSysex()" class="signatureLink">sendSysex</a>(moduleNum:uint, command:uint, sysexMessage:Array):void</div><div class="summaryTableDescription"></div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#sendSysexMessage()" class="signatureLink">sendSysexMessage</a>(command:uint, message:Array):void</div><div class="summaryTableDescription">
+		 send a sysex message to the arduino see firmata.org for details
+		 </div></td><td class="summaryTableOwnerCol">Arduino</td></tr><tr class=""><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="#setServoPulseRange()" class="signatureLink">setServoPulseRange</a>(pinNumber:uint, minPulse:uint, maxPulse:uint):void</div><div class="summaryTableDescription">
+		 set the minimum and maximum servo pulse range for the servo attached to the
+		 specified pin number
+		 </div></td><td class="summaryTableOwnerCol">Arduino</td></tr><tr class="hideInheritedMethod"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#update()" class="signatureLink">update</a>():void</div><div class="summaryTableDescription">
+		 Update the value of all output ports.</div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr></table></div><a name="eventSummary"></a><div class="summarySection"><div class="summaryTableTitle">Events</div><div class="showHideLinks"><div id="hideInheritedEvent" class="hideInheritedEvent"><a class="showHideLink" href="#eventSummary" onclick="javascript:setInheritedVisible(false,'Event');"><img class="showHideLinkImage" src="../images/expanded.gif"> Hide Inherited Events</a></div><div id="showInheritedEvent" class="showInheritedEvent"><a class="showHideLink" href="#eventSummary" onclick="javascript:setInheritedVisible(true,'Event');"><img class="showHideLinkImage" src="../images/collapsed.gif"> Show Inherited Events</a></div></div><table cellspacing="0" cellpadding="3" class="summaryTable hideInheritedEvent" id="summaryTableEvent"><tr><th>&nbsp;</th><th colspan="2">Event</th><th> Summary </th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:configurationError" class="signatureLink">configurationError</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:error" class="signatureLink">error</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:firmataString" class="signatureLink">firmataString</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:i2cPowerPinsReady" class="signatureLink">i2cPowerPinsReady</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:ready" class="signatureLink">ready</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr><tr class="hideInheritedEvent"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><div class="summarySignature"><a href="../funnel/IOSystem.html#event:rebootError" class="signatureLink">rebootError</a></div></td><td class="summaryTableDescription summaryTableCol"></td><td class="summaryTableOwnerCol"><a href="../IOSystem.html">IOSystem</a></td></tr></table></div><a name="protectedConstantSummary"></a><div class="summarySection"><div class="summaryTableTitle">Protected Constants</div><div class="showHideLinks"><div id="hideInheritedProtectedConstant" class="hideInheritedProtectedConstant"><a class="showHideLink" href="#protectedConstantSummary" onclick="javascript:setInheritedVisible(false,'ProtectedConstant');"><img class="showHideLinkImage" src="../images/expanded.gif"> Hide Inherited Protected Constants</a></div><div id="showInheritedProtectedConstant" class="showInheritedProtectedConstant"><a class="showHideLink" href="#protectedConstantSummary" onclick="javascript:setInheritedVisible(true,'ProtectedConstant');"><img class="showHideLinkImage" src="../images/collapsed.gif"> Show Inherited Protected Constants</a></div></div><table cellspacing="0" cellpadding="3" class="summaryTable hideInheritedProtectedConstant" id="summaryTableProtectedConstant"><tr><th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined By</th></tr><tr class="hideInheritedProtectedConstant"><td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img src="../images/inheritedSummary.gif" alt="Inherited" title="Inherited" class="inheritedSummaryImage"></td><td class="summaryTableSignatureCol"><a href="../funnel/IOSystem.html#I2C_POWER_PINS_STARTUP_TIME" class="signatureLink">I2C_POWER_PINS_STARTUP_TIME</a> : uint = 500<div class="summaryTableDescription">[static] 
+		 If using I2C power pins, this is time duration for the pin change to settle on the IO module
+		 </div></td><td class="summaryTableOwnerCol"><a href="../funnel/IOSystem.html">IOSystem</a></td></tr></table></div><script language="javascript" type="text/javascript"><!--
+										showHideInherited();
+										--></script><div class="MainContent"><div class="detailSectionHeader">Property Detail</div><a name="propertyDetail"></a><a name="FIRMATA"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">FIRMATA</td><td class="detailHeaderType">property</td></tr></table><div class="detailBody"><code>FIRMATA:<a href="../funnel/Configuration.html">Configuration</a></code>&nbsp;&nbsp;[read-only] <p></p><p></p><p>
+		 Gets the default Arduino configuration. Use setDigitalPinMode To set the pin IO configuration.
+		 		 <p>Arduino用のデフォルトのコンフィギュレーションを取得します。戻り値のコンフィギュレーションを変更するにはsetDigitalPinModeを利用します</p>
+		 		 </p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public static function get FIRMATA():<a href="../funnel:Configuration.html">Configuration</a></code><br/><p><span class="label">See also</span></p><div class="seeAlso"><a href="Arduino.html#Arduino()" target="">Arduino.Arduino()</a><br/><a href="Configuration.html#setDigitalPinMode()" target="">Configuration.setDigitalPinMode()</a></div></div><a name="propertyDetail"></a><a name="gui"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">gui</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code>gui:<a href="../funnel/gui/IOModuleGUI.html">IOModuleGUI</a></code><p></p><br/><span class="label"> Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function get gui():<a href="../funnel/gui/IOModuleGUI.html">IOModuleGUI</a></code><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;public function set gui(value:<a href="../funnel/gui/IOModuleGUI.html">IOModuleGUI</a>):void</code><br/></div><a name="constructorDetail"></a><div class="detailSectionHeader">Constructor Detail</div><a name="Arduino()"></a><a name="Arduino(funnel.Configuration,String,Number,int)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">Arduino</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">Constructor</td></tr></table><div class="detailBody"><code>public function Arduino(config:<a href="../funnel:Configuration.html">Configuration</a> = null, host:String = localhost, portNum:Number = 9000, samplingInterval:int = 33)</code><p></p><p>
+		 </p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">config</span>:<a href="../funnel:Configuration.html">Configuration</a></code> (default = <code>null</code>)<code></code> &mdash; Configuration of the Arduino such as Arduino.FIRMATA
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">host</span>:String</code> (default = <code>localhost</code>)<code></code> &mdash; IP address of the Funnel Server (default is "localhost")
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">portNum</span>:Number</code> (default = <code>9000</code>)<code></code> &mdash; port number of the Funnel Server (default is 9000)
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">samplingInterval</span>:int</code> (default = <code>33</code>)<code></code> &mdash; the sampling interval in milliseconds for inputs (default is 33)
+		 </td></tr></table></div><a name="methodDetail"></a><div class="detailSectionHeader">Method Detail</div><a name="addEventListener()"></a><a name="addEventListener(String,Function,Boolean,int,Boolean)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">addEventListener</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td></tr></table><div class="detailBody"><code>override public function addEventListener(type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false):void</code><p></p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">type</span>:String</code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">listener</span>:Function</code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">useCapture</span>:Boolean</code> (default = <code>false</code>)<code></code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">priority</span>:int</code> (default = <code>0</code>)<code></code></td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">useWeakReference</span>:Boolean</code> (default = <code>false</code>)<code></code></td></tr></table></p></div><a name="analogPin()"></a><a name="analogPin(uint)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">analogPin</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function analogPin(pinNum:uint):<a href="../funnel:Pin.html">Pin</a></code><p></p><p></p><p>
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">pinNum</span>:uint</code> &mdash; pin number
+		 </td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code><a href="../funnel:Pin.html">Pin</a></code> &mdash; Pin a reference to the specified analog pin object
+		 </td></tr></table><p><span class="label">See also</span></p><div class="seeAlso"><a href="Pin.html" target="">Pin</a></div></div><a name="digitalPin()"></a><a name="digitalPin(uint)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">digitalPin</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function digitalPin(pinNum:uint):<a href="../funnel:Pin.html">Pin</a></code><p></p><p></p><p>
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">pinNum</span>:uint</code> &mdash; pin number
+		 </td></tr></table></p><p></p><span class="label">Returns</span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20"></td><td><code><a href="../funnel:Pin.html">Pin</a></code> &mdash; Pin a reference to the specified digital pin object
+		 </td></tr></table><p><span class="label">See also</span></p><div class="seeAlso"><a href="Pin.html" target="">Pin</a></div></div><a name="sendFirmataString()"></a><a name="sendFirmataString(String)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">sendFirmataString</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function sendFirmataString(stringToSend:String):void</code><p></p><p></p><p>
+		 send a string to the Arduino
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">stringToSend</span>:String</code></td></tr></table></p></div><a name="sendSysexMessage()"></a><a name="sendSysexMessage(uint,Array)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">sendSysexMessage</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function sendSysexMessage(command:uint, message:Array):void</code><p></p><p></p><p>
+		 send a sysex message to the arduino see firmata.org for details
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">command</span>:uint</code> &mdash; the message command
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">message</span>:Array</code> &mdash; the message body as an Array
+		 </td></tr></table></p></div><a name="setServoPulseRange()"></a><a name="setServoPulseRange(uint,uint,uint)"></a><table class="detailHeader" cellpadding="0" cellspacing="0"><tr><td class="detailHeaderName">setServoPulseRange</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td></tr></table><div class="detailBody"><code> public function setServoPulseRange(pinNumber:uint, minPulse:uint, maxPulse:uint):void</code><p></p><p></p><p>
+		 set the minimum and maximum servo pulse range for the servo attached to the
+		 specified pin number
+		 </p><p><span class="label"> Parameters </span><table cellpadding="0" cellspacing="0" border="0"><tr><td width="20px"></td><td><code><span class="label">pinNumber</span>:uint</code> &mdash; the pin number of the attached servo
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">minPulse</span>:uint</code> &mdash; the minimum pulse for the attached servo (see servo datasheet)
+		 </td></tr><tr><td class="paramSpacer">&nbsp;</td></tr><tr><td width="20px"></td><td><code><span class="label">maxPulse</span>:uint</code> &mdash; the maximum pulse for the attached servo (see servo datasheet)
+		 </td></tr></table></p></div><br/><br/><hr><br/><p></p><center class="copyright"><footer></footer><br/>Thu Mar 31 2011, 01:45 PM +09:00  </center></div></body></html><!--<br/>Thu Mar 31 2011, 01:45 PM +09:00  -->
