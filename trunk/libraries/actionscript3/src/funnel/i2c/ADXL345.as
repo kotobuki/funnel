@@ -43,7 +43,7 @@ package funnel.i2c {
 		private var _dispatcher:EventDispatcher;
 		
 		// debug mode 		
-		private var _debugMode : Boolean = true;
+		private var _debugMode : Boolean = false;
 		
 		/**
 		 * @param	ioModule	A funnel io module such as an instance of a fio or arduino
