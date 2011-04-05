@@ -3,7 +3,7 @@ package processing.funnel;
 
 public abstract class Pin{
 	public float value;
-	public float lastValue;
+	public float lastValue = Float.MIN_VALUE;
 	
 	//
 	public float average = 0;

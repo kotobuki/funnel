@@ -155,7 +155,8 @@ public class IOSystem implements Runnable{
 
 			//サーバーを起動させて待つ
 			FunnelServer.serialPort = serverSerialName;
-			FunnelServer server = new FunnelServer(configFileName); 
+			//FunnelServer server = new FunnelServer(configFileName);
+			new FunnelServer(configFileName);
 			
 
 	}
@@ -175,6 +176,8 @@ public class IOSystem implements Runnable{
 		
 		if(initialized){
 			System.out.println(thread.getName() + " start");
+			
+			
 		}else{
 			errorMessage("IOSystem not initialized.");
 		}
@@ -208,11 +211,9 @@ public class IOSystem implements Runnable{
 				e.printStackTrace();
 			}
 
-
 //		if(quitServer && !withoutServer){
 //			quit();
 //		}
-
 
 		client.cleanOSCPort();	
 
@@ -337,7 +338,6 @@ public class IOSystem implements Runnable{
 	
 	protected boolean initialize(Configuration config){
 		
-		//reboot();
 
 		if(!configuration(config.moduleID, config.getPortStatus())){
 			return false;
@@ -456,7 +456,6 @@ public class IOSystem implements Runnable{
 			IOModule io = iomodules.get(id);
 			
 			io.checkOutputPortsUpdated();
-
 			
 			Vector<Integer> oport = io.getOutputPorts();
 			int[] outports = new int[oport.size()];
