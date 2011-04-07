@@ -177,11 +177,11 @@ public class IOSystem implements Runnable{
 		if(initialized){
 			System.out.println(thread.getName() + " start");
 			
-			
 		}else{
 			errorMessage("IOSystem not initialized.");
 		}
-
+		
+		
 		while(initialized){
 			long processMillis = System.currentTimeMillis() - updateTickMillis;
 			
@@ -193,27 +193,22 @@ public class IOSystem implements Runnable{
 				updateTickMillis = System.currentTimeMillis();
 			}
 		}
-		
+		//endPolling();
 		System.out.println(thread.getName() + " out");
 	}
 	
 	public void dispose(){
-		System.out.println("dispose funnel library");
-		endPolling();
-		
-		//reboot();
-
 		initialized = false;
-
-			try {
-				thread.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-//		if(quitServer && !withoutServer){
+//		if(!withoutServer){
 //			quit();
 //		}
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("dispose funnel library");
 
 		client.cleanOSCPort();	
 
@@ -309,6 +304,7 @@ public class IOSystem implements Runnable{
 
 	
 	protected void execCode(String code,boolean answer){
+//		System.out.println("exec" + code);
 		try {
 			client.sendFunnel(code);
 			if(answer){
@@ -324,6 +320,7 @@ public class IOSystem implements Runnable{
 	
 	
 	protected boolean execCode(String code,Object args[],boolean answer){
+//		System.out.println("exec" + code);
 		try {
 			client.sendFunnel(code,args);
 			if(answer){
@@ -370,7 +367,7 @@ public class IOSystem implements Runnable{
 
 	}
 	
-	protected void quit(){
+	public void quit(){
 		execCode("/quit",true);
 	}
 	
@@ -402,7 +399,6 @@ public class IOSystem implements Runnable{
 		args[0] = new Integer(1);
 		
 		execCode("/polling",args,true);
-
 	}
 
 	protected void endPolling(){

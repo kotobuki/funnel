@@ -6,6 +6,7 @@ import java.util.Set;
 
 
 import processing.core.PApplet;
+import processing.funnel.IOSystem.NotifyTokenizer;
 
 /**
  * @author endo
@@ -101,13 +102,13 @@ public final class Gainer extends IOSystem{
 	public static final Configuration MODE7 = new Configuration(moduleID,conf7,moduleName);
 	
 	
-//	private static final int[] conf8 = {
-//		 PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
-//		 PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
-//		 PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
-//		 PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,	
-//	};
-//	public static final Configuration MODE8 = new Configuration(moduleID,conf8,moduleName);
+	private static final int[] conf8 = {
+		 PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+		 PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
+		 PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,
+		 PORT_DOUT, PORT_DOUT, PORT_DOUT, PORT_DOUT,	
+	};
+	public static final Configuration MODE8 = new Configuration(moduleID,conf8,moduleName);
 	
 	
 	//ポートの名前
@@ -133,6 +134,7 @@ public final class Gainer extends IOSystem{
 		
 		initPins(config.pinsStatus);
 		
+
 		startIOSystem();
 	}
 	
@@ -261,22 +263,23 @@ public final class Gainer extends IOSystem{
 			analogOutput = aout;
 			digitalOutput = dout;
 
+			
+		}else if(Arrays.equals(conf,conf8)){
+			
+			int[] ain = {};
+			int[] din = {0,1,2,3,4,5,6,7};
+			int[] aout = {};
+			int[] dout = {8,9,10,11,12,13,14,15};
+			
+			analogInput = ain;
+			digitalInput = din;
+			analogOutput = aout;
+			digitalOutput = dout;
+
 		}
-//		}else if(Arrays.equals(conf,conf8)){
-//			
-//			int[] ain = {};
-//			int[] din = {0,1,2,3,4,5,6,7};
-//			int[] aout = {};
-//			int[] dout = {8,9,10,11,12,13,14,15};
-//			
-//			analogInput = ain;
-//			digitalInput = din;
-//			analogOutput = aout;
-//			digitalOutput = dout;
-//
-//		}
 
 	}
+	
 
 	//Gainerは特殊  GainerIOModule(ButtonEvent)のため
 	protected boolean addModule(int id,Configuration config,String name){
