@@ -174,7 +174,9 @@ public class IOModule{
 			this.parent = parent;
 			number = n;
 			//this.type = type;
-			
+//			if(type>=2){//
+//				lastValue = Float.NaN;
+//			}
 			filters = new Filter[0];
 			buffer = new LinkedList<Float>();
 			for(int i=0;i<bufferSize;i++){
