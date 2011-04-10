@@ -178,13 +178,10 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 	}
 
 	public void dispose() {
-		printMessage(Messages.getString("IOModule.Disposing")); //$NON-NLS-1$
-
 		if (this.isPolling) {
 			stopPolling();
 		}
 
-		port.removeEventListener();
 		try {
 			if (input != null)
 				input.close();
@@ -196,13 +193,14 @@ public class GainerIO extends IOModule implements SerialPortEventListener {
 		input = null;
 		output = null;
 
-		try {
-			if (port != null)
+		new Thread() {
+			@Override
+			public void run() {
+				port.removeEventListener();
 				port.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		port = null;
+				port = null;
+			}
+		}.start();
 	}
 
 	public Object[] getInputs(String address, Object[] arguments) throws IllegalArgumentException {

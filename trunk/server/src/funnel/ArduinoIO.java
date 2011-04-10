@@ -101,6 +101,10 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 	}
 
 	void writeByte(int data) {
+		if (output == null) {
+			return;
+		}
+		
 		try {
 			output.write((byte) data);
 			output.flush();
