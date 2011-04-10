@@ -151,8 +151,6 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 			}
 		}
 
-		printMessage(Messages.getString("IOModule.Disposing")); //$NON-NLS-1$
-		port.removeEventListener();
 		try {
 			if (input != null)
 				input.close();
@@ -164,13 +162,14 @@ public class XbeeIO extends IOModule implements SerialPortEventListener, XBeeEve
 		input = null;
 		output = null;
 
-		try {
-			if (port != null)
+		new Thread() {
+			@Override
+			public void run() {
+				port.removeEventListener();
 				port.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		port = null;
+				port = null;
+			}
+		}.start();
 	}
 
 	public Object[] getInputs(String address, Object[] arguments) {

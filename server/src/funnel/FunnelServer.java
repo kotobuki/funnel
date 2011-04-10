@@ -41,7 +41,7 @@ public class FunnelServer extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel Server v1.0 (r763)";
+	private static final String buildName = "Funnel Server v1.0 (r786)";
 
 	private final String BOARD_TYPE_ARDUINO = "Arduino (StandardFirmata, 57600 baud)";
 	private final String BOARD_TYPE_ARDUINO_FIO = "Arduino Fio (StandardFirmataForFio, 57600 baud)";
@@ -434,7 +434,22 @@ public class FunnelServer extends JFrame implements ActionListener {
 			if (ioModule != null && !hasDisposed) {
 				System.out.println("disposing...");
 				server.dispose();
+
+				// Just to be safe, wait 0.5s
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
 				ioModule.dispose();
+
+				// Just to be safe, wait 0.5s
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				System.out.println("disposed.");
 			}
 		}
