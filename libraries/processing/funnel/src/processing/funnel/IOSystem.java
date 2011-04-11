@@ -161,13 +161,13 @@ public class IOSystem implements Runnable{
 
 	}
 	
-	protected void quitServer(FunnelServer server){
-		if (server.getIOModule() != null) {
-			server.getIOModule().stopPolling();
-		}
-		server = null;
-		System.gc();
-	}
+//	protected void quitServer(FunnelServer server){
+//		if (server.getIOModule() != null) {
+//			server.getIOModule().stopPolling();
+//		}
+//		server = null;
+//		System.gc();
+//	}
 
 
 	//funnel‚Ìautupdate==true‚ÉˆË‘¶

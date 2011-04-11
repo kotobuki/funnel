@@ -22,6 +22,7 @@ public final class Gainer extends IOSystem{
 	public static final int moduleID = 0;//
 	
 	
+	
 	private static final int[] conf1 = {
 		PORT_AIN, PORT_AIN, PORT_AIN, PORT_AIN,
 		PORT_DIN, PORT_DIN, PORT_DIN, PORT_DIN,
@@ -134,6 +135,7 @@ public final class Gainer extends IOSystem{
 		
 		initPins(config.pinsStatus);
 		
+		
 
 		startIOSystem();
 	}
@@ -166,6 +168,8 @@ public final class Gainer extends IOSystem{
 	
 	//出力ポート番号などを決める
 	private void initPins(int[] conf){
+		boolean polling = false;
+		
 		if(Arrays.equals(conf,conf1)){
 
 			int[] ain = {0,1,2,3};
@@ -181,6 +185,8 @@ public final class Gainer extends IOSystem{
 			led = 16;
 			button = 17;
 			
+			polling = true;
+			
 		}else if(Arrays.equals(conf,conf2)){
 
 			int[] ain = {0,1,2,3,4,5,6,7};
@@ -195,6 +201,9 @@ public final class Gainer extends IOSystem{
 			
 			led = 16;
 			button = 17;
+			
+			polling = true;
+			
 		}else if(Arrays.equals(conf,conf3)){
 			
 			int[] ain = {0,1,2,3};
@@ -208,7 +217,10 @@ public final class Gainer extends IOSystem{
 			digitalOutput = dout;
 			
 			led = 16;
-			button = 17;	
+			button = 17;
+			
+			polling = true;
+			
 		}else if(Arrays.equals(conf,conf4)){
 			
 			int[] ain = {0,1,2,3,4,5,6,7};
@@ -222,7 +234,10 @@ public final class Gainer extends IOSystem{
 			digitalOutput = dout;
 			
 			led = 16;
-			button = 17;			
+			button = 17;
+			
+			polling = true;
+			
 		}else if(Arrays.equals(conf,conf5)){
 			
 			int[] ain = {};
@@ -277,9 +292,22 @@ public final class Gainer extends IOSystem{
 			digitalOutput = dout;
 
 		}
+		
+		if(polling){
+			beginPolling();
+		}
 
 	}
 	
+	
+	protected boolean startIOSystem(){
+		thread = new Thread(this,"funnelServiceThread");
+		thread.start();
+		
+		new NotifyTokenizer(this,client.commandPort);	
+		
+		return true;
+	}
 
 	//Gainerは特殊  GainerIOModule(ButtonEvent)のため
 	protected boolean addModule(int id,Configuration config,String name){
