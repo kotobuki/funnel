@@ -324,7 +324,8 @@ void configureXBeeModem() {
     serialPort.write("ATBD" + baudRate + ",");
     serialPort.write("ID" + Integer.toString(id, 16) + ",");
     serialPort.write("MY" + Integer.toString(my, 16) + ",");
-    serialPort.write("DL0,D35,IU0,IAFFFF,RO10,WR\r");
+    serialPort.write("DL" + Integer.toString(dl, 16) + ",");
+    serialPort.write("D35,IU0,IAFFFF,RO10,WR\r");
     if (!gotOkayFromXBeeModem()) {
       statusTextLabel.setLabel("Can't configure.");
       return;
