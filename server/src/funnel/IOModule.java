@@ -49,7 +49,7 @@ public abstract class IOModule {
 				CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
 					String foundPortName = portId.getName();
-					if (foundPortName.startsWith("/dev/cu.usbserial-")) {
+					if (foundPortName.startsWith("/dev/cu.usbserial-") || foundPortName.startsWith("/dev/cu.usbmodem")) {
 						theSerialPortName = foundPortName;
 					} else if (foundPortName.startsWith("COM")) {
 						theSerialPortName = "COM3";
