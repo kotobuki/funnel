@@ -41,7 +41,7 @@ public class FunnelServer extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = -2518876146630199843L;
 
-	private static final String buildName = "Funnel Server v1.0 (r786)";
+	private static final String buildName = "Funnel Server v1.0 (r794)";
 
 	private final String BOARD_TYPE_ARDUINO = "Arduino (StandardFirmata, 57600 baud)";
 	private final String BOARD_TYPE_ARDUINO_FIO = "Arduino Fio (StandardFirmataForFio, 57600 baud)";
