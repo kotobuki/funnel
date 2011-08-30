@@ -708,7 +708,9 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			writeByte((stateOfDigitalPins & 0x8000) >> 15); // digital pins 15
 			break;
 		case 2:
-			// TODO: Support digitalWrite to analog pins
+			writeByte(ARD_DIGITAL_MESSAGE | port);
+			writeByte((stateOfDigitalPins >> 16) & 0x7F); // digital pins 16-22
+			writeByte((stateOfDigitalPins & 0x800000) >> 23); // digital pins 23
 			break;
 		default:
 			break;
