@@ -25,7 +25,7 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 	private static final int TOTAL_ANALOG_PINS = 8;
 	private static final int TOTAL_DIGITAL_PINS = 22;
 	private static final int[] PWM_CAPABLE_PINS = new int[] {
-			3, 5, 6, 9, 10, 11
+		3, 5, 6, 9, 10, 11
 	};
 
 	public ArduinoIO(FunnelServer server, String serialPortName, int baudRate) {
@@ -34,29 +34,6 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 		this.baudRate = baudRate;
 
 		begin(serialPortName, baudRate);
-
-		queryVersion();
-
-		try {
-			firmwareVersionQueue.poll(10000, TimeUnit.MILLISECONDS);
-
-			if ((protocolVersion[1] == 2) && (protocolVersion[0] == 1)) {
-				analogPinOffset = 0;
-				printMessage("WARNING: Please update your Arduino IDE to v1.0");
-			} else if ((protocolVersion[1] == 2) && (protocolVersion[0] == 2)) {
-				analogPinOffset = 2;
-				printMessage("WARNING: Please update your Arduino IDE to v1.0");
-			} else if ((protocolVersion[1] == 2) && (protocolVersion[0] == 3)) {
-				analogPinOffset = 0;
-			} else {
-				printMessage("WARNING: Untested Firmata protocol version!!");
-			}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			firmwareVersionQueue.clear();
-		}
 	}
 
 	synchronized public void serialEvent(SerialPortEvent serialEvent) {
