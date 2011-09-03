@@ -35,7 +35,10 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected static final int ARD_PIN_MODE_AIN = 0x02;
 	protected static final int ARD_PIN_MODE_PWM = 0x03;
 	protected static final int ARD_PIN_MODE_SERVO = 0x04;
+	protected static final int ARD_PIN_MODE_I2C = 0x06;
 
+	protected static final int CAPABILITY_QUERY = 0x6B;
+	protected static final int CAPABILITY_RESPONSE = 0x6C;
 	protected static final int SERVO_CONFIG = 0x70;
 	protected static final int FIRMATA_STRING = 0x71;
 	protected static final int SYSEX_I2C_REQUEST = 0x76;
@@ -75,6 +78,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected ArrayList<ArrayList<Integer>> sysExDataList;
 
 	protected int analogPinOffset = 0;
+	protected int maximumAnalogPinIndex = totalAnalogPins - 1;
 
 	public FirmataIO(int analogPins, int digitalPins, int[] pwmPins) {
 		super();
@@ -245,7 +249,9 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 					}
 					setPinMode(i + analogPinOffset, ARD_PIN_MODE_AIN);
 					pinMode[i] = ARD_PIN_MODE_AIN;
-					rearmostAnalogInputPin = i - analogPinRange.getMin();
+					if ((i - analogPinRange.getMin()) <= maximumAnalogPinIndex) {
+						rearmostAnalogInputPin = i - analogPinRange.getMin();						
+					}
 				} else if (PIN_AOUT.equals(config[i])) {
 					if (Arrays.binarySearch(pwmCapablePins, i) < 0) {
 						throw new IllegalArgumentException("PWM is not available on the following pin: " + i);
@@ -253,10 +259,18 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 					setPinMode(i, ARD_PIN_MODE_PWM);
 					pinMode[i] = ARD_PIN_MODE_PWM;
 				} else if (PIN_DIN.equals(config[i])) {
-					setPinMode(i, ARD_PIN_MODE_IN);
+					if (!analogPinRange.contains(i)) {
+						setPinMode(i, ARD_PIN_MODE_IN);
+					} else {
+						setPinMode(i + analogPinOffset, ARD_PIN_MODE_IN);
+					}
 					pinMode[i] = ARD_PIN_MODE_IN;
 				} else if (PIN_DOUT.equals(config[i])) {
-					setPinMode(i, ARD_PIN_MODE_OUT);
+					if (!analogPinRange.contains(i)) {
+						setPinMode(i, ARD_PIN_MODE_OUT);
+					} else {
+						setPinMode(i + analogPinOffset, ARD_PIN_MODE_OUT);						
+					}
 					pinMode[i] = ARD_PIN_MODE_OUT;
 				} else if (PIN_SERVO.equals(config[i])) {
 					setPinMode(i, ARD_PIN_MODE_SERVO);
@@ -305,10 +319,6 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	 * @see funnel.IOModule#setOutput(java.lang.Object[])
 	 */
 	public void setOutput(Object[] arguments) {
-		// printMessage("arguments: " + arguments[0] + ", " + arguments[1] + ",
-		// "
-		// + arguments[2]);
-		// //$NON-NLS-1$ //$NON-NLS-2$
 		int moduleId = ((Integer) arguments[0]).intValue();
 		int start = ((Integer) arguments[1]).intValue();
 
@@ -456,7 +466,6 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 						input = port.getInputStream();
 						output = port.getOutputStream();
 						if (baudRate > 0) {
-							parent.printMessage("baudrate: " + baudRate);
 							port.setSerialPortParams(baudRate, databits, stopbits, parity);
 						} else {
 							port.setSerialPortParams(rate, databits, stopbits, parity);
@@ -478,8 +487,6 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 		try {
 			port.addEventListener(this);
-			printMessage(Messages.getString("IOModule.Started") //$NON-NLS-1$
-					+ serialPortName);
 		} catch (TooManyListenersException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -557,41 +564,33 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	}
 
 	protected void processDigitalBytes(int source, int port, int value) {
-		int mask;
+		int pin, mask;
 		float lastValue = 0;
 
 		for (int i = 0; i < totalDigitalPins; i++) {
 			digitalPinUpdated[i] = false;
 		}
 
-		switch (port) {
-		case 0: // D0 - D7
-			// ignore Rx,Tx pins (0 and 1)
-			for (int i = 2; i < 8; i++) {
-				mask = 1 << i;
-				lastValue = digitalData[source][i];
-				digitalData[source][i] = ((value & mask) > 0) ? 1.0f : 0.0f;
-				digitalPinUpdated[i] = (lastValue != digitalData[source][i]);
+		for (int i = 0; i < 8; i++) {
+			pin = (port * 8) + i;
+			if (analogPinOffset == 2 && port == 2) {
+				pin = pin - analogPinOffset;
 			}
-			break;
-		case 1: // D8 - D13
-			for (int i = 8; i <= digitalPinRange.getMax(); i++) {
-				mask = 1 << (i - 8);
-				lastValue = digitalData[source][i];
-				digitalData[source][i] = ((value & mask) > 0) ? 1.0f : 0.0f;
-				digitalPinUpdated[i] = (lastValue != digitalData[source][i]);
+			if (pin == 0 || pin == 1 || (pin > (totalDigitalPins - 1))) {
+				// TODO: replace with proper implementation utilizing queried capabilities
+				continue;
 			}
-			break;
-		case 2: // A0 - A7
-			break;
-		default:
-			break;
+
+			mask = 1 << i;
+			lastValue = digitalData[source][pin];
+			digitalData[source][pin] = ((value & mask) > 0) ? 1.0f : 0.0f;
+			digitalPinUpdated[pin] = (lastValue != digitalData[source][pin]);
 		}
 
 		for (int j = 0; j < dinPinChunks.size(); j++) {
 			boolean needToReport = false;
 			PortRange range = dinPinChunks.get(j);
-			for (int pin = range.getMin(); pin <= range.getMax(); pin++) {
+			for (pin = range.getMin(); pin <= range.getMax(); pin++) {
 				if (digitalPinUpdated[pin]) {
 					needToReport = true;
 				}
@@ -617,6 +616,78 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				s += String.valueOf((char) data);
 			}
 			sysExMessage[2] = new String(s);
+		} else if (((Integer) sysExMessage[1]).intValue() == CAPABILITY_RESPONSE) {
+			int pinIndex = 0;
+			String capabilities = "";
+
+			ArrayList<Integer> digitalPins = new ArrayList<Integer>();
+			ArrayList<Integer> analogPins = new ArrayList<Integer>();
+			ArrayList<Integer> pwmPins = new ArrayList<Integer>();
+			while (idx < sysExDataList.get(source).size()) {
+				int data = sysExDataList.get(source).get(idx);
+				if (data == 0x7F) {
+					if (capabilities.lastIndexOf(", ") == (capabilities.length() - 2)) {
+						capabilities = capabilities.substring(0, capabilities.length() - 2);
+					}
+					printMessage("Pin " + pinIndex + ": " + capabilities);
+					pinIndex++;
+					capabilities = "";
+				} else {
+					if (data == ARD_PIN_MODE_IN) {
+						capabilities += "Input, ";
+						if (digitalPins.indexOf(pinIndex) < 0) {
+							digitalPins.add(pinIndex);
+						}
+					} else if (data == ARD_PIN_MODE_OUT) {
+						capabilities += "Output, ";
+						if (digitalPins.indexOf(pinIndex) < 0) {
+							digitalPins.add(pinIndex);
+						}
+					} else if (data == ARD_PIN_MODE_AIN) {
+						capabilities += "Analog, ";
+						if (analogPins.indexOf(pinIndex) < 0) {
+							analogPins.add(pinIndex);
+						}
+					} else if (data == ARD_PIN_MODE_PWM) {
+						capabilities += "PWM, ";
+						if (pwmPins.indexOf(pinIndex) < 0) {
+							pwmPins.add(pinIndex);
+						}
+					} else if (data == ARD_PIN_MODE_SERVO) {
+						capabilities += "Servo, ";
+					} else if (data == ARD_PIN_MODE_I2C) {
+						capabilities += "I2C, ";
+					}
+					idx++;	// skip resolution byte
+				}
+				idx++;
+			}
+			maximumAnalogPinIndex = analogPins.size() - 1;
+			printMessage("Total configurable pins: " + pinIndex);
+		} else if (((Integer) sysExMessage[1]).intValue() == REPORT_FIRMWARE) {
+			int version = protocolVersion[1] * 10 + protocolVersion[0];
+			if (version < 23) {
+				printMessage("");
+				printMessage("******************************************************");
+				printMessage("WARNING");
+				printMessage("You must upload StandardFirmata version 2.3 or greater");
+				printMessage("from Arduino version 1.0 or higher");
+				printMessage("******************************************************");
+				printMessage("");
+				if (version == 22) {
+					analogPinOffset = 2;
+				} else {
+					analogPinOffset = 0;
+				}
+			} else {
+				analogPinOffset = 0;
+
+				// send a capability query
+				writeByte(ARD_SYSEX_START);
+				writeByte(CAPABILITY_QUERY);
+				writeByte(ARD_SYSEX_END);
+			}
+			printMessage(Messages.getString("IOModule.Started") + port.getName() + ", " + port.getBaudRate());
 		} else {
 			for (int i = 0; i < counts; i++) {
 				int data = sysExDataList.get(source).get(idx++);
@@ -639,6 +710,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected void enableDigitalPinReporting() {
 		boolean inputsAvailableInPort0 = false;
 		boolean inputsAvailableInPort1 = false;
+		boolean inputsAvailableInPort2 = false;
 
 		if (dinPinChunks == null) {
 			return;
@@ -652,8 +724,18 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				}
 			}
 			for (int pin = 8; pin < 16; pin++) {
+				// D14 and D15 are not available in port 1 under Firmata 2.2
+				if (analogPinOffset == 2 && analogPinRange.contains(pin)) {
+					continue;
+				}
+
 				if (range.contains(pin)) {
 					inputsAvailableInPort1 = true;
+				}
+			}
+			for (int pin = 16; pin < 24; pin++) {
+				if (range.contains(pin - analogPinOffset)) {
+					inputsAvailableInPort2 = true;
 				}
 			}
 		}
@@ -663,12 +745,17 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 		writeByte(ARD_REPORT_DIGITAL_PORTS | 0x01);
 		writeByte(inputsAvailableInPort1 ? 1 : 0);
+
+		writeByte(ARD_REPORT_DIGITAL_PORTS | 0x02);
+		writeByte(inputsAvailableInPort2 ? 1 : 0);
 	}
 
 	protected void disableDigitalPinReporting() {
 		writeByte(ARD_REPORT_DIGITAL_PORTS | 0x00);
 		writeByte(0);
 		writeByte(ARD_REPORT_DIGITAL_PORTS | 0x01);
+		writeByte(0);
+		writeByte(ARD_REPORT_DIGITAL_PORTS | 0x02);
 		writeByte(0);
 	}
 
@@ -690,7 +777,8 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		int port = -1;
 		if (pin < 8) {
 			port = 0;
-		} else if (pin < 16) {
+		} else if (pin < (16 - analogPinOffset)) {
+			// D14 and D15 are not available in port 1 under Firmata 2.2
 			port = 1;
 		} else if (pin < 24) {
 			port = 2;
@@ -709,8 +797,8 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			break;
 		case 2:
 			writeByte(ARD_DIGITAL_MESSAGE | port);
-			writeByte((stateOfDigitalPins >> 16) & 0x7F); // digital pins 16-22
-			writeByte((stateOfDigitalPins & 0x800000) >> 23); // digital pins 23
+			writeByte((stateOfDigitalPins >> (16 - analogPinOffset)) & 0x7F); // digital pins 16-22
+			writeByte((stateOfDigitalPins & 0x800000) >> (23 - analogPinOffset)); // digital pins 23
 			break;
 		default:
 			break;
