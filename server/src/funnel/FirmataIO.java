@@ -75,12 +75,13 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected Vector<PortRange> dinPinChunks;
 	protected int rearmostAnalogInputPin = -1;
 	protected BlockingQueue<String> firmwareVersionQueue;
+	protected BlockingQueue<String> capabilitiesReceived;
 	protected ArrayList<ArrayList<Integer>> sysExDataList;
 	protected ArrayList<Integer> i2cPins;
 
 	protected int analogPinOffset = 0;
 	protected int maximumAnalogPinIndex = totalAnalogPins - 1;
-
+	
 	public FirmataIO(int analogPins, int digitalPins, int[] pwmPins) {
 		super();
 
@@ -98,6 +99,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 		digitalPinUpdated = new boolean[totalDigitalPins];
 		firmwareVersionQueue = new LinkedBlockingQueue<String>(1);
+		capabilitiesReceived = new LinkedBlockingQueue<String>(1);
 		sysExDataList = new ArrayList<ArrayList<Integer>>(MAX_NODES);
 		for (int i = 0; i < MAX_NODES; i++) {
 			sysExDataList.add(i, new ArrayList<Integer>(0));
@@ -459,10 +461,44 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				int value = ((Integer) arguments[i]).intValue();
 				writeValueAsTwo7bitBytes(value);
 			}
-		} else {
+		} else if (command == SAMPLING_INTERVAL) {
 			for (int i = 2; i < arguments.length; i++) {
 				int value = ((Integer) arguments[i]).intValue();
 				writeValueAsTwo7bitBytes(value);
+			}
+		} else if (command == SYSEX_I2C_CONFIG) {
+			if (protocolVersion[0] == 2 && protocolVersion[1] == 2) {
+				/* I2C config (Firmata 2.2)
+				 * -------------------------------
+				 * 0  START_SYSEX (0xF0) (MIDI System Exclusive)
+				 * 1  I2C_CONFIG (0x78)
+				 * 2  Power pin settings (0:off or 1:on)
+				 * 3  Delay in microseconds (LSB)
+				 * 4  Delay in microseconds (MSB)
+				 * ... user defined for special cases, etc
+				 * n  END_SYSEX (0xF7)
+				 */
+				for (int i = 2; i < arguments.length; i++) {
+					writeByte(((Integer) arguments[i]).intValue());
+				}		
+			} else {
+				/* I2C config (Firmata 2.3)
+				 * -------------------------------
+				 * 0  START_SYSEX (0xF0) (MIDI System Exclusive)
+				 * 1  I2C_CONFIG (0x78)
+				 * 2  Delay in microseconds (LSB)
+				 * 3  Delay in microseconds (MSB)
+				 * ... user defined for special cases, etc
+				 * n  END_SYSEX (0xF7)
+				 */
+				// Skip the power pin settings byte
+				for (int i = 3; i < arguments.length; i++) {
+					writeByte(((Integer) arguments[i]).intValue());
+				}		
+			}
+		} else {
+			for (int i = 2; i < arguments.length; i++) {
+				writeByte(((Integer) arguments[i]).intValue());
 			}
 		}
 		writeByte(ARD_SYSEX_END);
@@ -634,6 +670,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				s += String.valueOf((char) data);
 			}
 			sysExMessage[2] = new String(s);
+			printMessage("STRING: " + s);
 		} else if (((Integer) sysExMessage[1]).intValue() == CAPABILITY_RESPONSE) {
 			int pinIndex = 0;
 			String capabilities = "";
@@ -686,6 +723,10 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			}
 			maximumAnalogPinIndex = analogPins.size() - 1;
 			printMessage("Total configurable pins: " + pinIndex);
+			if (!capabilitiesReceived.isEmpty()) {
+				capabilitiesReceived.clear();
+			}
+			capabilitiesReceived.add("ready");
 		} else if (((Integer) sysExMessage[1]).intValue() == REPORT_FIRMWARE) {
 			int version = protocolVersion[1] * 10 + protocolVersion[0];
 			if (version < 23) {
@@ -701,6 +742,10 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				} else {
 					analogPinOffset = 0;
 				}
+				if (!capabilitiesReceived.isEmpty()) {
+					capabilitiesReceived.clear();
+				}
+				capabilitiesReceived.add("ready");
 			} else {
 				analogPinOffset = 0;
 

@@ -34,6 +34,14 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 		this.baudRate = baudRate;
 
 		begin(serialPortName, baudRate);
+		try {
+			capabilitiesReceived.poll(5000, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			capabilitiesReceived.clear();
+		}		
 	}
 
 	synchronized public void serialEvent(SerialPortEvent serialEvent) {
