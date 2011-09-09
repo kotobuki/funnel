@@ -71,11 +71,11 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 		writeByte(ARD_REPORT_VERSION);
 		try {
 			firmwareVersionQueue.poll(10000, TimeUnit.MILLISECONDS);
+			printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
 		} catch (InterruptedException e) {
 			printMessage("ERROR: Couldn't get a version info after rebooting.");
 			e.printStackTrace();
 		}
-		printMessage(Messages.getString("IOModule.Rebooted")); //$NON-NLS-1$
 	}
 
 	public void setConfiguration(Object[] arguments) {
