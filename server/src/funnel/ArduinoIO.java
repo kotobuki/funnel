@@ -66,7 +66,7 @@ public class ArduinoIO extends FirmataIO implements SerialPortEventListener {
 		printMessage(Messages.getString("IOModule.Rebooting")); //$NON-NLS-1$
 
 		writeByte(ARD_SYSTEM_RESET);
-		sleep(500);
+		sleep(100);
 
 		writeByte(ARD_REPORT_VERSION);
 		try {
