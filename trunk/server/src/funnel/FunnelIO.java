@@ -30,7 +30,7 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 	private static final int TOTAL_ANALOG_PINS = 8;
 	private static final int TOTAL_DIGITAL_PINS = 22;
 	private static final int[] PWM_CAPABLE_PINS = new int[] {
-			3, 5, 6, 9, 10, 11
+		3, 5, 6, 9, 10, 11
 	};
 
 	private int[] rssi = new int[MAX_NODES];
@@ -132,10 +132,10 @@ public class FunnelIO extends FirmataIO implements XBeeEventListener {
 		for (int i = 0; i < (arguments.length - 2); i++) {
 			int port = start + i;
 			int index = 2 + i;
-			if (digitalPinRange.contains(port)) {
+			if (digitalPins.indexOf(port) >= 0) {
 				// converts from global pin number to local pin number
 				// e.g. global pin number 8 means local pin number 0
-				int pin = port - digitalPinRange.getMin();
+				int pin = port - digitalPins.get(0);
 
 				if (arguments[index] != null && arguments[index] instanceof Float) {
 					if (pinMode[port] == ARD_PIN_MODE_OUT) {

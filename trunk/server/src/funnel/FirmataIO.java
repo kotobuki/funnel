@@ -1,9 +1,12 @@
 package funnel;
 
+import gnu.io.CommPortIdentifier;
+import gnu.io.SerialPort;
+import gnu.io.SerialPortEventListener;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
 import java.util.Vector;
@@ -11,10 +14,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.illposed.osc.OSCMessage;
-
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEventListener;
 
 public abstract class FirmataIO extends IOModule implements SerialPortEventListener {
 
@@ -49,9 +48,6 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected static final int SYSEX_NON_REALTIME = 0x7E;
 	protected static final int SYSEX_REALTIME = 0x7F;
 
-	protected int totalAnalogPins = 8;
-	protected int totalDigitalPins = 22;
-	protected int[] pwmCapablePins = null;
 	protected SerialPort port;
 	protected InputStream input;
 	protected OutputStream output;
@@ -69,53 +65,82 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	protected boolean[] digitalPinUpdated = null;
 	protected int[] pinMode;
 	protected int[] protocolVersion = new int[ARD_MAX_DATA_BYTES];
-	private int stateOfDigitalPins = 0x0000;
-	protected funnel.PortRange analogPinRange;
-	protected funnel.PortRange digitalPinRange;
+	private int stateOfDigitalPins = 0;	// TODO: Should be an array of MAX_NODES
 	protected Vector<PortRange> dinPinChunks;
 	protected int rearmostAnalogInputPin = -1;
 	protected BlockingQueue<String> firmwareVersionQueue;
 	protected BlockingQueue<String> capabilitiesReceived;
 	protected ArrayList<ArrayList<Integer>> sysExDataList;
+	protected ArrayList<Integer> analogPins;
+	protected ArrayList<Integer> digitalPins;
+	protected ArrayList<Integer> pwmPins;
+	protected ArrayList<Integer> servoPins;
 	protected ArrayList<Integer> i2cPins;
 
 	protected int analogPinOffset = 0;
-	protected int maximumAnalogPinIndex = totalAnalogPins - 1;
+	protected int maximumAnalogPinIndex = -1;
+
+	private boolean hasBeenInitialized = false;
 	
-	public FirmataIO(int analogPins, int digitalPins, int[] pwmPins) {
+	public FirmataIO(int defaultAnalogPins, int defaultDigitalPins, int[] defaultPwmPins) {
 		super();
 
-		totalAnalogPins = analogPins;
-		totalDigitalPins = digitalPins;
-		pwmCapablePins = (int[]) pwmPins.clone();
-		pinMode = new int[totalDigitalPins];
-
-		digitalData = new float[MAX_NODES][totalDigitalPins];
-		for (int i = 0; i < MAX_NODES; i++) {
-			for (int j = 0; j < totalDigitalPins; j++) {
-				digitalData[i][j] = -1;
-			}
+		digitalPins = new ArrayList<Integer>();
+		for (int i = 0; i < defaultDigitalPins; i++) {
+			digitalPins.add(i);
 		}
 
-		digitalPinUpdated = new boolean[totalDigitalPins];
-		firmwareVersionQueue = new LinkedBlockingQueue<String>(1);
-		capabilitiesReceived = new LinkedBlockingQueue<String>(1);
+		analogPins = new ArrayList<Integer>();
+		for (int i = defaultDigitalPins; i < (defaultDigitalPins + defaultAnalogPins); i++) {
+			analogPins.add(i);
+		}
+		
+		pwmPins = new ArrayList<Integer>();		
+		for (int i = 0; i < defaultPwmPins.length; i++) {
+			pwmPins.add(defaultPwmPins[i]);
+		}
+
+		servoPins = new ArrayList<Integer>();		
+		for (int i = digitalPins.get(0); i < analogPins.get(0); i++) {
+			servoPins.add(i);
+		}
+
+		i2cPins = new ArrayList<Integer>();
+		i2cPins.add(18);	// SDA: A4/D18
+		i2cPins.add(19);	// SCL: A5/D19
+
+		dinPinChunks = new Vector<PortRange>();
+
 		sysExDataList = new ArrayList<ArrayList<Integer>>(MAX_NODES);
 		for (int i = 0; i < MAX_NODES; i++) {
 			sysExDataList.add(i, new ArrayList<Integer>(0));
 		}
 
-		digitalPinRange = new funnel.PortRange();
-		digitalPinRange.setRange(0, totalDigitalPins - 1);
-		dinPinChunks = new Vector<PortRange>();
-		analogPinRange = new funnel.PortRange();
-		analogPinRange.setRange(totalDigitalPins - totalAnalogPins, totalDigitalPins - 1);
-		
-		i2cPins = new ArrayList<Integer>();
-		i2cPins.add(18);	// A4/D18/SDA
-		i2cPins.add(19);	// A5/D19/SCL
+		firmwareVersionQueue = new LinkedBlockingQueue<String>(1);
+		capabilitiesReceived = new LinkedBlockingQueue<String>(1);
 	}
 
+	private void instantiatePinRelatedVariables() {
+		if (hasBeenInitialized) {
+			return;
+		}
+
+		maximumAnalogPinIndex = analogPins.size() - 1;
+
+		pinMode = new int[digitalPins.size()];
+
+		digitalData = new float[MAX_NODES][digitalPins.size()];
+		for (int i = 0; i < MAX_NODES; i++) {
+			for (int j = 0; j < digitalPins.size(); j++) {
+				digitalData[i][j] = -1;
+			}
+		}
+
+		digitalPinUpdated = new boolean[digitalPins.size()];
+
+		hasBeenInitialized = true;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -154,7 +179,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		int moduleId = 0;
 		int from = 0;
 		int counts = 0;
-		int totalPinCounts = analogPinRange.getCounts() + digitalPinRange.getCounts();
+		int totalPinCounts = digitalPins.size();
 
 		if (address.equals("/in")) { //$NON-NLS-1$
 			moduleId = ((Integer) arguments[0]).intValue();
@@ -179,7 +204,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		results[1] = new Integer(from);
 		for (int i = 0; i < counts; i++) {
 			int pin = from + i;
-			if (digitalPinRange.contains(pin)) {
+			if (digitalPins.indexOf(pin) >= 0) {
 				results[2 + i] = new Float(digitalData[moduleId][pin]);
 			}
 		}
@@ -192,7 +217,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		results[1] = new Integer(from);
 		for (int i = 0; i < counts; i++) {
 			int pin = from + i;
-			if (digitalPinRange.contains(pin)) {
+			if (digitalPins.indexOf(pin) >= 0) {
 				results[2 + i] = new Float(digitalData[source][pin]);
 			}
 		}
@@ -237,22 +262,26 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		dinPinChunks.clear();
 		rearmostAnalogInputPin = -1;
 
-		if (config.length != totalDigitalPins) {
-			throw new IllegalArgumentException("The number of pins does not match to that of the Arduino I/O module"); //$NON-NLS-1$
+		if (config.length != digitalPins.size()) {
+			printMessage("WARNING: The number of pins (" + config.length + ") does not match to that of the Arduino board (" + digitalPins.size() + ")");
+//			throw new IllegalArgumentException("The number of pins does not match to that of the Arduino I/O module"); //$NON-NLS-1$
 		}
 
 		beginPacketIfNeeded(moduleId);
 		for (int i = 0; i < config.length; i++) {
 			if (config[i] == null) {
+				printMessage("Argument of the following pin is null: " + i);
 				throw new IllegalArgumentException("Argument of the following pin is null: " + i);
 			}
 			if (!(config[i] instanceof Integer)) {
+				printMessage("Argument of the following pin is not an integer value: " + i);
 				throw new IllegalArgumentException("Argument of the following pin is not an integer value: " + i);
 			}
-			if (digitalPinRange.contains(i)) {
+			if (digitalPins.indexOf(i) >= 0) {
 				if (PIN_AIN.equals(config[i])) {
-					if (!analogPinRange.contains(i)) {
-						throw new IllegalArgumentException("AIN is not available on the following pin: " + i);
+					if (analogPins.indexOf(i) < 0) {
+						printMessage("Analog is not available for pin " + i);
+						throw new IllegalArgumentException("Analog is not available for pin " + i);
 					}
 					setPinMode(i + analogPinOffset, ARD_PIN_MODE_AIN);
 					pinMode[i] = ARD_PIN_MODE_AIN;
@@ -260,20 +289,21 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 						rearmostAnalogInputPin = pinFromDigitalToAnalog(i);
 					}
 				} else if (PIN_AOUT.equals(config[i])) {
-					if (Arrays.binarySearch(pwmCapablePins, i) < 0) {
-						throw new IllegalArgumentException("PWM is not available on the following pin: " + i);
+					if (pwmPins.indexOf(i) < 0) {
+						printMessage("PWM is not available for pin " + i);
+						throw new IllegalArgumentException("PWM is not available for pin " + i);
 					}
 					setPinMode(i, ARD_PIN_MODE_PWM);
 					pinMode[i] = ARD_PIN_MODE_PWM;
 				} else if (PIN_DIN.equals(config[i])) {
-					if (!analogPinRange.contains(i)) {
+					if (analogPins.indexOf(i) < 0) {
 						setPinMode(i, ARD_PIN_MODE_IN);
 					} else {
 						setPinMode(i + analogPinOffset, ARD_PIN_MODE_IN);
 					}
 					pinMode[i] = ARD_PIN_MODE_IN;
 				} else if (PIN_DOUT.equals(config[i])) {
-					if (!analogPinRange.contains(i)) {
+					if (analogPins.indexOf(i) < 0) {
 						setPinMode(i, ARD_PIN_MODE_OUT);
 					} else {
 						setPinMode(i + analogPinOffset, ARD_PIN_MODE_OUT);						
@@ -283,10 +313,12 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 					setPinMode(i, ARD_PIN_MODE_SERVO);
 					pinMode[i] = ARD_PIN_MODE_SERVO;
 				} else {
-					throw new IllegalArgumentException("A wrong pin mode is specified for the following pin: " + i);
+					printMessage("A unsupported pin mode is specified for pin " + i);
+					throw new IllegalArgumentException("A unsupported pin mode is specified for pin " + i);
 				}
 			} else {
-				throw new IllegalArgumentException("The following pin number is out of range: " + i);
+				printMessage("The following pin number is out of range: " + i);
+//				throw new IllegalArgumentException("The following pin number is out of range: " + i);
 			}
 		}
 		endPacketIfNeeded();
@@ -294,7 +326,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		boolean wasNotInput = true;
 		int from = 0;
 		int to = 0;
-		for (int i = digitalPinRange.getMin(); i <= digitalPinRange.getMax(); i++) {
+		for (int i = digitalPins.get(0); i <= digitalPins.get(digitalPins.size() - 1); i++) {
 			if (wasNotInput && pinMode[i] == ARD_PIN_MODE_IN) {
 				from = i;
 				wasNotInput = false;
@@ -308,8 +340,8 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		}
 
 		// process the last block
-		if (pinMode[digitalPinRange.getMax()] == ARD_PIN_MODE_IN) {
-			to = digitalPinRange.getMax();
+		if (pinMode[digitalPins.get(digitalPins.size() - 1)] == ARD_PIN_MODE_IN) {
+			to = digitalPins.get(digitalPins.size() - 1);
 			PortRange range = new PortRange();
 			range.setRange(from, to);
 			dinPinChunks.add(range);
@@ -333,10 +365,10 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		for (int i = 0; i < (arguments.length - 2); i++) {
 			int pin = start + i;
 			int index = 2 + i;
-			if (digitalPinRange.contains(pin)) {
+			if (digitalPins.indexOf(pin) >= 0) {
 				// converts from global pin number to local pin number
 				// e.g. global pin number 6 means local pin number 0
-				int pinNumber = pin - digitalPinRange.getMin();
+				int pinNumber = pin - digitalPins.get(0);
 
 				if (arguments[index] != null && arguments[index] instanceof Float) {
 					if (pinMode[pin] == ARD_PIN_MODE_OUT) {
@@ -386,7 +418,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		writeValueAsTwo7bitBytes(parent.getCommandPortServer().getSamplingInterval());
 		writeByte(ARD_SYSEX_END);
 
-		for (int pin = 0; pin < totalAnalogPins; pin++) {
+		for (int pin = 0; pin < analogPins.size(); pin++) {
 			if (pinMode[pinFromAnalogToDigital(pin)] == ARD_PIN_MODE_AIN) {
 				setAnalogPinReporting(pin, 1);
 			}
@@ -408,7 +440,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 
 		isPolling = false;
 		beginPacketIfNeeded(0xFFFF);
-		for (int pin = 0; pin < totalAnalogPins; pin++) {
+		for (int pin = 0; pin < analogPins.size(); pin++) {
 			setAnalogPinReporting(pin, 0);
 		}
 		disableDigitalPinReporting();
@@ -447,7 +479,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			}
 
 			if (rearmostAnalogInputPin == pinFromDigitalToAnalog(i2cPins.get(1))) {
-				for (int i = i2cPins.get(0) - 1; i > analogPinRange.getMin(); i--) {
+				for (int i = i2cPins.get(0) - 1; i > analogPins.get(0); i--) {
 					if (pinMode[i] == ARD_PIN_MODE_AIN) {
 						rearmostAnalogInputPin = this.pinFromDigitalToAnalog(i);
 						break;
@@ -573,7 +605,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				case ARD_ANALOG_MESSAGE:
 					digitalData[source][pinFromAnalogToDigital(multiByteChannel[source])] = (float) ((storedInputData[source][0] << 7) | storedInputData[source][1]) / 1023.0f;
 					if (multiByteChannel[source] == rearmostAnalogInputPin) {
-						notifyUpdate(source, analogPinRange.getMin(), analogPinRange.getCounts());
+						notifyUpdate(source, analogPins.get(0), analogPins.size());
 					}
 					break;
 				}
@@ -621,7 +653,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		int pin, mask;
 		float lastValue = 0;
 
-		for (int i = 0; i < totalDigitalPins; i++) {
+		for (int i = 0; i < digitalPins.size(); i++) {
 			digitalPinUpdated[i] = false;
 		}
 
@@ -630,7 +662,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			if (analogPinOffset == 2 && port == 2) {
 				pin = pin - analogPinOffset;
 			}
-			if (pin == 0 || pin == 1 || (pin > (totalDigitalPins - 1))) {
+			if (pin == 0 || pin == 1 || (pin > (digitalPins.size() - 1))) {
 				// TODO: replace with proper implementation utilizing queried capabilities
 				continue;
 			}
@@ -674,14 +706,19 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 		} else if (((Integer) sysExMessage[1]).intValue() == CAPABILITY_RESPONSE) {
 			int pinIndex = 0;
 			String capabilities = "";
+
+			digitalPins.clear();
+			analogPins.clear();
+			pwmPins.clear();
+			servoPins.clear();
 			i2cPins.clear();
 
-			ArrayList<Integer> digitalPins = new ArrayList<Integer>();
-			ArrayList<Integer> analogPins = new ArrayList<Integer>();
-			ArrayList<Integer> pwmPins = new ArrayList<Integer>();
 			while (idx < sysExDataList.get(source).size()) {
 				int data = sysExDataList.get(source).get(idx);
 				if (data == 0x7F) {
+					if (digitalPins.indexOf(pinIndex) < 0) {
+						digitalPins.add(pinIndex);
+					}
 					if (capabilities.lastIndexOf(", ") == (capabilities.length() - 2)) {
 						capabilities = capabilities.substring(0, capabilities.length() - 2);
 					}
@@ -691,14 +728,8 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				} else {
 					if (data == ARD_PIN_MODE_IN) {
 						capabilities += "Input, ";
-						if (digitalPins.indexOf(pinIndex) < 0) {
-							digitalPins.add(pinIndex);
-						}
 					} else if (data == ARD_PIN_MODE_OUT) {
 						capabilities += "Output, ";
-						if (digitalPins.indexOf(pinIndex) < 0) {
-							digitalPins.add(pinIndex);
-						}
 					} else if (data == ARD_PIN_MODE_AIN) {
 						capabilities += "Analog, ";
 						if (analogPins.indexOf(pinIndex) < 0) {
@@ -711,18 +742,23 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 						}
 					} else if (data == ARD_PIN_MODE_SERVO) {
 						capabilities += "Servo, ";
+						if (servoPins.indexOf(pinIndex) < 0) {
+							servoPins.add(pinIndex);
+						}
 					} else if (data == ARD_PIN_MODE_I2C) {
 						capabilities += "I2C, ";
 						if (i2cPins.indexOf(pinIndex) < 0) {
 							i2cPins.add(pinIndex);
 						}
 					}
-					idx++;	// skip resolution byte
+					idx++;	// skip the resolution byte
 				}
 				idx++;
 			}
-			maximumAnalogPinIndex = analogPins.size() - 1;
 			printMessage("Total configurable pins: " + pinIndex);
+
+			instantiatePinRelatedVariables();
+
 			if (!capabilitiesReceived.isEmpty()) {
 				capabilitiesReceived.clear();
 			}
@@ -742,6 +778,9 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 				} else {
 					analogPinOffset = 0;
 				}
+
+				instantiatePinRelatedVariables();
+
 				if (!capabilitiesReceived.isEmpty()) {
 					capabilitiesReceived.clear();
 				}
@@ -792,7 +831,7 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 			}
 			for (int pin = 8; pin < 16; pin++) {
 				// D14 and D15 are not available in port 1 under Firmata 2.2
-				if (analogPinOffset == 2 && analogPinRange.contains(pin)) {
+				if (analogPinOffset == 2 && (analogPins.indexOf(pin) >= 0)) {
 					continue;
 				}
 
@@ -904,11 +943,11 @@ public abstract class FirmataIO extends IOModule implements SerialPortEventListe
 	abstract void writeByte(int data);
 
 	private int pinFromDigitalToAnalog(int digitalPin) {
-		return digitalPin - analogPinRange.getMin();
+		return digitalPin - analogPins.get(0);
 	}
 
 	private int pinFromAnalogToDigital(int analogPin) {
-		return analogPin + analogPinRange.getMin();
+		return analogPin + analogPins.get(0);
 	}
 
 }
