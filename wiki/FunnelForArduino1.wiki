@@ -7,8 +7,9 @@ FunnelはArduinoボードと[http://firmata.org/ Firmata]を使って通信し�
 
 = Downloads / ダウンロード =
 
-* http://funnel.googlecode.com/files/funnel-1.0-r801.zip
+  * http://funnel.googlecode.com/files/funnel-1.0-r801.zip
 
 = Changes / 変更点 =
 
-* Support for both Firmata 2.3 (Arduino 1.0) and 2.2 (Arduino 0022) / Firmata 2.3（Arduino 2.3）と2.2（Arduino 0022）の両方をサポート
+  * Support for both Firmata 2.3 (Arduino 1.0) and 2.2 (Arduino 0022) / Firmata 2.3（Arduino 2.3）と2.2（Arduino 0022）の両方をサポート
+  * Modified to auto detect an Arduino Uno board in addition to a board with a FTDI chip (Mac OS X only) / FTDIチップを搭載したArduinoボードに加えてArduino Unoボードを自動検出するように変更（Mac OS Xのみ）
