@@ -6,6 +6,9 @@ cp ./server/settings.*.txt ./libraries/processing/funnel/library
 cp ./server/lib/RXTXcomm.jar ./libraries/processing/funnel/library
 cp ./server/lib/javaosc.jar ./libraries/processing/funnel/library
 cp ./server/lib/jvyaml.jar ./libraries/processing/funnel/library
+cp ./server/funnel_server.jar ./server/Funnel\ Server.app/Contents/Resources/Java
+cp ./server/librxtxSerial.jnilib ./server/Funnel\ Server.app/Contents/Resources/Java
+cp ./server/lib/RXTXcomm.jar ./server/Funnel\ Server.app/Contents/Resources/Java
 cp ./documents/src/installation_instructions_*.pdf ./documents
 rm -r ./documents/src/
 rm -r ./release/
