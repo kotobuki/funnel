@@ -148,6 +148,10 @@ public class IOModule{
 		return i2c;
 	}
 	
+	public boolean hasI2CDevice(){
+		return !i2cDevs.isEmpty();
+	}
+	
 	
 	//
 	// 

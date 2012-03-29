@@ -1,5 +1,7 @@
 package processing.funnel;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -46,6 +48,9 @@ public final class Fio extends Firmata{
 	private HashSet<Integer> nodes = new HashSet<Integer>();
 	private int[] IDs;
 	private Configuration config;
+	private boolean hasAllNodes = false;
+	
+	Method fioEventMethod = null;
 	
 	public Fio(PApplet parent, String hostName, String serverPortName,
 			int commandPortNumber,int samplingInterval,int[] IDs,Configuration config){
@@ -54,16 +59,27 @@ public final class Fio extends Firmata{
 
 		this.IDs = IDs;
 		this.config = config;
+		nodes.clear();
+		System.out.println(" size " + nodes.size());
 		
-		
+		System.out.println("initialize()");
 		if(!initialize(config)){
 			errorMessage("Funnel configuration error!");
 		}
 		
+		System.out.println("regModule()");
 		regModule(IDs,config);
-		
+		System.out.println("startIOSystem()");
 		startIOSystem();// /inと/nodeを読めるようにする
 		
+
+		try {
+			fioEventMethod = 
+				parent.getClass().getMethod("fioAllNodeFound",new Class[] { });
+
+		} catch (Exception e) {
+		  // no such method, or an error.. which is fine, just ignore
+		}
 		
 	}
 	
@@ -119,11 +135,12 @@ public final class Fio extends Firmata{
 			String name = "Fio.ID" + nf.format(IDs[i]);
 			addModule(IDs[i],config,name);
 
-			nodes.add(IDs[i]);
+			//nodes.add(IDs[i]);
 		}
 		
 		initPins(_a,_d);
 	}
+	
 	
 	
 	protected void interpretMessage(OSCMessage message){
@@ -135,6 +152,8 @@ public final class Fio extends Firmata{
 //		System.out.println( " " );
 		
 		if(message.getAddress().equals("/in") &&initialized){
+			
+			System.out.println("/in");
 			
 			int id = ((Integer)message.getArguments()[0]).intValue();
 			int n = ((Integer)message.getArguments()[1]).intValue();
@@ -172,10 +191,24 @@ public final class Fio extends Firmata{
 					}
 					
 					
-					if(nodes.size() == IDs.length){//全部そろった
+					if(nodes.size() == IDs.length && !hasAllNodes){//全部そろった
 
 						beginPolling();
-
+						hasAllNodes = true;
+						System.out.println("全部そろった");
+						
+						try {
+							fioEventMethod.invoke(parent,null);
+						} catch (IllegalArgumentException e) {
+							// TODO 自動生成された catch ブロック
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							// TODO 自動生成された catch ブロック
+							e.printStackTrace();
+						} catch (InvocationTargetException e) {
+							// TODO 自動生成された catch ブロック
+							e.printStackTrace();
+						}
 					}
 				}
 			}
