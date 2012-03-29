@@ -36,6 +36,7 @@ public abstract class Firmata extends IOSystem{
 		execCode("/sysex/request",args,false);
 	}
 	
+	//addI2CDevice()‚â‚ç‚ê‚Ä‚©‚ç‚Å‚È‚¢‚Æ
 	protected void waitMessage(OSCMessage message){
 		super.waitMessage(message);
 
@@ -48,15 +49,17 @@ public abstract class Firmata extends IOSystem{
 				int registerAddress = ((Integer)message.getArguments()[3]).intValue();
 				
 				IOModule io = iomodule(modid);
-				I2CInterface i2c = io.i2cdevice(slaveAddress);
-				
-				int len = message.getArguments().length-4;
-
-				byte[] data = new byte[len];
-				for(int i=0;i<len;i++){
-					data[i] = ((Integer)message.getArguments()[4+i]).byteValue();
+				if(io.hasI2CDevice()){
+					I2CInterface i2c = io.i2cdevice(slaveAddress);
+					
+					int len = message.getArguments().length-4;
+	
+					byte[] data = new byte[len];
+					for(int i=0;i<len;i++){
+						data[i] = ((Integer)message.getArguments()[4+i]).byteValue();
+					}
+					i2c.receiveData(registerAddress, data);
 				}
-				i2c.receiveData(registerAddress, data);
 				
 			}			
 			
