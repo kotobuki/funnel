@@ -30,16 +30,6 @@ public class HMC6352 extends I2CDevice implements I2CInterface{
 		System.out.println("initialize " + name);
 	}
 	
-	public void update(){
-
-		Firmata io = (Firmata)conectedModule.system;
-		  byte[] bu = {COM_I2C_REQUEST,COM_READ,slaveAddress,0x7F,0x02};
-
-
-		io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
-	}
-
-
 	//
 	public void beginUpdate(){
 
@@ -52,6 +42,7 @@ public class HMC6352 extends I2CDevice implements I2CInterface{
 		endTransmission();
 		
 		//request data
+		//read 2byte from 0x7F
 		requestFromRegister(0x7F,2,true);
 
 	}
@@ -77,12 +68,15 @@ public class HMC6352 extends I2CDevice implements I2CInterface{
 	}
 	
 	public void receiveData(int regAddress,byte[] data){
-		switch(regAddress){
-		case 0x7F:
-			int ihead =  (data[0] & 0xFF)<< 8 | data[1]&0xFF;
-			heading = (float)ihead/10;
-			break;
-		}
+//		switch(regAddress){
+//		case 0x7F:
+//			int ihead =  (data[0] & 0xFF)<< 8 | data[1]&0xFF;
+//			heading = (float)ihead/10;
+//			break;
+//		}
+		
+		int ihead =  (data[0] & 0xFF)<< 8 | data[1]&0xFF;
+		heading = (float)ihead/10;
 	}
 
 }

@@ -1,18 +1,16 @@
 package processing.funnel.i2c;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 
-import processing.core.*;
-import processing.xml.*;
+import Jama.*;
+
+import java.lang.Math;
+
 import processing.funnel.IOModule;
-import processing.funnel.Scaler;
+
 
 /**
  * @author endo
- * @version 1.0
+ * @version 1.1
  * 
  */
 
@@ -62,20 +60,21 @@ public class LSM303DLH {
 //	final byte IRB_REG_M = (0x0B);
 //	final byte IRC_REG_M = (0x0C);
 	
-	private boolean updateCaribrationData = false;
+
+	public _Accelerometer a;
+	public _Magnetometer m;
 	
-	
-	Accelerometer a;
-	Magnetometer m;
-	
+	private double pitch;
+	private double roll;
+	public float heading;
 	
 	
 	public LSM303DLH(IOModule iomodule){
 
-		m = new Magnetometer(iomodule);
+		m = new _Magnetometer(iomodule);
 		iomodule.addI2CDevice(m);
 
-		a = new Accelerometer(iomodule);
+		a = new _Accelerometer(iomodule);
 		iomodule.addI2CDevice(a);
 		
 		enable();
@@ -87,119 +86,64 @@ public class LSM303DLH {
 		m.enable();
 		a.enable();
 		
-		System.out.println("LSM303DLH enabled");
+		//System.out.println("LSM303DLH enabled");
 
 	}
-	
-	public void reset(){
-		m.maximum.x = Float.MIN_VALUE;m.maximum.y = Float.MIN_VALUE; m.maximum.z = Float.MIN_VALUE;
-		m.minimum.x = Float.MAX_VALUE;m.minimum.y = Float.MAX_VALUE;m.minimum.z = Float.MAX_VALUE;
-	}
-	
-	public void setCalibration(float min_x,float min_y,float min_z,float max_x,float max_y,float max_z){
-		m.maximum.x = max_x;m.maximum.y = max_y; m.maximum.z = max_z;
-		m.minimum.x = min_x;m.minimum.y = min_y;m.minimum.z = min_z;
-	}
-	
-	public void printCalibrationData(){
-		System.out.println("  min  " + m.minimum.x + "  " + m.minimum.y + "  "+m.minimum.z);
-		System.out.println("  max  " + m.maximum.x + "  " + m.maximum.y + "  "+m.maximum.z);
-	}
-	
-	public void enableCalibration(){
-		updateCaribrationData = true;
-	}
-	
-	public void disableCalibration(){
-		updateCaribrationData = false;
-	}
-	
-	
-	public float heading(){
-		return heading(new PVector(0,-1,0));
-	}
-	
-	public float heading(PVector from){
 
-		// shift and scale
-		PVector pm = new PVector();;
-	    pm.x = (m.value.x - m.minimum.x) / (m.maximum.x - m.minimum.x) * 2 - 1.0f;
-	    pm.y = (m.value.y - m.minimum.y) / (m.maximum.y - m.minimum.y) * 2 - 1.0f;
-	    pm.z = (m.value.z - m.minimum.z) / (m.maximum.z - m.minimum.z) * 2 - 1.0f;
-
-
-		PVector temp_a = new PVector(a.value.x,a.value.y,a.value.z);
-		
-	    // normalize
-	    temp_a.normalize();
-	    
-	    // compute E and N
-	    PVector E = new PVector();
-	    PVector N = new PVector();
-	    
-	    PVector.cross(pm,temp_a,E);
-	    E.normalize();
-	    PVector.cross(temp_a,E,N);
-	    
-	    // compute heading (radians)
-	    float heading = PApplet.atan2(E.dot(from),N.dot(from));
-
-		return heading;		
-
-	}
-	
-	public PVector getAccelerometer(){
-		return a.value;
-	}
-	
-	public PVector getMagnetometer(){
-		return m.value;
-	}
-	
-	public float[] getCalibrationData(){
-		float cal[] = {m.minimum.x,m.minimum.y,m.minimum.z,m.maximum.x,m.maximum.y,m.maximum.z};
-		return cal;
-	}
 	
 	
-	
-	public class Accelerometer extends I2CDevice implements I2CInterface{
+	public class _Accelerometer extends I2CDevice implements I2CInterface{
 		public final static String name = "LSM303DLH(accelmeter)";
 
 		final int SubAddress = OUT_X_L_A | (1 << 7);
 		
-		public PVector value;
+
+		private Matrix matRowData;
 		
-		public Accelerometer(IOModule iomodule){
+		
+		
+		public _Accelerometer(IOModule iomodule){
 			super(iomodule,ACC_ADDRESS, name);
 			
-			value = new PVector();
-			
+			matRowData = new Matrix(1,3);
 		}
+		
+
+//		//ÃŽ~‚³‚¹‚Ä5‚©‚ç10•bƒf[ƒ^‚ð‹L˜^‚·‚é
+//		public boolean setStationaryPosition(int p){
+//			//“Ç‚Ýž‚ñ‚Å•½‹Ï‚Æ‚Á‚Ä‹L˜^
+//			
+//			return true;
+//		}
 
 		
 		@Override
 		public void receiveData(int regAddress, byte[] data) {
+
 			switch(regAddress){
 			case SubAddress:
 				
-				byte xla = data[0];
-				byte xha = data[1];
-				byte yla = data[2];
-				byte yha = data[3];
-				byte zla = data[4];
-				byte zha = data[5];
+				byte lsbX = data[0];
+				byte msbX = data[1];
+				byte lsbY = data[2];
+				byte msbY = data[3];
+				byte lsbZ = data[4];
+				byte msbZ = data[5];
+	
+				int ax=0,ay=0,az=0;
+				ax |= msbX << 24 & 0xFF000000 | lsbX<< 16 & 0x00F00000;
+				ax = (ax>>20);
+
+				ay |= msbY << 24 & 0xFF000000 | lsbY<< 16 & 0x00F00000;
+				ay = (ay>>20);
 				
-				short xx = (short)(((xha&0xFF)<<8 | (xla&0xFF)));
+				az |= msbZ << 24 & 0xFF000000 | lsbZ<< 16 & 0x00F00000;
+				az = (az>>20);
+
+				updateValues(ax,ay,az);
 				
-				short yy = (short)(((yha&0xFF)<<8 | (yla&0xFF)));
+				//System.out.println("  A  " + value.x + "  " + value.y + "  "+value.z);
 				
-				short zz = (short)(((zha&0xFF)<<8 | (zla&0xFF)));
-				
-				
-				value = new PVector(xx,yy,zz);
-				
-//				System.out.println("  A  " + value.x + "  " + value.y + "  "+value.z);				
 				
 				break;
 //			case STATUS_REG_A:
@@ -210,52 +154,92 @@ public class LSM303DLH {
 		}
 		
 		public void enable(){
+		
 			beginTransmission();
-			send(CTRL_REG1_A);
-			//0x27 = 0b00100111 // Normal power mode, all axes enabled
-			send((byte)0x27);
+				send(CTRL_REG1_A);
+				// 0x27 = 0b00100111 // Normal power mode, all axes enabled  37Hz//
+				send((byte)0x27);
 			endTransmission();
 			
 			beginTransmission();
-			send(CTRL_REG4_A);
-			//0b00110000 +-2g
-			send((byte)0x00);
-			//0b00110000 8g
-			//send((byte)0x30);
+				send(CTRL_REG4_A);
+				// 0b10110000 +-8g
+				send((byte)0xB0);
+	
+				// 0b10000000 +-2g
+				//send((byte)0x80);
 			endTransmission();
 			
 			requestFromRegister(SubAddress,6,true);			
 		}
 		
 
+		private void updateValues(int x,int y,int z){
+			matRowData.set(0, 0, x);
+			matRowData.set(0, 1, y);
+			matRowData.set(0, 2, z);
+			
+			matRowData.timesEquals(1.0/matRowData.normF()); //normalize
+			
+			pitch = Math.asin(-matRowData.get(0, 0));//pitch = asin(-ax)
+			roll = Math.asin(matRowData.get(0, 1)/Math.cos(pitch));//roll = asin(ay/cos(pitch))
+
+		}
 	}
 	
 	
-	public class Magnetometer extends I2CDevice implements I2CInterface{
+	public class _Magnetometer extends I2CDevice implements I2CInterface{
 		public final static String name = "LSM303DLH (Magnetometer)";
 
 		
 		final int MagnetDataAddress = OUT_X_H_M;
-
-		public PVector value;
-
-		public PVector minimum;
-		public PVector maximum;
 		
-		public Magnetometer(IOModule iomodule){
+		private Matrix matRawData;
+		private Matrix matCompensateData;
+		private Matrix matTiltCompensatedData;
+		
+		private Matrix matEllipsoidTransform;
+		private Matrix matEllipsoidCenter;
+		
+		public _Magnetometer(IOModule iomodule){
 			super(iomodule,MAG_ADDRESS, name);
 
-			minimum = new PVector(Float.MAX_VALUE,Float.MAX_VALUE,Float.MAX_VALUE);
-			maximum = new PVector(Float.MIN_VALUE,Float.MIN_VALUE,Float.MIN_VALUE);
+		
+			matRawData = new Matrix(3,1);
+			matCompensateData = new Matrix(3,1);
+			matTiltCompensatedData = new Matrix(3,1);
 			
-			value = new PVector();
+//			double[][] dt = {{0.871045, 0.0341145, -0.00556378}, {0.0341145, 0.912459, -0.0491539}, {-0.00556378, -0.0491539, 0.967118}};
+//			matEllipsoidTransform = new Matrix(dt);
+//			double[] dc = {-69.1986, 97.7790, 130.019};
+//			matEllipsoidCenter = new Matrix(dc,3);
 			
-			requestFromRegister(MagnetDataAddress,6,true);			
+			matEllipsoidTransform = Matrix.identity(3, 3);
+			matEllipsoidCenter = new Matrix(3,1);
+			
+		}
+		
+		public double[] getRawData(){
+			return matRawData.getColumnPackedCopy();
+		}
+		
+		public double[] getCompensateData(){
+			return matCompensateData.getColumnPackedCopy();
+		}
+		
+		public void setEllipsoidTransformMatrix(double[][] dt){
+			matEllipsoidTransform = new Matrix(dt);
+		}
+		
+		public void setEllipsoidCenter(double[] dc){
+			matEllipsoidCenter = new Matrix(dc,3);
 		}
 
 		
 		@Override
+
 		public void receiveData(int regAddress, byte[] data) {
+			
 			switch(regAddress){
 			case MagnetDataAddress:
 				
@@ -266,64 +250,75 @@ public class LSM303DLH {
 				byte zhm = data[4];
 				byte zlm = data[5];
 				
-				short xx = (short)((xhm&0xFF)<<8 | (xlm&0xFF));
+				int mx=0,my=0,mz=0;
+				mx = (xhm<<24) & 0xFF000000 | (xlm<<16) & 0x00FF0000;
+				mx = (mx>>16);
+				my = (yhm<<24) & 0xFF000000 | (ylm<<16) & 0x00FF0000;
+				my = (my>>16);
+				mz = (zhm<<24) & 0xFF000000 | (zlm<<16) & 0x00FF0000;
+				mz = (mz>>16);
 				
-				short yy = (short)((yhm&0xFF)<<8 | (ylm&0xFF));
-				
-				short zz = (short)((zhm&0xFF)<<8 | (zlm&0xFF));
-				
-//				System.out.println("  M  " + xx + "  " + yy + "  "+zz);
+				//System.out.println("  M  " + mx + "  " + my + "  "+mz);
 
-				updateValue(xx,yy,zz);
+				updateValue(mx,my,mz);
 				
 				break;
 			}
-
-			
-				
 		}
 		
 		public void enable(){
 			beginTransmission();
-			send(CRA_REG_M);
-			//0b00011000 data output rate 75Hz
-			send((byte)0x18);
-			//0b00000000 data output rate 0.75Hz
-			//send((byte)0x00);
+				send(CRA_REG_M);
+				send((byte)0x18);//0b00011000 data output rate 75Hz
+				//send((byte)0x00);//0b00000000 data output rate 0.75Hz
 			endTransmission();
 			
 			beginTransmission();
-			send(CRB_REG_M);
-			//0b00100000 1.3gauss
-			send((byte)0x20);
-			//0b1110000 8.1gauss
-//			send((byte)0xE0);
+				send(CRB_REG_M);
+				//0b00100000 1.3gauss
+				send((byte)0x20);
+				//0b1110000 8.1gauss
+				//send((byte)0xE0);
 			endTransmission();
 			
 			beginTransmission();
-			send(MR_REG_M);
-			//0x00 = 0b00000000
-			// Continuous conversion mode
-			send((byte)0x00);
+				send(MR_REG_M);
+				//0x00 = 0b00000000
+				// Continuous conversion mode
+				send((byte)0x00);
 			endTransmission();
+			
+			requestFromRegister(MagnetDataAddress,6,true);
 
 		}
 
-		private void updateValue(short x,short y,short z){
+		private void updateValue(int x,int y,int z){
 			
-			value = new PVector(x,y,z);
+			matRawData.set(0, 0, x);
+			matRawData.set(1, 0, y);
+			matRawData.set(2, 0, z);
+			//matRawData.timesEquals(1.0/matRawData.normF()); //normalize
+
+			Matrix t = matRawData.minus(matEllipsoidCenter);
+			matCompensateData = matEllipsoidTransform.times(t);
+			//matCompensateData.timesEquals(1.0/matCompensateData.normF()); //normalize
 			
-						
-			if(updateCaribrationData){
-				minimum.x = PApplet.min(minimum.x,x);
-				maximum.x = PApplet.max(maximum.x,x);
-				
-				minimum.y = PApplet.min(minimum.y,y);
-				maximum.y = PApplet.max(maximum.y,y);
-				
-				minimum.z = PApplet.min(minimum.z,z);
-				maximum.z = PApplet.max(maximum.z,z);			
-			}
+			double[][] array = { {Math.cos(pitch),0.0,Math.sin(pitch)},
+					{Math.sin(roll)*Math.sin(pitch),Math.cos(roll),-Math.sin(roll)*Math.cos(pitch)},
+					{Math.cos(roll)*Math.sin(pitch),Math.sin(roll),Math.cos(roll)*Math.cos(pitch) } }; 
+			Matrix matM = new Matrix(array);
+			
+			matTiltCompensatedData = matM.times(matCompensateData);
+
+			//double mx2 = x*Math.cos(pitch)+z*Math.sin(pitch);
+			//double my2 = x*Math.sin(roll)*Math.sin(pitch)+y*Math.cos(roll)-z*Math.sin(roll)*Math.cos(pitch);
+			//double mz2 = -x*Math.cos(roll)*Math.sin(pitch)+y*Math.sin(roll)+z*Math.cos(roll)*Math.cos(pitch);
+			
+			
+			double mx2 = matTiltCompensatedData.get(0, 0);
+			double my2 = matTiltCompensatedData.get(1, 0);
+			//double mz2 = matTiltCompensatedData.get(2, 0);
+			heading = (float)Math.atan2(my2,mx2);
 			
 		}
 

@@ -102,7 +102,7 @@ public final class CommandPort extends TcpOSCPort implements Runnable{
 		byte[] byteArray = aPacket.getByteArray();
 		  
 //		OSCMessage mes = (OSCMessage)aPacket;
-//		System.out.print("mes send " + mes.getAddress() + "   ");
+//		System.out.print("mes (send) " + mes.getAddress() + "   ");
 //		for(int i=0;i<mes.getArguments().length;i++){
 //			System.out.print(mes.getArguments()[i] + "   " );
 //		}

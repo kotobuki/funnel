@@ -41,6 +41,20 @@ public abstract class Firmata extends IOSystem{
 		super.waitMessage(message);
 
 		if(message.getAddress().equals("/sysex/reply") && initialized){
+			
+//			System.out.println("     ----wait sysex Message");
+//			System.out.print("       ");
+//			for(int i=0;i<message.getArguments().length;i++){
+//				//int v = ((Integer)message.getArguments()[i]).intValue();
+//				try{
+//					int v = new Integer(message.getArguments()[i].toString()).intValue();
+//					System.out.print("0x"+Integer.toHexString(v ) + "  ");
+//				}catch(NumberFormatException e){
+//					System.out.println(message.getArguments()[i].toString());
+//				}
+//			}
+//			System.out.println();
+			
 			if(((Integer)message.getArguments()[1]).intValue() == I2CDevice.COM_I2C_REPLY){
 
 				int modid = ((Integer)message.getArguments()[0]).intValue();
@@ -55,23 +69,22 @@ public abstract class Firmata extends IOSystem{
 					int len = message.getArguments().length-4;
 	
 					byte[] data = new byte[len];
+
 					for(int i=0;i<len;i++){
-						data[i] = ((Integer)message.getArguments()[4+i]).byteValue();
+						try{
+							data[i] |= new Integer(message.getArguments()[4+i].toString()).byteValue();
+						}catch(NumberFormatException e){
+							System.out.println("sysex Message error");
+						}
+						
 					}
+					System.out.println();
 					i2c.receiveData(registerAddress, data);
 				}
 				
 			}			
 			
-//			System.out.println("     ----wait sysex Message");
-//			System.out.print("       ");
-//			for(int i=0;i<message.getArguments().length;i++){
-//				int v = ((Integer)message.getArguments()[i]).intValue();
-//				
-//				System.out.print("0x"+Integer.toHexString(v ) + "  ");
-//			
-//			}
-//			System.out.println();
+
 			
 		}
 		

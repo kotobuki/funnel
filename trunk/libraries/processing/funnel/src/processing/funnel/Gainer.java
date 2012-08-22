@@ -6,7 +6,6 @@ import java.util.Set;
 
 
 import processing.core.PApplet;
-import processing.funnel.IOSystem.NotifyTokenizer;
 
 /**
  * @author endo

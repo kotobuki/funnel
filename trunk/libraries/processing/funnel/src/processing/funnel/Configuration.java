@@ -75,6 +75,7 @@ public final class Configuration{
 	 */
 	public void enablePowerPins(){
 		powerPinSetting = true;
+		System.out.println("----- power enable");
 	}
 	
 	

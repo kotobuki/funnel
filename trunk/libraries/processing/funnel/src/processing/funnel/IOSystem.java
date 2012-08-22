@@ -46,7 +46,7 @@ public class IOSystem implements Runnable{
 
 	//private boolean quitServer = true;//終了時サーバーを終了するか
 	
-	private boolean rebootIsWaited = false;
+	//private boolean rebootIsWaited = false;
 	
 	//定数
 	private int NO_ERROR = 0;
@@ -223,11 +223,11 @@ public class IOSystem implements Runnable{
 	//の分だけ呼び出される（複数回呼び出される）
 	protected void interpretMessage(OSCMessage message){
 		
-//			System.out.print("iosytem interpret " + message.getAddress() + "   ");
-//			for(int i=0;i<message.getArguments().length;i++){
-//				System.out.print(message.getArguments()[i] + "   " );
-//			}
-//			System.out.println( " " );
+			System.out.print("iosytem interpret " + message.getAddress() + "   ");
+			for(int i=0;i<message.getArguments().length;i++){
+				System.out.print(message.getArguments()[i] + "   " );
+			}
+			System.out.println( " " );
 
 			int id = ((Integer)message.getArguments()[0]).intValue();
 			int n = ((Integer)message.getArguments()[1]).intValue();
@@ -274,7 +274,7 @@ public class IOSystem implements Runnable{
 		if(message.getAddress().equals("/reset")){
 			int returnCode = ((Integer)message.getArguments()[0]).intValue();
 			if( returnCode == NO_ERROR){
-				rebootIsWaited = false;
+				//rebootIsWaited = false;
 				System.out.println("reboot OK ");
 			}else if( returnCode == REBOOT_ERROR){
 				errorMessage((String)message.getArguments()[1]);
@@ -363,7 +363,7 @@ public class IOSystem implements Runnable{
 	protected void reboot(){
 
 		execCode("/reset",true);
-		rebootIsWaited = true;
+		//rebootIsWaited = true;
 
 	}
 	
@@ -436,11 +436,11 @@ public class IOSystem implements Runnable{
 		}
 		execCode("/out",args,false);
 
-//		System.out.print("/out ");
-//		for(int i=0;i<args.length;i++){
-//			System.out.print( " " + args[i]);
-//		}
-//		System.out.println();
+		System.out.print("/out ");
+		for(int i=0;i<args.length;i++){
+			System.out.print( " " + args[i]);
+		}
+		System.out.println();
 	}
 	
 	public void update(){
@@ -545,10 +545,12 @@ public class IOSystem implements Runnable{
 			port.addListener("/in", this);
 			port.addListener("/node",this);
 			port.startListening();
+			System.out.println("  ---------------------    startListening");
 		}
 		public void acceptMessage(Date time, OSCMessage message){
-
+			System.out.println("  ---------------------    startListening");
 			if(doneWithSetup()){
+				System.out.println("  ---------------------    startListening");
 				io.interpretMessage(message);
 			}
 			
