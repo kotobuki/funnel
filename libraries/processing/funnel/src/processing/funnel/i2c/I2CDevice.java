@@ -37,25 +37,22 @@ public abstract class I2CDevice {
 		
 		this.io= (Firmata)conectedModule.system;
 		
+		System.out.println("--- power " + iomodule.powerPinSetting);
+		
 		if(iomodule.powerPinSetting)
 		{
             int delayInMicrosecondsLSB = readingDelayTime & 0xFF;
             int delayInMicrosecondsMSB = (readingDelayTime >> 8) & 0xFF;
-		
-			byte[] bu = {COM_I2C_CONFIG,0x1,(byte)delayInMicrosecondsLSB,(byte)delayInMicrosecondsMSB};
+
+            byte[] bu = {COM_I2C_CONFIG,0x1,(byte)(delayInMicrosecondsLSB&0xFF),(byte)((delayInMicrosecondsLSB>>8)&0xFF),(byte)(delayInMicrosecondsMSB&0xFF),(byte)((delayInMicrosecondsLSB>>8)&0xFF)};
 			this.io.sendSysex(conectedModule.getModuleID(),bu.length,bu);
-			
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+
 		}
 	}
 	
 	public I2CDevice(IOModule io, int slaveAddress, String name){
 
-		this(io,slaveAddress, name, 0);
+		this(io,slaveAddress, name, 1000);
 	}
 	
 	/**

@@ -1,9 +1,8 @@
 package processing.funnel;
 
-import java.lang.reflect.InvocationTargetException;
+
 import java.lang.reflect.Method;
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.HashSet;
 
 import com.illposed.osc.OSCMessage;
@@ -48,7 +47,7 @@ public final class Fio extends Firmata{
 	private HashSet<Integer> nodes = new HashSet<Integer>();
 	private int[] IDs;
 	private Configuration config;
-	private boolean hasAllNodes = false;
+	//private boolean hasAllNodes = false;
 	
 	Method fioEventMethod = null;
 	
@@ -60,18 +59,19 @@ public final class Fio extends Firmata{
 		this.IDs = IDs;
 		this.config = config;
 		nodes.clear();
-		System.out.println(" size " + nodes.size());
+		//System.out.println("fio node size " + nodes.size());
 		
 		System.out.println("initialize()");
 		if(!initialize(config)){
 			errorMessage("Funnel configuration error!");
 		}
 		
-		System.out.println("regModule()");
 		regModule(IDs,config);
+		
+		initPins(_a,_d);
+		
 		System.out.println("startIOSystem()");
 		startIOSystem();// /inと/nodeを読めるようにする
-		
 
 		try {
 			fioEventMethod = 
@@ -117,9 +117,13 @@ public final class Fio extends Firmata{
 	
 	protected boolean startIOSystem(){
 
+		
+		beginPolling();
+		
 		thread = new Thread(this,"Fio funnelServiceThread");
 		thread.start();
-		new NotifyTokenizer(this,client.commandPort);		
+		
+		new NotifyTokenizer(this,client.commandPort);
 		
 		return true;
 	}
@@ -137,19 +141,18 @@ public final class Fio extends Firmata{
 
 			//nodes.add(IDs[i]);
 		}
-		
-		initPins(_a,_d);
+
 	}
 	
 	
 	
 	protected void interpretMessage(OSCMessage message){
 		
-//		System.out.print("fio interpret " + message.getAddress() + "   ");
-//		for(int i=0;i<message.getArguments().length;i++){
-//			System.out.print(message.getArguments()[i] + "   " );
-//		}
-//		System.out.println( " " );
+		System.out.print("fio interpret " + message.getAddress() + "   ");
+		for(int i=0;i<message.getArguments().length;i++){
+			System.out.print(message.getArguments()[i] + "   " );
+		}
+		System.out.println( " " );
 		
 		if(message.getAddress().equals("/in") &&initialized){
 			
@@ -176,43 +179,43 @@ public final class Fio extends Firmata{
 
 		}
 		
-		if(message.getAddress().equals("/node")){
-			
-
-				int n = message.getArguments().length;
-
-				if(n == 2){
-					
-//					String name = (String)message.getArguments()[1];
-					
-					int my = ((Integer)message.getArguments()[0]).intValue();
-					if(Arrays.binarySearch(IDs, my)>=0){
-						nodes.add(my);
-					}
-					
-					
-					if(nodes.size() == IDs.length && !hasAllNodes){//全部そろった
-
-						beginPolling();
-						hasAllNodes = true;
-						System.out.println("全部そろった");
-						
-						try {
-							fioEventMethod.invoke(parent,null);
-						} catch (IllegalArgumentException e) {
-							// TODO 自動生成された catch ブロック
-							e.printStackTrace();
-						} catch (IllegalAccessException e) {
-							// TODO 自動生成された catch ブロック
-							e.printStackTrace();
-						} catch (InvocationTargetException e) {
-							// TODO 自動生成された catch ブロック
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-	
+//		if(message.getAddress().equals("/node")){
+//			
+//
+//				int n = message.getArguments().length;
+//
+//				if(n == 2){
+//					
+////					String name = (String)message.getArguments()[1];
+//					
+//					int my = ((Integer)message.getArguments()[0]).intValue();
+//					if(Arrays.binarySearch(IDs, my)>=0){
+//						nodes.add(my);
+//					}
+//					
+//					
+//					if(nodes.size() == IDs.length && !hasAllNodes){//全部そろった
+//
+//						beginPolling();
+//						hasAllNodes = true;
+//						System.out.println("全部そろった");
+//						
+//						try {
+//							fioEventMethod.invoke(parent,null);
+//						} catch (IllegalArgumentException e) {
+//							// TODO 自動生成された catch ブロック
+//							e.printStackTrace();
+//						} catch (IllegalAccessException e) {
+//							// TODO 自動生成された catch ブロック
+//							e.printStackTrace();
+//						} catch (InvocationTargetException e) {
+//							// TODO 自動生成された catch ブロック
+//							e.printStackTrace();
+//						}
+//					}
+//				}
+//			}
+//	
 
 
 
